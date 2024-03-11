@@ -17,6 +17,7 @@ export default class DbSeedCommand extends BaseConsoleCommand {
     try {
       await this.dbConnection.open()
       await this.seed('example', 'examples')
+      await this.seed('accounting-chart-of-account', 'chart_of_accounts')
     } catch (error) {
       console.error(error)
     } finally {

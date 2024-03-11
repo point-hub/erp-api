@@ -6,9 +6,9 @@ import request from 'supertest'
 
 import { createApp } from '@/app'
 
-import ExampleFactory from '../factory'
+import ChartOfAccountFactory from '../factory'
 
-describe('retrieve an example', async () => {
+describe('retrieve an chartOfAccount', async () => {
   let app: Express
   beforeAll(async () => {
     app = await createApp({ dbConnection: DatabaseTestUtil.dbConnection })
@@ -17,20 +17,20 @@ describe('retrieve an example', async () => {
     await DatabaseTestUtil.reset()
   })
   it('retrieve success', async () => {
-    const exampleFactory = new ExampleFactory(DatabaseTestUtil.dbConnection)
-    const resultFactory = await exampleFactory.createMany(3)
+    const chartOfAccountFactory = new ChartOfAccountFactory(DatabaseTestUtil.dbConnection)
+    const resultFactory = await chartOfAccountFactory.createMany(3)
 
-    const examples = await DatabaseTestUtil.retrieveAll('examples')
+    const chartOfAccounts = await DatabaseTestUtil.retrieveAll('chartOfAccounts')
 
-    const response = await request(app).get(`/v1/examples/${resultFactory.inserted_ids[1]}`)
+    const response = await request(app).get(`/v1/chartOfAccounts/${resultFactory.inserted_ids[1]}`)
 
     // expect http response
     expect(response.statusCode).toEqual(200)
 
     // expect response json
     expect(response.body._id).toBeDefined()
-    expect(response.body.name).toStrictEqual(examples.data[1].name)
-    expect(response.body.phone).toStrictEqual(examples.data[1].phone)
+    expect(response.body.name).toStrictEqual(chartOfAccounts.data[1].name)
+    expect(response.body.phone).toStrictEqual(chartOfAccounts.data[1].phone)
     expect(isValid(new Date(response.body.created_date))).toBeTruthy()
   })
 })

@@ -6,9 +6,9 @@ import request from 'supertest'
 
 import { createApp } from '@/app'
 
-import ExampleFactory from '../factory'
+import ChartOfAccountFactory from '../factory'
 
-describe('update many examples', async () => {
+describe('update many chartOfAccounts', async () => {
   let app: Express
   beforeAll(async () => {
     app = await createApp({ dbConnection: DatabaseTestUtil.dbConnection })
@@ -17,8 +17,8 @@ describe('update many examples', async () => {
     await DatabaseTestUtil.reset()
   })
   it('update success', async () => {
-    const exampleFactory = new ExampleFactory(DatabaseTestUtil.dbConnection)
-    const exampleData = [
+    const chartOfAccountFactory = new ChartOfAccountFactory(DatabaseTestUtil.dbConnection)
+    const chartOfAccountData = [
       {
         phone: '',
       },
@@ -29,12 +29,12 @@ describe('update many examples', async () => {
         phone: '12345678',
       },
     ]
-    exampleFactory.sequence(exampleData)
-    const resultFactory = await exampleFactory.createMany(3)
+    chartOfAccountFactory.sequence(chartOfAccountData)
+    const resultFactory = await chartOfAccountFactory.createMany(3)
 
-    // suspend every example data with name robot
+    // suspend every chartOfAccount data with name robot
     const response = await request(app)
-      .post('/v1/examples/update-many')
+      .post('/v1/chartOfAccounts/update-many')
       .send({
         filter: {
           phone: '',
@@ -54,17 +54,17 @@ describe('update many examples', async () => {
     })
 
     // expect recorded data
-    const exampleRecord1 = await DatabaseTestUtil.retrieve('examples', resultFactory.inserted_ids[0])
-    expect(exampleRecord1.phone).toStrictEqual('11223344')
-    expect(isValid(new Date(exampleRecord1.updated_date as string))).toBeTruthy()
+    const chartOfAccountRecord1 = await DatabaseTestUtil.retrieve('chartOfAccounts', resultFactory.inserted_ids[0])
+    expect(chartOfAccountRecord1.phone).toStrictEqual('11223344')
+    expect(isValid(new Date(chartOfAccountRecord1.updated_date as string))).toBeTruthy()
 
-    const exampleRecord2 = await DatabaseTestUtil.retrieve('examples', resultFactory.inserted_ids[1])
-    expect(exampleRecord2.phone).toStrictEqual('11223344')
-    expect(isValid(new Date(exampleRecord2.updated_date as string))).toBeTruthy()
+    const chartOfAccountRecord2 = await DatabaseTestUtil.retrieve('chartOfAccounts', resultFactory.inserted_ids[1])
+    expect(chartOfAccountRecord2.phone).toStrictEqual('11223344')
+    expect(isValid(new Date(chartOfAccountRecord2.updated_date as string))).toBeTruthy()
 
     // expect unmodified data
-    const exampleRecord3 = await DatabaseTestUtil.retrieve('examples', resultFactory.inserted_ids[2])
-    expect(exampleRecord3.phone).toStrictEqual('12345678')
-    expect(isValid(new Date(exampleRecord3.updated_date as string))).toBeFalsy()
+    const chartOfAccountRecord3 = await DatabaseTestUtil.retrieve('chartOfAccounts', resultFactory.inserted_ids[2])
+    expect(chartOfAccountRecord3.phone).toStrictEqual('12345678')
+    expect(isValid(new Date(chartOfAccountRecord3.updated_date as string))).toBeFalsy()
   })
 })

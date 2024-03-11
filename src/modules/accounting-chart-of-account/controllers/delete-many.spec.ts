@@ -5,9 +5,9 @@ import request from 'supertest'
 
 import { createApp } from '@/app'
 
-import ExampleFactory from '../factory'
+import ChartOfAccountFactory from '../factory'
 
-describe('delete many examples', async () => {
+describe('delete many chartOfAccounts', async () => {
   let app: Express
   beforeAll(async () => {
     app = await createApp({ dbConnection: DatabaseTestUtil.dbConnection })
@@ -16,11 +16,11 @@ describe('delete many examples', async () => {
     await DatabaseTestUtil.reset()
   })
   it('delete success', async () => {
-    const exampleFactory = new ExampleFactory(DatabaseTestUtil.dbConnection)
-    const resultFactory = await exampleFactory.createMany(3)
+    const chartOfAccountFactory = new ChartOfAccountFactory(DatabaseTestUtil.dbConnection)
+    const resultFactory = await chartOfAccountFactory.createMany(3)
 
     const response = await request(app)
-      .post('/v1/examples/delete-many')
+      .post('/v1/chartOfAccounts/delete-many')
       .send({
         ids: [resultFactory.inserted_ids[0], resultFactory.inserted_ids[1]],
       })
@@ -32,12 +32,12 @@ describe('delete many examples', async () => {
     expect(response.body).toStrictEqual({ deleted_count: 2 })
 
     // expect recorded data
-    const exampleRecord1 = await DatabaseTestUtil.retrieve('examples', resultFactory.inserted_ids[0])
-    expect(exampleRecord1).toBeNull()
-    const exampleRecord2 = await DatabaseTestUtil.retrieve('examples', resultFactory.inserted_ids[1])
-    expect(exampleRecord2).toBeNull()
+    const chartOfAccountRecord1 = await DatabaseTestUtil.retrieve('chartOfAccounts', resultFactory.inserted_ids[0])
+    expect(chartOfAccountRecord1).toBeNull()
+    const chartOfAccountRecord2 = await DatabaseTestUtil.retrieve('chartOfAccounts', resultFactory.inserted_ids[1])
+    expect(chartOfAccountRecord2).toBeNull()
 
-    const exampleRecords = await DatabaseTestUtil.retrieveAll('examples')
-    expect(exampleRecords.data.length).toStrictEqual(1)
+    const chartOfAccountRecords = await DatabaseTestUtil.retrieveAll('chartOfAccounts')
+    expect(chartOfAccountRecords.data.length).toStrictEqual(1)
   })
 })

@@ -20,9 +20,13 @@ export const schema: ISchema[] = [
       bsonType: 'object',
       required: ['name'],
       properties: {
+        number: {
+          bsonType: 'string',
+          description: 'The number for the chart of account',
+        },
         name: {
           bsonType: 'string',
-          description: 'The name for the example',
+          description: 'The name for the chart of account',
         },
       },
     },

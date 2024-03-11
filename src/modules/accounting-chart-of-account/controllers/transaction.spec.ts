@@ -5,7 +5,7 @@ import request from 'supertest'
 
 import { createApp } from '@/app'
 
-describe('example use transaction', async () => {
+describe('chartOfAccount use transaction', async () => {
   let app: Express
   beforeAll(async () => {
     app = await createApp({ dbConnection: DatabaseTestUtil.dbConnection })
@@ -23,11 +23,11 @@ describe('example use transaction', async () => {
       },
     }
 
-    await request(app).post('/v1/examples/transaction').send(data)
+    await request(app).post('/v1/chartOfAccounts/transaction').send(data)
 
     // expect recorded data
-    const exampleRecords = await DatabaseTestUtil.retrieveAll('examples')
-    expect(exampleRecords.data.length).toStrictEqual(0)
+    const chartOfAccountRecords = await DatabaseTestUtil.retrieveAll('chartOfAccounts')
+    expect(chartOfAccountRecords.data.length).toStrictEqual(0)
   })
   it('transaction aborted when create many failed', async () => {
     const data = {
@@ -38,7 +38,7 @@ describe('example use transaction', async () => {
         name: 'John 2',
       },
       createMany: {
-        examples: [
+        chartOfAccounts: [
           {
             name: 'John 2',
           },
@@ -46,11 +46,11 @@ describe('example use transaction', async () => {
       },
     }
 
-    await request(app).post('/v1/examples/transaction').send(data)
+    await request(app).post('/v1/chartOfAccounts/transaction').send(data)
 
     // expect recorded data
-    const exampleRecords = await DatabaseTestUtil.retrieveAll('examples')
-    expect(exampleRecords.data.length).toStrictEqual(2)
+    const chartOfAccountRecords = await DatabaseTestUtil.retrieveAll('chartOfAccounts')
+    expect(chartOfAccountRecords.data.length).toStrictEqual(2)
   })
   it('transaction aborted when update failed', async () => {
     const data = {
@@ -61,7 +61,7 @@ describe('example use transaction', async () => {
         name: 'John 2',
       },
       createMany: {
-        examples: [
+        chartOfAccounts: [
           {
             name: 'John 3',
           },
@@ -72,11 +72,11 @@ describe('example use transaction', async () => {
       },
     }
 
-    await request(app).post('/v1/examples/transaction').send(data)
+    await request(app).post('/v1/chartOfAccounts/transaction').send(data)
 
     // expect recorded data
-    const exampleRecords = await DatabaseTestUtil.retrieveAll('examples')
-    expect(exampleRecords.data.length).toStrictEqual(3)
+    const chartOfAccountRecords = await DatabaseTestUtil.retrieveAll('chartOfAccounts')
+    expect(chartOfAccountRecords.data.length).toStrictEqual(3)
   })
   it('transaction aborted when update many failed', async () => {
     const data = {
@@ -87,7 +87,7 @@ describe('example use transaction', async () => {
         name: 'John 2',
       },
       createMany: {
-        examples: [
+        chartOfAccounts: [
           {
             name: 'John 3',
           },
@@ -109,12 +109,12 @@ describe('example use transaction', async () => {
       },
     }
 
-    await request(app).post('/v1/examples/transaction').send(data)
+    await request(app).post('/v1/chartOfAccounts/transaction').send(data)
 
     // expect recorded data
-    const exampleRecords = await DatabaseTestUtil.retrieveAll('examples')
-    expect(exampleRecords.data.length).toStrictEqual(4)
-    expect(exampleRecords.data[0].name).toStrictEqual('John 5')
+    const chartOfAccountRecords = await DatabaseTestUtil.retrieveAll('chartOfAccounts')
+    expect(chartOfAccountRecords.data.length).toStrictEqual(4)
+    expect(chartOfAccountRecords.data[0].name).toStrictEqual('John 5')
   })
   it('transaction aborted when delete failed', async () => {
     const data = {
@@ -125,7 +125,7 @@ describe('example use transaction', async () => {
         name: 'John 2',
       },
       createMany: {
-        examples: [
+        chartOfAccounts: [
           {
             name: 'John 3',
           },
@@ -148,11 +148,11 @@ describe('example use transaction', async () => {
       delete: false,
     }
 
-    await request(app).post('/v1/examples/transaction').send(data)
+    await request(app).post('/v1/chartOfAccounts/transaction').send(data)
 
     // expect recorded data
-    const exampleRecords = await DatabaseTestUtil.retrieveAll('examples')
-    expect(exampleRecords.data.length).toStrictEqual(4)
+    const chartOfAccountRecords = await DatabaseTestUtil.retrieveAll('chartOfAccounts')
+    expect(chartOfAccountRecords.data.length).toStrictEqual(4)
   })
   it('transaction aborted when delete many failed', async () => {
     const data = {
@@ -163,7 +163,7 @@ describe('example use transaction', async () => {
         name: 'John 2',
       },
       createMany: {
-        examples: [
+        chartOfAccounts: [
           {
             name: 'John 3',
           },
@@ -187,10 +187,10 @@ describe('example use transaction', async () => {
       deleteMany: false,
     }
 
-    await request(app).post('/v1/examples/transaction').send(data)
+    await request(app).post('/v1/chartOfAccounts/transaction').send(data)
 
     // expect recorded data
-    const exampleRecords = await DatabaseTestUtil.retrieveAll('examples')
-    expect(exampleRecords.data.length).toStrictEqual(3)
+    const chartOfAccountRecords = await DatabaseTestUtil.retrieveAll('chartOfAccounts')
+    expect(chartOfAccountRecords.data.length).toStrictEqual(3)
   })
 })

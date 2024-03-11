@@ -1,9 +1,9 @@
-import { IExampleEntity } from './interface'
+import { IChartOfAccountEntity } from './interface'
 
-export const collectionName = 'examples'
+export const collectionName = 'chart_of_accounts'
 
-export class ExampleEntity {
-  constructor(public data: IExampleEntity) {}
+export class ChartOfAccountEntity {
+  constructor(public data: IChartOfAccountEntity) {}
 
   public generateCreatedDate() {
     this.data.created_date = new Date()

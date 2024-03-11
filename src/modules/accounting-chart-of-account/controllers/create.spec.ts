@@ -7,9 +7,9 @@ import request from 'supertest'
 
 import { createApp } from '@/app'
 
-import ExampleFactory from '../factory'
+import ChartOfAccountFactory from '../factory'
 
-describe('create an example', async () => {
+describe('create an chartOfAccount', async () => {
   let app: Express
   beforeAll(async () => {
     app = await createApp({ dbConnection: DatabaseTestUtil.dbConnection })
@@ -18,16 +18,16 @@ describe('create an example', async () => {
     await DatabaseTestUtil.reset()
   })
   it('validate unique column', async () => {
-    const exampleFactory = new ExampleFactory(DatabaseTestUtil.dbConnection)
-    exampleFactory.state({
+    const chartOfAccountFactory = new ChartOfAccountFactory(DatabaseTestUtil.dbConnection)
+    chartOfAccountFactory.state({
       name: 'John Doe',
     })
-    await exampleFactory.create()
+    await chartOfAccountFactory.create()
     const data = {
       name: 'John Doe',
     }
 
-    const response = await request(app).post('/v1/examples').send(data)
+    const response = await request(app).post('/v1/chartOfAccounts').send(data)
 
     // expect http response
     expect(response.statusCode).toEqual(422)
@@ -42,15 +42,15 @@ describe('create an example', async () => {
     })
 
     // expect recorded data
-    const exampleRecord = await DatabaseTestUtil.retrieve('examples', response.body.inserted_id)
-    expect(exampleRecord).toBeNull()
+    const chartOfAccountRecord = await DatabaseTestUtil.retrieve('chartOfAccounts', response.body.inserted_id)
+    expect(chartOfAccountRecord).toBeNull()
   })
   it('validate schema', async () => {
     const data = {
       phone: faker.phone.number(),
     }
 
-    const response = await request(app).post('/v1/examples').send(data)
+    const response = await request(app).post('/v1/chartOfAccounts').send(data)
 
     // expect http response
     expect(response.statusCode).toEqual(422)
@@ -66,8 +66,8 @@ describe('create an example', async () => {
     })
 
     // expect recorded data
-    const exampleRecord = await DatabaseTestUtil.retrieve('examples', response.body.inserted_id)
-    expect(exampleRecord).toBeNull()
+    const chartOfAccountRecord = await DatabaseTestUtil.retrieve('chartOfAccounts', response.body.inserted_id)
+    expect(chartOfAccountRecord).toBeNull()
   })
   it('create success', async () => {
     const data = {
@@ -75,7 +75,7 @@ describe('create an example', async () => {
       phone: faker.phone.number(),
     }
 
-    const response = await request(app).post('/v1/examples').send(data)
+    const response = await request(app).post('/v1/chartOfAccounts').send(data)
 
     // expect http response
     expect(response.statusCode).toEqual(201)
@@ -84,10 +84,10 @@ describe('create an example', async () => {
     expect(response.body.inserted_id).toBeDefined()
 
     // expect recorded data
-    const exampleRecord = await DatabaseTestUtil.retrieve('examples', response.body.inserted_id)
+    const chartOfAccountRecord = await DatabaseTestUtil.retrieve('chartOfAccounts', response.body.inserted_id)
 
-    expect(exampleRecord._id).toStrictEqual(response.body.inserted_id)
-    expect(exampleRecord.name).toStrictEqual(data.name)
-    expect(isValid(new Date(exampleRecord.created_date as string))).toBeTruthy()
+    expect(chartOfAccountRecord._id).toStrictEqual(response.body.inserted_id)
+    expect(chartOfAccountRecord.name).toStrictEqual(data.name)
+    expect(isValid(new Date(chartOfAccountRecord.created_date as string))).toBeTruthy()
   })
 })

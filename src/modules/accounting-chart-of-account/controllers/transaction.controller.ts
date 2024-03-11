@@ -9,14 +9,14 @@ import { DeleteRepository } from '../repositories/delete.repository'
 import { DeleteManyRepository } from '../repositories/delete-many.repository'
 import { UpdateRepository } from '../repositories/update.repository'
 import { UpdateManyRepository } from '../repositories/update-many.repository'
-import { CreateExampleUseCase } from '../use-cases/create.use-case'
-import { CreateManyExampleUseCase } from '../use-cases/create-many.use-case'
-import { DeleteExampleUseCase } from '../use-cases/delete.use-case'
-import { DeleteManyExampleUseCase } from '../use-cases/delete-many.use-case'
-import { UpdateExampleUseCase } from '../use-cases/update.use-case'
-import { UpdateManyExampleUseCase } from '../use-cases/update-many.use-case'
+import { CreateChartOfAccountUseCase } from '../use-cases/create.use-case'
+import { CreateManyChartOfAccountUseCase } from '../use-cases/create-many.use-case'
+import { DeleteChartOfAccountUseCase } from '../use-cases/delete.use-case'
+import { DeleteManyChartOfAccountUseCase } from '../use-cases/delete-many.use-case'
+import { UpdateChartOfAccountUseCase } from '../use-cases/update.use-case'
+import { UpdateManyChartOfAccountUseCase } from '../use-cases/update-many.use-case'
 
-export const transactionExampleController: IController = async (controllerInput: IControllerInput) => {
+export const transactionChartOfAccountController: IController = async (controllerInput: IControllerInput) => {
   let session
   try {
     // 1. start session for transactional
@@ -30,7 +30,7 @@ export const transactionExampleController: IController = async (controllerInput:
     const deleteRepository = new DeleteRepository(controllerInput.dbConnection)
     const deleteManyRepository = new DeleteManyRepository(controllerInput.dbConnection)
     // 3. handle business rules
-    const responseCreate = await CreateExampleUseCase.handle(
+    const responseCreate = await CreateChartOfAccountUseCase.handle(
       controllerInput.httpRequest.body.new,
       {
         cleanObject: objClean,
@@ -40,7 +40,7 @@ export const transactionExampleController: IController = async (controllerInput:
       { session },
     )
     // 3.1. create
-    await CreateExampleUseCase.handle(
+    await CreateChartOfAccountUseCase.handle(
       controllerInput.httpRequest.body.create,
       {
         cleanObject: objClean,
@@ -52,7 +52,7 @@ export const transactionExampleController: IController = async (controllerInput:
     await session.commitTransaction()
     session.startTransaction()
     // 3.2. create many
-    const responseCreateMany = await CreateManyExampleUseCase.handle(
+    const responseCreateMany = await CreateManyChartOfAccountUseCase.handle(
       controllerInput.httpRequest.body.createMany,
       {
         cleanObject: objClean,
@@ -64,7 +64,7 @@ export const transactionExampleController: IController = async (controllerInput:
     await session.commitTransaction()
     session.startTransaction()
     // 3.3. update
-    await UpdateExampleUseCase.handle(
+    await UpdateChartOfAccountUseCase.handle(
       {
         _id: responseCreate.inserted_id,
         data: {
@@ -81,7 +81,7 @@ export const transactionExampleController: IController = async (controllerInput:
     await session.commitTransaction()
     session.startTransaction()
     // 3.4. update many
-    await UpdateManyExampleUseCase.handle(
+    await UpdateManyChartOfAccountUseCase.handle(
       {
         filter: {
           name: controllerInput.httpRequest.body.updateMany.filter.name,
@@ -100,7 +100,7 @@ export const transactionExampleController: IController = async (controllerInput:
     await session.commitTransaction()
     session.startTransaction()
     // 3.5. delete
-    await DeleteExampleUseCase.handle(
+    await DeleteChartOfAccountUseCase.handle(
       { _id: controllerInput.httpRequest.body.delete === true ? responseCreate.inserted_id : '' },
       {
         schemaValidation,
@@ -111,7 +111,7 @@ export const transactionExampleController: IController = async (controllerInput:
     await session.commitTransaction()
     session.startTransaction()
     // 3.6. delete many
-    await DeleteManyExampleUseCase.handle(
+    await DeleteManyChartOfAccountUseCase.handle(
       { ids: controllerInput.httpRequest.body.deleteMany === true ? responseCreateMany.inserted_ids : [''] },
       {
         schemaValidation,

@@ -11,63 +11,63 @@ const makeRouter = async (routerInput: IBaseAppInput) => {
   router.post(
     '/',
     await makeController({
-      controller: controller.createExampleController,
+      controller: controller.createChartOfAccountController,
       dbConnection: routerInput.dbConnection,
     }),
   )
   router.get(
     '/',
     await makeController({
-      controller: controller.retrieveAllExampleController,
+      controller: controller.retrieveAllChartOfAccountController,
       dbConnection: routerInput.dbConnection,
     }),
   )
   router.get(
     '/:id',
     await makeController({
-      controller: controller.retrieveExampleController,
+      controller: controller.retrieveChartOfAccountController,
       dbConnection: routerInput.dbConnection,
     }),
   )
   router.patch(
     '/:id',
     await makeController({
-      controller: controller.updateExampleController,
+      controller: controller.updateChartOfAccountController,
       dbConnection: routerInput.dbConnection,
     }),
   )
   router.delete(
     '/:id',
     await makeController({
-      controller: controller.deleteExampleController,
+      controller: controller.deleteChartOfAccountController,
       dbConnection: routerInput.dbConnection,
     }),
   )
   router.post(
     '/create-many',
     await makeController({
-      controller: controller.createManyExampleController,
+      controller: controller.createManyChartOfAccountController,
       dbConnection: routerInput.dbConnection,
     }),
   )
   router.post(
     '/update-many',
     await makeController({
-      controller: controller.updateManyExampleController,
+      controller: controller.updateManyChartOfAccountController,
       dbConnection: routerInput.dbConnection,
     }),
   )
   router.post(
     '/delete-many',
     await makeController({
-      controller: controller.deleteManyExampleController,
+      controller: controller.deleteManyChartOfAccountController,
       dbConnection: routerInput.dbConnection,
     }),
   )
   router.post(
     '/transaction',
     await makeController({
-      controller: controller.transactionExampleController,
+      controller: controller.transactionChartOfAccountController,
       dbConnection: routerInput.dbConnection,
     }),
   )

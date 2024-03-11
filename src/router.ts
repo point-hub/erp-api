@@ -12,7 +12,7 @@ export default async function (baseRouterInput: IBaseAppInput) {
    * <modules>/router.ts
    */
   app.use('/v1/examples', await exampleRouter(baseRouterInput))
-  app.use('/v1/accounting/chart-of-account', await accountingChartOfAccountRouter(baseRouterInput))
+  app.use('/v1/accounting/chart-of-accounts', await accountingChartOfAccountRouter(baseRouterInput))
 
   return app
 }

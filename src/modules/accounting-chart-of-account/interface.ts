@@ -1,4 +1,4 @@
-export interface IExampleEntity {
+export interface IChartOfAccountEntity {
   _id?: string
   name?: string
   phone?: string

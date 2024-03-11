@@ -7,9 +7,9 @@ import request from 'supertest'
 
 import { createApp } from '@/app'
 
-import ExampleFactory from '../factory'
+import ChartOfAccountFactory from '../factory'
 
-describe('update an example', async () => {
+describe('update an chartOfAccount', async () => {
   let app: Express
   beforeAll(async () => {
     app = await createApp({ dbConnection: DatabaseTestUtil.dbConnection })
@@ -18,15 +18,15 @@ describe('update an example', async () => {
     await DatabaseTestUtil.reset()
   })
   it('validate schema', async () => {
-    const resultFactory = await new ExampleFactory(DatabaseTestUtil.dbConnection).create()
+    const resultFactory = await new ChartOfAccountFactory(DatabaseTestUtil.dbConnection).create()
 
-    const examples = await DatabaseTestUtil.retrieveAll('examples')
+    const chartOfAccounts = await DatabaseTestUtil.retrieveAll('chartOfAccounts')
 
     const updateData = {
       name: true,
     }
 
-    const response = await request(app).patch(`/v1/examples/${resultFactory.inserted_id}`).send(updateData)
+    const response = await request(app).patch(`/v1/chartOfAccounts/${resultFactory.inserted_id}`).send(updateData)
 
     // expect http response
     expect(response.statusCode).toEqual(422)
@@ -42,20 +42,20 @@ describe('update an example', async () => {
     })
 
     // expect data unmodified
-    const unmodifiedExampleRecord = await DatabaseTestUtil.retrieve('examples', resultFactory.inserted_id)
-    expect(unmodifiedExampleRecord.name).toStrictEqual(examples.data[0].name)
-    expect(unmodifiedExampleRecord.updated_date).toBeUndefined()
+    const unmodifiedChartOfAccountRecord = await DatabaseTestUtil.retrieve('chartOfAccounts', resultFactory.inserted_id)
+    expect(unmodifiedChartOfAccountRecord.name).toStrictEqual(chartOfAccounts.data[0].name)
+    expect(unmodifiedChartOfAccountRecord.updated_date).toBeUndefined()
   })
   it('update success', async () => {
-    const resultFactory = await new ExampleFactory(DatabaseTestUtil.dbConnection).createMany(3)
+    const resultFactory = await new ChartOfAccountFactory(DatabaseTestUtil.dbConnection).createMany(3)
 
-    const examples = await DatabaseTestUtil.retrieveAll('examples')
+    const chartOfAccounts = await DatabaseTestUtil.retrieveAll('chartOfAccounts')
 
     const updateData = {
       name: faker.person.fullName(),
     }
 
-    const response = await request(app).patch(`/v1/examples/${resultFactory.inserted_ids[1]}`).send(updateData)
+    const response = await request(app).patch(`/v1/chartOfAccounts/${resultFactory.inserted_ids[1]}`).send(updateData)
 
     // expect http response
     expect(response.statusCode).toEqual(200)
@@ -67,13 +67,16 @@ describe('update an example', async () => {
     })
 
     // expect recorded data
-    const exampleRecord = await DatabaseTestUtil.retrieve('examples', resultFactory.inserted_ids[1])
-    expect(exampleRecord.name).toStrictEqual(updateData.name)
-    expect(isValid(new Date(exampleRecord.updated_date as string))).toBeTruthy()
+    const chartOfAccountRecord = await DatabaseTestUtil.retrieve('chartOfAccounts', resultFactory.inserted_ids[1])
+    expect(chartOfAccountRecord.name).toStrictEqual(updateData.name)
+    expect(isValid(new Date(chartOfAccountRecord.updated_date as string))).toBeTruthy()
 
     // expect another data unmodified
-    const unmodifiedExampleRecord = await DatabaseTestUtil.retrieve('examples', resultFactory.inserted_ids[0])
-    expect(unmodifiedExampleRecord.name).toStrictEqual(examples.data[0].name)
-    expect(unmodifiedExampleRecord.updated_date).toBeUndefined()
+    const unmodifiedChartOfAccountRecord = await DatabaseTestUtil.retrieve(
+      'chartOfAccounts',
+      resultFactory.inserted_ids[0],
+    )
+    expect(unmodifiedChartOfAccountRecord.name).toStrictEqual(chartOfAccounts.data[0].name)
+    expect(unmodifiedChartOfAccountRecord.updated_date).toBeUndefined()
   })
 })

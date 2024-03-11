@@ -1,6 +1,6 @@
 import type { ICreateOutput, ICreateRepository, ISchemaValidation } from '@point-hub/papi'
 
-import { ExampleEntity } from '../entity'
+import { ChartOfAccountEntity } from '../entity'
 import { createValidation } from '../validations/create.validation'
 
 export interface IInput {
@@ -16,15 +16,15 @@ export interface IOptions {
   session?: unknown
 }
 
-export class CreateExampleUseCase {
+export class CreateChartOfAccountUseCase {
   static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<ICreateOutput> {
     // 1. define entity
-    const exampleEntity = new ExampleEntity({
+    const chartOfAccountEntity = new ChartOfAccountEntity({
       name: input.name,
       phone: input.phone,
     })
-    exampleEntity.generateCreatedDate()
-    const cleanEntity = deps.cleanObject(exampleEntity.data)
+    chartOfAccountEntity.generateCreatedDate()
+    const cleanEntity = deps.cleanObject(chartOfAccountEntity.data)
     // 2. validate schema
     await deps.schemaValidation(cleanEntity, createValidation)
     // 3. database operation

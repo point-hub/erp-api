@@ -6,9 +6,9 @@ import request from 'supertest'
 
 import { createApp } from '@/app'
 
-import ExampleFactory from '../factory'
+import ChartOfAccountFactory from '../factory'
 
-describe('retrieve all examples', async () => {
+describe('retrieve all chartOfAccounts', async () => {
   let app: Express
   beforeAll(async () => {
     app = await createApp({ dbConnection: DatabaseTestUtil.dbConnection })
@@ -17,12 +17,12 @@ describe('retrieve all examples', async () => {
     await DatabaseTestUtil.reset()
   })
   it('retrieve success', async () => {
-    const exampleFactory = new ExampleFactory(DatabaseTestUtil.dbConnection)
-    await exampleFactory.createMany(3)
+    const chartOfAccountFactory = new ChartOfAccountFactory(DatabaseTestUtil.dbConnection)
+    await chartOfAccountFactory.createMany(3)
 
-    const examples = await DatabaseTestUtil.retrieveAll('examples')
+    const chartOfAccounts = await DatabaseTestUtil.retrieveAll('chartOfAccounts')
 
-    const response = await request(app).get(`/v1/examples`)
+    const response = await request(app).get(`/v1/chartOfAccounts`)
 
     // expect http response
     expect(response.statusCode).toEqual(200)
@@ -30,10 +30,10 @@ describe('retrieve all examples', async () => {
     // expect response json
     expect(response.body.data.length).toStrictEqual(3)
     expect(response.body.data[0]._id).toBeDefined()
-    expect(response.body.data[0].name).toStrictEqual(examples.data[0].name)
+    expect(response.body.data[0].name).toStrictEqual(chartOfAccounts.data[0].name)
     expect(isValid(new Date(response.body.data[0].created_date))).toBeTruthy()
-    expect(response.body.data[1].name).toStrictEqual(examples.data[1].name)
-    expect(response.body.data[2].name).toStrictEqual(examples.data[2].name)
+    expect(response.body.data[1].name).toStrictEqual(chartOfAccounts.data[1].name)
+    expect(response.body.data[2].name).toStrictEqual(chartOfAccounts.data[2].name)
 
     expect(response.body.pagination.page).toStrictEqual(1)
     expect(response.body.pagination.page_size).toStrictEqual(10)
@@ -41,7 +41,7 @@ describe('retrieve all examples', async () => {
     expect(response.body.pagination.total_document).toStrictEqual(3)
   })
   it('sort data in ascending order', async () => {
-    const exampleFactory = new ExampleFactory(DatabaseTestUtil.dbConnection)
+    const chartOfAccountFactory = new ChartOfAccountFactory(DatabaseTestUtil.dbConnection)
     const data = [
       {
         name: 'John Doe',
@@ -53,10 +53,10 @@ describe('retrieve all examples', async () => {
         name: 'Jane',
       },
     ]
-    exampleFactory.sequence(data)
-    await exampleFactory.createMany(3)
+    chartOfAccountFactory.sequence(data)
+    await chartOfAccountFactory.createMany(3)
 
-    const response = await request(app).get(`/v1/examples`).query({
+    const response = await request(app).get(`/v1/chartOfAccounts`).query({
       sort: 'name',
     })
 
@@ -75,7 +75,7 @@ describe('retrieve all examples', async () => {
     expect(response.body.pagination.total_document).toStrictEqual(3)
   })
   it('sort data in descending order', async () => {
-    const exampleFactory = new ExampleFactory(DatabaseTestUtil.dbConnection)
+    const chartOfAccountFactory = new ChartOfAccountFactory(DatabaseTestUtil.dbConnection)
     const data = [
       {
         name: 'John Doe',
@@ -87,10 +87,10 @@ describe('retrieve all examples', async () => {
         name: 'Jane',
       },
     ]
-    exampleFactory.sequence(data)
-    await exampleFactory.createMany(3)
+    chartOfAccountFactory.sequence(data)
+    await chartOfAccountFactory.createMany(3)
 
-    const response = await request(app).get(`/v1/examples`).query({
+    const response = await request(app).get(`/v1/chartOfAccounts`).query({
       sort: '-name',
     })
 
@@ -109,12 +109,12 @@ describe('retrieve all examples', async () => {
     expect(response.body.pagination.total_document).toStrictEqual(3)
   })
   it('navigate pagination', async () => {
-    const exampleFactory = new ExampleFactory(DatabaseTestUtil.dbConnection)
-    await exampleFactory.createMany(3)
+    const chartOfAccountFactory = new ChartOfAccountFactory(DatabaseTestUtil.dbConnection)
+    await chartOfAccountFactory.createMany(3)
 
-    const examples = await DatabaseTestUtil.retrieveAll('examples')
+    const chartOfAccounts = await DatabaseTestUtil.retrieveAll('chartOfAccounts')
 
-    const response = await request(app).get(`/v1/examples`).query({
+    const response = await request(app).get(`/v1/chartOfAccounts`).query({
       page: 2,
       page_size: 2,
     })
@@ -124,7 +124,7 @@ describe('retrieve all examples', async () => {
 
     // expect response json
     expect(response.body.data.length).toStrictEqual(1)
-    expect(response.body.data[0].name).toStrictEqual(examples.data[2].name)
+    expect(response.body.data[0].name).toStrictEqual(chartOfAccounts.data[2].name)
 
     expect(response.body.pagination.page).toStrictEqual(2)
     expect(response.body.pagination.page_size).toStrictEqual(2)
@@ -132,12 +132,12 @@ describe('retrieve all examples', async () => {
     expect(response.body.pagination.total_document).toStrictEqual(3)
   })
   it('choose fields', async () => {
-    const exampleFactory = new ExampleFactory(DatabaseTestUtil.dbConnection)
-    await exampleFactory.createMany(3)
+    const chartOfAccountFactory = new ChartOfAccountFactory(DatabaseTestUtil.dbConnection)
+    await chartOfAccountFactory.createMany(3)
 
-    const examples = await DatabaseTestUtil.retrieveAll('examples')
+    const chartOfAccounts = await DatabaseTestUtil.retrieveAll('chartOfAccounts')
 
-    const response = await request(app).get(`/v1/examples`).query({
+    const response = await request(app).get(`/v1/chartOfAccounts`).query({
       fields: 'name',
     })
 
@@ -149,9 +149,9 @@ describe('retrieve all examples', async () => {
     expect(response.body.data[0]._id).toBeDefined()
     expect(response.body.data[1]._id).toBeDefined()
     expect(response.body.data[2]._id).toBeDefined()
-    expect(response.body.data[0].name).toStrictEqual(examples.data[0].name)
-    expect(response.body.data[1].name).toStrictEqual(examples.data[1].name)
-    expect(response.body.data[2].name).toStrictEqual(examples.data[2].name)
+    expect(response.body.data[0].name).toStrictEqual(chartOfAccounts.data[0].name)
+    expect(response.body.data[1].name).toStrictEqual(chartOfAccounts.data[1].name)
+    expect(response.body.data[2].name).toStrictEqual(chartOfAccounts.data[2].name)
     expect(response.body.data[0].status).toBeUndefined()
     expect(response.body.data[1].status).toBeUndefined()
     expect(response.body.data[2].status).toBeUndefined()
