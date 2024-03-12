@@ -6,7 +6,6 @@ import { RetrieveAllChartOfAccountUseCase } from '../use-cases/retrieve-all.use-
 export const retrieveAllChartOfAccountController: IController = async (controllerInput: IControllerInput) => {
   let session
   try {
-    console.log(controllerInput.httpRequest)
     // 1. start session for transactional
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()

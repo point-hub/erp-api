@@ -8,6 +8,11 @@ export class RetrieveAllRepository implements IRetrieveAllRepository {
   constructor(public database: IDatabase) {}
 
   async handle(query: IQuery, options?: unknown): Promise<IRetrieveAllOutput> {
-    return await this.database.collection(this.collection).retrieveAll(query, options)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const pipeline: any[] = []
+    if (query && query.filter) {
+      pipeline.push({ $match: { ...query.filter } })
+    }
+    return await this.database.collection(this.collection).aggregate(pipeline, query, options)
   }
 }
