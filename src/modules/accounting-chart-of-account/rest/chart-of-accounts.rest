@@ -1,10 +1,10 @@
 @baseUrl = {{$dotenv BASE_URL}}
 
 ###
-# @name createChartOfAccount
+# @name create
 # @prompt name
 # @prompt phone
-POST {{baseUrl}}/v1/accounting/chart-of-accounts HTTP/1.1
+POST {{baseUrl}}/v1/accounting/chart-of-accounts 
 Accept: application/json
 Content-Type: application/json
 
@@ -14,12 +14,12 @@ Content-Type: application/json
 }
 
 ###
-# @name createManyChartOfAccount
+# @name createMany
 # @prompt name1
 # @prompt phone1
 # @prompt name2
 # @prompt phone2
-POST {{baseUrl}}/v1/accounting/chart-of-accounts/create-many HTTP/1.1
+POST {{baseUrl}}/v1/accounting/chart-of-accounts/create-many 
 Accept: application/json
 Content-Type: application/json
 
@@ -35,34 +35,40 @@ Content-Type: application/json
 ]
 
 ###
-# @name retrieveAllChartOfAccount
-GET {{baseUrl}}/v1/accounting/chart-of-accounts HTTP/1.1
+# @name retrieveAll
+GET {{baseUrl}}/v1/accounting/chart-of-accounts 
 Accept: application/json
 Content-Type: application/json
 
 ###
-# @name retrieveAllChartOfAccount2
-GET {{baseUrl}}/v1/accounting/chart-of-accounts HTTP/1.1
+# @name retrieveAllPagination
+GET {{baseUrl}}/v1/accounting/chart-of-accounts
+  ?page=2
+  &page_size=10 
 Accept: application/json
 Content-Type: application/json
 
-{
-  "page": 2
-}
+###
+# @name retrieveAll
+GET {{baseUrl}}/v1/accounting/chart-of-accounts
+  ?filter[type]=equity
+Accept: application/json
+Content-Type: application/json
+
 
 ###
-# @name retrieveChartOfAccount
+# @name retrieve
 # @prompt id
-GET {{baseUrl}}/v1/accounting/chart-of-accounts/{{id}} HTTP/1.1
+GET {{baseUrl}}/v1/accounting/chart-of-accounts/{{id}} 
 Accept: application/json
 Content-Type: application/json
 
 ###
-# @name updateChartOfAccount
+# @name update
 # @prompt id
 # @prompt name
 # @prompt phone
-PATCH {{baseUrl}}/v1/accounting/chart-of-accounts/{{id}} HTTP/1.1
+PATCH {{baseUrl}}/v1/accounting/chart-of-accounts/{{id}} 
 Accept: application/json
 Content-Type: application/json
 
@@ -72,10 +78,10 @@ Content-Type: application/json
 }
 
 ###
-# @name updateManyChartOfAccount
+# @name updateMany
 # @prompt name
 # @prompt phone
-POST {{baseUrl}}/v1/accounting/chart-of-accounts/update-many HTTP/1.1
+POST {{baseUrl}}/v1/accounting/chart-of-accounts/update-many 
 Accept: application/json
 Content-Type: application/json
 
@@ -89,17 +95,17 @@ Content-Type: application/json
 }
 
 ###
-# @name deleteChartOfAccount
+# @name delete
 # @prompt id
-DELETE {{baseUrl}}/v1/accounting/chart-of-accounts/{{id}} HTTP/1.1
+DELETE {{baseUrl}}/v1/accounting/chart-of-accounts/{{id}} 
 Accept: application/json
 Content-Type: application/json
 
 ###
-# @name deleteManyChartOfAccount
+# @name deleteMany
 # @prompt id1
 # @prompt id2
-POST {{baseUrl}}/v1/accounting/chart-of-accounts/delete-many HTTP/1.1
+POST {{baseUrl}}/v1/accounting/chart-of-accounts/delete-many 
 Accept: application/json
 Content-Type: application/json
 
@@ -108,12 +114,12 @@ Content-Type: application/json
 }
 
 ###
-# @name createTransactionChartOfAccount
+# @name createTransaction
 # @prompt name1
 # @prompt phone1
 # @prompt name2
 # @prompt phone2
-POST {{baseUrl}}/v1/accounting/chart-of-accounts/transaction HTTP/1.1
+POST {{baseUrl}}/v1/accounting/chart-of-accounts/transaction 
 Accept: application/json
 Content-Type: application/json
 
