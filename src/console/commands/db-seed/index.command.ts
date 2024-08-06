@@ -16,7 +16,7 @@ export default class DbSeedCommand extends BaseConsoleCommand {
   async handle(): Promise<void> {
     try {
       await this.dbConnection.open()
-      await this.seed('examples')
+      await this.seed('counters')
     } catch (error) {
       console.error(error)
     } finally {
@@ -26,8 +26,7 @@ export default class DbSeedCommand extends BaseConsoleCommand {
   private async seed(collectionName: string): Promise<void> {
     console.info(`[seed] seeding ${collectionName} data`)
     // get seeder from module
-    const { seeds } = await import('@/modules/applications/seed')
-    console.info(seeds)
+    const { seeds } = await import(`@/modules/${collectionName}/seed`)
     // delete all data inside collection
     await this.dbConnection.collection(collectionName).deleteAll()
     // insert new seeder data

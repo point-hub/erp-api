@@ -2,6 +2,7 @@ import express, { Express } from 'express'
 
 import { IBaseAppInput } from './app'
 import branchesRouter from './modules/branches/router'
+import countersRouter from './modules/counters/router'
 // import userRouter from './modules/users/router'
 // import authRouter from './modules/users/router-auth'
 
@@ -15,6 +16,7 @@ export default async function (baseRouterInput: IBaseAppInput) {
   // app.use('/v1/users', await userRouter(baseRouterInput))
   // app.use('/v1/auth', await authRouter(baseRouterInput))
   app.use('/v1/branches', await branchesRouter(baseRouterInput))
+  app.use('/v1/counters', await countersRouter(baseRouterInput))
 
   return app
 }
