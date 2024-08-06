@@ -22,10 +22,8 @@ export const retrieveBranchController: IController = async (controllerInput: ICo
       status: 200,
       json: {
         _id: response._id,
+        code: response.code,
         name: response.name,
-        web_restrictions: response.web_restrictions,
-        ip_address_restrictions: response.ip_address_restrictions,
-        prefix_api_key: response.prefix_api_key,
         created_date: response.created_date,
         updated_date: response.updated_date,
       },

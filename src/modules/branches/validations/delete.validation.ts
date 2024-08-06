@@ -1,3 +1,3 @@
 export const deleteValidation = {
-  _id: ['string'],
+  _id: ['required', 'string'],
 }

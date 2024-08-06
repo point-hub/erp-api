@@ -29,9 +29,8 @@ export class UpdateBranchUseCase {
       name: input.data.name,
     })
     branchEntity.generateUpdatedDate()
-    const cleanEntity = deps.cleanObject(branchEntity.data)
     // 3. database operation
-    const response = await deps.updateRepository.handle(input._id, cleanEntity, options)
+    const response = await deps.updateRepository.handle(input._id, branchEntity.data, options)
     return {
       matched_count: response.matched_count,
       modified_count: response.modified_count,

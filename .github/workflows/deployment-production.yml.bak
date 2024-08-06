@@ -19,7 +19,7 @@ jobs:
       DATABASE_NAME: 'test_db'
     strategy:
       matrix:
-        mongodb-version: ['6.0', '7.0']
+        mongodb-version: ['7.0']
     steps:
       - name: Checkout
         uses: actions/checkout@v4
