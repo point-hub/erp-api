@@ -8,7 +8,7 @@ export interface IUpdateSupplierGroupRepository extends IUpdateRepository {
   handle(_id: string, document: IDocument, options?: unknown): Promise<IUpdateSupplierGroupOutput>
 }
 
-export class UpdateRepository implements IUpdateSupplierGroupRepository {
+export class UpdateSupplierGroupRepository implements IUpdateSupplierGroupRepository {
   constructor(public database: IDatabase) {}
 
   async handle(_id: string, document: IDocument, options?: unknown): Promise<IUpdateSupplierGroupOutput> {

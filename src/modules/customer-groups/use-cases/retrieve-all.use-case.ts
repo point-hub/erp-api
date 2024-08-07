@@ -1,26 +1,27 @@
-import type { IQuery } from '@point-hub/papi'
+import type { IPagination, IQuery } from '@point-hub/papi'
 
-import {
-  IRetrieveAllCustomerGroupOutput,
-  IRetrieveAllCustomerGroupRepository,
-} from '../repositories/retrieve-all.repository'
+import { IRetrieveCustomerGroupOutput } from '../repositories/retrieve.repository'
+import { IRetrieveAllCustomerGroupRepository } from '../repositories/retrieve-all.repository'
 
 export interface IInput {
   query: IQuery
 }
 export interface IDeps {
-  retrieveAllRepository: IRetrieveAllCustomerGroupRepository
+  retrieveAllCustomerGroupRepository: IRetrieveAllCustomerGroupRepository
 }
 export interface IOptions {
   session: unknown
 }
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface IOutput extends IRetrieveAllCustomerGroupOutput {}
+export interface IOutput {
+  data: IRetrieveCustomerGroupOutput[]
+  pagination: IPagination
+}
 
 export class RetrieveAllCustomerGroupUseCase {
   static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
-    const response = await deps.retrieveAllRepository.handle(input.query, options)
-
+    // 1. database operation
+    const response = await deps.retrieveAllCustomerGroupRepository.handle(input.query, options)
+    // 2. output
     return {
       data: response.data,
       pagination: response.pagination,

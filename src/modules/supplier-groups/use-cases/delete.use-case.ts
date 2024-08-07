@@ -1,5 +1,6 @@
-import type { IDeleteOutput, IDeleteRepository, ISchemaValidation } from '@point-hub/papi'
+import type { ISchemaValidation } from '@point-hub/papi'
 
+import { IDeleteSupplierGroupRepository } from '../repositories/delete.repository'
 import { deleteValidation } from '../validations/delete.validation'
 
 export interface IInput {
@@ -7,20 +8,22 @@ export interface IInput {
 }
 export interface IDeps {
   schemaValidation: ISchemaValidation
-  deleteRepository: IDeleteRepository
+  deleteSupplierGroupRepository: IDeleteSupplierGroupRepository
 }
 export interface IOptions {
   session?: unknown
 }
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface IOutput extends IDeleteOutput {}
+export interface IOutput {
+  deleted_count: number
+}
 
 export class DeleteSupplierGroupUseCase {
   static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input, deleteValidation)
     // 2. database operation
-    const response = await deps.deleteRepository.handle(input._id, options)
+    const response = await deps.deleteSupplierGroupRepository.handle(input._id, options)
+    // 3. output
     return { deleted_count: response.deleted_count }
   }
 }

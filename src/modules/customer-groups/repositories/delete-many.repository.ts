@@ -8,7 +8,7 @@ export interface IDeleteManyCustomerGroupRepository extends IDeleteManyRepositor
   handle(_ids: string[], options?: unknown): Promise<IDeleteManyCustomerGroupOutput>
 }
 
-export class DeleteManyRepository implements IDeleteManyCustomerGroupRepository {
+export class DeleteManyCustomerGroupRepository implements IDeleteManyCustomerGroupRepository {
   constructor(public database: IDatabase) {}
 
   async handle(ids: string[], options?: unknown): Promise<IDeleteManyCustomerGroupOutput> {

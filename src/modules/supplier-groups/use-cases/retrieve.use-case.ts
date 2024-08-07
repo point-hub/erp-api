@@ -1,20 +1,27 @@
-import { IRetrieveSupplierGroupOutput, IRetrieveSupplierGroupRepository } from '../repositories/retrieve.repository'
+import { IRetrieveSupplierGroupRepository } from '../repositories/retrieve.repository'
 
 export interface IInput {
   _id: string
 }
 export interface IDeps {
-  retrieveRepository: IRetrieveSupplierGroupRepository
+  retrieveSupplierGroupRepository: IRetrieveSupplierGroupRepository
 }
 export interface IOptions {
   session: unknown
 }
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface IOutput extends IRetrieveSupplierGroupOutput {}
+export interface IOutput {
+  _id: string
+  code: string
+  name: string
+  created_date: string
+  updated_date: string
+}
 
 export class RetrieveSupplierGroupUseCase {
   static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
-    const response = await deps.retrieveRepository.handle(input._id, options)
+    // 1. database operation
+    const response = await deps.retrieveSupplierGroupRepository.handle(input._id, options)
+    // 2. output
     return {
       _id: response._id,
       code: response.code,

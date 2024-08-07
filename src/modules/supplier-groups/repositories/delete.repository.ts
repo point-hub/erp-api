@@ -8,7 +8,7 @@ export interface IDeleteSupplierGroupRepository extends IDeleteRepository {
   handle(_id: string, options?: unknown): Promise<IDeleteSupplierGroupOutput>
 }
 
-export class DeleteRepository implements IDeleteSupplierGroupRepository {
+export class DeleteSupplierGroupRepository implements IDeleteSupplierGroupRepository {
   constructor(public database: IDatabase) {}
 
   async handle(_id: string, options?: unknown): Promise<IDeleteSupplierGroupOutput> {

@@ -2,7 +2,7 @@ import type { IController, IControllerInput } from '@point-hub/papi'
 
 import { schemaValidation } from '@/utils/validation'
 
-import { DeleteRepository } from '../repositories/delete.repository'
+import { DeleteSupplierGroupRepository } from '../repositories/delete.repository'
 import { DeleteSupplierGroupUseCase } from '../use-cases/delete.use-case'
 
 export const deleteSupplierGroupController: IController = async (controllerInput: IControllerInput) => {
@@ -12,11 +12,11 @@ export const deleteSupplierGroupController: IController = async (controllerInput
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const deleteRepository = new DeleteRepository(controllerInput.dbConnection)
+    const deleteSupplierGroupRepository = new DeleteSupplierGroupRepository(controllerInput.dbConnection)
     // 3. handle business logic
     const response = await DeleteSupplierGroupUseCase.handle(
       { _id: controllerInput.httpRequest.params.id },
-      { schemaValidation, deleteRepository },
+      { schemaValidation, deleteSupplierGroupRepository },
       { session },
     )
     await session.commitTransaction()

@@ -9,7 +9,8 @@ export interface IRetrieveAllCustomerGroupOutput extends IAggregateOutput {
 export interface IRetrieveAllCustomerGroupRepository extends IAggregateRepository {
   handle(query: IQuery, options?: unknown): Promise<IRetrieveAllCustomerGroupOutput>
 }
-export class RetrieveAllRepository implements IRetrieveAllCustomerGroupRepository {
+
+export class RetrieveAllCustomerGroupRepository implements IRetrieveAllCustomerGroupRepository {
   public collection = collectionName
 
   constructor(public database: IDatabase) {}

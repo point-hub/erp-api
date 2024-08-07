@@ -1,4 +1,4 @@
-import type { ICreateOutput, ISchemaValidation } from '@point-hub/papi'
+import type { ISchemaValidation } from '@point-hub/papi'
 
 import { CustomerGroupEntity } from '../entity'
 import { ICreateCustomerGroupRepository } from '../repositories/create.repository'
@@ -10,15 +10,15 @@ export interface IInput {
 }
 export interface IDeps {
   cleanObject(object: object): object
-  createRepository: ICreateCustomerGroupRepository
+  createCustomerGroupRepository: ICreateCustomerGroupRepository
   schemaValidation: ISchemaValidation
 }
 export interface IOptions {
   session?: unknown
 }
-
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface IOutput extends ICreateOutput {}
+export interface IOutput {
+  inserted_id: string
+}
 
 export class CreateCustomerGroupUseCase {
   static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
@@ -32,9 +32,8 @@ export class CreateCustomerGroupUseCase {
     customerGroupEntity.generateCreatedDate()
     const cleanEntity = deps.cleanObject(customerGroupEntity.data)
     // 3. database operation
-    // 3.1 create customer group
-    const response = await deps.createRepository.handle(cleanEntity, options)
-    // response
+    const response = await deps.createCustomerGroupRepository.handle(cleanEntity, options)
+    // 4. output
     return { inserted_id: response.inserted_id }
   }
 }

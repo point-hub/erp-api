@@ -8,7 +8,7 @@ export interface ICreateManySupplierGroupRepository extends ICreateManyRepositor
   handle(documents: IDocument[], options?: unknown): Promise<ICreateManySupplierGroupOutput>
 }
 
-export class CreateManyRepository implements ICreateManySupplierGroupRepository {
+export class CreateManySupplierGroupRepository implements ICreateManySupplierGroupRepository {
   constructor(public database: IDatabase) {}
 
   async handle(documents: IDocument[], options?: unknown): Promise<ICreateManySupplierGroupOutput> {

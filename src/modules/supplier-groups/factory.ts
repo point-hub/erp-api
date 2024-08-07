@@ -2,8 +2,8 @@ import { faker } from '@faker-js/faker'
 import { BaseFactory, type IDatabase } from '@point-hub/papi'
 
 import { ISupplierGroupEntity } from './interface'
-import { CreateRepository } from './repositories/create.repository'
-import { CreateManyRepository } from './repositories/create-many.repository'
+import { CreateSupplierGroupRepository } from './repositories/create.repository'
+import { CreateManySupplierGroupRepository } from './repositories/create-many.repository'
 
 export default class SupplierGroupFactory extends BaseFactory<ISupplierGroupEntity> {
   constructor(public dbConnection: IDatabase) {
@@ -18,12 +18,12 @@ export default class SupplierGroupFactory extends BaseFactory<ISupplierGroupEnti
   }
 
   async create() {
-    const createRepository = new CreateRepository(this.dbConnection)
-    return await createRepository.handle(this.makeOne())
+    const createSupplierGroupRepository = new CreateSupplierGroupRepository(this.dbConnection)
+    return await createSupplierGroupRepository.handle(this.makeOne())
   }
 
   async createMany(count: number) {
-    const createManyRepository = new CreateManyRepository(this.dbConnection)
+    const createManyRepository = new CreateManySupplierGroupRepository(this.dbConnection)
     return await createManyRepository.handle(this.makeMany(count))
   }
 }

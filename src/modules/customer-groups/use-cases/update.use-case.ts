@@ -1,7 +1,7 @@
 import type { ISchemaValidation } from '@point-hub/papi'
 
 import { CustomerGroupEntity } from '../entity'
-import { IUpdateCustomerGroupOutput, IUpdateCustomerGroupRepository } from '../repositories/update.repository'
+import { IUpdateCustomerGroupRepository } from '../repositories/update.repository'
 import { updateValidation } from '../validations/update.validation'
 
 export interface IInput {
@@ -14,13 +14,15 @@ export interface IInput {
 export interface IDeps {
   cleanObject(object: object): object
   schemaValidation: ISchemaValidation
-  updateRepository: IUpdateCustomerGroupRepository
+  updateCustomerGroupRepository: IUpdateCustomerGroupRepository
 }
 export interface IOptions {
   session?: unknown
 }
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface IOutput extends IUpdateCustomerGroupOutput {}
+export interface IOutput {
+  matched_count: number
+  modified_count: number
+}
 
 export class UpdateCustomerGroupUseCase {
   static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
@@ -33,7 +35,8 @@ export class UpdateCustomerGroupUseCase {
     })
     customerGroupEntity.generateUpdatedDate()
     // 3. database operation
-    const response = await deps.updateRepository.handle(input._id, customerGroupEntity.data, options)
+    const response = await deps.updateCustomerGroupRepository.handle(input._id, customerGroupEntity.data, options)
+    // 4. output
     return {
       matched_count: response.matched_count,
       modified_count: response.modified_count,

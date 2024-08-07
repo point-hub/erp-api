@@ -3,7 +3,7 @@ import type { IController, IControllerInput } from '@point-hub/papi'
 
 import { schemaValidation } from '@/utils/validation'
 
-import { CreateRepository } from '../repositories/create.repository'
+import { CreateCustomerGroupRepository } from '../repositories/create.repository'
 import { CreateCustomerGroupUseCase } from '../use-cases/create.use-case'
 
 export const createCustomerGroupController: IController = async (controllerInput: IControllerInput) => {
@@ -13,13 +13,13 @@ export const createCustomerGroupController: IController = async (controllerInput
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const createRepository = new CreateRepository(controllerInput.dbConnection)
+    const createCustomerGroupRepository = new CreateCustomerGroupRepository(controllerInput.dbConnection)
     // 3. handle business rules
     const response = await CreateCustomerGroupUseCase.handle(
       controllerInput.httpRequest.body,
       {
         cleanObject: objClean,
-        createRepository,
+        createCustomerGroupRepository,
         schemaValidation,
       },
       { session },

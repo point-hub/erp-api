@@ -1,6 +1,6 @@
 import type { IController, IControllerInput } from '@point-hub/papi'
 
-import { RetrieveRepository } from '../repositories/retrieve.repository'
+import { RetrieveCustomerGroupRepository } from '../repositories/retrieve.repository'
 import { RetrieveCustomerGroupUseCase } from '../use-cases/retrieve.use-case'
 
 export const retrieveCustomerGroupController: IController = async (controllerInput: IControllerInput) => {
@@ -10,11 +10,11 @@ export const retrieveCustomerGroupController: IController = async (controllerInp
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const retrieveRepository = new RetrieveRepository(controllerInput.dbConnection)
+    const retrieveCustomerGroupRepository = new RetrieveCustomerGroupRepository(controllerInput.dbConnection)
     // 3. handle business rules
     const response = await RetrieveCustomerGroupUseCase.handle(
       { _id: controllerInput.httpRequest.params.id },
-      { retrieveRepository },
+      { retrieveCustomerGroupRepository },
     )
     await session.commitTransaction()
     // 4. return response to client

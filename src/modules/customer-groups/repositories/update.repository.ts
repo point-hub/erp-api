@@ -8,7 +8,7 @@ export interface IUpdateCustomerGroupRepository extends IUpdateRepository {
   handle(_id: string, document: IDocument, options?: unknown): Promise<IUpdateCustomerGroupOutput>
 }
 
-export class UpdateRepository implements IUpdateCustomerGroupRepository {
+export class UpdateCustomerGroupRepository implements IUpdateCustomerGroupRepository {
   constructor(public database: IDatabase) {}
 
   async handle(_id: string, document: IDocument, options?: unknown): Promise<IUpdateCustomerGroupOutput> {

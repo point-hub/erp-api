@@ -8,7 +8,7 @@ export interface IUpdateManySupplierGroupRepository extends IUpdateManyRepositor
   handle(filter: IDocument, document: IDocument, options?: unknown): Promise<IUpdateManySupplierGroupOutput>
 }
 
-export class UpdateManyRepository implements IUpdateManySupplierGroupRepository {
+export class UpdateManySupplierGroupRepository implements IUpdateManySupplierGroupRepository {
   constructor(public database: IDatabase) {}
 
   async handle(filter: IDocument, document: IDocument, options?: unknown): Promise<IUpdateManySupplierGroupOutput> {

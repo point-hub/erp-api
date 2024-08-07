@@ -12,7 +12,7 @@ export interface IRetrieveSupplierGroupRepository extends IRetrieveRepository {
   handle(_id: string, options?: unknown): Promise<IRetrieveSupplierGroupOutput>
 }
 
-export class RetrieveRepository implements IRetrieveSupplierGroupRepository {
+export class RetrieveSupplierGroupRepository implements IRetrieveSupplierGroupRepository {
   constructor(public database: IDatabase) {}
 
   async handle(_id: string, options?: unknown): Promise<IRetrieveSupplierGroupOutput> {
