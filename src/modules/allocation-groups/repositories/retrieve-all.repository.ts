@@ -10,7 +10,7 @@ export interface IRetrieveAllAllocationGroupRepository extends IAggregateReposit
   handle(query: IQuery, options?: unknown): Promise<IRetrieveAllAllocationGroupOutput>
 }
 
-export class RetrieveAllRepository implements IRetrieveAllAllocationGroupRepository {
+export class RetrieveAllAllocationGroupRepository implements IRetrieveAllAllocationGroupRepository {
   public collection = collectionName
 
   constructor(public database: IDatabase) {}

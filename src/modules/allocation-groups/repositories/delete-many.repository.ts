@@ -8,7 +8,7 @@ export interface IDeleteManyAllocationGroupRepository extends IDeleteManyReposit
   handle(_ids: string[], options?: unknown): Promise<IDeleteManyAllocationGroupOutput>
 }
 
-export class DeleteManyRepository implements IDeleteManyAllocationGroupRepository {
+export class DeleteManyAllocationGroupRepository implements IDeleteManyAllocationGroupRepository {
   constructor(public database: IDatabase) {}
 
   async handle(ids: string[], options?: unknown): Promise<IDeleteManyAllocationGroupOutput> {

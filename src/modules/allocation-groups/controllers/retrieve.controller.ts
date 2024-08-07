@@ -1,6 +1,6 @@
 import type { IController, IControllerInput } from '@point-hub/papi'
 
-import { RetrieveRepository } from '../repositories/retrieve.repository'
+import { RetrieveAllocationGroupRepository } from '../repositories/retrieve.repository'
 import { RetrieveAllocationGroupUseCase } from '../use-cases/retrieve.use-case'
 
 export const retrieveAllocationGroupController: IController = async (controllerInput: IControllerInput) => {
@@ -10,11 +10,11 @@ export const retrieveAllocationGroupController: IController = async (controllerI
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const retrieveRepository = new RetrieveRepository(controllerInput.dbConnection)
+    const retrieveAllocationGroupRepository = new RetrieveAllocationGroupRepository(controllerInput.dbConnection)
     // 3. handle business rules
     const response = await RetrieveAllocationGroupUseCase.handle(
       { _id: controllerInput.httpRequest.params.id },
-      { retrieveRepository },
+      { retrieveAllocationGroupRepository },
     )
     await session.commitTransaction()
     // 4. return response to client

@@ -12,7 +12,7 @@ export interface IRetrieveAllocationGroupRepository extends IRetrieveRepository 
   handle(_id: string, options?: unknown): Promise<IRetrieveAllocationGroupOutput>
 }
 
-export class RetrieveRepository implements IRetrieveAllocationGroupRepository {
+export class RetrieveAllocationGroupRepository implements IRetrieveAllocationGroupRepository {
   constructor(public database: IDatabase) {}
 
   async handle(_id: string, options?: unknown): Promise<IRetrieveAllocationGroupOutput> {

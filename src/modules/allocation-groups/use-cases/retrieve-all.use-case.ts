@@ -7,7 +7,7 @@ export interface IInput {
   query: IQuery
 }
 export interface IDeps {
-  retrieveAllRepository: IRetrieveAllAllocationGroupRepository
+  retrieveAllAllocationGroupRepository: IRetrieveAllAllocationGroupRepository
 }
 export interface IOptions {
   session: unknown
@@ -20,7 +20,7 @@ export interface IOutput {
 export class RetrieveAllAllocationGroupUseCase {
   static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
     // 1. database operation
-    const response = await deps.retrieveAllRepository.handle(input.query, options)
+    const response = await deps.retrieveAllAllocationGroupRepository.handle(input.query, options)
     // 2. output
     return {
       data: response.data,

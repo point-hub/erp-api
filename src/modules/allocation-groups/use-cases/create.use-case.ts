@@ -10,7 +10,7 @@ export interface IInput {
 }
 export interface IDeps {
   cleanObject(object: object): object
-  createRepository: ICreateAllocationGroupRepository
+  createAllocationGroupRepository: ICreateAllocationGroupRepository
   schemaValidation: ISchemaValidation
 }
 export interface IOptions {
@@ -32,7 +32,7 @@ export class CreateAllocationGroupUseCase {
     allocationGroupEntity.generateCreatedDate()
     const cleanEntity = deps.cleanObject(allocationGroupEntity.data)
     // 3. database operation
-    const response = await deps.createRepository.handle(cleanEntity, options)
+    const response = await deps.createAllocationGroupRepository.handle(cleanEntity, options)
     // 4. output
     return { inserted_id: response.inserted_id }
   }

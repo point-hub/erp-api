@@ -14,7 +14,7 @@ export interface IInput {
 export interface IDeps {
   cleanObject(object: object): object
   schemaValidation: ISchemaValidation
-  updateRepository: IUpdateAllocationGroupRepository
+  updateAllocationGroupRepository: IUpdateAllocationGroupRepository
 }
 export interface IOptions {
   session?: unknown
@@ -35,7 +35,7 @@ export class UpdateAllocationGroupUseCase {
     })
     allocationGroupEntity.generateUpdatedDate()
     // 3. database operation
-    const response = await deps.updateRepository.handle(input._id, allocationGroupEntity.data, options)
+    const response = await deps.updateAllocationGroupRepository.handle(input._id, allocationGroupEntity.data, options)
     // 4. output
     return {
       matched_count: response.matched_count,

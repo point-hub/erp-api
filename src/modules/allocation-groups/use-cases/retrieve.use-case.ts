@@ -4,7 +4,7 @@ export interface IInput {
   _id: string
 }
 export interface IDeps {
-  retrieveRepository: IRetrieveAllocationGroupRepository
+  retrieveAllocationGroupRepository: IRetrieveAllocationGroupRepository
 }
 export interface IOptions {
   session: unknown
@@ -20,7 +20,7 @@ export interface IOutput {
 export class RetrieveAllocationGroupUseCase {
   static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
     // 1. database operation
-    const response = await deps.retrieveRepository.handle(input._id, options)
+    const response = await deps.retrieveAllocationGroupRepository.handle(input._id, options)
     // 2. output
     return {
       _id: response._id,

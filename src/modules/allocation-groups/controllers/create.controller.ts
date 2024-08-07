@@ -3,7 +3,7 @@ import type { IController, IControllerInput } from '@point-hub/papi'
 
 import { schemaValidation } from '@/utils/validation'
 
-import { CreateRepository } from '../repositories/create.repository'
+import { CreateAllocationGroupRepository } from '../repositories/create.repository'
 import { CreateAllocationGroupUseCase } from '../use-cases/create.use-case'
 
 export const createAllocationGroupController: IController = async (controllerInput: IControllerInput) => {
@@ -13,13 +13,13 @@ export const createAllocationGroupController: IController = async (controllerInp
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const createRepository = new CreateRepository(controllerInput.dbConnection)
+    const createAllocationGroupRepository = new CreateAllocationGroupRepository(controllerInput.dbConnection)
     // 3. handle business rules
     const response = await CreateAllocationGroupUseCase.handle(
       controllerInput.httpRequest.body,
       {
         cleanObject: objClean,
-        createRepository,
+        createAllocationGroupRepository,
         schemaValidation,
       },
       { session },

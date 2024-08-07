@@ -8,7 +8,7 @@ export interface IUpdateAllocationGroupRepository extends IUpdateRepository {
   handle(_id: string, document: IDocument, options?: unknown): Promise<IUpdateAllocationGroupOutput>
 }
 
-export class UpdateRepository implements IUpdateAllocationGroupRepository {
+export class UpdateAllocationGroupRepository implements IUpdateAllocationGroupRepository {
   constructor(public database: IDatabase) {}
 
   async handle(_id: string, document: IDocument, options?: unknown): Promise<IUpdateAllocationGroupOutput> {

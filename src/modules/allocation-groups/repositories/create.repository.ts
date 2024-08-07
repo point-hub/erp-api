@@ -8,7 +8,7 @@ export interface ICreateAllocationGroupRepository extends ICreateRepository {
   handle(document: IDocument, options?: unknown): Promise<ICreateAllocationGroupOutput>
 }
 
-export class CreateRepository implements ICreateAllocationGroupRepository {
+export class CreateAllocationGroupRepository implements ICreateAllocationGroupRepository {
   constructor(public database: IDatabase) {}
 
   async handle(document: IDocument, options?: unknown): Promise<ICreateAllocationGroupOutput> {
