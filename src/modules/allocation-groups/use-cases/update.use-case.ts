@@ -1,7 +1,7 @@
 import type { ISchemaValidation } from '@point-hub/papi'
 
 import { AllocationGroupEntity } from '../entity'
-import { IUpdateAllocationGroupOutput, IUpdateAllocationGroupRepository } from '../repositories/update.repository'
+import { IUpdateAllocationGroupRepository } from '../repositories/update.repository'
 import { updateValidation } from '../validations/update.validation'
 
 export interface IInput {
@@ -19,8 +19,10 @@ export interface IDeps {
 export interface IOptions {
   session?: unknown
 }
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface IOutput extends IUpdateAllocationGroupOutput {}
+export interface IOutput {
+  matched_count: number
+  modified_count: number
+}
 
 export class UpdateAllocationGroupUseCase {
   static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
@@ -34,6 +36,7 @@ export class UpdateAllocationGroupUseCase {
     allocationGroupEntity.generateUpdatedDate()
     // 3. database operation
     const response = await deps.updateRepository.handle(input._id, allocationGroupEntity.data, options)
+    // 4. output
     return {
       matched_count: response.matched_count,
       modified_count: response.modified_count,

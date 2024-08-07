@@ -1,4 +1,4 @@
-import type { ICreateOutput, ISchemaValidation } from '@point-hub/papi'
+import type { ISchemaValidation } from '@point-hub/papi'
 
 import { AllocationGroupEntity } from '../entity'
 import { ICreateAllocationGroupRepository } from '../repositories/create.repository'
@@ -16,9 +16,9 @@ export interface IDeps {
 export interface IOptions {
   session?: unknown
 }
-
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface IOutput extends ICreateOutput {}
+export interface IOutput {
+  inserted_id: string
+}
 
 export class CreateAllocationGroupUseCase {
   static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
@@ -32,9 +32,8 @@ export class CreateAllocationGroupUseCase {
     allocationGroupEntity.generateCreatedDate()
     const cleanEntity = deps.cleanObject(allocationGroupEntity.data)
     // 3. database operation
-    // 3.1 create allocation group
     const response = await deps.createRepository.handle(cleanEntity, options)
-    // response
+    // output
     return { inserted_id: response.inserted_id }
   }
 }

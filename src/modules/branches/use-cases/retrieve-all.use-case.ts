@@ -1,13 +1,19 @@
-import type { IQuery, IRetrieveAllOutput, IRetrieveAllRepository } from '@point-hub/papi'
+import type { IQuery, IRetrieveAllOutput } from '@point-hub/papi'
+
+import { IRetrieveBranchOutput } from '../repositories/retrieve.repository'
+import { IRetrieveAllBranchRepository } from '../repositories/retrieve-all.repository'
 
 export interface IInput {
   query: IQuery
 }
 export interface IDeps {
-  retrieveAllRepository: IRetrieveAllRepository
+  retrieveAllRepository: IRetrieveAllBranchRepository
 }
 export interface IOptions {
   session: unknown
+}
+export interface IOutput {
+  data: IRetrieveBranchOutput[]
 }
 
 export class RetrieveAllBranchUseCase {

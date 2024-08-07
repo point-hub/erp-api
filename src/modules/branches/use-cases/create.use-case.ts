@@ -1,6 +1,7 @@
-import type { ICreateOutput, ISchemaValidation } from '@point-hub/papi'
-import { IUpdateRepository } from '@point-hub/papi'
-import { IRetrieveAllRepository } from '@point-hub/papi'
+import type { ISchemaValidation } from '@point-hub/papi'
+
+import { IRetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
+import { IUpdateCounterRepository } from '@/modules/counters/repositories/update.repository'
 
 import { BranchEntity } from '../entity'
 import { ICreateBranchRepository } from '../repositories/create.repository'
@@ -15,15 +16,17 @@ export interface IInput {
 export interface IDeps {
   cleanObject(object: object): object
   createRepository: ICreateBranchRepository
-  retrieveAllRepository: IRetrieveAllRepository
-  updateRepository: IUpdateRepository
+  retrieveAllRepository: IRetrieveAllCounterRepository
+  updateRepository: IUpdateCounterRepository
   schemaValidation: ISchemaValidation
 }
 export interface IOptions {
   session?: unknown
 }
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface IOutput extends ICreateOutput {}
+
+export interface IOutput {
+  inserted_id: string
+}
 
 export class CreateBranchUseCase {
   static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
