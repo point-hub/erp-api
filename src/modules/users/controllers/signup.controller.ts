@@ -1,6 +1,8 @@
 import { objClean, tokenGenerate } from '@point-hub/express-utils'
 import type { IController, IControllerInput } from '@point-hub/papi'
 
+import { RetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
+import { UpdateCounterRepository } from '@/modules/counters/repositories/update.repository'
 import { schemaValidation } from '@/utils/validation'
 
 import { RetrieveUserRepository } from '../repositories/retrieve.repository'
@@ -16,6 +18,8 @@ export const signupController: IController = async (controllerInput: IController
     // 2. define repository
     const signupRepository = new SignupRepository(controllerInput.dbConnection)
     const retrieveUserRepository = new RetrieveUserRepository(controllerInput.dbConnection)
+    const updateCounterRepository = new UpdateCounterRepository(controllerInput.dbConnection)
+    const retrieveAllCounterRepository = new RetrieveAllCounterRepository(controllerInput.dbConnection)
     // 3. handle business rules
     const responseCreate = await SignupUseCase.handle(
       controllerInput.httpRequest.body,
@@ -26,6 +30,8 @@ export const signupController: IController = async (controllerInput: IController
         schemaValidation,
         hashPassword: Bun.password.hash,
         generateVerificationCode: tokenGenerate,
+        updateCounterRepository,
+        retrieveAllCounterRepository,
       },
       { session },
     )

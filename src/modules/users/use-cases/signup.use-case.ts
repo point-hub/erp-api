@@ -1,5 +1,8 @@
 import type { ISchemaValidation } from '@point-hub/papi'
 
+import { IRetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
+import { IUpdateCounterRepository } from '@/modules/counters/repositories/update.repository'
+
 import { UserEntity } from '../entity'
 import type { ICreateUserRepository } from '../repositories/create.repository'
 import type { IRetrieveUserRepository } from '../repositories/retrieve.repository'
@@ -24,6 +27,8 @@ export interface IInput {
 export interface IDeps {
   signupRepository: ICreateUserRepository
   retrieveUserRepository: IRetrieveUserRepository
+  retrieveAllCounterRepository: IRetrieveAllCounterRepository
+  updateCounterRepository: IUpdateCounterRepository
   cleanObject(object: object): object
   schemaValidation: ISchemaValidation
   hashPassword(password: string): Promise<string>
@@ -52,9 +57,17 @@ export class SignupUseCase {
     userEntity.generateCreatedDate()
     const cleanEntity = deps.cleanObject(userEntity.data)
     // 3. database operation
+    // 3.1. signup new user
     const responseSignup = await deps.signupRepository.handle(cleanEntity, options)
+    // 3.2. update code counter
+    const counters = await deps.retrieveAllCounterRepository.handle({ filter: { name: 'user-code' } }, options)
+    await deps.updateCounterRepository.handle(
+      counters.data[0]._id,
+      { count: Number(counters.data[0].count) + 1 },
+      options,
+    )
     // 4. get user recorded data
-    const responseUser = await deps.retrieveUserRepository.handle(responseSignup.inserted_id, options)
+    const responseUser = await deps.retrieveUserRepository.handle({ _id: responseSignup.inserted_id }, options)
     // 5. return response
     return {
       inserted_id: responseSignup.inserted_id,
