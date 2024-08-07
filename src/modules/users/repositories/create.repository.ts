@@ -8,7 +8,7 @@ export interface ICreateUserRepository extends ICreateRepository {
   handle(document: IDocument, options?: unknown): Promise<ICreateUserOutput>
 }
 
-export class CreateRepository implements ICreateUserRepository {
+export class CreateUserRepository implements ICreateUserRepository {
   constructor(public database: IDatabase) {}
 
   async handle(document: IDocument, options?: unknown): Promise<ICreateUserOutput> {

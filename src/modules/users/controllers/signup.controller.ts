@@ -1,15 +1,11 @@
 import { objClean, tokenGenerate } from '@point-hub/express-utils'
 import type { IController, IControllerInput } from '@point-hub/papi'
 
-import { CreateRepository as CreateOrganizationRepository } from '@/modules/organizations/repositories/create.repository'
-import { CreateRepository as CreateProjectRepository } from '@/modules/projects/repositories/create.repository'
-import { renderHbsTemplate, sendMail } from '@/utils/email'
 import { schemaValidation } from '@/utils/validation'
 
-import { RetrieveRepository } from '../repositories/retrieve.repository'
+import { RetrieveUserRepository } from '../repositories/retrieve.repository'
 import { SignupRepository } from '../repositories/signup.repository'
 import { SignupUseCase } from '../use-cases/signup.use-case'
-import { generateVerificationLink } from '../utils/generate-verification-link'
 
 export const signupController: IController = async (controllerInput: IControllerInput) => {
   let session
@@ -19,9 +15,7 @@ export const signupController: IController = async (controllerInput: IController
     session.startTransaction()
     // 2. define repository
     const signupRepository = new SignupRepository(controllerInput.dbConnection)
-    const retrieveRepository = new RetrieveRepository(controllerInput.dbConnection)
-    const createOrganizationRepository = new CreateOrganizationRepository(controllerInput.dbConnection)
-    const createProjectRepository = new CreateProjectRepository(controllerInput.dbConnection)
+    const retrieveUserRepository = new RetrieveUserRepository(controllerInput.dbConnection)
     // 3. handle business rules
     const responseCreate = await SignupUseCase.handle(
       {
@@ -30,16 +24,11 @@ export const signupController: IController = async (controllerInput: IController
       },
       {
         signupRepository,
-        retrieveRepository,
-        createOrganizationRepository,
-        createProjectRepository,
+        retrieveUserRepository,
         cleanObject: objClean,
         schemaValidation,
         hashPassword: Bun.password.hash,
-        renderHbsTemplate: renderHbsTemplate,
-        sendEmail: sendMail,
         generateVerificationCode: tokenGenerate,
-        generateVerificationLink: generateVerificationLink,
       },
       { session },
     )

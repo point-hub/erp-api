@@ -1,8 +1,10 @@
-import type { IAggregateRepository, IRetrieveOutput, ISchemaValidation, TypeCodeStatus } from '@point-hub/papi'
+import type { ISchemaValidation, TypeCodeStatus } from '@point-hub/papi'
 import { type JwtPayload } from 'jsonwebtoken'
 
+import type { IOptions as IOptionsApiError } from '@/utils/throw-api-error'
 import { throwApiError } from '@/utils/throw-api-error'
 
+import { IRetrieveAuthUserRepository } from '../repositories/retrieve-auth-user.repository'
 import { verifyTokenValidation } from '../validations/verify-token.validation'
 
 export interface IInput {
@@ -11,17 +13,23 @@ export interface IInput {
   secret: string
 }
 export interface IDeps {
-  retrieveAuthUserRepository: IAggregateRepository
-  throwApiError(codeStatus: TypeCodeStatus, message?: string, errors?: object): void
+  retrieveAuthUserRepository: IRetrieveAuthUserRepository
+  throwApiError(codeStatus: TypeCodeStatus, options: IOptionsApiError): void
   schemaValidation: ISchemaValidation
   verifyToken(token: string, secret: string): string | JwtPayload
 }
 export interface IOptions {
   session?: unknown
 }
+export interface IOutput {
+  _id: string
+  email: string
+  username: string
+  name: string
+}
 
 export class VerifyTokenUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IRetrieveOutput> {
+  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input, verifyTokenValidation)
     // 2. verify token
@@ -31,19 +39,16 @@ export class VerifyTokenUseCase {
       throwApiError(403)
     }
     // 3. database operation
-    console.log('input', input)
     const authUser = await deps.retrieveAuthUserRepository.handle(
       { user_id: decodedToken.sub, project_id: input.project_id },
       options,
     )
     // 4. return response
     return {
-      _id: authUser.data[0]._id,
-      email: authUser.data[0].email,
-      username: authUser.data[0].username,
-      name: authUser.data[0].name,
-      organization: authUser.data[0].organization,
-      project: authUser.data[0].project,
+      _id: authUser.data[0]._id as string,
+      email: authUser.data[0].email as string,
+      username: authUser.data[0].username as string,
+      name: authUser.data[0].name as string,
     }
   }
 }

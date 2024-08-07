@@ -6,14 +6,14 @@ export interface IRetrieveUserOutput extends IRetrieveOutput {
   name: string
   username: string
   email: string
-  created_date: string
-  updated_date: string
+  created_date: Date
+  updated_date: Date
 }
 export interface IRetrieveUserRepository extends IRetrieveRepository {
   handle(_id: string, options?: unknown): Promise<IRetrieveUserOutput>
 }
 
-export class RetrieveRepository implements IRetrieveUserRepository {
+export class RetrieveUserRepository implements IRetrieveUserRepository {
   constructor(public database: IDatabase) {}
 
   async handle(_id: string, options?: unknown): Promise<IRetrieveUserOutput> {
@@ -23,8 +23,8 @@ export class RetrieveRepository implements IRetrieveUserRepository {
       name: response.name as string,
       username: response.username as string,
       email: response.email as string,
-      created_date: response.created_date as string,
-      updated_date: response.updated_date as string,
+      created_date: response.created_date as Date,
+      updated_date: response.updated_date as Date,
     }
   }
 }

@@ -2,8 +2,8 @@ import { faker } from '@faker-js/faker'
 import { BaseFactory, type IDatabase } from '@point-hub/papi'
 
 import { IAllocationGroupEntity } from './interface'
-import { CreateRepository } from './repositories/create.repository'
-import { CreateManyRepository } from './repositories/create-many.repository'
+import { CreateAllocationGroupRepository } from './repositories/create.repository'
+import { CreateManyAllocationGroupRepository } from './repositories/create-many.repository'
 
 export default class AllocationGroupFactory extends BaseFactory<IAllocationGroupEntity> {
   constructor(public dbConnection: IDatabase) {
@@ -18,12 +18,12 @@ export default class AllocationGroupFactory extends BaseFactory<IAllocationGroup
   }
 
   async create() {
-    const createRepository = new CreateRepository(this.dbConnection)
-    return await createRepository.handle(this.makeOne())
+    const createAllocationGroupRepository = new CreateAllocationGroupRepository(this.dbConnection)
+    return await createAllocationGroupRepository.handle(this.makeOne())
   }
 
   async createMany(count: number) {
-    const createManyRepository = new CreateManyRepository(this.dbConnection)
+    const createManyRepository = new CreateManyAllocationGroupRepository(this.dbConnection)
     return await createManyRepository.handle(this.makeMany(count))
   }
 }

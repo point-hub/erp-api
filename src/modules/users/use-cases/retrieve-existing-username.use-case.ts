@@ -1,13 +1,14 @@
-import type { IRetrieveAllRepository, ISchemaValidation } from '@point-hub/papi'
+import type { ISchemaValidation } from '@point-hub/papi'
 
 import { UserEntity } from '../entity'
+import { IRetrieveAllUserRepository } from '../repositories/retrieve-all.repository'
 import { retrieveExistingUsernameValidation } from '../validations/retrieve-existing-username.validation'
 
 export interface IInput {
   username: string
 }
 export interface IDeps {
-  retrieveExistingUsernameRepository: IRetrieveAllRepository
+  retrieveExistingUsernameRepository: IRetrieveAllUserRepository
   cleanObject(object: object): object
   schemaValidation: ISchemaValidation
 }

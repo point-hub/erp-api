@@ -1,10 +1,11 @@
-import type { IAggregateOutput, IAggregateRepository, IDatabase, IPipeline, IQuery } from '@point-hub/papi'
+import type { IAggregateOutput, IAggregateRepository, IDatabase, IPagination, IPipeline, IQuery } from '@point-hub/papi'
 
 import { collectionName } from '../entity'
 import { IRetrieveCounterOutput } from './retrieve.repository'
 
 export interface IRetrieveAllCounterOutput extends IAggregateOutput {
   data: IRetrieveCounterOutput[]
+  pagination: IPagination
 }
 export interface IRetrieveAllCounterRepository extends IAggregateRepository {
   handle(query: IQuery, options?: unknown): Promise<IRetrieveAllCounterOutput>

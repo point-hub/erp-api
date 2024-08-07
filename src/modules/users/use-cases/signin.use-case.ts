@@ -1,8 +1,9 @@
-import type { IRetrieveAllRepository, IRetrieveOutput, ISchemaValidation, TypeCodeStatus } from '@point-hub/papi'
+import type { ISchemaValidation, TypeCodeStatus } from '@point-hub/papi'
 
 import type { IOptions as IOptionsApiError } from '@/utils/throw-api-error'
 
 import { UserEntity } from '../entity'
+import { IRetrieveAllUserRepository } from '../repositories/retrieve-all.repository'
 import { signinValidation } from '../validations/signin.validation'
 
 export interface IInput {
@@ -10,7 +11,7 @@ export interface IInput {
   password: string
 }
 export interface IDeps {
-  retrieveMatchedUsernameRepository: IRetrieveAllRepository
+  retrieveMatchedUsernameRepository: IRetrieveAllUserRepository
   cleanObject(object: object): object
   schemaValidation: ISchemaValidation
   verifyPassword(password: string, hash: string): Promise<boolean>
@@ -21,10 +22,13 @@ export interface IDeps {
 export interface IOptions {
   session?: unknown
 }
-interface IOutput extends IRetrieveOutput {
+interface IOutput {
+  _id: string
   email: string
   username: string
   name: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  cookies: any
   tokens: {
     token_type: string
     access_token: string
@@ -35,16 +39,13 @@ interface IOutput extends IRetrieveOutput {
 export class SigninUseCase {
   static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
     // 1. validate schema
-    console.log(1)
     await deps.schemaValidation({ username: input.username, password: input.password }, signinValidation)
     // 2. check any matched username / email in database
-    console.log(2)
     const userInput = new UserEntity({ username: input.username })
     const users = await deps.retrieveMatchedUsernameRepository.handle(
       { filter: { username: userInput.data.trimmed_username } },
       options,
     )
-
     // err.1. return error username is invalid
     if (users.data.length === 0) {
       deps.throwApiError(422, {
@@ -54,8 +55,9 @@ export class SigninUseCase {
       })
     }
     // 3. validate password
-    console.log(2)
-    const user = new UserEntity(users.data[0])
+    const user = new UserEntity({
+      ...users.data[0],
+    })
     const isPasswordVerified = await deps.verifyPassword(input.password, user.data.password as string)
     // err.2. return error password is invalid
     if (!isPasswordVerified) {
@@ -73,13 +75,10 @@ export class SigninUseCase {
         },
       })
     }
-    console.log(31, user)
     // 4. generate access token
-    console.log(4)
     const accessToken = deps.generateAccessToken(user.data._id as string)
     const refreshToken = deps.generateRefreshToken(user.data._id as string)
     // 5 setup auth cookies
-    console.log(5)
     const date = new Date()
     date.setDate(date.getDate() + 60)
     const cookies = [

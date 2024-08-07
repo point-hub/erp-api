@@ -2,12 +2,24 @@ import type { IDatabase, IPipeline, IRetrieveOutput, IRetrieveRepository } from 
 
 import { collectionName } from '../entity'
 
-export class RetrieveRepository implements IRetrieveRepository {
+export interface IRetrieveWarehouseOutput extends IRetrieveOutput {
+  code?: string
+  name?: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  branch?: any
+  created_date?: Date
+  updated_date?: Date
+}
+export interface IRetrieveWarehouseRepository extends IRetrieveRepository {
+  handle(_id: string, options?: unknown): Promise<IRetrieveWarehouseOutput>
+}
+
+export class RetrieveWarehouseRepository implements IRetrieveWarehouseRepository {
   public collection = collectionName
 
   constructor(public database: IDatabase) {}
 
-  async handle(_id: string, options?: unknown): Promise<IRetrieveOutput> {
+  async handle(_id: string, options?: unknown): Promise<IRetrieveWarehouseOutput> {
     const pipeline: IPipeline[] = []
 
     const filters = [] // filter keys using "and" logic

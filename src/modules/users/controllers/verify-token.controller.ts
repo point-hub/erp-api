@@ -17,7 +17,6 @@ export const verifyTokenController: IController = async (controllerInput: IContr
     // 2. define repository
     const retrieveAuthUserRepository = new RetrieveAuthUserRepository(controllerInput.dbConnection)
     // 3. handle business rules
-    console.log(controllerInput.httpRequest)
     const response = await VerifyTokenUseCase.handle(
       {
         token: controllerInput.httpRequest.signedCookies.POINTHUB_ACCESS,
@@ -32,7 +31,6 @@ export const verifyTokenController: IController = async (controllerInput: IContr
       },
       { session },
     )
-    console.log(response)
     await session.commitTransaction()
     // 4. return response to client
     const date = new Date()

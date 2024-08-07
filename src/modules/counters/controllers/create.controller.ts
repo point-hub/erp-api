@@ -21,8 +21,6 @@ export const createBranchController: IController = async (controllerInput: ICont
         cleanObject: objClean,
         createRepository,
         schemaValidation,
-        generateBranch: tokenGenerate,
-        hashBranch: tokenSha256,
       },
       { session },
     )

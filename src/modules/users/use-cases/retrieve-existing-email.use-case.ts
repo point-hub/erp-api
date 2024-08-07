@@ -1,13 +1,14 @@
-import type { IRetrieveAllRepository, ISchemaValidation } from '@point-hub/papi'
+import type { ISchemaValidation } from '@point-hub/papi'
 
 import { UserEntity } from '../entity'
+import { IRetrieveAllUserRepository } from '../repositories/retrieve-all.repository'
 import { retrieveExistingEmailValidation } from '../validations/retrieve-existing-email.validation'
 
 export interface IInput {
   email: string
 }
 export interface IDeps {
-  retrieveExistingEmailRepository: IRetrieveAllRepository
+  retrieveExistingEmailRepository: IRetrieveAllUserRepository
   cleanObject(object: object): object
   schemaValidation: ISchemaValidation
 }

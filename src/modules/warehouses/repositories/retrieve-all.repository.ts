@@ -1,14 +1,23 @@
-import type { IAggregateOutput, IAggregateRepository, IDatabase, IPipeline, IQuery } from '@point-hub/papi'
+import type { IAggregateOutput, IAggregateRepository, IDatabase, IPagination, IPipeline, IQuery } from '@point-hub/papi'
 import { addDays } from 'date-fns'
 
 import { collectionName } from '../entity'
+import { IRetrieveWarehouseOutput } from './retrieve.repository'
 
-export class RetrieveAllRepository implements IAggregateRepository {
+export interface IRetrieveAllWarehouseOutput extends IAggregateOutput {
+  data: IRetrieveWarehouseOutput[]
+  pagination: IPagination
+}
+export interface IRetrieveAllWarehouseRepository extends IAggregateRepository {
+  handle(query: IQuery, options?: unknown): Promise<IRetrieveAllWarehouseOutput>
+}
+
+export class RetrieveAllWarehouseRepository implements IRetrieveAllWarehouseRepository {
   public collection = collectionName
 
   constructor(public database: IDatabase) {}
 
-  async handle(query: IQuery, options?: unknown): Promise<IAggregateOutput> {
+  async handle(query: IQuery, options?: unknown): Promise<IRetrieveAllWarehouseOutput> {
     const pipeline: IPipeline[] = []
 
     const filters = [] // filter keys using "and" logic
@@ -66,7 +75,7 @@ export class RetrieveAllRepository implements IAggregateRepository {
     const response = await this.database.collection(this.collection).aggregate(pipeline, query, options)
 
     return {
-      data: response.data,
+      data: response.data as IRetrieveWarehouseOutput[],
       pagination: response.pagination,
     }
   }

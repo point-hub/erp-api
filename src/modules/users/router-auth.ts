@@ -41,49 +41,9 @@ const makeRouter = async (routerInput: IBaseAppInput): Promise<Router> => {
   )
 
   router.post(
-    '/verify-email',
-    await makeController({
-      controller: controller.verifyEmailController,
-      dbConnection: routerInput.dbConnection,
-    }),
-  )
-
-  router.post(
     '/verify-token',
     await makeController({
       controller: controller.verifyTokenController,
-      dbConnection: routerInput.dbConnection,
-    }),
-  )
-
-  router.post(
-    '/google',
-    await makeController({
-      controller: controller.googleAuthController,
-      dbConnection: routerInput.dbConnection,
-    }),
-  )
-
-  router.get(
-    '/google/callback',
-    await makeController({
-      controller: controller.googleAuthCallbackController,
-      dbConnection: routerInput.dbConnection,
-    }),
-  )
-
-  router.post(
-    '/github',
-    await makeController({
-      controller: controller.githubAuthController,
-      dbConnection: routerInput.dbConnection,
-    }),
-  )
-
-  router.get(
-    '/github/callback',
-    await makeController({
-      controller: controller.githubAuthCallbackController,
       dbConnection: routerInput.dbConnection,
     }),
   )

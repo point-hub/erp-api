@@ -2,12 +2,16 @@ import type { IDatabase, IDeleteOutput, IDeleteRepository } from '@point-hub/pap
 
 import { collectionName } from '../entity'
 
-export class DeleteRepository implements IDeleteRepository {
-  public collection = collectionName
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface IDeleteWarehouseOutput extends IDeleteOutput {}
+export interface IDeleteWarehouseRepository extends IDeleteRepository {
+  handle(_id: string, options?: unknown): Promise<IDeleteWarehouseOutput>
+}
 
+export class DeleteWarehouseRepository implements IDeleteWarehouseRepository {
   constructor(public database: IDatabase) {}
 
-  async handle(_id: string, options?: unknown): Promise<IDeleteOutput> {
-    return await this.database.collection(this.collection).delete(_id, options)
+  async handle(_id: string, options?: unknown): Promise<IDeleteWarehouseOutput> {
+    return await this.database.collection(collectionName).delete(_id, options)
   }
 }
