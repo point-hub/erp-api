@@ -27,6 +27,8 @@ export class UpdateBranchUseCase {
     const branchEntity = new BranchEntity({
       code: input.data.code,
       name: input.data.name,
+      address: input.data.address,
+      phone: input.data.phone,
     })
     branchEntity.generateUpdatedDate()
     // 3. database operation

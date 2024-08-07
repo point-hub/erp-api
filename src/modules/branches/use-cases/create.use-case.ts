@@ -8,6 +8,8 @@ import { createValidation } from '../validations/create.validation'
 export interface IInput {
   code?: string
   name?: string
+  address?: string
+  phone?: string
 }
 export interface IDeps {
   cleanObject(object: object): object
@@ -28,6 +30,8 @@ export class CreateBranchUseCase {
     const exampleEntity = new BranchEntity({
       code: input.code,
       name: input.name,
+      address: input.address,
+      phone: input.phone,
     })
     exampleEntity.generateCreatedDate()
     const cleanEntity = deps.cleanObject(exampleEntity.data)
