@@ -1,22 +1,22 @@
 export const seeds = [
   {
     name: 'user-code',
+    code: 'USER',
     count: 0,
   },
   {
     name: 'role-code',
+    code: 'ROLE',
     count: 0,
   },
   {
     name: 'branch-code',
+    code: 'BR',
     count: 0,
   },
   {
     name: 'warehouse-code',
-    count: 0,
-  },
-  {
-    name: 'customer-code',
+    code: 'WH',
     count: 0,
   },
 ]

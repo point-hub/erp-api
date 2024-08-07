@@ -1,5 +1,6 @@
 export interface IBranchEntity {
   _id?: string
+  code?: string
   name?: string
   count?: string
   created_by?: string

@@ -36,7 +36,6 @@ export const createAllocationGroupController: IController = async (controllerInp
       status: 201,
       json: {
         inserted_id: response.inserted_id,
-        api_key: response.api_key,
       },
     }
   } catch (error) {

@@ -25,6 +25,7 @@ export class UpdateAllocationGroupUseCase {
     await deps.schemaValidation(input, updateValidation)
     // 2. define entity
     const allocationGroupEntity = new AllocationGroupEntity({
+      code: input.data.code,
       name: input.data.name,
     })
     allocationGroupEntity.generateUpdatedDate()

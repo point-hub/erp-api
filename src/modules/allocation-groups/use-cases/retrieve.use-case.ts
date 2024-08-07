@@ -15,6 +15,7 @@ export class RetrieveAllocationGroupUseCase {
     const response = await deps.retrieveRepository.handle(input._id, options)
     return {
       _id: response._id,
+      code: response.code,
       name: response.name,
       created_date: response.created_date,
       updated_date: response.updated_date,
