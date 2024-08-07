@@ -1,5 +1,4 @@
 import type { IAggregateOutput, IAggregateRepository, IDatabase, IPagination, IPipeline, IQuery } from '@point-hub/papi'
-import { addDays } from 'date-fns'
 
 import { collectionName } from '../entity'
 import { IRetrieveWarehouseOutput } from './retrieve.repository'
@@ -20,40 +19,6 @@ export class RetrieveAllWarehouseRepository implements IRetrieveAllWarehouseRepo
   async handle(query: IQuery, options?: unknown): Promise<IRetrieveAllWarehouseOutput> {
     const pipeline: IPipeline[] = []
 
-    const filters = [] // filter keys using "and" logic
-    const filterAll = [] // filter keys using "or" logic
-
-    if (query.filter?.search) {
-      filterAll.push({ code: { $regex: query.filter?.search, $options: 'i' } })
-      filterAll.push({ name: { $regex: query.filter?.search, $options: 'i' } })
-      filters.push({ $or: filterAll })
-    }
-
-    if (query.filter?.name) {
-      filters.push({ name: { $regex: query.filter?.name, $options: 'i' } })
-    }
-
-    if (query.filter?.created_date) {
-      filters.push({
-        $and: [
-          {
-            created_date: {
-              $gte: new Date(query.filter.created_date),
-            },
-          },
-          {
-            created_date: {
-              $lt: addDays(new Date(query.filter.created_date), 1),
-            },
-          },
-        ],
-      })
-    }
-
-    if (filters.length) {
-      pipeline.push({ $match: { $and: filters } })
-    }
-
     pipeline.push({
       $lookup: {
         from: 'branches',
@@ -63,6 +28,7 @@ export class RetrieveAllWarehouseRepository implements IRetrieveAllWarehouseRepo
         as: 'branch',
       },
     })
+
     pipeline.push({
       $set: {
         branch: {
@@ -71,6 +37,35 @@ export class RetrieveAllWarehouseRepository implements IRetrieveAllWarehouseRepo
       },
     })
     pipeline.push({ $unset: ['branch_id'] })
+
+    const filtersAnd = [] // filter keys using "and" logic
+    const filtersOr = [] // filter keys using "or" logic
+
+    if (query.filter?.search) {
+      filtersOr.push({ code: { $regex: query.filter?.search, $options: 'i' } })
+      filtersOr.push({ name: { $regex: query.filter?.search, $options: 'i' } })
+      filtersOr.push({
+        $or: [
+          { 'branch.code': { $regex: query.filter?.search, $options: 'i' } },
+          { 'branch.name': { $regex: query.filter?.search, $options: 'i' } },
+        ],
+      })
+      filtersAnd.push({ $or: filtersOr })
+    }
+
+    if (query.filter?.code) filtersAnd.push({ code: { $regex: query.filter?.code, $options: 'i' } })
+    if (query.filter?.name) filtersAnd.push({ name: { $regex: query.filter?.name, $options: 'i' } })
+    if (query.filter?.branch)
+      filtersAnd.push({
+        $or: [
+          { 'branch.code': { $regex: query.filter?.branch, $options: 'i' } },
+          { 'branch.name': { $regex: query.filter?.branch, $options: 'i' } },
+        ],
+      })
+
+    if (filtersAnd.length) {
+      pipeline.push({ $match: { $and: filtersAnd } })
+    }
 
     const response = await this.database.collection(this.collection).aggregate(pipeline, query, options)
 
