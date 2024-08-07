@@ -25,6 +25,7 @@ export class UpdateCustomerGroupUseCase {
     await deps.schemaValidation(input, updateValidation)
     // 2. define entity
     const customerGroupEntity = new CustomerGroupEntity({
+      code: input.data.code,
       name: input.data.name,
     })
     customerGroupEntity.generateUpdatedDate()

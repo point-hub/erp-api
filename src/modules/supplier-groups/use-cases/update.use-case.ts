@@ -25,6 +25,7 @@ export class UpdateSupplierGroupUseCase {
     await deps.schemaValidation(input, updateValidation)
     // 2. define entity
     const supplierGroupEntity = new SupplierGroupEntity({
+      code: input.data.code,
       name: input.data.name,
     })
     supplierGroupEntity.generateUpdatedDate()

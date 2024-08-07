@@ -15,8 +15,13 @@ export class RetrieveAllRepository implements IAggregateRepository {
     const filterAll = [] // filter keys using "or" logic
 
     if (query.filter?.search) {
+      filterAll.push({ code: { $regex: query.filter?.search, $options: 'i' } })
       filterAll.push({ name: { $regex: query.filter?.search, $options: 'i' } })
       filters.push({ $or: filterAll })
+    }
+
+    if (query.filter?.code) {
+      filters.push({ code: { $regex: query.filter?.code, $options: 'i' } })
     }
 
     if (query.filter?.name) {

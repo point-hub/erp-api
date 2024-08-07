@@ -22,6 +22,7 @@ export const retrieveSupplierGroupController: IController = async (controllerInp
       status: 200,
       json: {
         _id: response._id,
+        code: response.code,
         name: response.name,
         created_date: response.created_date,
         updated_date: response.updated_date,

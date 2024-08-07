@@ -13,12 +13,16 @@ import { collectionName } from './entity'
 export const schema: ISchema[] = [
   {
     collection: collectionName,
-    unique: [['name']],
+    unique: [['code'], ['name']],
     uniqueIfExists: [[]],
     schema: {
       bsonType: 'object',
-      required: ['name'],
+      required: ['code', 'name'],
       properties: {
+        code: {
+          bsonType: 'string',
+          description: 'The code for the customer group',
+        },
         name: {
           bsonType: 'string',
           description: 'The name for the customer group',
