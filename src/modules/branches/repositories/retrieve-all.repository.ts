@@ -17,11 +17,19 @@ export class RetrieveAllRepository implements IAggregateRepository {
     if (query.filter?.search) {
       filterAll.push({ code: { $regex: query.filter?.search, $options: 'i' } })
       filterAll.push({ name: { $regex: query.filter?.search, $options: 'i' } })
+      filterAll.push({ address: { $regex: query.filter?.search, $options: 'i' } })
+      filterAll.push({ phone: { $regex: query.filter?.search, $options: 'i' } })
       filters.push({ $or: filterAll })
     }
 
     if (query.filter?.name) {
       filters.push({ name: { $regex: query.filter?.name, $options: 'i' } })
+    }
+    if (query.filter?.address) {
+      filters.push({ address: { $regex: query.filter?.address, $options: 'i' } })
+    }
+    if (query.filter?.phone) {
+      filters.push({ phone: { $regex: query.filter?.phone, $options: 'i' } })
     }
 
     if (query.filter?.created_date) {
