@@ -1,4 +1,4 @@
-export interface IBranchEntity {
+export interface ICounterEntity {
   _id?: string
   code?: string
   name?: string

@@ -7,7 +7,7 @@ export interface IInput {
   query: IQuery
 }
 export interface IDeps {
-  retrieveAllRepository: IRetrieveAllCounterRepository
+  retrieveAllCounterRepository: IRetrieveAllCounterRepository
 }
 export interface IOptions {
   session: unknown
@@ -23,10 +23,10 @@ export interface IOutput {
   }
 }
 
-export class RetrieveAllBranchUseCase {
+export class RetrieveAllCounterUseCase {
   static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
     // 1. database operation
-    const response = await deps.retrieveAllRepository.handle(input.query, options)
+    const response = await deps.retrieveAllCounterRepository.handle(input.query, options)
     // 2. output
     return {
       data: response.data,

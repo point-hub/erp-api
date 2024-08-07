@@ -1,20 +1,20 @@
 import type { IController, IControllerInput } from '@point-hub/papi'
 
-import { RetrieveAllRepository } from '../repositories/retrieve-all.repository'
-import { RetrieveAllBranchUseCase } from '../use-cases/retrieve-all.use-case'
+import { RetrieveAllCounterRepository } from '../repositories/retrieve-all.repository'
+import { RetrieveAllCounterUseCase } from '../use-cases/retrieve-all.use-case'
 
-export const retrieveAllBranchController: IController = async (controllerInput: IControllerInput) => {
+export const retrieveAllCounterController: IController = async (controllerInput: IControllerInput) => {
   let session
   try {
     // 1. start session for transactional
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const retrieveAllRepository = new RetrieveAllRepository(controllerInput.dbConnection)
+    const retrieveAllCounterRepository = new RetrieveAllCounterRepository(controllerInput.dbConnection)
     // 3. handle business rules
-    const response = await RetrieveAllBranchUseCase.handle(
+    const response = await RetrieveAllCounterUseCase.handle(
       { query: controllerInput.httpRequest.query },
-      { retrieveAllRepository },
+      { retrieveAllCounterRepository },
     )
     await session.commitTransaction()
     // 4. return response to client

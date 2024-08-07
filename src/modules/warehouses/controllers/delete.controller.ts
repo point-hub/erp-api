@@ -2,7 +2,7 @@ import type { IController, IControllerInput } from '@point-hub/papi'
 
 import { schemaValidation } from '@/utils/validation'
 
-import { DeleteRepository } from '../repositories/delete.repository'
+import { DeleteWarehouseRepository } from '../repositories/delete.repository'
 import { DeleteWarehouseUseCase } from '../use-cases/delete.use-case'
 
 export const deleteWarehouseController: IController = async (controllerInput: IControllerInput) => {
@@ -12,11 +12,11 @@ export const deleteWarehouseController: IController = async (controllerInput: IC
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const deleteRepository = new DeleteRepository(controllerInput.dbConnection)
+    const deleteWarehouseRepository = new DeleteWarehouseRepository(controllerInput.dbConnection)
     // 3. handle business logic
     const response = await DeleteWarehouseUseCase.handle(
       { _id: controllerInput.httpRequest.params.id },
-      { schemaValidation, deleteRepository },
+      { schemaValidation, deleteWarehouseRepository },
       { session },
     )
     await session.commitTransaction()

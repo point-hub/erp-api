@@ -1,9 +1,9 @@
-import { IBranchEntity } from './interface'
+import { ICounterEntity } from './interface'
 
 export const collectionName = 'counters'
 
-export class BranchEntity {
-  constructor(public data: IBranchEntity) {}
+export class CounterEntity {
+  constructor(public data: ICounterEntity) {}
 
   public generateCreatedDate() {
     this.data.created_date = new Date()

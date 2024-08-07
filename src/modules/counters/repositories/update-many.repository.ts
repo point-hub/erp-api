@@ -8,7 +8,7 @@ export interface IUpdateManyCounterRepository extends IUpdateManyRepository {
   handle(filter: IDocument, document: IDocument, options?: unknown): Promise<IUpdateManyCounterOutput>
 }
 
-export class UpdateManyRepository implements IUpdateManyCounterRepository {
+export class UpdateManyCounterRepository implements IUpdateManyCounterRepository {
   constructor(public database: IDatabase) {}
 
   async handle(filter: IDocument, document: IDocument, options?: unknown): Promise<IUpdateManyCounterOutput> {

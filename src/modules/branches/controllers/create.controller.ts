@@ -1,8 +1,8 @@
 import { objClean } from '@point-hub/express-utils'
 import type { IController, IControllerInput } from '@point-hub/papi'
 
-import { RetrieveAllRepository } from '@/modules/counters/repositories/retrieve-all.repository'
-import { UpdateRepository } from '@/modules/counters/repositories/update.repository'
+import { RetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
+import { UpdateCounterRepository } from '@/modules/counters/repositories/update.repository'
 import { schemaValidation } from '@/utils/validation'
 
 import { CreateBranchRepository } from '../repositories/create.repository'
@@ -16,8 +16,8 @@ export const createBranchController: IController = async (controllerInput: ICont
     session.startTransaction()
     // 2. define repository
     const createBranchRepository = new CreateBranchRepository(controllerInput.dbConnection)
-    const updateRepository = new UpdateRepository(controllerInput.dbConnection)
-    const retrieveAllRepository = new RetrieveAllRepository(controllerInput.dbConnection)
+    const updateRepository = new UpdateCounterRepository(controllerInput.dbConnection)
+    const retrieveAllRepository = new RetrieveAllCounterRepository(controllerInput.dbConnection)
     // 3. handle business rules
     const response = await CreateBranchUseCase.handle(
       controllerInput.httpRequest.body,

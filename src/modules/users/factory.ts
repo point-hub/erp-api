@@ -2,8 +2,8 @@ import { faker } from '@faker-js/faker'
 import { BaseFactory, type IDatabase } from '@point-hub/papi'
 
 import { IUserEntity } from './interface'
-import { CreateRepository } from './repositories/create.repository'
-import { CreateManyRepository } from './repositories/create-many.repository'
+import { CreateUserRepository } from './repositories/create.repository'
+import { CreateManyUserRepository } from './repositories/create-many.repository'
 
 export default class UserFactory extends BaseFactory<IUserEntity> {
   constructor(public dbConnection: IDatabase) {
@@ -19,12 +19,12 @@ export default class UserFactory extends BaseFactory<IUserEntity> {
   }
 
   async create() {
-    const createRepository = new CreateRepository(this.dbConnection)
-    return await createRepository.handle(this.makeOne())
+    const createUserRepository = new CreateUserRepository(this.dbConnection)
+    return await createUserRepository.handle(this.makeOne())
   }
 
   async createMany(count: number) {
-    const createManyRepository = new CreateManyRepository(this.dbConnection)
-    return await createManyRepository.handle(this.makeMany(count))
+    const createManyUserRepository = new CreateManyUserRepository(this.dbConnection)
+    return await createManyUserRepository.handle(this.makeMany(count))
   }
 }

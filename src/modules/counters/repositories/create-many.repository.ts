@@ -8,7 +8,7 @@ export interface ICreateManyCounterRepository extends ICreateManyRepository {
   handle(documents: IDocument[], options?: unknown): Promise<ICreateManyCounterOutput>
 }
 
-export class CreateManyRepository implements ICreateManyCounterRepository {
+export class CreateManyCounterRepository implements ICreateManyCounterRepository {
   constructor(public database: IDatabase) {}
 
   async handle(documents: IDocument[], options?: unknown): Promise<ICreateManyCounterOutput> {

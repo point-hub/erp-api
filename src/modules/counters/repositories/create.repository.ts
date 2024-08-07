@@ -8,7 +8,7 @@ export interface ICreateCounterRepository extends ICreateRepository {
   handle(document: IDocument, options?: unknown): Promise<ICreateCounterOutput>
 }
 
-export class CreateRepository implements ICreateCounterRepository {
+export class CreateCounterRepository implements ICreateCounterRepository {
   constructor(public database: IDatabase) {}
 
   async handle(document: IDocument, options?: unknown): Promise<ICreateCounterOutput> {

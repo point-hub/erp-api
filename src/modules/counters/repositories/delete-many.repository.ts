@@ -8,7 +8,7 @@ export interface IDeleteManyCounterRepository extends IDeleteManyRepository {
   handle(_ids: string[], options?: unknown): Promise<IDeleteManyCounterOutput>
 }
 
-export class DeleteManyRepository implements IDeleteManyCounterRepository {
+export class DeleteManyCounterRepository implements IDeleteManyCounterRepository {
   constructor(public database: IDatabase) {}
 
   async handle(ids: string[], options?: unknown): Promise<IDeleteManyCounterOutput> {

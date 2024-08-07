@@ -1,5 +1,6 @@
-import type { IDeleteOutput, IDeleteRepository, ISchemaValidation } from '@point-hub/papi'
+import type { IDeleteOutput, ISchemaValidation } from '@point-hub/papi'
 
+import { IDeleteWarehouseRepository } from '../repositories/delete.repository'
 import { deleteValidation } from '../validations/delete.validation'
 
 export interface IInput {
@@ -7,7 +8,7 @@ export interface IInput {
 }
 export interface IDeps {
   schemaValidation: ISchemaValidation
-  deleteRepository: IDeleteRepository
+  deleteWarehouseRepository: IDeleteWarehouseRepository
 }
 export interface IOptions {
   session?: unknown
@@ -18,7 +19,8 @@ export class DeleteWarehouseUseCase {
     // 1. validate schema
     await deps.schemaValidation(input, deleteValidation)
     // 2. database operation
-    const response = await deps.deleteRepository.handle(input._id, options)
+    const response = await deps.deleteWarehouseRepository.handle(input._id, options)
+    // 3. output
     return { deleted_count: response.deleted_count }
   }
 }

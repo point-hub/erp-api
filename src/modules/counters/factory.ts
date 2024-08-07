@@ -1,11 +1,11 @@
 import { faker } from '@faker-js/faker'
 import { BaseFactory, type IDatabase } from '@point-hub/papi'
 
-import { IBranchEntity } from './interface'
-import { CreateRepository } from './repositories/create.repository'
-import { CreateManyRepository } from './repositories/create-many.repository'
+import { ICounterEntity } from './interface'
+import { CreateCounterRepository } from './repositories/create.repository'
+import { CreateManyCounterRepository } from './repositories/create-many.repository'
 
-export default class BranchFactory extends BaseFactory<IBranchEntity> {
+export default class CounterFactory extends BaseFactory<ICounterEntity> {
   constructor(public dbConnection: IDatabase) {
     super()
   }
@@ -18,12 +18,12 @@ export default class BranchFactory extends BaseFactory<IBranchEntity> {
   }
 
   async create() {
-    const createRepository = new CreateRepository(this.dbConnection)
-    return await createRepository.handle(this.makeOne())
+    const createCounterRepository = new CreateCounterRepository(this.dbConnection)
+    return await createCounterRepository.handle(this.makeOne())
   }
 
   async createMany(count: number) {
-    const createManyRepository = new CreateManyRepository(this.dbConnection)
-    return await createManyRepository.handle(this.makeMany(count))
+    const createManyCounterRepository = new CreateManyCounterRepository(this.dbConnection)
+    return await createManyCounterRepository.handle(this.makeMany(count))
   }
 }

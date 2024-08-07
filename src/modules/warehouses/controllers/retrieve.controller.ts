@@ -1,6 +1,6 @@
 import type { IController, IControllerInput } from '@point-hub/papi'
 
-import { RetrieveRepository } from '../repositories/retrieve.repository'
+import { RetrieveWarehouseRepository } from '../repositories/retrieve.repository'
 import { RetrieveWarehouseUseCase } from '../use-cases/retrieve.use-case'
 
 export const retrieveWarehouseController: IController = async (controllerInput: IControllerInput) => {
@@ -10,11 +10,11 @@ export const retrieveWarehouseController: IController = async (controllerInput: 
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const retrieveRepository = new RetrieveRepository(controllerInput.dbConnection)
+    const retrieveWarehouseRepository = new RetrieveWarehouseRepository(controllerInput.dbConnection)
     // 3. handle business rules
     const response = await RetrieveWarehouseUseCase.handle(
       { _id: controllerInput.httpRequest.params.id },
-      { retrieveRepository },
+      { retrieveWarehouseRepository },
     )
     await session.commitTransaction()
     // 4. return response to client

@@ -11,7 +11,7 @@ export interface IRetrieveAllCounterRepository extends IAggregateRepository {
   handle(query: IQuery, options?: unknown): Promise<IRetrieveAllCounterOutput>
 }
 
-export class RetrieveAllRepository implements IRetrieveAllCounterRepository {
+export class RetrieveAllCounterRepository implements IRetrieveAllCounterRepository {
   public collection = collectionName
 
   constructor(public database: IDatabase) {}

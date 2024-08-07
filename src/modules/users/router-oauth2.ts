@@ -24,14 +24,6 @@ const makeRouter = async (routerInput: IBaseAppInput): Promise<Router> => {
     }),
   )
 
-  router.get(
-    '/callback',
-    await makeController({
-      controller: controller.oAuth2CallbackController,
-      dbConnection: routerInput.dbConnection,
-    }),
-  )
-
   return router
 }
 

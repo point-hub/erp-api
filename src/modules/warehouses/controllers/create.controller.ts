@@ -1,11 +1,11 @@
 import { objClean } from '@point-hub/express-utils'
 import type { IController, IControllerInput } from '@point-hub/papi'
 
-import { RetrieveAllRepository } from '@/modules/counters/repositories/retrieve-all.repository'
-import { UpdateRepository } from '@/modules/counters/repositories/update.repository'
+import { RetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
+import { UpdateCounterRepository } from '@/modules/counters/repositories/update.repository'
 import { schemaValidation } from '@/utils/validation'
 
-import { CreateRepository } from '../repositories/create.repository'
+import { CreateWarehouseRepository } from '../repositories/create.repository'
 import { CreateWarehouseUseCase } from '../use-cases/create.use-case'
 
 export const createWarehouseController: IController = async (controllerInput: IControllerInput) => {
@@ -15,17 +15,17 @@ export const createWarehouseController: IController = async (controllerInput: IC
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const createRepository = new CreateRepository(controllerInput.dbConnection)
-    const updateRepository = new UpdateRepository(controllerInput.dbConnection)
-    const retrieveAllRepository = new RetrieveAllRepository(controllerInput.dbConnection)
+    const createWarehouseRepository = new CreateWarehouseRepository(controllerInput.dbConnection)
+    const updateCounterRepository = new UpdateCounterRepository(controllerInput.dbConnection)
+    const retrieveAllCounterRepository = new RetrieveAllCounterRepository(controllerInput.dbConnection)
     // 3. handle business rules
     const response = await CreateWarehouseUseCase.handle(
       controllerInput.httpRequest.body,
       {
         cleanObject: objClean,
-        createRepository,
-        updateRepository,
-        retrieveAllRepository,
+        createWarehouseRepository,
+        updateCounterRepository,
+        retrieveAllCounterRepository,
         schemaValidation,
       },
       { session },
@@ -36,7 +36,6 @@ export const createWarehouseController: IController = async (controllerInput: IC
       status: 201,
       json: {
         inserted_id: response.inserted_id,
-        api_key: response.api_key,
       },
     }
   } catch (error) {

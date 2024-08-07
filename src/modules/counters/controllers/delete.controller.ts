@@ -2,21 +2,21 @@ import type { IController, IControllerInput } from '@point-hub/papi'
 
 import { schemaValidation } from '@/utils/validation'
 
-import { DeleteRepository } from '../repositories/delete.repository'
-import { DeleteBranchUseCase } from '../use-cases/delete.use-case'
+import { DeleteCounterRepository } from '../repositories/delete.repository'
+import { DeleteCounterUseCase } from '../use-cases/delete.use-case'
 
-export const deleteBranchController: IController = async (controllerInput: IControllerInput) => {
+export const deleteCounterController: IController = async (controllerInput: IControllerInput) => {
   let session
   try {
     // 1. start session for transactional
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const deleteRepository = new DeleteRepository(controllerInput.dbConnection)
+    const deleteCounterRepository = new DeleteCounterRepository(controllerInput.dbConnection)
     // 3. handle business logic
-    const response = await DeleteBranchUseCase.handle(
+    const response = await DeleteCounterUseCase.handle(
       { _id: controllerInput.httpRequest.params.id },
-      { schemaValidation, deleteRepository },
+      { schemaValidation, deleteCounterRepository },
       { session },
     )
     await session.commitTransaction()

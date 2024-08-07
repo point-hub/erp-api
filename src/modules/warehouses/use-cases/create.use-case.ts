@@ -1,8 +1,10 @@
-import type { ICreateOutput, ICreateRepository, ISchemaValidation } from '@point-hub/papi'
-import { IUpdateRepository } from '@point-hub/papi'
-import { IRetrieveAllRepository } from '@point-hub/papi'
+import type { ICreateOutput, ISchemaValidation } from '@point-hub/papi'
+
+import { IRetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
+import { IUpdateCounterRepository } from '@/modules/counters/repositories/update.repository'
 
 import { WarehouseEntity } from '../entity'
+import { ICreateWarehouseRepository } from '../repositories/create.repository'
 import { createValidation } from '../validations/create.validation'
 
 export interface IInput {
@@ -12,9 +14,9 @@ export interface IInput {
 }
 export interface IDeps {
   cleanObject(object: object): object
-  createRepository: ICreateRepository
-  retrieveAllRepository: IRetrieveAllRepository
-  updateRepository: IUpdateRepository
+  createWarehouseRepository: ICreateWarehouseRepository
+  retrieveAllCounterRepository: IRetrieveAllCounterRepository
+  updateCounterRepository: IUpdateCounterRepository
   schemaValidation: ISchemaValidation
 }
 export interface IOptions {
@@ -35,11 +37,15 @@ export class CreateWarehouseUseCase {
     const cleanEntity = deps.cleanObject(exampleEntity.data)
     // 3. database operation
     // 3.1 create warehouse
-    const response = await deps.createRepository.handle(cleanEntity, options)
+    const response = await deps.createWarehouseRepository.handle(cleanEntity, options)
     // 3.2. update code counter
-    const counters = await deps.retrieveAllRepository.handle({ filter: { name: 'warehouse-code' } }, options)
-    await deps.updateRepository.handle(counters.data[0]._id, { count: Number(counters.data[0].count) + 1 }, options)
-    // response
+    const counters = await deps.retrieveAllCounterRepository.handle({ filter: { name: 'warehouse-code' } }, options)
+    await deps.updateCounterRepository.handle(
+      counters.data[0]._id,
+      { count: Number(counters.data[0].count) + 1 },
+      options,
+    )
+    // 4. response
     return { inserted_id: response.inserted_id }
   }
 }

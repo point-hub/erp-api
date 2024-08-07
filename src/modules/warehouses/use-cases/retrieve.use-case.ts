@@ -1,10 +1,12 @@
-import type { IRetrieveOutput, IRetrieveRepository } from '@point-hub/papi'
+import type { IRetrieveOutput } from '@point-hub/papi'
+
+import { IRetrieveWarehouseRepository } from '../repositories/retrieve.repository'
 
 export interface IInput {
   _id: string
 }
 export interface IDeps {
-  retrieveRepository: IRetrieveRepository
+  retrieveWarehouseRepository: IRetrieveWarehouseRepository
 }
 export interface IOptions {
   session: unknown
@@ -12,7 +14,9 @@ export interface IOptions {
 
 export class RetrieveWarehouseUseCase {
   static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IRetrieveOutput> {
-    const response = await deps.retrieveRepository.handle(input._id, options)
+    // 1. database operation
+    const response = await deps.retrieveWarehouseRepository.handle(input._id, options)
+    // 2. output
     return {
       _id: response._id,
       branch: response.branch,

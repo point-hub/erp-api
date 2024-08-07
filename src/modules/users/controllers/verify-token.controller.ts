@@ -42,8 +42,6 @@ export const verifyTokenController: IController = async (controllerInput: IContr
         email: response.email,
         username: response.username,
         name: response.name,
-        organization: response.organization,
-        project: response.project,
       },
     }
   } catch (error) {

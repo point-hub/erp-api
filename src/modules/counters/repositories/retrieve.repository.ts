@@ -12,7 +12,7 @@ export interface IRetrieveCounterRepository extends IRetrieveRepository {
   handle(_id: string, options?: unknown): Promise<IRetrieveCounterOutput>
 }
 
-export class RetrieveRepository implements IRetrieveCounterRepository {
+export class RetrieveCounterRepository implements IRetrieveCounterRepository {
   constructor(public database: IDatabase) {}
 
   async handle(_id: string, options?: unknown): Promise<IRetrieveCounterOutput> {

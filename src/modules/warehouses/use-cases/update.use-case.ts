@@ -1,6 +1,7 @@
-import type { ISchemaValidation, IUpdateOutput, IUpdateRepository } from '@point-hub/papi'
+import type { ISchemaValidation, IUpdateOutput } from '@point-hub/papi'
 
 import { WarehouseEntity } from '../entity'
+import { IUpdateWarehouseRepository } from '../repositories/update.repository'
 import { updateValidation } from '../validations/update.validation'
 
 export interface IInput {
@@ -14,7 +15,7 @@ export interface IInput {
 export interface IDeps {
   cleanObject(object: object): object
   schemaValidation: ISchemaValidation
-  updateRepository: IUpdateRepository
+  updateWarehouseRepository: IUpdateWarehouseRepository
 }
 export interface IOptions {
   session?: unknown
@@ -32,7 +33,8 @@ export class UpdateWarehouseUseCase {
     })
     warehouseEntity.generateUpdatedDate()
     // 3. database operation
-    const response = await deps.updateRepository.handle(input._id, warehouseEntity.data, options)
+    const response = await deps.updateWarehouseRepository.handle(input._id, warehouseEntity.data, options)
+    // 4. response
     return {
       matched_count: response.matched_count,
       modified_count: response.modified_count,

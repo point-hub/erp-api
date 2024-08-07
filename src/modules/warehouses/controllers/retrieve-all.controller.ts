@@ -1,6 +1,6 @@
 import type { IController, IControllerInput } from '@point-hub/papi'
 
-import { RetrieveAllRepository } from '../repositories/retrieve-all.repository'
+import { RetrieveAllWarehouseRepository } from '../repositories/retrieve-all.repository'
 import { RetrieveAllWarehouseUseCase } from '../use-cases/retrieve-all.use-case'
 
 export const retrieveAllWarehouseController: IController = async (controllerInput: IControllerInput) => {
@@ -10,7 +10,7 @@ export const retrieveAllWarehouseController: IController = async (controllerInpu
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const retrieveAllWarehouseRepository = new RetrieveAllRepository(controllerInput.dbConnection)
+    const retrieveAllWarehouseRepository = new RetrieveAllWarehouseRepository(controllerInput.dbConnection)
     // 3. handle business rules
     const response = await RetrieveAllWarehouseUseCase.handle(
       { query: controllerInput.httpRequest.query },

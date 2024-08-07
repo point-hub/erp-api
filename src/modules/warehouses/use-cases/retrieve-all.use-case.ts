@@ -1,10 +1,12 @@
-import type { IQuery, IRetrieveAllOutput, IRetrieveAllRepository } from '@point-hub/papi'
+import type { IQuery, IRetrieveAllOutput } from '@point-hub/papi'
+
+import { IRetrieveAllWarehouseRepository } from '../repositories/retrieve-all.repository'
 
 export interface IInput {
   query: IQuery
 }
 export interface IDeps {
-  retrieveAllRepository: IRetrieveAllRepository
+  retrieveAllWarehouseRepository: IRetrieveAllWarehouseRepository
 }
 export interface IOptions {
   session: unknown
@@ -12,7 +14,9 @@ export interface IOptions {
 
 export class RetrieveAllWarehouseUseCase {
   static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IRetrieveAllOutput> {
-    const response = await deps.retrieveAllRepository.handle(input.query, options)
+    // 1. database operation
+    const response = await deps.retrieveAllWarehouseRepository.handle(input.query, options)
+    // 2. output
     return {
       data: response.data,
       pagination: response.pagination,

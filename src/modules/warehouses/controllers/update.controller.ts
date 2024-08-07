@@ -3,7 +3,7 @@ import type { IController, IControllerInput } from '@point-hub/papi'
 
 import { schemaValidation } from '@/utils/validation'
 
-import { UpdateRepository } from '../repositories/update.repository'
+import { UpdateWarehouseRepository } from '../repositories/update.repository'
 import { UpdateWarehouseUseCase } from '../use-cases/update.use-case'
 
 export const updateWarehouseController: IController = async (controllerInput: IControllerInput) => {
@@ -13,14 +13,14 @@ export const updateWarehouseController: IController = async (controllerInput: IC
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const updateRepository = new UpdateRepository(controllerInput.dbConnection)
+    const updateWarehouseRepository = new UpdateWarehouseRepository(controllerInput.dbConnection)
     // 3. handle business rules
     const response = await UpdateWarehouseUseCase.handle(
       {
         _id: controllerInput.httpRequest.params.id,
         data: controllerInput.httpRequest.body,
       },
-      { cleanObject: objClean, schemaValidation, updateRepository },
+      { cleanObject: objClean, schemaValidation, updateWarehouseRepository },
     )
     await session.commitTransaction()
     // 4. return response to client
