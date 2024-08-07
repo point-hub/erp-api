@@ -1,5 +1,12 @@
 import type { IController, IControllerInput } from '@point-hub/papi'
 
+import authConfig from '@/config/auth'
+import { RetrieveAuthUserRepository } from '@/modules/users/repositories/retrieve-auth-user.repository'
+import { VerifyTokenUseCase } from '@/modules/users/use-cases/verify-token.use-case'
+import { verifyToken } from '@/modules/users/utils/jwt'
+import { throwApiError } from '@/utils/throw-api-error'
+import { schemaValidation } from '@/utils/validation'
+
 import { RetrieveAllUserRepository } from '../repositories/retrieve-all.repository'
 import { RetrieveAllUserUseCase } from '../use-cases/retrieve-all.use-case'
 
@@ -10,8 +17,26 @@ export const retrieveAllUserController: IController = async (controllerInput: IC
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
+    const retrieveAuthUserRepository = new RetrieveAuthUserRepository(controllerInput.dbConnection)
     const retrieveAllUserRepository = new RetrieveAllUserRepository(controllerInput.dbConnection)
     // 3. handle business rules
+    // 3.1 check authenticated user
+    const verifyTokenResponse = await VerifyTokenUseCase.handle(
+      {
+        token: controllerInput.httpRequest.signedCookies.POINTHUB_ACCESS,
+        secret: authConfig.secret,
+        project_id: controllerInput.httpRequest.query.project_id,
+      },
+      {
+        schemaValidation,
+        throwApiError,
+        retrieveAuthUserRepository,
+        verifyToken,
+      },
+      { session },
+    )
+    console.log(verifyTokenResponse)
+    // 3.2 retrieve all user
     const response = await RetrieveAllUserUseCase.handle(
       { query: controllerInput.httpRequest.query },
       { retrieveAllUserRepository },

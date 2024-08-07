@@ -15,13 +15,15 @@ export interface IOptions {
 export class RetrieveUserUseCase {
   static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IRetrieveOutput> {
     // 1. database operation
-    const response = await deps.retrieveUserRepository.handle(input._id, options)
+    const response = await deps.retrieveUserRepository.handle({ _id: input._id }, options)
     // 2. output
     return {
       _id: response._id,
-      branch: response.branch,
+      role: response.role,
       code: response.code,
       name: response.name,
+      username: response.username,
+      email: response.email,
       created_date: response.created_date,
       updated_date: response.updated_date,
     }

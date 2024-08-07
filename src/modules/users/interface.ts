@@ -1,6 +1,7 @@
 export interface IUserEntity {
   _id?: string
   role_id?: string
+  code?: string
   name?: string
   username?: string
   trimmed_username?: string // for checking unique username by ignoring spaces
