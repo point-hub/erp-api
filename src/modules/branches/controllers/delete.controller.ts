@@ -15,7 +15,7 @@ export const deleteBranchController: IController = async (controllerInput: ICont
     const deleteBranchRepository = new DeleteBranchRepository(controllerInput.dbConnection)
     // 3. handle business logic
     const response = await DeleteBranchUseCase.handle(
-      { _id: controllerInput.httpRequest.params.id },
+      { _id: controllerInput.httpRequest.params.id, reason: controllerInput.httpRequest.body.reason },
       { schemaValidation, deleteBranchRepository },
       { session },
     )

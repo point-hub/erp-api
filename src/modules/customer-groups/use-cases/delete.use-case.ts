@@ -5,6 +5,7 @@ import { deleteValidation } from '../validations/delete.validation'
 
 export interface IInput {
   _id: string
+  reason: string
 }
 export interface IDeps {
   schemaValidation: ISchemaValidation

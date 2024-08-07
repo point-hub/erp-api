@@ -15,7 +15,7 @@ export const deleteAllocationGroupController: IController = async (controllerInp
     const deleteAllocationGroupRepository = new DeleteAllocationGroupRepository(controllerInput.dbConnection)
     // 3. handle business logic
     const response = await DeleteAllocationGroupUseCase.handle(
-      { _id: controllerInput.httpRequest.params.id },
+      { _id: controllerInput.httpRequest.params.id, reason: controllerInput.httpRequest.body.reason },
       { schemaValidation, deleteAllocationGroupRepository },
       { session },
     )

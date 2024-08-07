@@ -15,7 +15,7 @@ export const deleteCustomerGroupController: IController = async (controllerInput
     const deleteCustomerGroupRepository = new DeleteCustomerGroupRepository(controllerInput.dbConnection)
     // 3. handle business logic
     const response = await DeleteCustomerGroupUseCase.handle(
-      { _id: controllerInput.httpRequest.params.id },
+      { _id: controllerInput.httpRequest.params.id, reason: controllerInput.httpRequest.body.reason },
       { schemaValidation, deleteCustomerGroupRepository },
       { session },
     )

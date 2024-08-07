@@ -15,7 +15,7 @@ export const deleteWarehouseController: IController = async (controllerInput: IC
     const deleteWarehouseRepository = new DeleteWarehouseRepository(controllerInput.dbConnection)
     // 3. handle business logic
     const response = await DeleteWarehouseUseCase.handle(
-      { _id: controllerInput.httpRequest.params.id },
+      { _id: controllerInput.httpRequest.params.id, reason: controllerInput.httpRequest.body.reason },
       { schemaValidation, deleteWarehouseRepository },
       { session },
     )

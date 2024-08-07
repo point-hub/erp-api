@@ -36,8 +36,8 @@ const makeRouter = async (routerInput: IBaseAppInput): Promise<Router> => {
       dbConnection: routerInput.dbConnection,
     }),
   )
-  router.delete(
-    '/:id',
+  router.post(
+    '/:id/delete',
     await makeController({
       controller: controller.deleteBranchController,
       dbConnection: routerInput.dbConnection,

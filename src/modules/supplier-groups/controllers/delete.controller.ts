@@ -15,7 +15,7 @@ export const deleteSupplierGroupController: IController = async (controllerInput
     const deleteSupplierGroupRepository = new DeleteSupplierGroupRepository(controllerInput.dbConnection)
     // 3. handle business logic
     const response = await DeleteSupplierGroupUseCase.handle(
-      { _id: controllerInput.httpRequest.params.id },
+      { _id: controllerInput.httpRequest.params.id, reason: controllerInput.httpRequest.body.reason },
       { schemaValidation, deleteSupplierGroupRepository },
       { session },
     )
