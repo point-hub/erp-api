@@ -8,18 +8,31 @@ import * as controller from './controllers/index'
 const makeRouter = async (routerInput: IBaseAppInput): Promise<Router> => {
   const router = Router()
 
-  router.post(
-    '/signup',
+  router.get(
+    '/',
     await makeController({
-      controller: controller.signupController,
+      controller: controller.retrieveAllUserController,
       dbConnection: routerInput.dbConnection,
     }),
   )
-
-  router.post(
-    '/signin',
+  router.get(
+    '/:id',
     await makeController({
-      controller: controller.signinController,
+      controller: controller.retrieveUserController,
+      dbConnection: routerInput.dbConnection,
+    }),
+  )
+  router.patch(
+    '/:id',
+    await makeController({
+      controller: controller.updateUserController,
+      dbConnection: routerInput.dbConnection,
+    }),
+  )
+  router.post(
+    '/:id/delete',
+    await makeController({
+      controller: controller.deleteUserController,
       dbConnection: routerInput.dbConnection,
     }),
   )

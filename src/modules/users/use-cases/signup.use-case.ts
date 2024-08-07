@@ -14,13 +14,12 @@ export interface IOutput {
   }
 }
 export interface IInput {
-  pointhubSecret: string
-  data: {
-    name: string
-    username: string
-    email: string
-    password: string
-  }
+  role_id: string
+  code: string
+  name: string
+  username: string
+  email: string
+  password: string
 }
 export interface IDeps {
   signupRepository: ICreateUserRepository
@@ -41,10 +40,12 @@ export class SignupUseCase {
     // 2. define entity
     const codeVerification = deps.generateVerificationCode()
     const userEntity = new UserEntity({
-      name: input.data.name,
-      username: input.data.username,
-      email: input.data.email,
-      password: input.data.password ? await deps.hashPassword(input.data.password) : '',
+      role_id: input.role_id,
+      code: input.code,
+      name: input.name,
+      username: input.username,
+      email: input.email,
+      password: input.password ? await deps.hashPassword(input.password) : '',
       email_verification_code: codeVerification,
       is_email_verified: true,
     })

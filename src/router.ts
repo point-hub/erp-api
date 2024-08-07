@@ -7,9 +7,9 @@ import countersRouter from './modules/counters/router'
 import customerGroupsRouter from './modules/customer-groups/router'
 import rolesRouter from './modules/roles/router'
 import supplierGroupsRouter from './modules/supplier-groups/router'
+import userRouter from './modules/users/router'
+import authRouter from './modules/users/router-auth'
 import warehousesRouter from './modules/warehouses/router'
-// import userRouter from './modules/users/router'
-// import authRouter from './modules/users/router-auth'
 
 export default async function (baseRouterInput: IBaseAppInput) {
   const app: Express = express()
@@ -18,8 +18,8 @@ export default async function (baseRouterInput: IBaseAppInput) {
    * Register all available modules
    * <modules>/router.ts
    */
-  // app.use('/v1/users', await userRouter(baseRouterInput))
-  // app.use('/v1/auth', await authRouter(baseRouterInput))
+  app.use('/v1/users', await userRouter(baseRouterInput))
+  app.use('/v1/auth', await authRouter(baseRouterInput))
   app.use('/v1/roles', await rolesRouter(baseRouterInput))
   app.use('/v1/branches', await branchesRouter(baseRouterInput))
   app.use('/v1/warehouses', await warehousesRouter(baseRouterInput))

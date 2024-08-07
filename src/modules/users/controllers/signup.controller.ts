@@ -18,10 +18,7 @@ export const signupController: IController = async (controllerInput: IController
     const retrieveUserRepository = new RetrieveUserRepository(controllerInput.dbConnection)
     // 3. handle business rules
     const responseCreate = await SignupUseCase.handle(
-      {
-        pointhubSecret: controllerInput.httpRequest.headers['Pointhub-Secret'],
-        data: controllerInput.httpRequest.body,
-      },
+      controllerInput.httpRequest.body,
       {
         signupRepository,
         retrieveUserRepository,
