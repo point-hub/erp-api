@@ -51,7 +51,7 @@ const makeRouter = async (routerInput: IBaseAppInput): Promise<Router> => {
   router.post(
     '/verify-password',
     await makeController({
-      controller: controller.verifyTokenController,
+      controller: controller.verifyPasswordController,
       dbConnection: routerInput.dbConnection,
     }),
   )
