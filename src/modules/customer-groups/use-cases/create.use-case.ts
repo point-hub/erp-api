@@ -1,0 +1,40 @@
+import type { ICreateOutput, ICreateRepository, ISchemaValidation } from '@point-hub/papi'
+import { IUpdateRepository } from '@point-hub/papi'
+import { IRetrieveAllRepository } from '@point-hub/papi'
+
+import { CustomerGroupEntity } from '../entity'
+import { createValidation } from '../validations/create.validation'
+
+export interface IInput {
+  code?: string
+  name?: string
+}
+export interface IDeps {
+  cleanObject(object: object): object
+  createRepository: ICreateRepository
+  retrieveAllRepository: IRetrieveAllRepository
+  updateRepository: IUpdateRepository
+  schemaValidation: ISchemaValidation
+}
+export interface IOptions {
+  session?: unknown
+}
+
+export class CreateCustomerGroupUseCase {
+  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<ICreateOutput> {
+    // 1. validate schema
+    await deps.schemaValidation(input, createValidation)
+    // 2. define entity
+    const exampleEntity = new CustomerGroupEntity({
+      code: input.code,
+      name: input.name,
+    })
+    exampleEntity.generateCreatedDate()
+    const cleanEntity = deps.cleanObject(exampleEntity.data)
+    // 3. database operation
+    // 3.1 create customer group
+    const response = await deps.createRepository.handle(cleanEntity, options)
+    // response
+    return { inserted_id: response.inserted_id }
+  }
+}
