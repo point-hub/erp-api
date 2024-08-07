@@ -1,4 +1,4 @@
-import { BaseConsoleCommand, BaseDatabaseConnection, BaseMongoDBConnection } from '@point-hub/papi'
+import { BaseConsoleCommand, BaseDatabaseConnection, BaseMongoDBConnection, ICreateManyOutput } from '@point-hub/papi'
 
 import mongoDBConfig from '@/config/mongodb'
 
@@ -16,20 +16,22 @@ export default class DbSeedCommand extends BaseConsoleCommand {
   async handle(): Promise<void> {
     try {
       await this.dbConnection.open()
-      await this.seed('counters')
+      // await this.seed('counters')
+      const roles = await this.seed('roles')
+      console.log(roles)
     } catch (error) {
       console.error(error)
     } finally {
       this.dbConnection.close()
     }
   }
-  private async seed(collectionName: string): Promise<void> {
+  private async seed(collectionName: string): Promise<ICreateManyOutput> {
     console.info(`[seed] seeding ${collectionName} data`)
     // get seeder from module
     const { seeds } = await import(`@/modules/${collectionName}/seed`)
     // delete all data inside collection
     await this.dbConnection.collection(collectionName).deleteAll()
     // insert new seeder data
-    await this.dbConnection.collection(collectionName).createMany(seeds)
+    return await this.dbConnection.collection(collectionName).createMany(seeds)
   }
 }
