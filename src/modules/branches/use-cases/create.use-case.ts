@@ -15,7 +15,7 @@ export interface IInput {
 }
 export interface IDeps {
   cleanObject(object: object): object
-  createRepository: ICreateBranchRepository
+  createBranchRepository: ICreateBranchRepository
   retrieveAllRepository: IRetrieveAllCounterRepository
   updateRepository: IUpdateCounterRepository
   schemaValidation: ISchemaValidation
@@ -23,7 +23,6 @@ export interface IDeps {
 export interface IOptions {
   session?: unknown
 }
-
 export interface IOutput {
   inserted_id: string
 }
@@ -47,7 +46,7 @@ export class CreateBranchUseCase {
     // 3.2. update code counter
     const counters = await deps.retrieveAllRepository.handle({ filter: { name: 'branch-code' } }, options)
     await deps.updateRepository.handle(counters.data[0]._id, { count: Number(counters.data[0].count) + 1 }, options)
-    // response
+    // 4. output
     return { inserted_id: response.inserted_id }
   }
 }

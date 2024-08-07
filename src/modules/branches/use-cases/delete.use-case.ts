@@ -8,7 +8,7 @@ export interface IInput {
 }
 export interface IDeps {
   schemaValidation: ISchemaValidation
-  deleteRepository: IDeleteBranchRepository
+  deleteBranchRepository: IDeleteBranchRepository
 }
 export interface IOptions {
   session?: unknown
@@ -22,7 +22,8 @@ export class DeleteBranchUseCase {
     // 1. validate schema
     await deps.schemaValidation(input, deleteValidation)
     // 2. database operation
-    const response = await deps.deleteRepository.handle(input._id, options)
+    const response = await deps.deleteBranchRepository.handle(input._id, options)
+    // 3. output
     return { deleted_count: response.deleted_count }
   }
 }

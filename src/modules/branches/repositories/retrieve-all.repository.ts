@@ -10,7 +10,7 @@ export interface IRetrieveAllBranchRepository extends IAggregateRepository {
   handle(query: IQuery, options?: unknown): Promise<IRetrieveAllBranchOutput>
 }
 
-export class RetrieveAllRepository implements IRetrieveAllBranchRepository {
+export class RetrieveAllBranchRepository implements IRetrieveAllBranchRepository {
   public collection = collectionName
 
   constructor(public database: IDatabase) {}

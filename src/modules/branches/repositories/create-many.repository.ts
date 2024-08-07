@@ -8,7 +8,7 @@ export interface ICreateManyBranchRepository extends ICreateManyRepository {
   handle(documents: IDocument[], options?: unknown): Promise<ICreateManyBranchOutput>
 }
 
-export class CreateManyRepository implements ICreateManyBranchRepository {
+export class CreateManyBranchRepository implements ICreateManyBranchRepository {
   constructor(public database: IDatabase) {}
 
   async handle(documents: IDocument[], options?: unknown): Promise<ICreateManyBranchOutput> {

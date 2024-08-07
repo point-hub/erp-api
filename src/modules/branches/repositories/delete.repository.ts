@@ -8,7 +8,7 @@ export interface IDeleteBranchRepository extends IDeleteRepository {
   handle(_id: string, options?: unknown): Promise<IDeleteBranchOutput>
 }
 
-export class DeleteRepository implements IDeleteBranchRepository {
+export class DeleteBranchRepository implements IDeleteBranchRepository {
   constructor(public database: IDatabase) {}
 
   async handle(_id: string, options?: unknown): Promise<IDeleteBranchOutput> {

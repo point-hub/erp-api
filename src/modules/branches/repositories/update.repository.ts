@@ -8,7 +8,7 @@ export interface IUpdateBranchRepository extends IUpdateRepository {
   handle(_id: string, document: IDocument, options?: unknown): Promise<IUpdateBranchOutput>
 }
 
-export class UpdateRepository implements IUpdateBranchRepository {
+export class UpdateBranchRepository implements IUpdateBranchRepository {
   constructor(public database: IDatabase) {}
 
   async handle(_id: string, document: IDocument, options?: unknown): Promise<IUpdateBranchOutput> {

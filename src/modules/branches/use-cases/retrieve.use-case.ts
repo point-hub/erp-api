@@ -1,18 +1,29 @@
-import type { IRetrieveOutput, IRetrieveRepository } from '@point-hub/papi'
+import { IRetrieveBranchRepository } from '../repositories/retrieve.repository'
 
 export interface IInput {
   _id: string
 }
 export interface IDeps {
-  retrieveRepository: IRetrieveRepository
+  retrieveBranchRepository: IRetrieveBranchRepository
 }
 export interface IOptions {
   session: unknown
 }
+export interface IOutput {
+  _id: string
+  code: string
+  name: string
+  address: string
+  phone: string
+  created_date: string
+  updated_date: string
+}
 
 export class RetrieveBranchUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IRetrieveOutput> {
-    const response = await deps.retrieveRepository.handle(input._id, options)
+  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+    // 1. database operation
+    const response = await deps.retrieveBranchRepository.handle(input._id, options)
+    // 2. output
     return {
       _id: response._id,
       code: response.code,

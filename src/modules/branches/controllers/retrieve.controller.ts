@@ -1,6 +1,6 @@
 import type { IController, IControllerInput } from '@point-hub/papi'
 
-import { RetrieveRepository } from '../repositories/retrieve.repository'
+import { RetrieveBranchRepository } from '../repositories/retrieve.repository'
 import { RetrieveBranchUseCase } from '../use-cases/retrieve.use-case'
 
 export const retrieveBranchController: IController = async (controllerInput: IControllerInput) => {
@@ -10,11 +10,11 @@ export const retrieveBranchController: IController = async (controllerInput: ICo
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const retrieveRepository = new RetrieveRepository(controllerInput.dbConnection)
+    const retrieveBranchRepository = new RetrieveBranchRepository(controllerInput.dbConnection)
     // 3. handle business rules
     const response = await RetrieveBranchUseCase.handle(
       { _id: controllerInput.httpRequest.params.id },
-      { retrieveRepository },
+      { retrieveBranchRepository },
     )
     await session.commitTransaction()
     // 4. return response to client
