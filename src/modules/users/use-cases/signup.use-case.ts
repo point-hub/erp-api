@@ -1,4 +1,4 @@
-import type { ICreateOutput, ICreateRepository, IRetrieveRepository, ISchemaValidation } from '@point-hub/papi'
+import type { ICreateRepository, ISchemaValidation } from '@point-hub/papi'
 
 import pointhubConfig from '@/config/pointhub'
 import { renderHbsTemplate, sendMail } from '@/utils/email'

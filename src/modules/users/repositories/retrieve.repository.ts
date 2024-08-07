@@ -3,27 +3,28 @@ import type { IDatabase, IRetrieveOutput, IRetrieveRepository } from '@point-hub
 import { collectionName } from '../entity'
 
 export interface IRetrieveUserOutput extends IRetrieveOutput {
-  _id: string
   name: string
-  email: string
   username: string
+  email: string
+  created_date: string
+  updated_date: string
 }
 export interface IRetrieveUserRepository extends IRetrieveRepository {
   handle(_id: string, options?: unknown): Promise<IRetrieveUserOutput>
 }
 
 export class RetrieveRepository implements IRetrieveUserRepository {
-  public collection = collectionName
-
   constructor(public database: IDatabase) {}
 
   async handle(_id: string, options?: unknown): Promise<IRetrieveUserOutput> {
-    const user = await this.database.collection(collectionName).retrieve(_id, options)
+    const response = await this.database.collection(collectionName).retrieve(_id, options)
     return {
-      _id: user._id,
-      name: user.name as string,
-      email: user.email as string,
-      username: user.username as string,
+      _id: response._id,
+      name: response.name as string,
+      username: response.username as string,
+      email: response.email as string,
+      created_date: response.created_date as string,
+      updated_date: response.updated_date as string,
     }
   }
 }

@@ -2,12 +2,16 @@ import type { IDatabase, IDeleteManyOutput, IDeleteManyRepository } from '@point
 
 import { collectionName } from '../entity'
 
-export class DeleteManyRepository implements IDeleteManyRepository {
-  public collection = collectionName
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface IDeleteManyUserOutput extends IDeleteManyOutput {}
+export interface IDeleteManyUserRepository extends IDeleteManyRepository {
+  handle(_ids: string[], options?: unknown): Promise<IDeleteManyUserOutput>
+}
 
+export class DeleteManyRepository implements IDeleteManyUserRepository {
   constructor(public database: IDatabase) {}
 
-  async handle(ids: string[], options?: unknown): Promise<IDeleteManyOutput> {
-    return await this.database.collection(this.collection).deleteMany(ids, options)
+  async handle(ids: string[], options?: unknown): Promise<IDeleteManyUserOutput> {
+    return await this.database.collection(collectionName).deleteMany(ids, options)
   }
 }

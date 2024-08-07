@@ -17,7 +17,7 @@ export const requestPasswordController: IController = async (controllerInput: IC
     // 2. define repository
     const retrieveMatchedUsernameRepository = new RetrieveAllRepository(controllerInput.dbConnection)
     // 3. handle business rules
-    const response = await SigninUseCase.handle(
+    await SigninUseCase.handle(
       controllerInput.httpRequest.body,
       {
         retrieveMatchedUsernameRepository,
