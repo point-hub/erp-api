@@ -13,7 +13,7 @@ jobs:
     environment: test
     runs-on: ubuntu-latest
     env: 
-      DATABASE_URL: 'mongodb://localhost:27017/?replicaSet=replica-set'
+      DATABASE_URL: 'mongodb://localhost:27017/?replicaSet=rs0'
       DATABASE_NAME: 'test_db'
     strategy:
       matrix:
