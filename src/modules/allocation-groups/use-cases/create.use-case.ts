@@ -33,7 +33,7 @@ export class CreateAllocationGroupUseCase {
     const cleanEntity = deps.cleanObject(allocationGroupEntity.data)
     // 3. database operation
     const response = await deps.createRepository.handle(cleanEntity, options)
-    // output
+    // 4. output
     return { inserted_id: response.inserted_id }
   }
 }
