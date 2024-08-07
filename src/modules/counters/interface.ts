@@ -2,7 +2,7 @@ export interface IBranchEntity {
   _id?: string
   code?: string
   name?: string
-  count?: string
+  count?: number
   created_by?: string
   updated_by?: string
   created_date?: Date

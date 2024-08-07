@@ -1,6 +1,7 @@
-import type { ICreateOutput, ICreateRepository, ISchemaValidation } from '@point-hub/papi'
+import type { ISchemaValidation } from '@point-hub/papi'
 
 import { BranchEntity } from '../entity'
+import { ICreateCounterRepository } from '../repositories/create.repository'
 import { createValidation } from '../validations/create.validation'
 
 export interface IInput {
@@ -9,26 +10,31 @@ export interface IInput {
 }
 export interface IDeps {
   cleanObject(object: object): object
-  createRepository: ICreateRepository
+  createRepository: ICreateCounterRepository
   schemaValidation: ISchemaValidation
 }
 export interface IOptions {
   session?: unknown
 }
 
+export interface IOutput {
+  inserted_id: string
+}
+
 export class CreateBranchUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<ICreateOutput> {
+  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input, createValidation)
     // 2. define entity
-    const exampleEntity = new BranchEntity({
+    const counterEntity = new BranchEntity({
       code: input.code,
       name: input.name,
     })
-    exampleEntity.generateCreatedDate()
-    const cleanEntity = deps.cleanObject(exampleEntity.data)
+    counterEntity.generateCreatedDate()
+    const cleanEntity = deps.cleanObject(counterEntity.data)
     // 3. database operation
     const response = await deps.createRepository.handle(cleanEntity, options)
+    // 4. output
     return { inserted_id: response.inserted_id }
   }
 }

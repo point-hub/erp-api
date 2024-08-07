@@ -9,6 +9,7 @@ export interface IRetrieveAllAllocationGroupOutput extends IAggregateOutput {
 export interface IRetrieveAllAllocationGroupRepository extends IAggregateRepository {
   handle(query: IQuery, options?: unknown): Promise<IRetrieveAllAllocationGroupOutput>
 }
+
 export class RetrieveAllRepository implements IRetrieveAllAllocationGroupRepository {
   public collection = collectionName
 
