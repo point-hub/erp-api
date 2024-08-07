@@ -1,0 +1,5 @@
+export { createAllocationController } from './create.controller'
+export { deleteAllocationController } from './delete.controller'
+export { retrieveAllocationController } from './retrieve.controller'
+export { retrieveAllAllocationController } from './retrieve-all.controller'
+export { updateAllocationController } from './update.controller'

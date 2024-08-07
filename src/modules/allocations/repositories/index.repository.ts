@@ -1,0 +1,5 @@
+export { CreateAllocationRepository } from './create.repository'
+export { DeleteAllocationRepository } from './delete.repository'
+export { RetrieveAllocationRepository } from './retrieve.repository'
+export { RetrieveAllAllocationRepository } from './retrieve-all.repository'
+export { UpdateAllocationRepository } from './update.repository'

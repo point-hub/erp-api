@@ -2,6 +2,7 @@ import express, { Express } from 'express'
 
 import { IBaseAppInput } from './app'
 import allocationGroupsRouter from './modules/allocation-groups/router'
+import allocationsRouter from './modules/allocations/router'
 import branchesRouter from './modules/branches/router'
 import countersRouter from './modules/counters/router'
 import customerGroupsRouter from './modules/customer-groups/router'
@@ -27,6 +28,7 @@ export default async function (baseRouterInput: IBaseAppInput) {
   app.use('/v1/supplier-groups', await supplierGroupsRouter(baseRouterInput))
   app.use('/v1/customer-groups', await customerGroupsRouter(baseRouterInput))
   app.use('/v1/allocation-groups', await allocationGroupsRouter(baseRouterInput))
+  app.use('/v1/allocations', await allocationsRouter(baseRouterInput))
   app.use('/v1/item-categories', await itemCategoriesRouter(baseRouterInput))
   app.use('/v1/counters', await countersRouter(baseRouterInput))
 
