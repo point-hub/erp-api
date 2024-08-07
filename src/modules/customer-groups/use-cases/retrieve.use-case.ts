@@ -1,17 +1,19 @@
-import type { IRetrieveOutput, IRetrieveRepository } from '@point-hub/papi'
+import { IRetrieveCustomerGroupOutput, IRetrieveCustomerGroupRepository } from '../repositories/retrieve.repository'
 
 export interface IInput {
   _id: string
 }
 export interface IDeps {
-  retrieveRepository: IRetrieveRepository
+  retrieveRepository: IRetrieveCustomerGroupRepository
 }
 export interface IOptions {
   session: unknown
 }
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface IOutput extends IRetrieveCustomerGroupOutput {}
 
 export class RetrieveCustomerGroupUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IRetrieveOutput> {
+  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
     const response = await deps.retrieveRepository.handle(input._id, options)
     return {
       _id: response._id,

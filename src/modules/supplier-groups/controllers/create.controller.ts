@@ -1,8 +1,6 @@
-import { objClean, tokenGenerate, tokenSha256 } from '@point-hub/express-utils'
+import { objClean } from '@point-hub/express-utils'
 import type { IController, IControllerInput } from '@point-hub/papi'
 
-import { RetrieveAllRepository } from '@/modules/counters/repositories/retrieve-all.repository'
-import { UpdateRepository } from '@/modules/counters/repositories/update.repository'
 import { schemaValidation } from '@/utils/validation'
 
 import { CreateRepository } from '../repositories/create.repository'
@@ -16,16 +14,12 @@ export const createSupplierGroupController: IController = async (controllerInput
     session.startTransaction()
     // 2. define repository
     const createRepository = new CreateRepository(controllerInput.dbConnection)
-    const updateRepository = new UpdateRepository(controllerInput.dbConnection)
-    const retrieveAllRepository = new RetrieveAllRepository(controllerInput.dbConnection)
     // 3. handle business rules
     const response = await CreateSupplierGroupUseCase.handle(
       controllerInput.httpRequest.body,
       {
         cleanObject: objClean,
         createRepository,
-        updateRepository,
-        retrieveAllRepository,
         schemaValidation,
       },
       { session },

@@ -2,12 +2,16 @@ import type { ICreateManyOutput, ICreateManyRepository, IDatabase, IDocument } f
 
 import { collectionName } from '../entity'
 
-export class CreateManyRepository implements ICreateManyRepository {
-  public collection = collectionName
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface ICreateManySupplierGroupOutput extends ICreateManyOutput {}
+export interface ICreateManySupplierGroupRepository extends ICreateManyRepository {
+  handle(documents: IDocument[], options?: unknown): Promise<ICreateManySupplierGroupOutput>
+}
 
+export class CreateManyRepository implements ICreateManySupplierGroupRepository {
   constructor(public database: IDatabase) {}
 
-  async handle(documents: IDocument[], options?: unknown): Promise<ICreateManyOutput> {
-    return await this.database.collection(this.collection).createMany(documents, options)
+  async handle(documents: IDocument[], options?: unknown): Promise<ICreateManySupplierGroupOutput> {
+    return await this.database.collection(collectionName).createMany(documents, options)
   }
 }

@@ -12,9 +12,11 @@ export interface IDeps {
 export interface IOptions {
   session?: unknown
 }
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface IOutput extends IDeleteOutput {}
 
 export class DeleteSupplierGroupUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IDeleteOutput> {
+  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input, deleteValidation)
     // 2. database operation

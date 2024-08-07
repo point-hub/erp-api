@@ -1,6 +1,7 @@
-import type { ISchemaValidation, IUpdateOutput, IUpdateRepository } from '@point-hub/papi'
+import type { ISchemaValidation } from '@point-hub/papi'
 
 import { SupplierGroupEntity } from '../entity'
+import { IUpdateSupplierGroupOutput, IUpdateSupplierGroupRepository } from '../repositories/update.repository'
 import { updateValidation } from '../validations/update.validation'
 
 export interface IInput {
@@ -13,14 +14,16 @@ export interface IInput {
 export interface IDeps {
   cleanObject(object: object): object
   schemaValidation: ISchemaValidation
-  updateRepository: IUpdateRepository
+  updateRepository: IUpdateSupplierGroupRepository
 }
 export interface IOptions {
   session?: unknown
 }
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface IOutput extends IUpdateSupplierGroupOutput {}
 
 export class UpdateSupplierGroupUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IUpdateOutput> {
+  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input, updateValidation)
     // 2. define entity
