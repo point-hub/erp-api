@@ -1,0 +1,5 @@
+export { createItemCategoryController } from './create.controller'
+export { deleteItemCategoryController } from './delete.controller'
+export { retrieveItemCategoryController } from './retrieve.controller'
+export { retrieveAllItemCategoryController } from './retrieve-all.controller'
+export { updateItemCategoryController } from './update.controller'

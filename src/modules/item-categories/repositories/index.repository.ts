@@ -1,0 +1,5 @@
+export { CreateItemCategoryRepository } from './create.repository'
+export { DeleteItemCategoryRepository } from './delete.repository'
+export { RetrieveItemCategoryRepository } from './retrieve.repository'
+export { RetrieveAllItemCategoryRepository } from './retrieve-all.repository'
+export { UpdateItemCategoryRepository } from './update.repository'
