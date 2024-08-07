@@ -15,4 +15,8 @@ export const seeds = [
     name: 'warehouse-code',
     count: 0,
   },
+  {
+    name: 'customer-code',
+    count: 0,
+  },
 ]
