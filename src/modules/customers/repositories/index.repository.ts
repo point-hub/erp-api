@@ -1,0 +1,5 @@
+export { CreateCustomerRepository } from './create.repository'
+export { DeleteCustomerRepository } from './delete.repository'
+export { RetrieveCustomerRepository } from './retrieve.repository'
+export { RetrieveAllCustomerRepository } from './retrieve-all.repository'
+export { UpdateCustomerRepository } from './update.repository'

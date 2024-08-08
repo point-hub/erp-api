@@ -29,4 +29,19 @@ export const seeds = [
     code: 'SP',
     count: 0,
   },
+  {
+    name: 'customer-code',
+    code: 'CS',
+    count: 0,
+  },
+  {
+    name: 'item-categories',
+    code: 'CAT',
+    count: 0,
+  },
+  {
+    name: 'items',
+    code: 'A',
+    count: 0,
+  },
 ]
