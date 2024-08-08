@@ -12,7 +12,7 @@ export class RetrieveExistingUsernameRepository implements IRetrieveAllUserRepos
   async handle(query: IQuery, options?: unknown): Promise<IRetrieveAllUserOutput> {
     const response = await this.database.collection(this.collection).retrieveAll(query, options)
     return {
-      data: response.data as IRetrieveUserOutput[],
+      data: response.data as unknown as IRetrieveUserOutput[],
       pagination: response.pagination,
     }
   }

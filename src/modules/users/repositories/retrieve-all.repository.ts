@@ -1,13 +1,13 @@
-import type { IAggregateOutput, IAggregateRepository, IDatabase, IPagination, IPipeline, IQuery } from '@point-hub/papi'
+import type { IDatabase, IPagination, IPipeline, IQuery } from '@point-hub/papi'
 
 import { collectionName } from '../entity'
 import { IRetrieveUserOutput } from './retrieve.repository'
 
-export interface IRetrieveAllUserOutput extends IAggregateOutput {
+export interface IRetrieveAllUserOutput {
   data: IRetrieveUserOutput[]
   pagination: IPagination
 }
-export interface IRetrieveAllUserRepository extends IAggregateRepository {
+export interface IRetrieveAllUserRepository {
   handle(query: IQuery, options?: unknown): Promise<IRetrieveAllUserOutput>
 }
 
@@ -70,7 +70,7 @@ export class RetrieveAllUserRepository implements IRetrieveAllUserRepository {
     const response = await this.database.collection(this.collection).aggregate(pipeline, query, options)
 
     return {
-      data: response.data as IRetrieveUserOutput[],
+      data: response.data as unknown as IRetrieveUserOutput[],
       pagination: response.pagination,
     }
   }

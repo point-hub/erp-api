@@ -10,6 +10,14 @@ export interface IInput {
     supplier_group_id?: string
     code?: string
     name?: string
+    address?: string
+    phone?: string
+    email?: string
+    notes?: string
+    bank_name?: string
+    bank_branch?: string
+    bank_account_name?: string
+    bank_account_number?: string
   }
 }
 export interface IDeps {
@@ -30,6 +38,14 @@ export class UpdateSupplierUseCase {
       supplier_group_id: input.data.supplier_group_id,
       code: input.data.code,
       name: input.data.name,
+      address: input.data.address,
+      phone: input.data.phone,
+      email: input.data.email,
+      notes: input.data.notes,
+      bank_name: input.data.bank_name,
+      bank_branch: input.data.bank_branch,
+      bank_account_name: input.data.bank_account_name,
+      bank_account_number: input.data.bank_account_number,
     })
     supplierEntity.generateUpdatedDate()
     // 3. database operation

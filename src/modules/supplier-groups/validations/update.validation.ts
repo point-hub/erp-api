@@ -1,5 +1,5 @@
 export const updateValidation = {
   _id: ['required', 'string'],
-  'data.code': ['string', 'max:4'],
-  'data.name': ['string'],
+  'data.code': ['required', 'string', 'max:4'],
+  'data.name': ['required', 'string'],
 }

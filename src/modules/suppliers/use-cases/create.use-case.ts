@@ -11,6 +11,14 @@ export interface IInput {
   supplier_group_id?: string
   code?: string
   name?: string
+  address?: string
+  phone?: string
+  email?: string
+  notes?: string
+  bank_name?: string
+  bank_branch?: string
+  bank_account_name?: string
+  bank_account_number?: string
 }
 export interface IDeps {
   cleanObject(object: object): object
@@ -32,6 +40,14 @@ export class CreateSupplierUseCase {
       supplier_group_id: input.supplier_group_id,
       code: input.code,
       name: input.name,
+      address: input.address,
+      phone: input.phone,
+      email: input.email,
+      notes: input.notes,
+      bank_name: input.bank_name,
+      bank_branch: input.bank_branch,
+      bank_account_name: input.bank_account_name,
+      bank_account_number: input.bank_account_number,
     })
     exampleEntity.generateCreatedDate()
     const cleanEntity = deps.cleanObject(exampleEntity.data)
