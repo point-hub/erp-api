@@ -1,0 +1,5 @@
+export { CreatePermissionRepository } from './create.repository'
+export { DeletePermissionRepository } from './delete.repository'
+export { RetrievePermissionRepository } from './retrieve.repository'
+export { RetrieveAllPermissionRepository } from './retrieve-all.repository'
+export { UpdatePermissionRepository } from './update.repository'
