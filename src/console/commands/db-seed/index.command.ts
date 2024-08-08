@@ -17,6 +17,7 @@ export default class DbSeedCommand extends BaseConsoleCommand {
     try {
       await this.dbConnection.open()
       await this.seed('counters')
+      await this.seed('roles')
     } catch (error) {
       console.error(error)
     } finally {

@@ -4,7 +4,7 @@ import { type IController, type IControllerInput } from '@point-hub/papi'
 import { throwApiError } from '@/utils/throw-api-error'
 import { schemaValidation } from '@/utils/validation'
 
-import { RetrieveAllUserRepository } from '../repositories/retrieve-all.repository'
+import { RetrieveMatchedUsernameRepository } from '../repositories/retrieve-matched-username.repository'
 import { SigninUseCase } from '../use-cases/signin.use-case'
 import { generateAccessToken, generateRefreshToken } from '../utils/jwt'
 
@@ -15,7 +15,7 @@ export const signinController: IController = async (controllerInput: IController
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const retrieveMatchedUsernameRepository = new RetrieveAllUserRepository(controllerInput.dbConnection)
+    const retrieveMatchedUsernameRepository = new RetrieveMatchedUsernameRepository(controllerInput.dbConnection)
     // 3. handle business rules
     const response = await SigninUseCase.handle(
       controllerInput.httpRequest.body,
