@@ -21,7 +21,7 @@ export class RetrieveAllChartOfAccountCategoryRepository implements IRetrieveAll
 
     pipeline.push({
       $lookup: {
-        from: 'types',
+        from: 'chart_of_account_types',
         localField: 'type_id',
         foreignField: '_id',
         pipeline: [{ $project: { name: 1 } }],
@@ -29,13 +29,7 @@ export class RetrieveAllChartOfAccountCategoryRepository implements IRetrieveAll
       },
     })
 
-    pipeline.push({
-      $set: {
-        type: {
-          $arrayElemAt: ['$type', 0],
-        },
-      },
-    })
+    pipeline.push({ $unwind: '$type' })
     pipeline.push({ $unset: ['type_id'] })
 
     const filtersAnd = [] // filter keys using "and" logic
@@ -46,7 +40,7 @@ export class RetrieveAllChartOfAccountCategoryRepository implements IRetrieveAll
       filtersOr.push({ 'type.name': { $regex: query.filter?.search, $options: 'i' } })
       filtersAnd.push({ $or: filtersOr })
     }
-
+    if (query.filter?.type_id) filtersAnd.push({ 'type._id': { $eq: query.filter?.type_id } })
     if (query.filter?.type) filtersAnd.push({ 'type.name': { $regex: query.filter?.type, $options: 'i' } })
     if (query.filter?.name) filtersAnd.push({ name: { $regex: query.filter?.name, $options: 'i' } })
 
