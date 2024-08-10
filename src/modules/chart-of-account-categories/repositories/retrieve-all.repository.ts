@@ -21,47 +21,34 @@ export class RetrieveAllChartOfAccountCategoryRepository implements IRetrieveAll
 
     pipeline.push({
       $lookup: {
-        from: 'branches',
-        localField: 'branch_id',
+        from: 'types',
+        localField: 'type_id',
         foreignField: '_id',
-        pipeline: [{ $project: { code: 1, name: 1 } }],
-        as: 'branch',
+        pipeline: [{ $project: { name: 1 } }],
+        as: 'type',
       },
     })
 
     pipeline.push({
       $set: {
-        branch: {
-          $arrayElemAt: ['$branch', 0],
+        type: {
+          $arrayElemAt: ['$type', 0],
         },
       },
     })
-    pipeline.push({ $unset: ['branch_id'] })
+    pipeline.push({ $unset: ['type_id'] })
 
     const filtersAnd = [] // filter keys using "and" logic
     const filtersOr = [] // filter keys using "or" logic
 
     if (query.filter?.search) {
-      filtersOr.push({ code: { $regex: query.filter?.search, $options: 'i' } })
       filtersOr.push({ name: { $regex: query.filter?.search, $options: 'i' } })
-      filtersOr.push({
-        $or: [
-          { 'branch.code': { $regex: query.filter?.search, $options: 'i' } },
-          { 'branch.name': { $regex: query.filter?.search, $options: 'i' } },
-        ],
-      })
+      filtersOr.push({ 'type.name': { $regex: query.filter?.search, $options: 'i' } })
       filtersAnd.push({ $or: filtersOr })
     }
 
-    if (query.filter?.code) filtersAnd.push({ code: { $regex: query.filter?.code, $options: 'i' } })
+    if (query.filter?.type) filtersAnd.push({ 'type.name': { $regex: query.filter?.type, $options: 'i' } })
     if (query.filter?.name) filtersAnd.push({ name: { $regex: query.filter?.name, $options: 'i' } })
-    if (query.filter?.branch)
-      filtersAnd.push({
-        $or: [
-          { 'branch.code': { $regex: query.filter?.branch, $options: 'i' } },
-          { 'branch.name': { $regex: query.filter?.branch, $options: 'i' } },
-        ],
-      })
 
     if (filtersAnd.length) {
       pipeline.push({ $match: { $and: filtersAnd } })

@@ -29,39 +29,23 @@ export class RetrieveAllChartOfAccountRepository implements IRetrieveAllChartOfA
         as: 'category',
       },
     })
-    pipeline.push({
-      $set: {
-        category: {
-          $arrayElemAt: ['$category', 0],
-        },
-      },
-    })
+    pipeline.push({ $unwind: '$category' })
     pipeline.push({ $unset: ['category_id'] })
 
     // join type
     pipeline.push({
       $lookup: {
         from: 'chart_of_account_types',
-        localField: 'type_id',
-        foreignField: 'category.type_id',
+        localField: 'category.type_id',
+        foreignField: '_id',
         pipeline: [{ $project: { _id: 1, name: 1 } }],
         as: 'type',
       },
     })
-    pipeline.push({
-      $set: {
-        type: {
-          $arrayElemAt: ['$type', 0],
-        },
-      },
-    })
+    pipeline.push({ $unwind: '$type' })
     pipeline.push({ $unset: ['category.type_id'] })
 
-    pipeline.push({
-      $addFields: {
-        number: { $toString: '$number' },
-      },
-    })
+    pipeline.push({ $addFields: { number: { $toString: '$number' } } })
 
     const filtersAnd = [] // filter keys using "and" logic
     const filtersOr = [] // filter keys using "or" logic
@@ -85,6 +69,7 @@ export class RetrieveAllChartOfAccountRepository implements IRetrieveAllChartOfA
     }
 
     const response = await this.database.collection(this.collection).aggregate(pipeline, query, options)
+    console.log(response.data)
 
     return {
       data: response.data as IRetrieveChartOfAccountOutput[],

@@ -1,6 +1,6 @@
 import type { ISchemaValidation, IUpdateOutput } from '@point-hub/papi'
 
-import { ChartOfAccountCategoryCategoryEntity } from '../entity'
+import { ChartOfAccountCategoryEntity } from '../entity'
 import { IUpdateChartOfAccountCategoryRepository } from '../repositories/update.repository'
 import { updateValidation } from '../validations/update.validation'
 
@@ -28,7 +28,7 @@ export class UpdateChartOfAccountCategoryUseCase {
     // 1. validate schema
     await deps.schemaValidation(input, updateValidation)
     // 2. define entity
-    const chartOfAccountCategoryEntity = new ChartOfAccountCategoryCategoryEntity({
+    const chartOfAccountCategoryEntity = new ChartOfAccountCategoryEntity({
       name: input.data.name,
     })
     chartOfAccountCategoryEntity.generateUpdatedDate()

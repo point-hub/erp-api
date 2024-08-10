@@ -13,7 +13,9 @@ export const createChartOfAccountCategoryController: IController = async (contro
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const createChartOfAccountCategoryRepository = new CreateChartOfAccountCategoryRepository(controllerInput.dbConnection)
+    const createChartOfAccountCategoryRepository = new CreateChartOfAccountCategoryRepository(
+      controllerInput.dbConnection,
+    )
     // 3. handle business rules
     const response = await CreateChartOfAccountCategoryUseCase.handle(
       controllerInput.httpRequest.body,

@@ -1,4 +1,4 @@
-import { BaseConsoleCommand, BaseDatabaseConnection, BaseMongoDBConnection, ICreateManyOutput } from '@point-hub/papi'
+import { BaseConsoleCommand, BaseDatabaseConnection, BaseMongoDBConnection } from '@point-hub/papi'
 
 import mongoDBConfig from '@/config/mongodb'
 
