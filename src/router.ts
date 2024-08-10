@@ -4,6 +4,7 @@ import { IBaseAppInput } from './app'
 import allocationGroupsRouter from './modules/allocation-groups/router'
 import allocationsRouter from './modules/allocations/router'
 import branchesRouter from './modules/branches/router'
+import chartOfAccountRouter from './modules/chart-of-accounts/router'
 import countersRouter from './modules/counters/router'
 import customerGroupsRouter from './modules/customer-groups/router'
 import customersRouter from './modules/customers/router'
@@ -29,6 +30,7 @@ export default async function (baseRouterInput: IBaseAppInput) {
   app.use('/v1/warehouses', await warehousesRouter(baseRouterInput))
   app.use('/v1/supplier-groups', await supplierGroupsRouter(baseRouterInput))
   app.use('/v1/suppliers', await suppliersRouter(baseRouterInput))
+  app.use('/v1/chart-of-accounts', await chartOfAccountRouter(baseRouterInput))
   app.use('/v1/customer-groups', await customerGroupsRouter(baseRouterInput))
   app.use('/v1/customers', await customersRouter(baseRouterInput))
   app.use('/v1/allocation-groups', await allocationGroupsRouter(baseRouterInput))

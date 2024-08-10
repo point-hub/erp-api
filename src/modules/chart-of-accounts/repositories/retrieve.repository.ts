@@ -3,10 +3,14 @@ import type { IDatabase, IPipeline, IRetrieveOutput, IRetrieveRepository } from 
 import { collectionName } from '../entity'
 
 export interface IRetrieveChartOfAccountOutput extends IRetrieveOutput {
-  code?: string
+  number?: string
   name?: string
+  subledger?: string
+  increasing_in?: string
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  branch?: any
+  category?: any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  type?: any
   created_date?: Date
   updated_date?: Date
 }
