@@ -26,37 +26,57 @@ export class RetrieveChartOfAccountRepository implements IRetrieveChartOfAccount
   async handle(_id: string, options?: unknown): Promise<IRetrieveChartOfAccountOutput> {
     const pipeline: IPipeline[] = []
 
-    const filters = [] // filter keys using "and" logic
+    pipeline.push(...this.aggregateFilter(_id))
+    pipeline.push(...this.aggregateJoinCategories())
+    pipeline.push(...this.aggregateJoinTypes())
 
-    filters.push({ _id: _id })
+    const response = await this.database.collection(collectionName).aggregate(pipeline, {}, options)
 
-    if (filters.length) {
-      pipeline.push({ $match: { $and: filters } })
-    }
-
-    pipeline.push({
-      $lookup: {
-        from: 'branches',
-        localField: 'branch_id',
-        foreignField: '_id',
-        pipeline: [{ $project: { code: 1, name: 1 } }],
-        as: 'branch',
-      },
-    })
-    pipeline.push({
-      $set: {
-        branch: {
-          $arrayElemAt: ['$branch', 0],
-        },
-      },
-    })
-    pipeline.push({ $unset: ['branch_id'] })
-
-    const response = await this.database.collection(this.collection).aggregate(pipeline, {}, options)
+    console.log(response)
 
     return {
       _id: response.data[0]._id as string,
       ...response.data[0],
     }
+  }
+
+  private aggregateJoinCategories() {
+    return [
+      {
+        $lookup: {
+          from: 'chart_of_account_categories',
+          localField: 'category_id',
+          foreignField: '_id',
+          pipeline: [{ $project: { _id: 1, type_id: 1, name: 1 } }],
+          as: 'category',
+        },
+      },
+      { $unwind: '$category' },
+      { $unset: ['category_id'] },
+    ]
+  }
+
+  private aggregateJoinTypes() {
+    return [
+      {
+        $lookup: {
+          from: 'chart_of_account_types',
+          localField: 'category.type_id',
+          foreignField: '_id',
+          pipeline: [{ $project: { _id: 1, name: 1 } }],
+          as: 'type',
+        },
+      },
+      { $unwind: '$type' },
+      { $unset: ['category.type_id'] },
+    ]
+  }
+
+  private aggregateFilter(_id: string) {
+    return [
+      {
+        $match: { _id: { $eq: _id } },
+      },
+    ]
   }
 }

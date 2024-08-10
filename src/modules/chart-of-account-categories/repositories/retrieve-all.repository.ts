@@ -19,18 +19,7 @@ export class RetrieveAllChartOfAccountCategoryRepository implements IRetrieveAll
   async handle(query: IQuery, options?: unknown): Promise<IRetrieveAllChartOfAccountCategoryOutput> {
     const pipeline: IPipeline[] = []
 
-    pipeline.push({
-      $lookup: {
-        from: 'chart_of_account_types',
-        localField: 'type_id',
-        foreignField: '_id',
-        pipeline: [{ $project: { name: 1 } }],
-        as: 'type',
-      },
-    })
-
-    pipeline.push({ $unwind: '$type' })
-    pipeline.push({ $unset: ['type_id'] })
+    this.join(pipeline)
 
     const filtersAnd = [] // filter keys using "and" logic
     const filtersOr = [] // filter keys using "or" logic
@@ -54,5 +43,20 @@ export class RetrieveAllChartOfAccountCategoryRepository implements IRetrieveAll
       data: response.data as IRetrieveChartOfAccountCategoryOutput[],
       pagination: response.pagination,
     }
+  }
+
+  join(pipeline: IPipeline[]) {
+    pipeline.push({
+      $lookup: {
+        from: 'chart_of_account_types',
+        localField: 'type_id',
+        foreignField: '_id',
+        pipeline: [{ $project: { name: 1 } }],
+        as: 'type',
+      },
+    })
+
+    pipeline.push({ $unwind: '$type' })
+    pipeline.push({ $unset: ['type_id'] })
   }
 }

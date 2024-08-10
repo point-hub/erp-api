@@ -27,8 +27,9 @@ export class CreateChartOfAccountUseCase {
     await deps.schemaValidation(input, createValidation)
     // 2. define entity
     const exampleEntity = new ChartOfAccountEntity({
+      type_id: input.type_id,
       category_id: input.category_id,
-      number: Number(input.number),
+      number: Number(input.number) ? Number(input.number) : undefined,
       name: input.name,
       increasing_in: input.increasing_in,
       subledger: input.subledger,

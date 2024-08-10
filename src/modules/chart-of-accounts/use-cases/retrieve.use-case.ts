@@ -19,9 +19,11 @@ export class RetrieveChartOfAccountUseCase {
     // 2. output
     return {
       _id: response._id,
-      branch: response.branch,
-      code: response.code,
+      type: response.type,
+      category: response.category,
+      number: response.number,
       name: response.name,
+      subledger: response.subledger,
       created_date: response.created_date,
       updated_date: response.updated_date,
     }
