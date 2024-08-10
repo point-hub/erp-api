@@ -6,7 +6,11 @@ import { createValidation } from '../validations/create.validation'
 
 export interface IInput {
   type_id?: string
+  category_id?: string
+  number?: string
   name?: string
+  subledger?: string
+  increasing_in?: string
 }
 export interface IDeps {
   cleanObject(object: object): object
@@ -24,7 +28,11 @@ export class CreateChartOfAccountCategoryUseCase {
     // 2. define entity
     const exampleEntity = new ChartOfAccountCategoryEntity({
       type_id: input.type_id,
+      category_id: input.category_id,
+      number: input.number,
       name: input.name,
+      subledger: input.subledger,
+      increasing_in: input.increasing_in,
     })
     exampleEntity.generateCreatedDate()
     const cleanEntity = deps.cleanObject(exampleEntity.data)

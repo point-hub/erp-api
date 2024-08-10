@@ -5,6 +5,7 @@ import { ICreateChartOfAccountRepository } from '../repositories/create.reposito
 import { createValidation } from '../validations/create.validation'
 
 export interface IInput {
+  type_id?: string
   category_id?: string
   number?: string
   name?: string
@@ -27,7 +28,7 @@ export class CreateChartOfAccountUseCase {
     // 2. define entity
     const exampleEntity = new ChartOfAccountEntity({
       category_id: input.category_id,
-      number: input.number,
+      number: Number(input.number),
       name: input.name,
       increasing_in: input.increasing_in,
       subledger: input.subledger,

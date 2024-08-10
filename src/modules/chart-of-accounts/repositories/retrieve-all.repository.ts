@@ -54,8 +54,8 @@ export class RetrieveAllChartOfAccountRepository implements IRetrieveAllChartOfA
       filtersOr.push({ number: { $regex: query.filter?.search, $options: 'i' } })
       filtersOr.push({ name: { $regex: query.filter?.search, $options: 'i' } })
       filtersOr.push({ subledger: { $regex: query.filter?.search, $options: 'i' } })
-      filtersOr.push({ type: { $regex: query.filter?.search, $options: 'i' } })
-      filtersOr.push({ category: { $regex: query.filter?.search, $options: 'i' } })
+      filtersOr.push({ 'type.name': { $regex: query.filter?.search, $options: 'i' } })
+      filtersOr.push({ 'category.name': { $regex: query.filter?.search, $options: 'i' } })
       filtersAnd.push({ $or: filtersOr })
     }
     if (query.filter?.number) filtersAnd.push({ number: { $regex: query.filter?.number, $options: 'i' } })
@@ -69,7 +69,6 @@ export class RetrieveAllChartOfAccountRepository implements IRetrieveAllChartOfA
     }
 
     const response = await this.database.collection(this.collection).aggregate(pipeline, query, options)
-    console.log(response.data)
 
     return {
       data: response.data as IRetrieveChartOfAccountOutput[],
