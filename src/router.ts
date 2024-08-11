@@ -11,6 +11,7 @@ import countersRouter from './modules/counters/router'
 import customerGroupsRouter from './modules/customer-groups/router'
 import customersRouter from './modules/customers/router'
 import itemCategoriesRouter from './modules/item-categories/router'
+import permissionsRouter from './modules/permissions/router'
 import rolesRouter from './modules/roles/router'
 import supplierGroupsRouter from './modules/supplier-groups/router'
 import suppliersRouter from './modules/suppliers/router'
@@ -27,6 +28,7 @@ export default async function (baseRouterInput: IBaseAppInput) {
    */
   app.use('/v1/users', await userRouter(baseRouterInput))
   app.use('/v1/auth', await authRouter(baseRouterInput))
+  app.use('/v1/permissions', await permissionsRouter(baseRouterInput))
   app.use('/v1/roles', await rolesRouter(baseRouterInput))
   app.use('/v1/branches', await branchesRouter(baseRouterInput))
   app.use('/v1/warehouses', await warehousesRouter(baseRouterInput))
