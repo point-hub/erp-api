@@ -21,7 +21,7 @@ export class RetrieveAllChartOfAccountRepository implements IRetrieveAllChartOfA
     pipeline.push(...this.aggregateJoinTypes())
     pipeline.push({ $addFields: { number: { $toString: '$number' } } })
     pipeline.push(...this.aggregateFilters(query))
-
+    console.log(query)
     const response = await this.database.collection(collectionName).aggregate(pipeline, query, options)
 
     return {

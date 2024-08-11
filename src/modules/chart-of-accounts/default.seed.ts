@@ -1,3 +1,9 @@
+import { type IDatabase } from '@point-hub/papi'
+
+import { CreateChartOfAccountCategoryRepository } from '@/modules/chart-of-account-categories/repositories/create.repository'
+import { CreateChartOfAccountTypeRepository } from '@/modules/chart-of-account-types/repositories/create.repository'
+import { CreateChartOfAccountRepository } from '@/modules/chart-of-accounts/repositories/create.repository'
+
 export interface ISeed {
   type?: string
   category?: string
@@ -8,7 +14,52 @@ export interface ISeed {
   increasing_in?: string
 }
 
-export const seedDefaultDB = () => {}
+export const seed = async (dbConnection: IDatabase, options: unknown) => {
+  console.info(`[seed] chart of accounts data`)
+  // delete all data inside collection
+  await dbConnection.collection('chart_of_accounts').deleteAll(options)
+  await dbConnection.collection('chart_of_account_categories').deleteAll(options)
+  await dbConnection.collection('chart_of_account_types').deleteAll(options)
+  // prepare repository
+  const createChartOfAccountTypeRepository = new CreateChartOfAccountTypeRepository(dbConnection)
+  const createChartOfAccountCategoryRepository = new CreateChartOfAccountCategoryRepository(dbConnection)
+  const createChartOfAccountRepository = new CreateChartOfAccountRepository(dbConnection)
+  // insert new seeder data
+  const uniqueTypes = [...new Map(seeds.map((el) => [el.type, el])).values()]
+  const types = uniqueTypes.map((el) => el.type)
+  for (const type of types) {
+    // insert account type
+    const typeResponse = await createChartOfAccountTypeRepository.handle({ name: type }, options)
+    const filteredCategorySeeds = seeds.filter((el) => el.type === type)
+    const uniqueCategories = [...new Map(filteredCategorySeeds.map((el) => [el.category, el])).values()]
+    const categories = uniqueCategories.map((el) => el.category)
+    for (const category of categories) {
+      // insert account category
+      const categoryResponse = await createChartOfAccountCategoryRepository.handle(
+        {
+          type_id: typeResponse.inserted_id,
+          name: category,
+        },
+        options,
+      )
+      const filteredAccountSeeds = seeds.filter((el) => el.category === category)
+      const accounts = filteredAccountSeeds.filter((el) => el.category === category)
+      for (const account of accounts) {
+        // insert account
+        await createChartOfAccountRepository.handle(
+          {
+            category_id: categoryResponse.inserted_id,
+            number: account.number,
+            name: account.name,
+            subledger: account.subledger ?? '',
+            increasing_in: account.increasing_in,
+          },
+          options,
+        )
+      }
+    }
+  }
+}
 
 export const seeds = [
   {
