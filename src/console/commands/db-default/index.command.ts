@@ -20,6 +20,9 @@ export default class DbSeedCommand extends BaseConsoleCommand {
       await this.dbConnection.open()
       session = this.dbConnection.startSession()
       session.startTransaction()
+      await this.seeds(['permissions'], { session })
+      await this.seeds(['roles'], { session })
+      await this.seeds(['users'], { session })
       await this.seeds(['chart-of-accounts'], { session })
     } catch (error) {
       console.error(error)
