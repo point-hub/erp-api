@@ -5,8 +5,8 @@ import { collectionName } from '../entity'
 export interface IRetrieveRoleOutput extends IRetrieveOutput {
   code: string
   name: string
-  address: string
-  phone: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  permission: { [key: string]: any }
   created_date: string
   updated_date: string
 }
@@ -23,8 +23,8 @@ export class RetrieveRoleRepository implements IRetrieveRoleRepository {
       _id: response._id,
       code: response.code as string,
       name: response.name as string,
-      address: response.address as string,
-      phone: response.phone as string,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      permission: response.permission as unknown as { [key: string]: any },
       created_date: response.created_date as string,
       updated_date: response.updated_date as string,
     }

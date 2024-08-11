@@ -9,8 +9,8 @@ export interface IInput {
   data: {
     code?: string
     name?: string
-    address?: string
-    phone?: string
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    permission?: { [key: string]: any }
   }
 }
 export interface IDeps {
@@ -30,8 +30,7 @@ export class UpdateRoleUseCase {
     const roleEntity = new RoleEntity({
       code: input.data.code,
       name: input.data.name,
-      address: input.data.address,
-      phone: input.data.phone,
+      permission: input.data.permission,
     })
     roleEntity.generateUpdatedDate()
     // 3. database operation

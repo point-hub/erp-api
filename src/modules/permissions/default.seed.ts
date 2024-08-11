@@ -161,7 +161,7 @@ export const seeds = [
         delete: false,
       },
     },
-    finace: {
+    finance: {
       menu: false,
       payment_order: {
         read: false,

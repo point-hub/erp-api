@@ -13,8 +13,8 @@ export interface IOutput {
   _id: string
   code: string
   name: string
-  address: string
-  phone: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  permission: { [key: string]: any }
   created_date: string
   updated_date: string
 }
@@ -28,8 +28,7 @@ export class RetrieveRoleUseCase {
       _id: response._id,
       code: response.code,
       name: response.name,
-      address: response.address,
-      phone: response.phone,
+      permission: response.permission,
       created_date: response.created_date,
       updated_date: response.updated_date,
     }

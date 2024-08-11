@@ -10,8 +10,8 @@ import { createValidation } from '../validations/create.validation'
 export interface IInput {
   code?: string
   name?: string
-  address?: string
-  phone?: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  permission?: { [key: string]: any }
 }
 export interface IDeps {
   cleanObject(object: object): object
@@ -35,8 +35,7 @@ export class CreateRoleUseCase {
     const roleEntity = new RoleEntity({
       code: input.code,
       name: input.name,
-      address: input.address,
-      phone: input.phone,
+      permission: input.permission,
     })
     roleEntity.generateCreatedDate()
     const cleanEntity = deps.cleanObject(roleEntity.data)
