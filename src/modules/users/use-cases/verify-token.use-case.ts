@@ -26,6 +26,8 @@ export interface IOutput {
   email: string
   username: string
   name: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  role: { [key: string]: any }
 }
 
 export class VerifyTokenUseCase {
@@ -49,6 +51,8 @@ export class VerifyTokenUseCase {
       email: authUser.data[0].email as string,
       username: authUser.data[0].username as string,
       name: authUser.data[0].name as string,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      role: authUser.data[0].role as { [key: string]: any },
     }
   }
 }

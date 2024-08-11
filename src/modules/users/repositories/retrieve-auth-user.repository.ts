@@ -26,6 +26,8 @@ export class RetrieveAuthUserRepository implements IRetrieveAuthUserRepository {
       },
     })
 
+    pipeline.push(...this.aggregateJoinRole())
+
     const query: IQuery = {
       page: filter.page,
       page_size: filter.page_size,
@@ -40,9 +42,26 @@ export class RetrieveAuthUserRepository implements IRetrieveAuthUserRepository {
           name: aggregateResult.data[0].name,
           email: aggregateResult.data[0].email,
           username: aggregateResult.data[0].username,
+          role: aggregateResult.data[0].role,
         },
       ],
       pagination: aggregateResult.pagination,
     }
+  }
+
+  private aggregateJoinRole() {
+    return [
+      {
+        $lookup: {
+          from: 'roles',
+          localField: 'role_id',
+          foreignField: '_id',
+          pipeline: [{ $project: { _id: 1, code: 1, name: 1, permission: 1 } }],
+          as: 'role',
+        },
+      },
+      { $unwind: '$role' },
+      { $unset: ['role_id'] },
+    ]
   }
 }
