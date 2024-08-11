@@ -28,6 +28,8 @@ interface IOutput {
   username: string
   name: string
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  role: { [key: string]: any }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   cookies: any
   tokens: {
     token_type: string
@@ -99,6 +101,8 @@ export class SigninUseCase {
       email: user.data.email as string,
       username: user.data.username as string,
       name: user.data.name as string,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      role: user.data.role as any,
       cookies: cookies,
       tokens: {
         token_type: 'Bearer',

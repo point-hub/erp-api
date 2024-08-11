@@ -1,6 +1,8 @@
 export interface IUserEntity {
   _id?: string
   role_id?: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  role?: { [key: string]: any }
   code?: string
   name?: string
   username?: string

@@ -1,13 +1,13 @@
 export const seeds = [
   {
     name: 'user-code',
-    code: 'USER',
+    code: 'US',
     count: 0,
   },
   {
     name: 'role-code',
-    code: 'ROLE',
-    count: 0,
+    code: 'RL',
+    count: 1,
   },
   {
     name: 'branch-code',
