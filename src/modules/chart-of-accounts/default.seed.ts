@@ -11,7 +11,6 @@ export interface ISeed {
   number?: number
   name?: string
   subledger?: string
-  increasing_in?: string
 }
 
 export const seed = async (dbConnection: IDatabase, options: unknown) => {
@@ -52,7 +51,6 @@ export const seed = async (dbConnection: IDatabase, options: unknown) => {
             number: account.number,
             name: account.name,
             subledger: account.subledger ?? '',
-            increasing_in: account.increasing_in,
           },
           options,
         )
@@ -67,28 +65,24 @@ export const seeds = [
     category: 'cash',
     number: 10101,
     name: 'cash',
-    increasing_in: 'debit',
   },
   {
     type: 'asset',
     category: 'bank',
     number: 10201,
     name: 'bank',
-    increasing_in: 'debit',
   },
   {
     type: 'asset',
     category: 'supplies',
     number: 10301,
     name: 'supplies',
-    increasing_in: 'debit',
   },
   {
     type: 'asset',
     category: 'inventory',
     number: 10401,
     name: 'raw material inventory',
-    increasing_in: 'debit',
     subledger: 'item',
   },
   {
@@ -96,7 +90,6 @@ export const seeds = [
     category: 'inventory',
     number: 10402,
     name: 'indirect material inventory',
-    increasing_in: 'debit',
     subledger: 'item',
   },
   {
@@ -104,7 +97,6 @@ export const seeds = [
     category: 'inventory',
     number: 10403,
     name: 'work in process inventory',
-    increasing_in: 'debit',
     subledger: 'item',
   },
   {
@@ -112,7 +104,6 @@ export const seeds = [
     category: 'inventory',
     number: 10404,
     name: 'finished good inventory',
-    increasing_in: 'debit',
     subledger: 'item',
   },
   {
@@ -120,7 +111,6 @@ export const seeds = [
     category: 'inventory',
     number: 10405,
     name: 'inventory in distribution',
-    increasing_in: 'debit',
     subledger: 'item',
   },
   {
@@ -128,7 +118,6 @@ export const seeds = [
     category: 'note receivable',
     number: 10501,
     name: 'note receivable',
-    increasing_in: 'debit',
     subledger: 'customer',
   },
   {
@@ -136,7 +125,6 @@ export const seeds = [
     category: 'account receivable',
     number: 10502,
     name: 'account receivable',
-    increasing_in: 'debit',
     subledger: 'customer',
   },
   {
@@ -144,28 +132,24 @@ export const seeds = [
     category: 'account receivable of management',
     number: 10503,
     name: 'account receivable of management',
-    increasing_in: 'debit',
   },
   {
     type: 'asset',
     category: 'account receivable of employee',
     number: 10504,
     name: 'account receivable of employee',
-    increasing_in: 'debit',
   },
   {
     type: 'asset',
     category: 'other account receivable',
     number: 10599,
     name: 'other account receivable',
-    increasing_in: 'debit',
   },
   {
     type: 'asset',
     category: 'purchase down payment',
     number: 10601,
     name: 'purchase down payment',
-    increasing_in: 'debit',
     subledger: 'supplier',
   },
   {
@@ -173,7 +157,6 @@ export const seeds = [
     category: 'purchase down payment',
     number: 10602,
     name: 'expedition down payment',
-    increasing_in: 'debit',
     subledger: 'expedition',
   },
   {
@@ -181,7 +164,6 @@ export const seeds = [
     category: 'asset down payment',
     number: 10603,
     name: 'fixed asset down payment',
-    increasing_in: 'debit',
     subledger: 'supplier',
   },
   {
@@ -189,42 +171,36 @@ export const seeds = [
     category: 'income tax receivable',
     number: 10701,
     name: 'income tax receivable',
-    increasing_in: 'debit',
   },
   {
     type: 'asset',
     category: 'other current asset',
     number: 10801,
     name: 'marketable securities',
-    increasing_in: 'debit',
   },
   {
     type: 'asset',
     category: 'other current asset',
     number: 10901,
     name: 'prepaid advertising',
-    increasing_in: 'debit',
   },
   {
     type: 'asset',
     category: 'other current asset',
     number: 10902,
     name: 'prepaid rent',
-    increasing_in: 'debit',
   },
   {
     type: 'asset',
     category: 'other current asset',
     number: 10903,
     name: 'prepaid insurance',
-    increasing_in: 'debit',
   },
   {
     type: 'asset',
     category: 'fixed asset',
     number: 11101,
     name: 'land',
-    increasing_in: 'debit',
     subledger: 'fixed asset',
   },
   {
@@ -232,7 +208,6 @@ export const seeds = [
     category: 'fixed asset',
     number: 11202,
     name: 'factory building',
-    increasing_in: 'debit',
     subledger: 'fixed asset',
   },
   {
@@ -240,7 +215,6 @@ export const seeds = [
     category: 'fixed asset depreciation',
     number: 11203,
     name: 'accumulated depreciation of factory building',
-    increasing_in: 'credit',
     subledger: 'fixed asset',
   },
   {
@@ -248,7 +222,6 @@ export const seeds = [
     category: 'fixed asset',
     number: 11301,
     name: 'office building',
-    increasing_in: 'debit',
     subledger: 'fixed asset',
   },
   {
@@ -256,7 +229,6 @@ export const seeds = [
     category: 'fixed asset depreciation',
     number: 11302,
     name: 'accumulated depreciation of office building',
-    increasing_in: 'credit',
     subledger: 'fixed asset',
   },
   {
@@ -264,7 +236,6 @@ export const seeds = [
     category: 'fixed asset',
     number: 11401,
     name: 'machine',
-    increasing_in: 'debit',
     subledger: 'fixed asset',
   },
   {
@@ -272,7 +243,6 @@ export const seeds = [
     category: 'fixed asset depreciation',
     number: 11402,
     name: 'accumulated depreciation of machine',
-    increasing_in: 'credit',
     subledger: 'fixed asset',
   },
   {
@@ -280,7 +250,6 @@ export const seeds = [
     category: 'fixed asset',
     number: 11501,
     name: 'equipment',
-    increasing_in: 'debit',
     subledger: 'fixed asset',
   },
   {
@@ -288,7 +257,6 @@ export const seeds = [
     category: 'fixed asset depreciation',
     number: 11502,
     name: 'accumulated deprecition of equipment',
-    increasing_in: 'credit',
     subledger: 'fixed asset',
   },
   {
@@ -296,7 +264,6 @@ export const seeds = [
     category: 'fixed asset',
     number: 11601,
     name: 'factory vehicle',
-    increasing_in: 'debit',
     subledger: 'fixed asset',
   },
   {
@@ -304,7 +271,6 @@ export const seeds = [
     category: 'fixed asset depreciation',
     number: 11602,
     name: 'accumulated depreciation of factory vehicle',
-    increasing_in: 'credit',
     subledger: 'fixed asset',
   },
   {
@@ -312,7 +278,6 @@ export const seeds = [
     category: 'fixed asset',
     number: 11701,
     name: 'office vehicle',
-    increasing_in: 'debit',
     subledger: 'fixed asset',
   },
   {
@@ -320,7 +285,6 @@ export const seeds = [
     category: 'fixed asset depreciation',
     number: 11702,
     name: 'accumulated depreciation of office vehicle',
-    increasing_in: 'credit',
     subledger: 'fixed asset',
   },
   {
@@ -328,7 +292,6 @@ export const seeds = [
     category: 'other assets',
     number: 11801,
     name: 'intangible fixed assets',
-    increasing_in: 'debit',
     subledger: 'fixed asset',
   },
   {
@@ -336,7 +299,6 @@ export const seeds = [
     category: 'other assets amortization',
     number: 11802,
     name: 'accumulated amortized of intangble fixed assets',
-    increasing_in: 'credit',
     subledger: 'fixed asset',
   },
   {
@@ -344,14 +306,12 @@ export const seeds = [
     category: 'note payable',
     number: 20101,
     name: 'note payable',
-    increasing_in: 'credit',
   },
   {
     type: 'liability',
     category: 'account payable',
     number: 20201,
     name: 'account payable',
-    increasing_in: 'credit',
     subledger: 'supplier',
   },
   {
@@ -359,7 +319,6 @@ export const seeds = [
     category: 'sales down payment',
     number: 20301,
     name: 'sales down payment',
-    increasing_in: 'credit',
     subledger: 'customer',
   },
   {
@@ -367,7 +326,6 @@ export const seeds = [
     category: 'asset sales down payment',
     number: 20302,
     name: 'asset sales down payment',
-    increasing_in: 'credit',
     subledger: 'customer',
   },
   {
@@ -375,14 +333,12 @@ export const seeds = [
     category: 'income tax payable',
     number: 20401,
     name: 'income tax payable',
-    increasing_in: 'credit',
   },
   {
     type: 'liability',
     category: 'other current liability',
     number: 20501,
     name: 'account payable expedition',
-    increasing_in: 'credit',
     subledger: 'expedition',
   },
   {
@@ -390,7 +346,6 @@ export const seeds = [
     category: 'other current liability',
     number: 20503,
     name: 'account payable fixed asset',
-    increasing_in: 'credit',
     subledger: 'supplier',
   },
   {
@@ -398,147 +353,126 @@ export const seeds = [
     category: 'other current liability',
     number: 20602,
     name: 'interest payable',
-    increasing_in: 'credit',
   },
   {
     type: 'liability',
     category: 'other current liability',
     number: 20701,
     name: 'other current payable',
-    increasing_in: 'credit',
   },
   {
     type: 'liability',
     category: 'long term liability',
     number: 21101,
     name: 'bank payable <bank_name>',
-    increasing_in: 'credit',
   },
   {
     type: 'liability',
     category: 'long term liability',
     number: 21201,
     name: 'hypotic payable',
-    increasing_in: 'credit',
   },
   {
     type: 'liability',
     category: 'long term liability',
     number: 21301,
     name: 'bond payable',
-    increasing_in: 'credit',
   },
   {
     type: 'liability',
     category: 'long term liability',
     number: 21401,
     name: 'other long term payable',
-    increasing_in: 'credit',
   },
   {
     type: 'equity',
     category: 'owner equity',
     number: 30101,
     name: 'stock capital',
-    increasing_in: 'credit',
   },
   {
     type: 'equity',
     category: 'shareholer distribution',
     number: 30102,
     name: 'dividend',
-    increasing_in: 'debit ',
   },
   {
     type: 'equity',
     category: 'retained earning',
     number: 30103,
     name: 'retained earning',
-    increasing_in: 'credit',
   },
   {
     type: 'equity',
     category: 'net income for the month',
     number: 30111,
     name: 'net income for the month',
-    increasing_in: 'credit',
   },
   {
     type: 'equity',
     category: 'net income for the year',
     number: 30112,
     name: 'net income for the year',
-    increasing_in: 'credit',
   },
   {
     type: 'income',
     category: 'sales income',
     number: 40101,
     name: 'sales',
-    increasing_in: 'credit',
   },
   {
     type: 'income',
     category: 'sales income',
     number: 40102,
     name: 'sales return',
-    increasing_in: 'debit',
   },
   {
     type: 'income',
     category: 'sales income',
     number: 40103,
     name: 'sales discount',
-    increasing_in: 'debit',
   },
   {
     type: 'income',
     category: 'other income',
     number: 41101,
     name: 'fullfillment',
-    increasing_in: 'credit',
   },
   {
     type: 'income',
     category: 'other income',
     number: 41102,
     name: 'interest income',
-    increasing_in: 'credit',
   },
   {
     type: 'income',
     category: 'other income',
     number: 41103,
     name: 'exchange rate',
-    increasing_in: 'credit',
   },
   {
     type: 'income',
     category: 'other income',
     number: 41199,
     name: 'other income',
-    increasing_in: 'credit',
   },
   {
     type: 'income',
     category: 'other income',
     number: 41200,
     name: 'non operating income',
-    increasing_in: 'credit',
   },
   {
     type: 'income',
     category: 'cost of sales',
     number: 50101,
     name: 'cost of sales',
-    increasing_in: 'debit',
   },
   {
     type: 'expense',
     category: 'purchase discount',
     number: 50102,
     name: 'purchase discount',
-    increasing_in: 'debit ',
   },
   {
     type: 'expense',
@@ -546,7 +480,6 @@ export const seeds = [
     group: 'office',
     number: 50111,
     name: 'delivery expense',
-    increasing_in: 'debit',
   },
   {
     type: 'expense',
@@ -554,7 +487,6 @@ export const seeds = [
     group: 'office',
     number: 50112,
     name: 'difference stock expense',
-    increasing_in: 'debit',
   },
   {
     type: 'expense',
@@ -562,7 +494,6 @@ export const seeds = [
     group: 'office',
     number: 50113,
     name: 'salary expense',
-    increasing_in: 'debit',
   },
   {
     type: 'expense',
@@ -570,7 +501,6 @@ export const seeds = [
     group: 'office',
     number: 50114,
     name: 'office electricity expense',
-    increasing_in: 'debit',
   },
   {
     type: 'expense',
@@ -578,7 +508,6 @@ export const seeds = [
     group: 'office',
     number: 50115,
     name: 'office water expense',
-    increasing_in: 'debit',
   },
   {
     type: 'expense',
@@ -586,7 +515,6 @@ export const seeds = [
     group: 'office',
     number: 50116,
     name: 'office catering expense',
-    increasing_in: 'debit',
   },
   {
     type: 'expense',
@@ -594,7 +522,6 @@ export const seeds = [
     group: 'office',
     number: 50117,
     name: 'maintenance of office expense',
-    increasing_in: 'debit',
   },
   {
     type: 'expense',
@@ -602,7 +529,6 @@ export const seeds = [
     group: 'office',
     number: 50118,
     name: 'office building depreciation expense',
-    increasing_in: 'debit',
   },
   {
     type: 'expense',
@@ -610,7 +536,6 @@ export const seeds = [
     group: 'office',
     number: 50119,
     name: 'equipment depreciation expense',
-    increasing_in: 'debit',
   },
   {
     type: 'expense',
@@ -618,7 +543,6 @@ export const seeds = [
     group: 'office',
     number: 50120,
     name: 'office vehicle depreciation expense',
-    increasing_in: 'debit',
   },
   {
     type: 'expense',
@@ -626,7 +550,6 @@ export const seeds = [
     group: 'office',
     number: 50121,
     name: 'amortization intangible fixed assets expense',
-    increasing_in: 'debit',
   },
   {
     type: 'expense',
@@ -634,7 +557,6 @@ export const seeds = [
     group: 'office',
     number: 50122,
     name: 'supplies expense',
-    increasing_in: 'debit',
   },
   {
     type: 'expense',
@@ -642,7 +564,6 @@ export const seeds = [
     group: 'office',
     number: 50123,
     name: 'rent expense',
-    increasing_in: 'debit',
   },
   {
     type: 'expense',
@@ -650,7 +571,6 @@ export const seeds = [
     group: 'office',
     number: 50124,
     name: 'insurance  expense',
-    increasing_in: 'debit',
   },
   {
     type: 'expense',
@@ -658,7 +578,6 @@ export const seeds = [
     group: 'office',
     number: 50125,
     name: 'telephone expense',
-    increasing_in: 'debit',
   },
   {
     type: 'expense',
@@ -666,7 +585,6 @@ export const seeds = [
     group: 'office',
     number: 50126,
     name: 'internet expense',
-    increasing_in: 'debit',
   },
   {
     type: 'expense',
@@ -674,7 +592,6 @@ export const seeds = [
     group: 'office',
     number: 50127,
     name: 'consultant service expense',
-    increasing_in: 'debit',
   },
   {
     type: 'expense',
@@ -682,7 +599,6 @@ export const seeds = [
     group: 'office',
     number: 50128,
     name: 'bank administration expense',
-    increasing_in: 'debit',
   },
   {
     type: 'expense',
@@ -690,7 +606,6 @@ export const seeds = [
     group: 'office',
     number: 50129,
     name: 'interest expense',
-    increasing_in: 'debit',
   },
   {
     type: 'expense',
@@ -698,7 +613,6 @@ export const seeds = [
     group: 'office',
     number: 50130,
     name: 'tax expense',
-    increasing_in: 'debit',
   },
   {
     type: 'expense',
@@ -706,7 +620,6 @@ export const seeds = [
     group: 'office',
     number: 50131,
     name: 'other expense',
-    increasing_in: 'debit',
   },
   {
     type: 'expense',
@@ -714,7 +627,6 @@ export const seeds = [
     group: 'office',
     number: 50132,
     name: 'accomodation expense',
-    increasing_in: 'debit',
   },
   {
     type: 'expense',
@@ -722,7 +634,6 @@ export const seeds = [
     group: 'office',
     number: 50133,
     name: 'office gasoline expense',
-    increasing_in: 'debit',
   },
   {
     type: 'expense',
@@ -730,7 +641,6 @@ export const seeds = [
     group: 'office',
     number: 50134,
     name: 'non operating expense',
-    increasing_in: 'debit',
   },
   {
     type: 'expense',
@@ -738,7 +648,6 @@ export const seeds = [
     group: 'marketing',
     number: 50135,
     name: 'entertaiment expense',
-    increasing_in: 'debit',
   },
   {
     type: 'expense',
@@ -746,7 +655,6 @@ export const seeds = [
     group: 'marketing',
     number: 50136,
     name: 'advertising expense',
-    increasing_in: 'debit',
   },
   {
     type: 'expense',
@@ -754,7 +662,6 @@ export const seeds = [
     group: 'marketing',
     number: 50137,
     name: 'sales commission expense',
-    increasing_in: 'debit',
   },
   {
     type: 'expense',
@@ -762,7 +669,6 @@ export const seeds = [
     group: 'factory',
     number: 50138,
     name: 'wage expense',
-    increasing_in: 'debit',
   },
   {
     type: 'expense',
@@ -770,7 +676,6 @@ export const seeds = [
     group: 'factory',
     number: 50139,
     name: 'factory gasoline expense',
-    increasing_in: 'debit',
   },
   {
     type: 'expense',
@@ -778,7 +683,6 @@ export const seeds = [
     group: 'factory',
     number: 50140,
     name: 'factory electricity expense',
-    increasing_in: 'debit',
   },
   {
     type: 'expense',
@@ -786,7 +690,6 @@ export const seeds = [
     group: 'factory',
     number: 50141,
     name: 'factory water expense',
-    increasing_in: 'debit',
   },
   {
     type: 'expense',
@@ -794,7 +697,6 @@ export const seeds = [
     group: 'factory',
     number: 50142,
     name: 'factory catering expense',
-    increasing_in: 'debit',
   },
   {
     type: 'expense',
@@ -802,7 +704,6 @@ export const seeds = [
     group: 'factory',
     number: 50143,
     name: 'maintenance of factory expense',
-    increasing_in: 'debit',
   },
   {
     type: 'expense',
@@ -810,7 +711,6 @@ export const seeds = [
     group: 'factory',
     number: 50144,
     name: 'factory building depreciation expense',
-    increasing_in: 'debit',
   },
   {
     type: 'expense',
@@ -818,7 +718,6 @@ export const seeds = [
     group: 'factory',
     number: 50145,
     name: 'machine depreciation expense',
-    increasing_in: 'debit',
   },
   {
     type: 'expense',
@@ -826,6 +725,5 @@ export const seeds = [
     group: 'factory',
     number: 50146,
     name: 'factory vehicle depreciation expense',
-    increasing_in: 'debit',
   },
 ]

@@ -7,5 +7,4 @@ export const updateValidation = {
   'data.number': ['required', 'integer'],
   'data.name': ['required', 'string'],
   'data.subledger': ['string'],
-  'data.increasing_in': ['string'],
 }

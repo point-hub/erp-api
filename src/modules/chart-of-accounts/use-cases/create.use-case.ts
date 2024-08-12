@@ -10,7 +10,6 @@ export interface IInput {
   number?: string
   name?: string
   subledger?: string
-  increasing_in?: string
 }
 export interface IDeps {
   cleanObject(object: object): object
@@ -31,7 +30,6 @@ export class CreateChartOfAccountUseCase {
       category_id: input.category_id,
       number: Number(input.number) ? Number(input.number) : undefined,
       name: input.name,
-      increasing_in: input.increasing_in,
       subledger: input.subledger,
     })
     exampleEntity.generateCreatedDate()

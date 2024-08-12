@@ -10,7 +10,6 @@ export interface ISeed {
   number?: number
   name?: string
   subledger?: string
-  increasing_in?: string
 }
 
 export const seed = async (dbConnection: IDatabase, options: unknown) => {

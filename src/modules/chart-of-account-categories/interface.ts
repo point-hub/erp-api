@@ -5,7 +5,6 @@ export interface IChartOfAccountCategoryEntity {
   number?: string
   name?: string
   subledger?: string
-  increasing_in?: string
   created_date?: Date
   updated_date?: Date
 }

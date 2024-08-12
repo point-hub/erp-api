@@ -6,5 +6,4 @@ export const createValidation = {
   number: ['required', 'integer'],
   name: ['required', 'string'],
   subledger: ['string'],
-  increasing_in: ['string'],
 }

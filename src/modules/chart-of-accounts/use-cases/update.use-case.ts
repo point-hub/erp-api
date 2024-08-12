@@ -11,7 +11,6 @@ export interface IInput {
     number?: string
     name?: string
     subledger?: string
-    increasing_in?: string
   }
 }
 export interface IDeps {
@@ -33,7 +32,6 @@ export class UpdateChartOfAccountUseCase {
       number: Number(input.data.number),
       name: input.data.name,
       subledger: input.data.subledger,
-      increasing_in: input.data.increasing_in,
     })
     chartOfAccountEntity.generateUpdatedDate()
     // 3. database operation

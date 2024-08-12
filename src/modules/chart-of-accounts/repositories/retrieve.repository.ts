@@ -6,7 +6,6 @@ export interface IRetrieveChartOfAccountOutput extends IRetrieveOutput {
   number?: string
   name?: string
   subledger?: string
-  increasing_in?: string
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   category?: any
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -11,7 +11,6 @@ export interface IInput {
     number?: string
     name?: string
     subledger?: string
-    increasing_in?: string
   }
 }
 export interface IDeps {

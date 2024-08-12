@@ -26,7 +26,6 @@ export const retrieveChartOfAccountTypeController: IController = async (controll
         number: response.number,
         name: response.name,
         subledger: response.subledger,
-        increasing_in: response.increasing_in,
         created_date: response.created_date,
         updated_date: response.updated_date,
       },
