@@ -11,6 +11,7 @@ import countersRouter from './modules/counters/router'
 import customerGroupsRouter from './modules/customer-groups/router'
 import customersRouter from './modules/customers/router'
 import itemCategoriesRouter from './modules/item-categories/router'
+import itemsRouter from './modules/items/router'
 import permissionsRouter from './modules/permissions/router'
 import rolesRouter from './modules/roles/router'
 import supplierGroupsRouter from './modules/supplier-groups/router'
@@ -42,6 +43,7 @@ export default async function (baseRouterInput: IBaseAppInput) {
   app.use('/v1/allocation-groups', await allocationGroupsRouter(baseRouterInput))
   app.use('/v1/allocations', await allocationsRouter(baseRouterInput))
   app.use('/v1/item-categories', await itemCategoriesRouter(baseRouterInput))
+  app.use('/v1/items', await itemsRouter(baseRouterInput))
   app.use('/v1/counters', await countersRouter(baseRouterInput))
 
   return app

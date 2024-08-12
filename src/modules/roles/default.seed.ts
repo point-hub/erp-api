@@ -35,7 +35,7 @@ export const seeds = [
           update: true,
           delete: true,
         },
-        branchs: {
+        branches: {
           read: true,
           create: true,
           update: true,

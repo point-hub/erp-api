@@ -28,7 +28,7 @@ export const seeds = [
         update: false,
         delete: false,
       },
-      branchs: {
+      branches: {
         read: false,
         create: false,
         update: false,
@@ -191,10 +191,10 @@ export const seeds = [
         read: false,
       },
       debts_aging_report: {
-        read: true,
+        read: false,
       },
       allocation_report: {
-        read: true,
+        read: false,
       },
     },
     manufacture: {
@@ -245,16 +245,16 @@ export const seeds = [
         delete: false,
       },
       transfer_items: {
-        read: true,
-        create: true,
-        update: true,
-        delete: true,
+        read: false,
+        create: false,
+        update: false,
+        delete: false,
       },
       receive_items: {
-        read: true,
-        create: true,
-        update: true,
-        delete: true,
+        read: false,
+        create: false,
+        update: false,
+        delete: false,
       },
       inventory_report: {
         read: false,
@@ -263,28 +263,28 @@ export const seeds = [
     accounting: {
       menu: false,
       cut_offs: {
-        read: true,
-        create: true,
-        update: true,
-        delete: true,
+        read: false,
+        create: false,
+        update: false,
+        delete: false,
       },
       memo_journals: {
-        read: true,
-        create: true,
-        update: true,
-        delete: true,
+        read: false,
+        create: false,
+        update: false,
+        delete: false,
       },
       general_ledger: {
-        read: true,
+        read: false,
       },
       subledger: {
-        read: true,
+        read: false,
       },
       balance_sheet: {
-        read: true,
+        read: false,
       },
       trial_balance: {
-        read: true,
+        read: false,
       },
     },
   },
