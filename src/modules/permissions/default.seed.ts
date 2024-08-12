@@ -175,13 +175,13 @@ export const seeds = [
         update: false,
         delete: false,
       },
-      cashes: {
+      cash_payments: {
         read: false,
         create: false,
         update: false,
         delete: false,
       },
-      banks: {
+      bank_payments: {
         read: false,
         create: false,
         update: false,
@@ -245,25 +245,28 @@ export const seeds = [
     accounting: {
       menu: false,
       cut_offs: {
-        read: false,
-        create: false,
-        update: false,
-        delete: false,
+        read: true,
+        create: true,
+        update: true,
+        delete: true,
       },
       memo_journals: {
-        read: false,
-        create: false,
-        update: false,
-        delete: false,
+        read: true,
+        create: true,
+        update: true,
+        delete: true,
       },
       general_ledger: {
-        read: false,
+        read: true,
       },
-      sub_ledger: {
-        read: false,
+      subledger: {
+        read: true,
       },
       balance_sheet: {
-        read: false,
+        read: true,
+      },
+      trial_balance: {
+        read: true,
       },
     },
   },
