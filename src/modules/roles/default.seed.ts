@@ -266,10 +266,13 @@ export const seeds = [
         general_ledger: {
           read: true,
         },
-        sub_ledger: {
+        subledger: {
           read: true,
         },
         balance_sheet: {
+          read: true,
+        },
+        trial_balance: {
           read: true,
         },
       },
