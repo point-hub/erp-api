@@ -190,6 +190,12 @@ export const seeds = [
       profit_and_loss: {
         read: false,
       },
+      debts_aging_report: {
+        read: true,
+      },
+      allocation_report: {
+        read: true,
+      },
     },
     manufacture: {
       menu: false,
@@ -237,6 +243,18 @@ export const seeds = [
         create: false,
         update: false,
         delete: false,
+      },
+      transfer_items: {
+        read: true,
+        create: true,
+        update: true,
+        delete: true,
+      },
+      receive_items: {
+        read: true,
+        create: true,
+        update: true,
+        delete: true,
       },
       inventory_report: {
         read: false,
