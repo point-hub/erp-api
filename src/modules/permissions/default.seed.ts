@@ -16,61 +16,61 @@ export const seeds = [
   {
     master: {
       menu: false,
-      user: {
+      users: {
         read: false,
         create: false,
         update: false,
         delete: false,
       },
-      role: {
+      roles: {
         read: false,
         create: false,
         update: false,
         delete: false,
       },
-      branch: {
+      branchs: {
         read: false,
         create: false,
         update: false,
         delete: false,
       },
-      warehouse: {
+      warehouses: {
         read: false,
         create: false,
         update: false,
         delete: false,
       },
-      allocation: {
+      allocations: {
         read: false,
         create: false,
         update: false,
         delete: false,
       },
-      supplier: {
+      suppliers: {
         read: false,
         create: false,
         update: false,
         delete: false,
       },
-      customer: {
+      customers: {
         read: false,
         create: false,
         update: false,
         delete: false,
       },
-      item: {
+      items: {
         read: false,
         create: false,
         update: false,
         delete: false,
       },
-      chart_of_account: {
+      chart_of_accounts: {
         read: false,
         create: false,
         update: false,
         delete: false,
       },
-      setting_journal: {
+      setting_journals: {
         read: false,
         create: false,
         update: false,
@@ -79,37 +79,37 @@ export const seeds = [
     },
     purchasing: {
       menu: false,
-      purchase_request: {
+      purchase_requests: {
         read: false,
         create: false,
         update: false,
         delete: false,
       },
-      purchase_order: {
+      purchase_orders: {
         read: false,
         create: false,
         update: false,
         delete: false,
       },
-      down_payment: {
+      down_payments: {
         read: false,
         create: false,
         update: false,
         delete: false,
       },
-      purchase_receive: {
+      purchase_receives: {
         read: false,
         create: false,
         update: false,
         delete: false,
       },
-      invoice: {
+      invoices: {
         read: false,
         create: false,
         update: false,
         delete: false,
       },
-      payment_order: {
+      payment_orders: {
         read: false,
         create: false,
         update: false,
@@ -118,43 +118,43 @@ export const seeds = [
     },
     sales: {
       menu: false,
-      sales_quotation: {
+      sales_quotations: {
         read: false,
         create: false,
         update: false,
         delete: false,
       },
-      sales_order: {
+      sales_orders: {
         read: false,
         create: false,
         update: false,
         delete: false,
       },
-      down_payment: {
+      down_payments: {
         read: false,
         create: false,
         update: false,
         delete: false,
       },
-      delivery_order: {
+      delivery_orders: {
         read: false,
         create: false,
         update: false,
         delete: false,
       },
-      delivery_note: {
+      delivery_notes: {
         read: false,
         create: false,
         update: false,
         delete: false,
       },
-      invoice: {
+      invoices: {
         read: false,
         create: false,
         update: false,
         delete: false,
       },
-      payment_collection: {
+      payment_collections: {
         read: false,
         create: false,
         update: false,
@@ -163,25 +163,25 @@ export const seeds = [
     },
     finance: {
       menu: false,
-      payment_order: {
+      payment_orders: {
         read: false,
         create: false,
         update: false,
         delete: false,
       },
-      cash_advance: {
+      cash_advances: {
         read: false,
         create: false,
         update: false,
         delete: false,
       },
-      cash: {
+      cashes: {
         read: false,
         create: false,
         update: false,
         delete: false,
       },
-      bank: {
+      banks: {
         read: false,
         create: false,
         update: false,
@@ -193,19 +193,19 @@ export const seeds = [
     },
     manufacture: {
       menu: false,
-      machine: {
+      machines: {
         read: false,
         create: false,
         update: false,
         delete: false,
       },
-      process: {
+      processes: {
         read: false,
         create: false,
         update: false,
         delete: false,
       },
-      formula: {
+      formulas: {
         read: false,
         create: false,
         update: false,
@@ -220,19 +220,19 @@ export const seeds = [
     },
     inventory: {
       menu: false,
-      inventory_usage: {
+      inventory_usages: {
         read: false,
         create: false,
         update: false,
         delete: false,
       },
-      inventory_audit: {
+      inventory_audits: {
         read: false,
         create: false,
         update: false,
         delete: false,
       },
-      stock_correction: {
+      stock_corrections: {
         read: false,
         create: false,
         update: false,
@@ -244,13 +244,13 @@ export const seeds = [
     },
     accounting: {
       menu: false,
-      cut_off: {
+      cut_offs: {
         read: false,
         create: false,
         update: false,
         delete: false,
       },
-      memo_journal: {
+      memo_journals: {
         read: false,
         create: false,
         update: false,

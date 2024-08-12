@@ -34,7 +34,7 @@ export class RetrieveAuthUserRepository implements IRetrieveAuthUserRepository {
       sort: filter.sort,
     }
     const aggregateResult = await this.database.collection(collectionName).aggregate(pipeline, query, options)
-
+    console.log(JSON.stringify(aggregateResult))
     return {
       data: [
         {

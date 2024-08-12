@@ -41,7 +41,6 @@ export class RetrieveMatchedUsernameRepository implements IRetrieveMatchedUserna
     })
 
     const response = await this.database.collection(collectionName).aggregate(pipeline, query, options)
-    console.log(response.data[0].role)
 
     return {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
