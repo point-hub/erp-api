@@ -7,9 +7,13 @@ import { updateValidation } from '../validations/update.validation'
 export interface IInput {
   _id: string
   data: {
-    branch_id?: string
+    category_id?: string
+    chart_of_account_id?: string
     code?: string
     name?: string
+    unit?: string
+    have_production_number?: boolean
+    have_an_expiry_date?: boolean
   }
 }
 export interface IDeps {
@@ -27,9 +31,13 @@ export class UpdateItemUseCase {
     await deps.schemaValidation(input, updateValidation)
     // 2. define entity
     const itemEntity = new ItemEntity({
-      branch_id: input.data.branch_id,
+      category_id: input.data.category_id,
+      chart_of_account_id: input.data.chart_of_account_id,
       code: input.data.code,
       name: input.data.name,
+      unit: input.data.unit,
+      have_production_number: input.data.have_production_number,
+      have_an_expiry_date: input.data.have_an_expiry_date,
     })
     itemEntity.generateUpdatedDate()
     // 3. database operation

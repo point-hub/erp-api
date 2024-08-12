@@ -1,4 +1,5 @@
 import type { IAggregateOutput, IAggregateRepository, IDatabase, IPagination, IPipeline, IQuery } from '@point-hub/papi'
+import { filter } from 'compression'
 
 import { collectionName } from '../entity'
 import { IRetrieveItemOutput } from './retrieve.repository'
@@ -17,9 +18,8 @@ export class RetrieveAllItemRepository implements IRetrieveAllItemRepository {
   async handle(query: IQuery, options?: unknown): Promise<IRetrieveAllItemOutput> {
     const pipeline: IPipeline[] = []
 
-    pipeline.push(...this.aggregateJoinCategories())
-    pipeline.push(...this.aggregateJoinTypes())
-    pipeline.push({ $addFields: { number: { $toString: '$number' } } })
+    pipeline.push(...this.aggregateJoinCategory())
+    pipeline.push(...this.aggregateJoinChartOfAccount())
     pipeline.push(...this.aggregateFilters(query))
 
     const response = await this.database.collection(collectionName).aggregate(pipeline, query, options)
@@ -30,14 +30,14 @@ export class RetrieveAllItemRepository implements IRetrieveAllItemRepository {
     }
   }
 
-  private aggregateJoinCategories() {
+  private aggregateJoinCategory() {
     return [
       {
         $lookup: {
-          from: 'chart_of_account_categories',
+          from: 'item_categories',
           localField: 'category_id',
           foreignField: '_id',
-          pipeline: [{ $project: { _id: 1, type_id: 1, name: 1 } }],
+          pipeline: [{ $project: { _id: 1, code: 1, name: 1 } }],
           as: 'category',
         },
       },
@@ -46,19 +46,19 @@ export class RetrieveAllItemRepository implements IRetrieveAllItemRepository {
     ]
   }
 
-  private aggregateJoinTypes() {
+  private aggregateJoinChartOfAccount() {
     return [
       {
         $lookup: {
-          from: 'chart_of_account_types',
-          localField: 'category.type_id',
+          from: 'chart_of_accounts',
+          localField: 'chart_of_account_id',
           foreignField: '_id',
-          pipeline: [{ $project: { _id: 1, name: 1 } }],
-          as: 'type',
+          pipeline: [{ $project: { _id: 1, number: 1, name: 1 } }],
+          as: 'chart_of_account',
         },
       },
-      { $unwind: '$type' },
-      { $unset: ['category.type_id'] },
+      { $unwind: '$chart_of_account' },
+      { $unset: ['chart_of_account_id'] },
     ]
   }
 
@@ -67,24 +67,25 @@ export class RetrieveAllItemRepository implements IRetrieveAllItemRepository {
     const filtersOr = [] // filter keys using "or" logic
 
     if (query.filter?.search) {
-      filtersOr.push({ number: { $regex: query.filter?.search, $options: 'i' } })
+      filtersOr.push({ code: { $regex: query.filter?.search, $options: 'i' } })
       filtersOr.push({ name: { $regex: query.filter?.search, $options: 'i' } })
-      filtersOr.push({ subledger: { $regex: query.filter?.search, $options: 'i' } })
-      filtersOr.push({ 'type.name': { $regex: query.filter?.search, $options: 'i' } })
+      filtersOr.push({ unit: { $regex: query.filter?.search, $options: 'i' } })
+      filtersOr.push({ 'chart_of_account.name': { $regex: query.filter?.search, $options: 'i' } })
       filtersOr.push({ 'category.name': { $regex: query.filter?.search, $options: 'i' } })
       filtersAnd.push({ $or: filtersOr })
     }
 
-    if (query.filter?.number) filtersAnd.push({ number: { $regex: query.filter?.number, $options: 'i' } })
+    if (query.filter?.code) filtersAnd.push({ code: { $regex: query.filter?.code, $options: 'i' } })
     if (query.filter?.name) filtersAnd.push({ name: { $regex: query.filter?.name, $options: 'i' } })
-    if (query.filter?.subledger) filtersAnd.push({ subledger: { $regex: query.filter?.subledger, $options: 'i' } })
-    if (query.filter?.type) filtersAnd.push({ 'type.name': { $regex: query.filter?.type, $options: 'i' } })
+    if (query.filter?.unit) filtersAnd.push({ unit: { $regex: query.filter?.unit, $options: 'i' } })
+    if (query.filter?.chart_of_account)
+      filtersAnd.push({ 'chart_of_account.name': { $regex: query.filter?.chart_of_account, $options: 'i' } })
     if (query.filter?.category) filtersAnd.push({ 'category.name': { $regex: query.filter?.category, $options: 'i' } })
 
     if (!filtersAnd.length) {
       return []
     }
 
-    return [{ $addFields: { number: { $toString: '$number' } } }, { $match: { $and: filtersAnd } }]
+    return [{ $match: { $and: filtersAnd } }]
   }
 }

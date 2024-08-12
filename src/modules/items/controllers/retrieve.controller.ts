@@ -16,15 +16,20 @@ export const retrieveItemController: IController = async (controllerInput: ICont
       { _id: controllerInput.httpRequest.params.id },
       { retrieveItemRepository },
     )
+    console.log('retrieve')
     await session.commitTransaction()
     // 4. return response to client
     return {
       status: 200,
       json: {
         _id: response._id,
-        branch: response.branch,
+        chart_of_account: response.chart_of_account,
+        category: response.category,
         code: response.code,
         name: response.name,
+        unit: response.unit,
+        have_production_number: response.have_production_number,
+        have_an_expiry_date: response.have_an_expiry_date,
         created_date: response.created_date,
         updated_date: response.updated_date,
       },
