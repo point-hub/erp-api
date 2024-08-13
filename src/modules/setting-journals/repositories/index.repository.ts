@@ -1,0 +1,5 @@
+export { CreateSettingJournalRepository } from './create.repository'
+export { DeleteSettingJournalRepository } from './delete.repository'
+export { RetrieveSettingJournalRepository } from './retrieve.repository'
+export { RetrieveAllSettingJournalRepository } from './retrieve-all.repository'
+export { UpdateSettingJournalRepository } from './update.repository'

@@ -1,5 +1,4 @@
 import type { IAggregateOutput, IAggregateRepository, IDatabase, IPagination, IPipeline, IQuery } from '@point-hub/papi'
-import { filter } from 'compression'
 
 import { collectionName } from '../entity'
 import { IRetrieveItemOutput } from './retrieve.repository'

@@ -1,0 +1,5 @@
+export { createSettingJournalController } from './create.controller'
+export { deleteSettingJournalController } from './delete.controller'
+export { retrieveSettingJournalController } from './retrieve.controller'
+export { retrieveAllSettingJournalController } from './retrieve-all.controller'
+export { updateSettingJournalController } from './update.controller'
