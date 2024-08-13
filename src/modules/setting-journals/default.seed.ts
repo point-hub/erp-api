@@ -1,329 +1,260 @@
 import { type IDatabase } from '@point-hub/papi'
 
-import { CreatePermissionRepository } from '@/modules/permissions/repositories/create.repository'
+import { CreateSettingJournalRepository } from '@/modules/setting-journals/repositories/create.repository'
 
 export const seed = async (dbConnection: IDatabase, options: unknown) => {
-  console.info(`[seed] permissions data`)
+  console.info(`[seed] setting journals data`)
   // delete all data inside collection
-  await dbConnection.collection('permissions').deleteAll(options)
+  await dbConnection.collection('setting-journals').deleteAll(options)
   // prepare repository
-  const createPermissionRepository = new CreatePermissionRepository(dbConnection)
+  const createSettingJournalRepository = new CreateSettingJournalRepository(dbConnection)
   // seed
-  await createPermissionRepository.handle(seeds[0], options)
+  await createSettingJournalRepository.handle(seeds[0], options)
 }
 
 export const seeds = [
   {
-    master: {
-      menu: false,
-      users: {
-        read: false,
-        create: false,
-        update: false,
-        delete: false,
-        approval: false,
+    module: 'purchasing',
+    feature: 'down payment',
+    journals: [
+      {
+        account: 'purchase down payment',
+        description: 'jumlah dp yang harus dibayarkan ke supplier',
+        position: 'debit',
+        subledger: 'supplier',
       },
-      roles: {
-        read: false,
-        create: false,
-        update: false,
-        delete: false,
-        approval: false,
+      {
+        account: 'Cash or Bank ',
+        description: 'diambil dari modul cash atau bank',
+        position: 'credit',
       },
-      branches: {
-        read: false,
-        create: false,
-        update: false,
-        delete: false,
-        approval: false,
+    ],
+  },
+  {
+    module: 'purchasing',
+    feature: 'purchase invoice',
+    journals: [
+      {
+        account: 'account payable',
+        description: 'jumlah hutang yang harus dibayarkan ke supplier',
+        position: 'credit',
+        subledger: 'supplier',
       },
-      warehouses: {
-        read: false,
-        create: false,
-        update: false,
-        delete: false,
-        approval: false,
+      {
+        account: 'income tax receivable',
+        description: 'jumlah PPN yang dibayarkan kepada supplier',
+        position: 'debit',
       },
-      allocations: {
-        read: false,
-        create: false,
-        update: false,
-        delete: false,
-        approval: false,
+      {
+        account: 'payment difference',
+        description: 'pendapata / beban selisih pembayaran',
+        position: 'debit',
       },
-      suppliers: {
-        read: false,
-        create: false,
-        update: false,
-        delete: false,
-        approval: false,
+      {
+        account: 'inventory',
+        description: 'akun sediaan tergantung dari coa yang ada di master item',
+        position: 'debit',
+        subledger: 'item',
       },
-      customers: {
-        read: false,
-        create: false,
-        update: false,
-        delete: false,
-        approval: false,
+    ],
+  },
+  {
+    module: 'purchasing',
+    feature: 'payment order',
+    journals: [
+      {
+        account: 'account payable',
+        description: 'diambil dari modul purchase invoice',
+        position: 'debit',
+        subledger: 'supplier',
       },
-      items: {
-        read: false,
-        create: false,
-        update: false,
-        delete: false,
-        approval: false,
+      {
+        account: 'purchase down payment',
+        description: 'diambil dari modul purchase down payment',
+        position: 'credit',
+        subledger: 'supplier',
       },
-      chart_of_accounts: {
-        read: false,
-        create: false,
-        update: false,
-        delete: false,
-        approval: false,
+      {
+        account: 'Others',
+        description: 'Diambil dari account yang dipilih pada saat pembuatan form payment order',
+        position: 'credit',
       },
-      setting_journals: {
-        read: false,
-        create: false,
-        update: false,
-        delete: false,
-        approval: false,
+      {
+        account: 'Cash or bank',
+        description: 'Diambil dari modul cash atau bank',
+        position: 'debit',
       },
-    },
-    purchasing: {
-      menu: false,
-      purchase_requests: {
-        read: false,
-        create: false,
-        update: false,
-        delete: false,
-        approval: false,
+    ],
+  },
+  {
+    module: 'sales',
+    feature: 'down payment',
+    journals: [
+      {
+        account: 'sales down payment',
+        description: 'jumlah uang muka yang diterima dari customer ',
+        position: 'credit',
+        subledger: 'customer',
       },
-      purchase_orders: {
-        read: false,
-        create: false,
-        update: false,
-        delete: false,
-        approval: false,
+      {
+        account: 'Cash or bank',
+        description: 'Diambil dari modul cash atau bank',
+        position: 'debit',
       },
-      down_payments: {
-        read: false,
-        create: false,
-        update: false,
-        delete: false,
-        approval: false,
+    ],
+  },
+  {
+    module: 'sales',
+    feature: 'delivery notes',
+    journals: [
+      {
+        account: 'cost of sales',
+        description: 'jumlah rupiah barang yang dikeluarkan ',
+        position: 'debit',
       },
-      purchase_receives: {
-        read: false,
-        create: false,
-        update: false,
-        delete: false,
-        approval: false,
+      {
+        account: 'Inventory',
+        description: 'Diambil dari master item yang dikeluarkan pada delivery note',
+        position: 'credit',
+        subledger: 'item',
       },
-      invoices: {
-        read: false,
-        create: false,
-        update: false,
-        delete: false,
-        approval: false,
+    ],
+  },
+  {
+    module: 'sales',
+    feature: 'sales invoice',
+    journals: [
+      {
+        account: 'account receivable',
+        description: 'jumlah Piutang yang harus diterima dari supplier',
+        position: 'debit',
+        subledger: 'customer',
       },
-      payment_orders: {
-        read: false,
-        create: false,
-        update: false,
-        delete: false,
-        approval: false,
+      {
+        account: 'income tax payable',
+        description: 'jumlah PPN yang diterima dari customer',
+        position: 'credit',
       },
-    },
-    sales: {
-      menu: false,
-      sales_quotations: {
-        read: false,
-        create: false,
-        update: false,
-        delete: false,
-        approval: false,
+      {
+        account: 'inventory',
+        description: 'akun sediaan tergantung dari coa yang ada di master item',
+        position: 'credit',
+        subledger: 'item',
       },
-      sales_orders: {
-        read: false,
-        create: false,
-        update: false,
-        delete: false,
-        approval: false,
+    ],
+  },
+  {
+    module: 'inventory',
+    feature: 'stock correction',
+    journals: [
+      {
+        account: 'difference stock expense',
+        description:
+          'jumlah rupiah barang yang selisih ketika ada pengurangan stock, jika ada penambahan jumlah stock maka posisi dibalik',
+        position: 'debit',
       },
-      down_payments: {
-        read: false,
-        create: false,
-        update: false,
-        delete: false,
-        approval: false,
+      {
+        account: 'Inventory',
+        description:
+          'Diambil dari master item yang dikeluarkan pada stock correction,jika ada penambahan jumlah stock maka posisi dibalik',
+        position: 'credit',
+        subledger: 'item',
       },
-      delivery_orders: {
-        read: false,
-        create: false,
-        update: false,
-        delete: false,
-        approval: false,
+    ],
+  },
+  {
+    module: 'inventory',
+    feature: 'transfer item',
+    journals: [
+      {
+        account: 'inventory in distribution',
+        description: 'jumlah item yang dalam proses pengiriman,Jika ada item yang selisih maka dibalik secara posisi',
+        position: 'debit',
+        subledger: 'item',
       },
-      delivery_notes: {
-        read: false,
-        create: false,
-        update: false,
-        delete: false,
-        approval: false,
+      {
+        account: 'Inventory',
+        description: 'Diambil dari master item yang dalam proses pengiriman',
+        position: 'credit',
+        subledger: 'item',
       },
-      invoices: {
-        read: false,
-        create: false,
-        update: false,
-        delete: false,
-        approval: false,
+      {
+        account: 'difference stock expense',
+        description: 'jumlah selisih item yang belum diterima',
+        position: 'debit',
       },
-      payment_collections: {
-        read: false,
-        create: false,
-        update: false,
-        delete: false,
-        approval: false,
+    ],
+  },
+  {
+    module: 'inventory',
+    feature: 'receive item',
+    journals: [
+      {
+        account: 'Inventory',
+        description: 'Diambil dari master item yang dalam proses pengiriman',
+        position: 'credit',
+        subledger: 'item',
       },
-    },
-    finance: {
-      menu: false,
-      payment_orders: {
-        read: false,
-        create: false,
-        update: false,
-        delete: false,
-        approval: false,
+      {
+        account: 'inventory in distribution',
+        description: 'jumlah item yang dalam proses pengiriman',
+        position: 'debit',
+        subledger: 'item',
       },
-      cash_advances: {
-        read: false,
-        create: false,
-        update: false,
-        delete: false,
-        approval: false,
+    ],
+  },
+  {
+    module: 'accounting',
+    feature: 'Cut Off',
+    journals: [
+      {
+        account: 'Account yang dipilih',
+        description:
+          'Diambil dari master account yang dipilih pada saat create cut off,posisi account dan status subledger mengikuti coa yang dipilih ',
+        position: 'debit or credit',
       },
-      cash_payments: {
-        read: false,
-        create: false,
-        update: false,
-        delete: false,
-        approval: false,
+      {
+        account: 'retained earning',
+        description: 'jumlah nominal account yang dicut off,posisinya bisa credit or debit',
+        position: 'debit or credit',
       },
-      bank_payments: {
-        read: false,
-        create: false,
-        update: false,
-        delete: false,
-        approval: false,
+    ],
+  },
+  {
+    module: 'manufacture',
+    feature: 'processing-in',
+    journals: [
+      {
+        account: 'work in process inventory',
+        description: 'jumlah inventory yang dalam proses produksi',
+        position: 'debit',
+        subledger: 'item',
       },
-      profit_and_loss: {
-        read: false,
+      {
+        account: 'raw material inventory',
+        description:
+          'jumlah bahan baku yang dipakai untuk proses produksi,diambil dari account yang digunakan pada item',
+        position: 'credit',
+        subledger: 'item',
       },
-      debts_aging_report: {
-        read: false,
+    ],
+  },
+  {
+    module: 'manufacture',
+    feature: 'processing-out',
+    journals: [
+      {
+        account: 'finished good inventory',
+        description: 'jumlah item hasil produksi, diambil dari account yang ada diitem ',
+        position: 'debit',
+        subledger: 'item',
       },
-      allocation_report: {
-        read: false,
+      {
+        account: 'work in process inventory',
+        description: 'jumlah inventory yang dalam proses produksi',
+        position: 'credit',
+        subledger: 'item',
       },
-    },
-    manufacture: {
-      menu: false,
-      machines: {
-        read: false,
-        create: false,
-        update: false,
-        delete: false,
-        approval: false,
-      },
-      processes: {
-        read: false,
-        create: false,
-        update: false,
-        delete: false,
-        approval: false,
-      },
-      formulas: {
-        read: false,
-        create: false,
-        update: false,
-        delete: false,
-        approval: false,
-      },
-      processing: {
-        read: false,
-        create: false,
-        update: false,
-        delete: false,
-        approval: false,
-      },
-    },
-    inventory: {
-      menu: false,
-      inventory_usages: {
-        read: false,
-        create: false,
-        update: false,
-        delete: false,
-        approval: false,
-      },
-      inventory_audits: {
-        read: false,
-        create: false,
-        update: false,
-        delete: false,
-        approval: false,
-      },
-      stock_corrections: {
-        read: false,
-        create: false,
-        update: false,
-        delete: false,
-        approval: false,
-      },
-      transfer_items: {
-        read: false,
-        create: false,
-        update: false,
-        delete: false,
-        approval: false,
-      },
-      receive_items: {
-        read: false,
-        create: false,
-        update: false,
-        delete: false,
-        approval: false,
-      },
-      inventory_report: {
-        read: false,
-      },
-    },
-    accounting: {
-      menu: false,
-      cut_offs: {
-        read: false,
-        create: false,
-        update: false,
-        delete: false,
-        approval: false,
-      },
-      memo_journals: {
-        read: false,
-        create: false,
-        update: false,
-        delete: false,
-        approval: false,
-      },
-      general_ledger: {
-        read: false,
-      },
-      subledger: {
-        read: false,
-      },
-      balance_sheet: {
-        read: false,
-      },
-      trial_balance: {
-        read: false,
-      },
-    },
+    ],
   },
 ]

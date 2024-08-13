@@ -29,8 +29,6 @@ export class CreateSettingJournalUseCase {
     await deps.schemaValidation(input, createValidation)
     // 2. define entity
     const exampleEntity = new SettingJournalEntity({
-      branch_id: input.branch_id,
-      code: input.code,
       name: input.name,
     })
     exampleEntity.generateCreatedDate()
@@ -39,10 +37,7 @@ export class CreateSettingJournalUseCase {
     // 3.1 create setting journal
     const response = await deps.createSettingJournalRepository.handle(cleanEntity, options)
     // 3.2. update code counter
-    const counters = await deps.retrieveAllCounterRepository.handle(
-      { filter: { name: 'setting-journal-code' } },
-      options,
-    )
+    const counters = await deps.retrieveAllCounterRepository.handle({ filter: { name: 'setting-journal' } }, options)
     await deps.updateCounterRepository.handle(
       counters.data[0]._id,
       { count: Number(counters.data[0].count) + 1 },

@@ -25,6 +25,7 @@ export default class DbSeedCommand extends BaseConsoleCommand {
       await this.seeds(['roles'], { session })
       await this.seeds(['users'], { session })
       await this.seeds(['chart-of-accounts'], { session })
+      await this.seeds(['setting-journals'], { session })
     } catch (error) {
       console.error(error)
       await session?.abortTransaction()

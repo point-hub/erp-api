@@ -1,5 +1,5 @@
 export const createValidation = {
-  branch_id: ['required', 'string'],
-  code: ['required', 'string'],
   name: ['required', 'string'],
+  'journals.*.chart_of_account_id': ['required', 'string'],
+  'journals.*.position': ['required', 'string'],
 }
