@@ -1,16 +1,16 @@
 import type { IController, IControllerInput } from '@point-hub/papi'
 
 import authConfig from '@/config/auth'
-import { RetrieveAuthUserRepository } from '@/modules/users/repositories/retrieve-auth-user.repository'
-import { VerifyTokenUseCase } from '@/modules/users/use-cases/verify-token.use-case'
-import { verifyToken } from '@/modules/users/utils/jwt'
+import { RetrieveAuthUserRepository } from '@/modules/master/users/repositories/retrieve-auth-user.repository'
+import { VerifyTokenUseCase } from '@/modules/master/users/use-cases/verify-token.use-case'
+import { verifyToken } from '@/modules/master/users/utils/jwt'
 import { throwApiError } from '@/utils/throw-api-error'
 import { schemaValidation } from '@/utils/validation'
 
-import { RetrieveAllAllocationGroupRepository } from '../repositories/retrieve-all.repository'
-import { RetrieveAllAllocationGroupUseCase } from '../use-cases/retrieve-all.use-case'
+import { RetrieveItemCategoryRepository } from '../repositories/retrieve.repository'
+import { RetrieveItemCategoryUseCase } from '../use-cases/retrieve.use-case'
 
-export const retrieveAllAllocationGroupController: IController = async (controllerInput: IControllerInput) => {
+export const retrieveItemCategoryController: IController = async (controllerInput: IControllerInput) => {
   let session
   try {
     // 1. start session for transactional
@@ -18,7 +18,7 @@ export const retrieveAllAllocationGroupController: IController = async (controll
     session.startTransaction()
     // 2. define repository
     const retrieveAuthUserRepository = new RetrieveAuthUserRepository(controllerInput.dbConnection)
-    const retrieveAllAllocationGroupRepository = new RetrieveAllAllocationGroupRepository(controllerInput.dbConnection)
+    const retrieveItemCategoryRepository = new RetrieveItemCategoryRepository(controllerInput.dbConnection)
     // 3. handle business rules
     // 3.1 check authenticated user
     const verifyTokenResponse = await VerifyTokenUseCase.handle(
@@ -36,18 +36,21 @@ export const retrieveAllAllocationGroupController: IController = async (controll
       { session },
     )
     console.log(verifyTokenResponse)
-    // 3.2 retrieve all allocation group
-    const response = await RetrieveAllAllocationGroupUseCase.handle(
-      { query: controllerInput.httpRequest.query },
-      { retrieveAllAllocationGroupRepository },
+    // 3.2 retrieve item category
+    const response = await RetrieveItemCategoryUseCase.handle(
+      { _id: controllerInput.httpRequest.params.id },
+      { retrieveItemCategoryRepository },
     )
     await session.commitTransaction()
     // 4. return response to client
     return {
       status: 200,
       json: {
-        data: response.data,
-        pagination: response.pagination,
+        _id: response._id,
+        code: response.code,
+        name: response.name,
+        created_date: response.created_date,
+        updated_date: response.updated_date,
       },
     }
   } catch (error) {

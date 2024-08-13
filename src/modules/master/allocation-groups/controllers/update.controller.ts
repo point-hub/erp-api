@@ -1,16 +1,17 @@
+import { objClean } from '@point-hub/express-utils'
 import type { IController, IControllerInput } from '@point-hub/papi'
 
 import authConfig from '@/config/auth'
-import { RetrieveAuthUserRepository } from '@/modules/users/repositories/retrieve-auth-user.repository'
-import { VerifyTokenUseCase } from '@/modules/users/use-cases/verify-token.use-case'
-import { verifyToken } from '@/modules/users/utils/jwt'
+import { RetrieveAuthUserRepository } from '@/modules/master/users/repositories/retrieve-auth-user.repository'
+import { VerifyTokenUseCase } from '@/modules/master/users/use-cases/verify-token.use-case'
+import { verifyToken } from '@/modules/master/users/utils/jwt'
 import { throwApiError } from '@/utils/throw-api-error'
 import { schemaValidation } from '@/utils/validation'
 
-import { RetrieveAllUserRepository } from '../repositories/retrieve-all.repository'
-import { RetrieveAllUserUseCase } from '../use-cases/retrieve-all.use-case'
+import { UpdateAllocationGroupRepository } from '../repositories/update.repository'
+import { UpdateAllocationGroupUseCase } from '../use-cases/update.use-case'
 
-export const retrieveAllUserController: IController = async (controllerInput: IControllerInput) => {
+export const updateAllocationGroupController: IController = async (controllerInput: IControllerInput) => {
   let session
   try {
     // 1. start session for transactional
@@ -18,7 +19,7 @@ export const retrieveAllUserController: IController = async (controllerInput: IC
     session.startTransaction()
     // 2. define repository
     const retrieveAuthUserRepository = new RetrieveAuthUserRepository(controllerInput.dbConnection)
-    const retrieveAllUserRepository = new RetrieveAllUserRepository(controllerInput.dbConnection)
+    const updateAllocationGroupRepository = new UpdateAllocationGroupRepository(controllerInput.dbConnection)
     // 3. handle business rules
     // 3.1 check authenticated user
     const verifyTokenResponse = await VerifyTokenUseCase.handle(
@@ -36,18 +37,21 @@ export const retrieveAllUserController: IController = async (controllerInput: IC
       { session },
     )
     console.log(verifyTokenResponse)
-    // 3.2 retrieve all user
-    const response = await RetrieveAllUserUseCase.handle(
-      { query: controllerInput.httpRequest.query },
-      { retrieveAllUserRepository },
+    // 3.2 update allocation group
+    const response = await UpdateAllocationGroupUseCase.handle(
+      {
+        _id: controllerInput.httpRequest.params.id,
+        data: controllerInput.httpRequest.body,
+      },
+      { cleanObject: objClean, schemaValidation, updateAllocationGroupRepository },
     )
     await session.commitTransaction()
     // 4. return response to client
     return {
       status: 200,
       json: {
-        data: response.data,
-        pagination: response.pagination,
+        matched_count: response.matched_count,
+        modified_count: response.modified_count,
       },
     }
   } catch (error) {
