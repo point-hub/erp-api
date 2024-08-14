@@ -13,7 +13,6 @@ export interface IInput {
   }
 }
 export interface IDeps {
-  cleanObject(object: object): object
   schemaValidation: ISchemaValidation
   updateMachineRepository: IUpdateMachineRepository
 }

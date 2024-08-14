@@ -10,8 +10,7 @@ import { createValidation } from '../validations/create.validation'
 export interface IInput {
   code?: string
   name?: string
-  address?: string
-  phone?: string
+  notes?: string
 }
 export interface IDeps {
   cleanObject(object: object): object
@@ -35,8 +34,7 @@ export class CreateMachineUseCase {
     const machineEntity = new MachineEntity({
       code: input.code,
       name: input.name,
-      address: input.address,
-      phone: input.phone,
+      notes: input.notes,
     })
     machineEntity.generateCreatedDate()
     const cleanEntity = deps.cleanObject(machineEntity.data)
