@@ -2,17 +2,21 @@ import type { ISchemaValidation } from '@point-hub/papi'
 
 import { IRetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
 import { IUpdateCounterRepository } from '@/modules/counters/repositories/update.repository'
+import { IAuth } from '@/modules/master/users/interface'
 
 import { BranchEntity } from '../entity'
 import { ICreateBranchRepository } from '../repositories/create.repository'
 import { createValidation } from '../validations/create.validation'
 
 export interface IInput {
-  code?: string
-  name?: string
-  address?: string
-  phone?: string
-  notes?: string
+  auth: IAuth
+  data: {
+    code?: string
+    name?: string
+    address?: string
+    phone?: string
+    notes?: string
+  }
 }
 export interface IDeps {
   cleanObject(object: object): object
@@ -31,14 +35,16 @@ export interface IOutput {
 export class CreateBranchUseCase {
   static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
     // 1. validate schema
-    await deps.schemaValidation(input, createValidation)
+    await deps.schemaValidation(input.data, createValidation)
     // 2. define entity
+    console.log(input.auth)
     const branchEntity = new BranchEntity({
-      code: input.code,
-      name: input.name,
-      address: input.address,
-      phone: input.phone,
-      notes: input.notes,
+      code: input.data.code,
+      name: input.data.name,
+      address: input.data.address,
+      phone: input.data.phone,
+      notes: input.data.notes,
+      created_by: input.auth._id,
     })
     branchEntity.generateCreatedDate()
     const cleanEntity = deps.cleanObject(branchEntity.data)

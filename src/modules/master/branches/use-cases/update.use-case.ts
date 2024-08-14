@@ -1,10 +1,13 @@
 import type { ISchemaValidation } from '@point-hub/papi'
 
+import { IAuth } from '@/modules/master/users/interface'
+
 import { BranchEntity } from '../entity'
 import { IUpdateBranchRepository } from '../repositories/update.repository'
 import { updateValidation } from '../validations/update.validation'
 
 export interface IInput {
+  auth: IAuth
   _id: string
   data: {
     code?: string
@@ -12,6 +15,7 @@ export interface IInput {
     address?: string
     phone?: string
     notes?: string
+    updated_by?: string
   }
 }
 export interface IDeps {
@@ -37,6 +41,7 @@ export class UpdateBranchUseCase {
       address: input.data.address,
       phone: input.data.phone,
       notes: input.data.notes,
+      updated_by: input.auth._id,
     })
     branchEntity.generateUpdatedDate()
     // 3. database operation

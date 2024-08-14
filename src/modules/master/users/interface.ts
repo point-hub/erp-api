@@ -16,6 +16,21 @@ export interface IUserEntity {
   updated_date?: Date
 }
 
+export interface IAuth {
+  _id: string
+  name: string
+  username: string
+  email: string
+  role: {
+    _id: string
+    code: string
+    name: string
+    permission: {
+      [key: string]: boolean | { [key: string]: boolean }
+    }
+  }
+}
+
 export interface IUserToken {
   application_id?: string
   user_id?: string

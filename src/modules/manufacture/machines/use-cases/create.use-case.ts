@@ -2,15 +2,19 @@ import type { ISchemaValidation } from '@point-hub/papi'
 
 import { IRetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
 import { IUpdateCounterRepository } from '@/modules/counters/repositories/update.repository'
+import { IAuth } from '@/modules/master/users/interface'
 
 import { MachineEntity } from '../entity'
 import { ICreateMachineRepository } from '../repositories/create.repository'
 import { createValidation } from '../validations/create.validation'
 
 export interface IInput {
-  code?: string
-  name?: string
-  notes?: string
+  auth: IAuth
+  data: {
+    code?: string
+    name?: string
+    notes?: string
+  }
 }
 export interface IDeps {
   cleanObject(object: object): object
@@ -29,12 +33,13 @@ export interface IOutput {
 export class CreateMachineUseCase {
   static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
     // 1. validate schema
-    await deps.schemaValidation(input, createValidation)
+    await deps.schemaValidation(input.data, createValidation)
     // 2. define entity
     const machineEntity = new MachineEntity({
-      code: input.code,
-      name: input.name,
-      notes: input.notes,
+      code: input.data.code,
+      name: input.data.name,
+      notes: input.data.notes,
+      created_by: input.auth._id,
     })
     machineEntity.generateCreatedDate()
     const cleanEntity = deps.cleanObject(machineEntity.data)
