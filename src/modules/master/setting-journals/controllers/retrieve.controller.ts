@@ -22,9 +22,9 @@ export const retrieveSettingJournalController: IController = async (controllerIn
       status: 200,
       json: {
         _id: response._id,
-        branch: response.branch,
-        code: response.code,
-        name: response.name,
+        module: response.module,
+        feature: response.feature,
+        journals: response.journals,
         created_date: response.created_date,
         updated_date: response.updated_date,
       },

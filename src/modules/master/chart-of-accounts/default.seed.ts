@@ -2,7 +2,7 @@ import { type IDatabase } from '@point-hub/papi'
 
 import { CreateChartOfAccountCategoryRepository } from '@/modules/master/chart-of-account-categories/repositories/create.repository'
 import { CreateChartOfAccountTypeRepository } from '@/modules/master/chart-of-account-types/repositories/create.repository'
-import { CreateChartOfAccountRepository } from '@/modules/chart-of-accounts/repositories/create.repository'
+import { CreateChartOfAccountRepository } from '@/modules/master/chart-of-accounts/repositories/create.repository'
 
 export interface ISeed {
   type?: string

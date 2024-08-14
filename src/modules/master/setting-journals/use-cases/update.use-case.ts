@@ -7,7 +7,9 @@ import { updateValidation } from '../validations/update.validation'
 export interface IInput {
   _id: string
   data: {
-    name?: string
+    module?: string
+    feature?: string
+    journals?: { [key: string]: string }[]
   }
 }
 export interface IDeps {
@@ -25,7 +27,9 @@ export class UpdateSettingJournalUseCase {
     await deps.schemaValidation(input, updateValidation)
     // 2. define entity
     const settingJournalEntity = new SettingJournalEntity({
-      name: input.data.name,
+      module: input.data.module,
+      feature: input.data.feature,
+      journals: input.data.journals,
     })
     settingJournalEntity.generateUpdatedDate()
     // 3. database operation

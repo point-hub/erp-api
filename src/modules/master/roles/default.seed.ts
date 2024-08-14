@@ -1,6 +1,6 @@
 import { type IDatabase } from '@point-hub/papi'
 
-import { CreateRoleRepository } from '@/modules/roles/repositories/create.repository'
+import { CreateRoleRepository } from './repositories/create.repository'
 
 export interface ISeed {
   name?: string

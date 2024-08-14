@@ -30,24 +30,52 @@ export class RetrieveSettingJournalRepository implements IRetrieveSettingJournal
       pipeline.push({ $match: { $and: filters } })
     }
 
-    pipeline.push({
-      $lookup: {
-        from: 'branches',
-        localField: 'branch_id',
-        foreignField: '_id',
-        pipeline: [{ $project: { code: 1, name: 1 } }],
-        as: 'branch',
-      },
-    })
-    pipeline.push({
-      $set: {
-        branch: {
-          $arrayElemAt: ['$branch', 0],
+    pipeline.push(
+      {
+        $unwind: {
+          path: '$journals',
+          preserveNullAndEmptyArrays: true,
         },
       },
-    })
-    pipeline.push({ $unset: ['branch_id'] })
-
+      {
+        $lookup: {
+          from: 'chart_of_accounts',
+          localField: 'journals.chart_of_account_id',
+          foreignField: '_id',
+          pipeline: [{ $project: { number: 1, name: 1 } }],
+          as: 'lookup_chart_of_accounts',
+        },
+      },
+      {
+        $unwind: {
+          path: '$lookup_chart_of_accounts',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $group: {
+          _id: '$_id',
+          module: { $first: '$module' },
+          feature: { $first: '$feature' },
+          journals: {
+            $push: {
+              _id: '$journals._id',
+              description: '$journals.description',
+              account: '$journals.account',
+              position: '$journals.position',
+              subledger: '$journals.subledger',
+              editable: '$journals.editable',
+              chart_of_account: {
+                _id: '$lookup_chart_of_accounts._id',
+                number: '$lookup_chart_of_accounts.number',
+                name: '$lookup_chart_of_accounts.name',
+              },
+            },
+          },
+        },
+      },
+    )
+    // console.log(pipeline)
     const response = await this.database.collection(this.collection).aggregate(pipeline, {}, options)
 
     return {

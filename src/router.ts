@@ -14,6 +14,7 @@ import itemCategoriesRouter from './modules/master/item-categories/router'
 import itemsRouter from './modules/master/items/router'
 import permissionsRouter from './modules/master/permissions/router'
 import rolesRouter from './modules/master/roles/router'
+import settingJournalsRouter from './modules/master/setting-journals/router'
 import supplierGroupsRouter from './modules/master/supplier-groups/router'
 import suppliersRouter from './modules/master/suppliers/router'
 import userRouter from './modules/master/users/router'
@@ -38,6 +39,7 @@ export default async function (baseRouterInput: IBaseAppInput) {
   app.use('/v1/chart-of-account-types', await chartOfAccountTypeRouter(baseRouterInput))
   app.use('/v1/chart-of-account-categories', await chartOfAccountCategoryRouter(baseRouterInput))
   app.use('/v1/chart-of-accounts', await chartOfAccountRouter(baseRouterInput))
+  app.use('/v1/setting-journals', await settingJournalsRouter(baseRouterInput))
   app.use('/v1/customer-groups', await customerGroupsRouter(baseRouterInput))
   app.use('/v1/customers', await customersRouter(baseRouterInput))
   app.use('/v1/allocation-groups', await allocationGroupsRouter(baseRouterInput))

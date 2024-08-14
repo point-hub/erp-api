@@ -1,31 +1,54 @@
 import { type IDatabase } from '@point-hub/papi'
 
-import { CreateSettingJournalRepository } from '@/modules/setting-journals/repositories/create.repository'
+import { RetrieveAllChartOfAccountRepository } from '@/modules/master/chart-of-accounts/repositories/retrieve-all.repository'
+import { CreateSettingJournalRepository } from '@/modules/master/setting-journals/repositories/create.repository'
+
+import { ISettingJournalEntity } from './interface'
 
 export const seed = async (dbConnection: IDatabase, options: unknown) => {
   console.info(`[seed] setting journals data`)
   // delete all data inside collection
-  await dbConnection.collection('setting-journals').deleteAll(options)
+  await dbConnection.collection('setting_journals').deleteAll(options)
   // prepare repository
   const createSettingJournalRepository = new CreateSettingJournalRepository(dbConnection)
+  const retrieveAllChartOfAccountRepository = new RetrieveAllChartOfAccountRepository(dbConnection)
   // seed
-  await createSettingJournalRepository.handle(seeds[0], options)
+  for (const feature of seeds) {
+    for (const journal of feature.journals ?? []) {
+      if (journal.editable) {
+        const account = await retrieveAllChartOfAccountRepository.handle(
+          {
+            filter: {
+              name: journal.account,
+            },
+          },
+          options,
+        )
+        if (account?.data?.length) {
+          console.log(account.data)
+          journal.chart_of_account_id = account.data[0]._id
+        }
+      }
+    }
+    await createSettingJournalRepository.handle(feature, options)
+  }
 }
 
-export const seeds = [
+export const seeds: ISettingJournalEntity[] = [
   {
     module: 'purchasing',
     feature: 'down payment',
     journals: [
       {
+        description: 'jumlah uang muka yang harus dibayarkan ke supplier',
         account: 'purchase down payment',
-        description: 'jumlah dp yang harus dibayarkan ke supplier',
-        position: 'debit',
         subledger: 'supplier',
+        position: 'debit',
+        editable: true,
       },
       {
-        account: 'Cash or Bank ',
-        description: 'diambil dari modul cash atau bank',
+        description: 'akun cash atau bank tergantung metode pembayaran yang dipakai',
+        account: 'cash / bank ',
         position: 'credit',
       },
     ],
@@ -39,50 +62,25 @@ export const seeds = [
         description: 'jumlah hutang yang harus dibayarkan ke supplier',
         position: 'credit',
         subledger: 'supplier',
+        editable: true,
       },
       {
         account: 'income tax receivable',
         description: 'jumlah PPN yang dibayarkan kepada supplier',
         position: 'debit',
+        editable: true,
       },
       {
         account: 'payment difference',
-        description: 'pendapata / beban selisih pembayaran',
+        description: 'pendapatan (beban) selisih pembayaran',
         position: 'debit',
+        editable: true,
       },
       {
         account: 'inventory',
         description: 'akun sediaan tergantung dari coa yang ada di master item',
         position: 'debit',
         subledger: 'item',
-      },
-    ],
-  },
-  {
-    module: 'purchasing',
-    feature: 'payment order',
-    journals: [
-      {
-        account: 'account payable',
-        description: 'diambil dari modul purchase invoice',
-        position: 'debit',
-        subledger: 'supplier',
-      },
-      {
-        account: 'purchase down payment',
-        description: 'diambil dari modul purchase down payment',
-        position: 'credit',
-        subledger: 'supplier',
-      },
-      {
-        account: 'Others',
-        description: 'Diambil dari account yang dipilih pada saat pembuatan form payment order',
-        position: 'credit',
-      },
-      {
-        account: 'Cash or bank',
-        description: 'Diambil dari modul cash atau bank',
-        position: 'debit',
       },
     ],
   },
@@ -95,10 +93,11 @@ export const seeds = [
         description: 'jumlah uang muka yang diterima dari customer ',
         position: 'credit',
         subledger: 'customer',
+        editable: true,
       },
       {
-        account: 'Cash or bank',
-        description: 'Diambil dari modul cash atau bank',
+        account: 'cash / bank',
+        description: 'diambil dari modul cash atau bank',
         position: 'debit',
       },
     ],
@@ -111,10 +110,11 @@ export const seeds = [
         account: 'cost of sales',
         description: 'jumlah rupiah barang yang dikeluarkan ',
         position: 'debit',
+        editable: true,
       },
       {
-        account: 'Inventory',
-        description: 'Diambil dari master item yang dikeluarkan pada delivery note',
+        account: 'inventory',
+        description: 'diambil dari master item yang dikeluarkan pada delivery note',
         position: 'credit',
         subledger: 'item',
       },
@@ -129,11 +129,13 @@ export const seeds = [
         description: 'jumlah Piutang yang harus diterima dari supplier',
         position: 'debit',
         subledger: 'customer',
+        editable: true,
       },
       {
         account: 'income tax payable',
         description: 'jumlah PPN yang diterima dari customer',
         position: 'credit',
+        editable: true,
       },
       {
         account: 'inventory',
@@ -152,11 +154,12 @@ export const seeds = [
         description:
           'jumlah rupiah barang yang selisih ketika ada pengurangan stock, jika ada penambahan jumlah stock maka posisi dibalik',
         position: 'debit',
+        editable: true,
       },
       {
-        account: 'Inventory',
+        account: 'inventory',
         description:
-          'Diambil dari master item yang dikeluarkan pada stock correction,jika ada penambahan jumlah stock maka posisi dibalik',
+          'diambil dari master item yang dikeluarkan pada stock correction,jika ada penambahan jumlah stock maka posisi dibalik',
         position: 'credit',
         subledger: 'item',
       },
@@ -168,13 +171,14 @@ export const seeds = [
     journals: [
       {
         account: 'inventory in distribution',
-        description: 'jumlah item yang dalam proses pengiriman,Jika ada item yang selisih maka dibalik secara posisi',
+        description: 'jumlah item yang dalam proses pengiriman, jika ada item yang selisih maka dibalik secara posisi',
         position: 'debit',
         subledger: 'item',
+        editable: true,
       },
       {
-        account: 'Inventory',
-        description: 'Diambil dari master item yang dalam proses pengiriman',
+        account: 'inventory',
+        description: 'diambil dari master item yang dalam proses pengiriman',
         position: 'credit',
         subledger: 'item',
       },
@@ -190,8 +194,8 @@ export const seeds = [
     feature: 'receive item',
     journals: [
       {
-        account: 'Inventory',
-        description: 'Diambil dari master item yang dalam proses pengiriman',
+        account: 'inventory',
+        description: 'diambil dari master item yang dalam proses pengiriman',
         position: 'credit',
         subledger: 'item',
       },
@@ -200,23 +204,19 @@ export const seeds = [
         description: 'jumlah item yang dalam proses pengiriman',
         position: 'debit',
         subledger: 'item',
+        editable: true,
       },
     ],
   },
   {
     module: 'accounting',
-    feature: 'Cut Off',
+    feature: 'cut off',
     journals: [
-      {
-        account: 'Account yang dipilih',
-        description:
-          'Diambil dari master account yang dipilih pada saat create cut off,posisi account dan status subledger mengikuti coa yang dipilih ',
-        position: 'debit or credit',
-      },
       {
         account: 'retained earning',
         description: 'jumlah nominal account yang dicut off,posisinya bisa credit or debit',
-        position: 'debit or credit',
+        position: 'debit',
+        editable: true,
       },
     ],
   },
@@ -229,6 +229,7 @@ export const seeds = [
         description: 'jumlah inventory yang dalam proses produksi',
         position: 'debit',
         subledger: 'item',
+        editable: true,
       },
       {
         account: 'raw material inventory',
@@ -254,6 +255,7 @@ export const seeds = [
         description: 'jumlah inventory yang dalam proses produksi',
         position: 'credit',
         subledger: 'item',
+        editable: true,
       },
     ],
   },

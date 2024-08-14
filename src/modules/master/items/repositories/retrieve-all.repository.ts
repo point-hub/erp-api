@@ -24,7 +24,7 @@ export class RetrieveAllItemRepository implements IRetrieveAllItemRepository {
     const response = await this.database.collection(collectionName).aggregate(pipeline, query, options)
 
     return {
-      data: response.data as IRetrieveAllItemOutput[],
+      data: response.data as IRetrieveItemOutput[],
       pagination: response.pagination,
     }
   }

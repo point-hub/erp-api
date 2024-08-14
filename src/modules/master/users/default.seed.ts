@@ -1,6 +1,6 @@
 import { type IDatabase } from '@point-hub/papi'
 
-import { RetrieveAllRoleRepository } from '@/modules/roles/repositories/retrieve-all.repository'
+import { RetrieveAllRoleRepository } from '@/modules/master/roles/repositories/retrieve-all.repository'
 import { SignupRepository } from '@/modules/master/users/repositories/signup.repository'
 
 export interface ISeed {

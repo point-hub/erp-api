@@ -1,10 +1,18 @@
 export interface ISettingJournalEntity {
   _id?: string
-  name?: string
+  module?: string
+  feature?: string
   journals?: {
-    chart_of_account_id: string
-    description: string
-    position: 'debit' | 'credit'
+    chart_of_account_id?: string
+    chart_of_account?: {
+      number: string
+      name: string
+    }
+    description?: string
+    account?: string
+    subledger?: string
+    editable?: boolean
+    position?: 'debit' | 'credit'
   }[]
   created_by?: string
   updated_by?: string

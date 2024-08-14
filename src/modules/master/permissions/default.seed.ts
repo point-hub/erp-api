@@ -1,6 +1,6 @@
 import { type IDatabase } from '@point-hub/papi'
 
-import { CreatePermissionRepository } from '@/modules/permissions/repositories/create.repository'
+import { CreatePermissionRepository } from './repositories/create.repository'
 
 export const seed = async (dbConnection: IDatabase, options: unknown) => {
   console.info(`[seed] permissions data`)

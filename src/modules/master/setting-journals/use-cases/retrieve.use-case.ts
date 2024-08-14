@@ -19,7 +19,9 @@ export class RetrieveSettingJournalUseCase {
     // 2. output
     return {
       _id: response._id,
-      name: response.name,
+      module: response.module,
+      feature: response.feature,
+      journals: response.journals,
       created_date: response.created_date,
       updated_date: response.updated_date,
     }

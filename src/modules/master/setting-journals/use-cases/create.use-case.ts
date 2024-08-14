@@ -8,9 +8,8 @@ import { ICreateSettingJournalRepository } from '../repositories/create.reposito
 import { createValidation } from '../validations/create.validation'
 
 export interface IInput {
-  branch_id?: string
-  code?: string
-  name?: string
+  module?: string
+  feature?: string
 }
 export interface IDeps {
   cleanObject(object: object): object
@@ -29,7 +28,8 @@ export class CreateSettingJournalUseCase {
     await deps.schemaValidation(input, createValidation)
     // 2. define entity
     const exampleEntity = new SettingJournalEntity({
-      name: input.name,
+      module: input.module,
+      feature: input.feature,
     })
     exampleEntity.generateCreatedDate()
     const cleanEntity = deps.cleanObject(exampleEntity.data)
