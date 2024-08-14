@@ -3,6 +3,7 @@ import express, { Express } from 'express'
 import { IBaseAppInput } from './app'
 import countersRouter from './modules/counters/router'
 import healthRouter from './modules/health/router'
+import machinesRouter from './modules/manufacture/machines/router'
 import allocationGroupsRouter from './modules/master/allocation-groups/router'
 import allocationsRouter from './modules/master/allocations/router'
 import branchesRouter from './modules/master/branches/router'
@@ -50,6 +51,7 @@ export default async function (baseRouterInput: IBaseAppInput) {
   app.use('/v1/item-categories', await itemCategoriesRouter(baseRouterInput))
   app.use('/v1/items', await itemsRouter(baseRouterInput))
   app.use('/v1/counters', await countersRouter(baseRouterInput))
+  app.use('/v1/manufacture/machines', await machinesRouter(baseRouterInput))
 
   return app
 }

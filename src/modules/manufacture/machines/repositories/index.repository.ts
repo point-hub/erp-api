@@ -1,0 +1,5 @@
+export { CreateMachineRepository } from './create.repository'
+export { DeleteMachineRepository } from './delete.repository'
+export { RetrieveMachineRepository } from './retrieve.repository'
+export { RetrieveAllMachineRepository } from './retrieve-all.repository'
+export { UpdateMachineRepository } from './update.repository'
