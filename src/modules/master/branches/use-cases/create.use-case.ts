@@ -43,7 +43,7 @@ export class CreateBranchUseCase {
     // 3. database operation
     // 3.1 create branch
     const response = await deps.createBranchRepository.handle(cleanEntity, options)
-    // 3.2. update code counter
+    // 3.2. update counter
     const counters = await deps.retrieveAllRepository.handle({ filter: { name: 'branch-code' } }, options)
     await deps.updateRepository.handle(counters.data[0]._id, { count: Number(counters.data[0].count) + 1 }, options)
     // 4. output
