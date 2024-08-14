@@ -2,6 +2,7 @@ import express, { Express } from 'express'
 
 import { IBaseAppInput } from './app'
 import countersRouter from './modules/counters/router'
+import healthRouter from './modules/health/router'
 import allocationGroupsRouter from './modules/master/allocation-groups/router'
 import allocationsRouter from './modules/master/allocations/router'
 import branchesRouter from './modules/master/branches/router'
@@ -28,6 +29,7 @@ export default async function (baseRouterInput: IBaseAppInput) {
    * Register all available modules
    * <modules>/router.ts
    */
+  app.use('/v1/health', await healthRouter(baseRouterInput))
   app.use('/v1/users', await userRouter(baseRouterInput))
   app.use('/v1/auth', await authRouter(baseRouterInput))
   app.use('/v1/permissions', await permissionsRouter(baseRouterInput))

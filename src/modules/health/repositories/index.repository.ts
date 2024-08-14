@@ -1,0 +1,5 @@
+export { CreateHealthRepository } from './create.repository'
+export { DeleteHealthRepository } from './delete.repository'
+export { RetrieveHealthRepository } from './retrieve.repository'
+export { RetrieveAllHealthRepository } from './retrieve-all.repository'
+export { UpdateHealthRepository } from './update.repository'

@@ -1,0 +1,5 @@
+export { createHealthController } from './create.controller'
+export { deleteHealthController } from './delete.controller'
+export { retrieveHealthController } from './retrieve.controller'
+export { retrieveAllHealthController } from './retrieve-all.controller'
+export { updateHealthController } from './update.controller'
