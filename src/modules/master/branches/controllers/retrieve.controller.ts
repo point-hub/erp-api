@@ -26,6 +26,7 @@ export const retrieveBranchController: IController = async (controllerInput: ICo
         name: response.name,
         address: response.address,
         phone: response.phone,
+        notes: response.notes,
         created_date: response.created_date,
         updated_date: response.updated_date,
       },

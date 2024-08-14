@@ -15,6 +15,7 @@ export interface IOutput {
   name: string
   address: string
   phone: string
+  notes: string
   created_date: string
   updated_date: string
 }
@@ -30,6 +31,7 @@ export class RetrieveBranchUseCase {
       name: response.name,
       address: response.address,
       phone: response.phone,
+      notes: response.notes,
       created_date: response.created_date,
       updated_date: response.updated_date,
     }

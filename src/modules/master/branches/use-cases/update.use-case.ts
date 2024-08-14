@@ -11,10 +11,10 @@ export interface IInput {
     name?: string
     address?: string
     phone?: string
+    notes?: string
   }
 }
 export interface IDeps {
-  cleanObject(object: object): object
   schemaValidation: ISchemaValidation
   updateBranchRepository: IUpdateBranchRepository
 }
@@ -36,6 +36,7 @@ export class UpdateBranchUseCase {
       name: input.data.name,
       address: input.data.address,
       phone: input.data.phone,
+      notes: input.data.notes,
     })
     branchEntity.generateUpdatedDate()
     // 3. database operation

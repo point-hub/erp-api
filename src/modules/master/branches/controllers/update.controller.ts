@@ -1,4 +1,3 @@
-import { objClean } from '@point-hub/express-utils'
 import type { IController, IControllerInput } from '@point-hub/papi'
 
 import { schemaValidation } from '@/utils/validation'
@@ -20,7 +19,7 @@ export const updateBranchController: IController = async (controllerInput: ICont
         _id: controllerInput.httpRequest.params.id,
         data: controllerInput.httpRequest.body,
       },
-      { cleanObject: objClean, schemaValidation, updateBranchRepository },
+      { schemaValidation, updateBranchRepository },
     )
     await session.commitTransaction()
     // 4. return response to client

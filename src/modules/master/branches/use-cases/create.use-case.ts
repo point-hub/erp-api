@@ -12,6 +12,7 @@ export interface IInput {
   name?: string
   address?: string
   phone?: string
+  notes?: string
 }
 export interface IDeps {
   cleanObject(object: object): object
@@ -37,6 +38,7 @@ export class CreateBranchUseCase {
       name: input.name,
       address: input.address,
       phone: input.phone,
+      notes: input.notes,
     })
     branchEntity.generateCreatedDate()
     const cleanEntity = deps.cleanObject(branchEntity.data)
