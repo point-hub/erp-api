@@ -42,7 +42,7 @@ export class CreateMachineUseCase {
     // 3.1 create machine
     const response = await deps.createMachineRepository.handle(cleanEntity, options)
     // 3.2. update counter
-    const counters = await deps.retrieveAllRepository.handle({ filter: { name: 'machine-code' } }, options)
+    const counters = await deps.retrieveAllRepository.handle({ filter: { name: 'machines' } }, options)
     await deps.updateRepository.handle(counters.data[0]._id, { count: Number(counters.data[0].count) + 1 }, options)
     // 4. output
     return { inserted_id: response.inserted_id }
