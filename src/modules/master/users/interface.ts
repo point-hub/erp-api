@@ -16,6 +16,13 @@ export interface IUserEntity {
   updated_date?: Date
 }
 
+export interface IAuthBy {
+  _id: string
+  name: string
+  username: string
+  email: string
+}
+
 export interface IAuth {
   _id: string
   name: string
