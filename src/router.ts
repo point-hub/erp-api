@@ -29,6 +29,7 @@ export default async function (baseRouterInput: IBaseAppInput) {
    * Register all available modules
    * <modules>/router.ts
    */
+  app.use('/', await healthRouter(baseRouterInput))
   app.use('/v1/health', await healthRouter(baseRouterInput))
   app.use('/v1/users', await userRouter(baseRouterInput))
   app.use('/v1/auth', await authRouter(baseRouterInput))

@@ -1,5 +1,15 @@
-export { createHealthController } from './create.controller'
-export { deleteHealthController } from './delete.controller'
-export { retrieveHealthController } from './retrieve.controller'
-export { retrieveAllHealthController } from './retrieve-all.controller'
-export { updateHealthController } from './update.controller'
+import type { IController, IControllerInput } from '@point-hub/papi'
+
+import { version } from '@/../package.json'
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const healthController: IController = async (controllerInput: IControllerInput) => {
+  return {
+    status: 200,
+    json: {
+      version: version,
+      status: 'healthy',
+      timestamp: new Date(),
+    },
+  }
+}
