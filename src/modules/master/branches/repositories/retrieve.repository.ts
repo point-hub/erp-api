@@ -8,6 +8,7 @@ export interface IRetrieveBranchOutput {
   name: string
   address: string
   phone: string
+  notes: string
   created_date: string
   updated_date: string
 }
@@ -26,6 +27,7 @@ export class RetrieveBranchRepository implements IRetrieveBranchRepository {
       name: response.name as string,
       address: response.address as string,
       phone: response.phone as string,
+      notes: response.notes as string,
       created_date: response.created_date as string,
       updated_date: response.updated_date as string,
     }

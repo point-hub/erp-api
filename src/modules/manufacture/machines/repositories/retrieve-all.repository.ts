@@ -17,23 +17,7 @@ export class RetrieveAllMachineRepository implements IRetrieveAllMachineReposito
   async handle(query: IQuery, options?: unknown): Promise<IRetrieveAllMachineOutput> {
     const pipeline: IPipeline[] = []
 
-    const filters = [] // filter keys using "and" logic
-    const filterAll = [] // filter keys using "or" logic
-
-    if (query.filter?.search) {
-      filterAll.push({ code: { $regex: query.filter?.search, $options: 'i' } })
-      filterAll.push({ name: { $regex: query.filter?.search, $options: 'i' } })
-      filterAll.push({ notes: { $regex: query.filter?.search, $options: 'i' } })
-      filters.push({ $or: filterAll })
-    }
-
-    if (query.filter?.code) filters.push({ code: { $regex: query.filter?.code, $options: 'i' } })
-    if (query.filter?.name) filters.push({ name: { $regex: query.filter?.name, $options: 'i' } })
-    if (query.filter?.notes) filters.push({ notes: { $regex: query.filter?.notes, $options: 'i' } })
-
-    if (filters.length) {
-      pipeline.push({ $match: { $and: filters } })
-    }
+    pipeline.push(...this.aggregateFilters(query))
 
     const response = await this.database.collection(collectionName).aggregate(pipeline, query, options)
 
@@ -41,5 +25,25 @@ export class RetrieveAllMachineRepository implements IRetrieveAllMachineReposito
       data: response.data as unknown as IRetrieveMachineOutput[],
       pagination: response.pagination,
     }
+  }
+
+  private aggregateFilters(query: IQuery) {
+    const filtersAnd = [] // filter keys using "and" logic
+    const filtersOr = [] // filter keys using "or" logic
+
+    if (query.filter?.search) {
+      filtersOr.push({ code: { $regex: query.filter?.search, $options: 'i' } })
+      filtersOr.push({ name: { $regex: query.filter?.search, $options: 'i' } })
+      filtersAnd.push({ $or: filtersOr })
+    }
+
+    if (query.filter?.code) filtersAnd.push({ code: { $regex: query.filter?.code, $options: 'i' } })
+    if (query.filter?.name) filtersAnd.push({ name: { $regex: query.filter?.name, $options: 'i' } })
+
+    if (!filtersAnd.length) {
+      return []
+    }
+
+    return [{ $match: { $and: filtersAnd } }]
   }
 }

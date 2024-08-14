@@ -17,25 +17,7 @@ export class RetrieveAllBranchRepository implements IRetrieveAllBranchRepository
   async handle(query: IQuery, options?: unknown): Promise<IRetrieveAllBranchOutput> {
     const pipeline: IPipeline[] = []
 
-    const filters = [] // filter keys using "and" logic
-    const filterAll = [] // filter keys using "or" logic
-
-    if (query.filter?.search) {
-      filterAll.push({ code: { $regex: query.filter?.search, $options: 'i' } })
-      filterAll.push({ name: { $regex: query.filter?.search, $options: 'i' } })
-      filterAll.push({ address: { $regex: query.filter?.search, $options: 'i' } })
-      filterAll.push({ phone: { $regex: query.filter?.search, $options: 'i' } })
-      filters.push({ $or: filterAll })
-    }
-
-    if (query.filter?.code) filters.push({ code: { $regex: query.filter?.code, $options: 'i' } })
-    if (query.filter?.name) filters.push({ name: { $regex: query.filter?.name, $options: 'i' } })
-    if (query.filter?.address) filters.push({ address: { $regex: query.filter?.address, $options: 'i' } })
-    if (query.filter?.phone) filters.push({ phone: { $regex: query.filter?.phone, $options: 'i' } })
-
-    if (filters.length) {
-      pipeline.push({ $match: { $and: filters } })
-    }
+    pipeline.push(...this.aggregateFilters(query))
 
     const response = await this.database.collection(collectionName).aggregate(pipeline, query, options)
 
@@ -43,5 +25,29 @@ export class RetrieveAllBranchRepository implements IRetrieveAllBranchRepository
       data: response.data as unknown as IRetrieveBranchOutput[],
       pagination: response.pagination,
     }
+  }
+
+  private aggregateFilters(query: IQuery) {
+    const filtersAnd = [] // filter keys using "and" logic
+    const filtersOr = [] // filter keys using "or" logic
+
+    if (query.filter?.search) {
+      filtersOr.push({ code: { $regex: query.filter?.search, $options: 'i' } })
+      filtersOr.push({ name: { $regex: query.filter?.search, $options: 'i' } })
+      filtersOr.push({ address: { $regex: query.filter?.search, $options: 'i' } })
+      filtersOr.push({ phone: { $regex: query.filter?.search, $options: 'i' } })
+      filtersAnd.push({ $or: filtersOr })
+    }
+
+    if (query.filter?.code) filtersAnd.push({ code: { $regex: query.filter?.code, $options: 'i' } })
+    if (query.filter?.name) filtersAnd.push({ name: { $regex: query.filter?.name, $options: 'i' } })
+    if (query.filter?.address) filtersAnd.push({ address: { $regex: query.filter?.address, $options: 'i' } })
+    if (query.filter?.phone) filtersAnd.push({ phone: { $regex: query.filter?.phone, $options: 'i' } })
+
+    if (!filtersAnd.length) {
+      return []
+    }
+
+    return [{ $match: { $and: filtersAnd } }]
   }
 }
