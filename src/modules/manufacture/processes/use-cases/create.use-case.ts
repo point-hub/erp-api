@@ -1,0 +1,51 @@
+import type { ISchemaValidation } from '@point-hub/papi'
+
+import { IRetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
+import { IUpdateCounterRepository } from '@/modules/counters/repositories/update.repository'
+import { IAuth } from '@/modules/master/users/interface'
+
+import { ProcessEntity } from '../entity'
+import { ICreateProcessRepository } from '../repositories/create.repository'
+import { createValidation } from '../validations/create.validation'
+
+export interface IInput {
+  auth: IAuth
+  data: {
+    code?: string
+    name?: string
+    notes?: string
+  }
+}
+export interface IDeps {
+  cleanObject(object: object): object
+  createProcessRepository: ICreateProcessRepository
+  retrieveAllRepository: IRetrieveAllCounterRepository
+  updateRepository: IUpdateCounterRepository
+  schemaValidation: ISchemaValidation
+}
+export interface IOptions {
+  session?: unknown
+}
+export interface IOutput {
+  inserted_id: string
+}
+
+export class CreateProcessUseCase {
+  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+    // 1. validate schema
+    await deps.schemaValidation(input.data, createValidation)
+    // 2. define entity
+    const processEntity = new ProcessEntity({
+      code: input.data.code,
+      name: input.data.name,
+      notes: input.data.notes,
+      created_by: input.auth._id,
+    })
+    processEntity.generateCreatedDate()
+    const cleanEntity = deps.cleanObject(processEntity.data)
+    // 3. database operation
+    const response = await deps.createProcessRepository.handle(cleanEntity, options)
+    // 4. output
+    return { inserted_id: response.inserted_id }
+  }
+}

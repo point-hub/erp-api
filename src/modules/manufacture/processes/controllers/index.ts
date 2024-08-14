@@ -1,0 +1,5 @@
+export { createProcessController } from './create.controller'
+export { deleteProcessController } from './delete.controller'
+export { retrieveProcessController } from './retrieve.controller'
+export { retrieveAllProcessController } from './retrieve-all.controller'
+export { updateProcessController } from './update.controller'

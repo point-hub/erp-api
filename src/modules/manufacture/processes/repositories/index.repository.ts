@@ -1,0 +1,5 @@
+export { CreateProcessRepository } from './create.repository'
+export { DeleteProcessRepository } from './delete.repository'
+export { RetrieveProcessRepository } from './retrieve.repository'
+export { RetrieveAllProcessRepository } from './retrieve-all.repository'
+export { UpdateProcessRepository } from './update.repository'
