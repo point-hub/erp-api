@@ -1,8 +1,9 @@
-import type { IDatabase, IRetrieveOutput, IRetrieveRepository } from '@point-hub/papi'
+import type { IDatabase } from '@point-hub/papi'
 
 import { collectionName } from '../entity'
 
-export interface IRetrieveBranchOutput extends IRetrieveOutput {
+export interface IRetrieveBranchOutput {
+  _id: string
   code: string
   name: string
   address: string
@@ -10,7 +11,7 @@ export interface IRetrieveBranchOutput extends IRetrieveOutput {
   created_date: string
   updated_date: string
 }
-export interface IRetrieveBranchRepository extends IRetrieveRepository {
+export interface IRetrieveBranchRepository {
   handle(_id: string, options?: unknown): Promise<IRetrieveBranchOutput>
 }
 

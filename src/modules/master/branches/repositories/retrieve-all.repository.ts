@@ -1,18 +1,17 @@
-import type { IAggregateOutput, IAggregateRepository, IDatabase, IPipeline, IQuery } from '@point-hub/papi'
+import type { IDatabase, IPagination, IPipeline, IQuery } from '@point-hub/papi'
 
 import { collectionName } from '../entity'
 import { IRetrieveBranchOutput } from './retrieve.repository'
 
-export interface IRetrieveAllBranchOutput extends IAggregateOutput {
+export interface IRetrieveAllBranchOutput {
   data: IRetrieveBranchOutput[]
+  pagination: IPagination
 }
-export interface IRetrieveAllBranchRepository extends IAggregateRepository {
+export interface IRetrieveAllBranchRepository {
   handle(query: IQuery, options?: unknown): Promise<IRetrieveAllBranchOutput>
 }
 
 export class RetrieveAllBranchRepository implements IRetrieveAllBranchRepository {
-  public collection = collectionName
-
   constructor(public database: IDatabase) {}
 
   async handle(query: IQuery, options?: unknown): Promise<IRetrieveAllBranchOutput> {
@@ -38,10 +37,10 @@ export class RetrieveAllBranchRepository implements IRetrieveAllBranchRepository
       pipeline.push({ $match: { $and: filters } })
     }
 
-    const response = await this.database.collection(this.collection).aggregate(pipeline, query, options)
+    const response = await this.database.collection(collectionName).aggregate(pipeline, query, options)
 
     return {
-      data: response.data as IRetrieveBranchOutput[],
+      data: response.data as unknown as IRetrieveBranchOutput[],
       pagination: response.pagination,
     }
   }

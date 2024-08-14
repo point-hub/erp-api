@@ -1,4 +1,4 @@
-import type { ISchemaValidation, IUpdateOutput } from '@point-hub/papi'
+import type { ISchemaValidation } from '@point-hub/papi'
 
 import { BranchEntity } from '../entity'
 import { IUpdateBranchRepository } from '../repositories/update.repository'
@@ -21,9 +21,13 @@ export interface IDeps {
 export interface IOptions {
   session?: unknown
 }
+export interface IOutput {
+  matched_count: number
+  modified_count: number
+}
 
 export class UpdateBranchUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IUpdateOutput> {
+  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input, updateValidation)
     // 2. define entity
@@ -36,6 +40,7 @@ export class UpdateBranchUseCase {
     branchEntity.generateUpdatedDate()
     // 3. database operation
     const response = await deps.updateBranchRepository.handle(input._id, branchEntity.data, options)
+    // 4. output
     return {
       matched_count: response.matched_count,
       modified_count: response.modified_count,
