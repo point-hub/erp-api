@@ -36,7 +36,7 @@ export const seeds: ISeed[] = [
   },
   {
     name: 'machines',
-    code: 'W',
+    code: 'M',
     count: 0,
   },
   {
