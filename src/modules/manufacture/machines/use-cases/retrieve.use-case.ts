@@ -14,8 +14,8 @@ export interface IOutput {
   code: string
   name: string
   notes: string
-  created_date: string
-  updated_date: string
+  created_date: Date
+  updated_date: Date
 }
 
 export class RetrieveMachineUseCase {

@@ -1,8 +1,18 @@
+export interface IChartOfAccountType {
+  _id?: string
+  name?: string
+}
+
+export interface IChartOfAccountCategory {
+  _id?: string
+  name?: string
+}
+
 export interface IChartOfAccountEntity {
   _id?: string
   type_id?: string
   category_id?: string
-  number?: number
+  number?: string
   name?: string
   subledger?: string
   notes?: string

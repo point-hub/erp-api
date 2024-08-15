@@ -7,8 +7,8 @@ export interface IRetrieveRoleOutput extends IRetrieveOutput {
   name: string
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   permission: { [key: string]: any }
-  created_date: string
-  updated_date: string
+  created_date: Date
+  updated_date: Date
 }
 export interface IRetrieveRoleRepository extends IRetrieveRepository {
   handle(_id: string, options?: unknown): Promise<IRetrieveRoleOutput>

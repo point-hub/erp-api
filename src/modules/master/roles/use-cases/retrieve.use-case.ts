@@ -15,8 +15,8 @@ export interface IOutput {
   name: string
   permission: { [key: string]: boolean | { [key: string]: boolean } }
   notes: string
-  created_date: string
-  updated_date: string
+  created_date: Date
+  updated_date: Date
 }
 
 export class RetrieveRoleUseCase {

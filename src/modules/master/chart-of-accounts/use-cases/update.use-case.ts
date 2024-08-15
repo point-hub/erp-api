@@ -30,7 +30,7 @@ export class UpdateChartOfAccountUseCase {
     // 2. define entity
     const chartOfAccountEntity = new ChartOfAccountEntity({
       category_id: input.data.category_id,
-      number: Number(input.data.number),
+      number: input.data.number,
       name: input.data.name,
       subledger: input.data.subledger,
       notes: input.data.notes,

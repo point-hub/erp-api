@@ -21,8 +21,8 @@ export interface IOutput {
   address: string
   phone: string
   notes: string
-  created_date: string
-  updated_date: string
+  created_date: Date
+  updated_date: Date
 }
 
 export class RetrieveWarehouseUseCase {

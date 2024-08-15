@@ -7,8 +7,8 @@ export interface IRetrievePermissionOutput extends IRetrieveOutput {
   name: string
   address: string
   phone: string
-  created_date: string
-  updated_date: string
+  created_date: Date
+  updated_date: Date
 }
 export interface IRetrievePermissionRepository extends IRetrieveRepository {
   handle(_id: string, options?: unknown): Promise<IRetrievePermissionOutput>

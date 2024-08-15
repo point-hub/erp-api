@@ -24,7 +24,7 @@ export class RetrieveAllChartOfAccountRepository implements IRetrieveAllChartOfA
     const response = await this.database.collection(collectionName).aggregate(pipeline, query, options)
 
     return {
-      data: response.data as IRetrieveChartOfAccountOutput[],
+      data: response.data as unknown as IRetrieveChartOfAccountOutput[],
       pagination: response.pagination,
     }
   }

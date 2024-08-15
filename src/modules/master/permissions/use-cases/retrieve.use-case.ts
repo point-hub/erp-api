@@ -15,8 +15,8 @@ export interface IOutput {
   name: string
   address: string
   phone: string
-  created_date: string
-  updated_date: string
+  created_date: Date
+  updated_date: Date
 }
 
 export class RetrievePermissionUseCase {

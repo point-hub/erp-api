@@ -11,8 +11,8 @@ export interface IRetrieveProcessOutput {
   notes: string
   created_by: IAuthBy
   updated_by: IAuthBy
-  created_date: string
-  updated_date: string
+  created_date: Date
+  updated_date: Date
 }
 export interface IRetrieveProcessRepository {
   handle(_id: string, options?: unknown): Promise<IRetrieveProcessOutput>

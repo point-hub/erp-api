@@ -12,8 +12,8 @@ export interface IRetrieveRoleOutput {
   permission: { [key: string]: boolean | { [key: string]: boolean } }
   created_by: IAuthBy
   updated_by: IAuthBy
-  created_date: string
-  updated_date: string
+  created_date: Date
+  updated_date: Date
 }
 export interface IRetrieveRoleRepository {
   handle(_id: string, options?: unknown): Promise<IRetrieveRoleOutput>

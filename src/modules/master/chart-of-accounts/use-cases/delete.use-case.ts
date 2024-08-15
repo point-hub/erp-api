@@ -1,6 +1,6 @@
 import type { ISchemaValidation } from '@point-hub/papi'
 
-import { IDeleteChartOfAccountOutput, IDeleteChartOfAccountRepository } from '../repositories/delete.repository'
+import { IDeleteChartOfAccountRepository } from '../repositories/delete.repository'
 import { deleteValidation } from '../validations/delete.validation'
 
 export interface IInput {
@@ -14,9 +14,12 @@ export interface IDeps {
 export interface IOptions {
   session?: unknown
 }
+export interface IOutput {
+  deleted_count: number
+}
 
 export class DeleteChartOfAccountUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IDeleteChartOfAccountOutput> {
+  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input, deleteValidation)
     // 2. database operation

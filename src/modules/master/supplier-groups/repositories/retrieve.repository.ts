@@ -5,8 +5,8 @@ import { collectionName } from '../entity'
 export interface IRetrieveSupplierGroupOutput extends IRetrieveOutput {
   code: string
   name: string
-  created_date: string
-  updated_date: string
+  created_date: Date
+  updated_date: Date
 }
 export interface IRetrieveSupplierGroupRepository extends IRetrieveRepository {
   handle(_id: string, options?: unknown): Promise<IRetrieveSupplierGroupOutput>

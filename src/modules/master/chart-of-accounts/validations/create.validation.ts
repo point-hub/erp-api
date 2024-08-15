@@ -3,7 +3,7 @@
 export const createValidation = {
   type_id: ['required', 'string'],
   category_id: ['required', 'string'],
-  number: ['required', 'integer'],
+  number: ['required', 'string'],
   name: ['required', 'string'],
   subledger: ['string'],
   notes: ['string'],

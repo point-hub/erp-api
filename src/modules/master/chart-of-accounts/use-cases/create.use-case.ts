@@ -1,7 +1,7 @@
 import type { ISchemaValidation } from '@point-hub/papi'
 
 import { ChartOfAccountEntity } from '../entity'
-import { ICreateChartOfAccountOutput, ICreateChartOfAccountRepository } from '../repositories/create.repository'
+import { ICreateChartOfAccountRepository } from '../repositories/create.repository'
 import { createValidation } from '../validations/create.validation'
 
 export interface IInput {
@@ -20,16 +20,19 @@ export interface IDeps {
 export interface IOptions {
   session?: unknown
 }
+export interface IOutput {
+  inserted_id: string
+}
 
 export class CreateChartOfAccountUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<ICreateChartOfAccountOutput> {
+  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input, createValidation)
     // 2. define entity
     const exampleEntity = new ChartOfAccountEntity({
       type_id: input.type_id,
       category_id: input.category_id,
-      number: Number(input.number) ? Number(input.number) : undefined,
+      number: input.number,
       name: input.name,
       subledger: input.subledger,
       notes: input.notes,

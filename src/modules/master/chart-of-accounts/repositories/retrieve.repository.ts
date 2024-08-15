@@ -2,27 +2,26 @@ import type { IDatabase, IPipeline } from '@point-hub/papi'
 
 import { IAuthBy } from '../../users/interface'
 import { collectionName } from '../entity'
+import { IChartOfAccountCategory, IChartOfAccountType } from '../interface'
 
 export interface IRetrieveChartOfAccountOutput {
-  _id?: string
-  number?: string
-  name?: string
-  subledger?: string
-  category?: {
+  _id: string
+  number: string
+  name: string
+  subledger: string
+  category: {
     _id: string
-    code: string
     name: string
   }
-  type?: {
+  type: {
     _id: string
-    code: string
     name: string
   }
-  notes?: string
-  created_by?: IAuthBy
-  updated_by?: IAuthBy
-  created_date?: Date
-  updated_date?: Date
+  notes: string
+  created_by: IAuthBy
+  updated_by: IAuthBy
+  created_date: Date
+  updated_date: Date
 }
 export interface IRetrieveChartOfAccountRepository {
   handle(_id: string, options?: unknown): Promise<IRetrieveChartOfAccountOutput>
@@ -44,7 +43,22 @@ export class RetrieveChartOfAccountRepository implements IRetrieveChartOfAccount
 
     return {
       _id: response.data[0]._id as string,
-      ...response.data[0],
+      number: response.data[0].number as string,
+      name: response.data[0].name as string,
+      subledger: response.data[0].subledger as string,
+      category: {
+        _id: (response.data[0].category as IChartOfAccountCategory)._id as string,
+        name: (response.data[0].category as IChartOfAccountCategory).name as string,
+      },
+      type: {
+        _id: (response.data[0].type as IChartOfAccountType)._id as string,
+        name: (response.data[0].type as IChartOfAccountType).name as string,
+      },
+      notes: response.data[0].notes as string,
+      created_by: response.data[0].created_by as IAuthBy,
+      updated_by: response.data[0].updated_by as IAuthBy,
+      created_date: response.data[0].created_date as Date,
+      updated_date: response.data[0].updated_date as Date,
     }
   }
 

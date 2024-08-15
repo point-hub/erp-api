@@ -1,5 +1,6 @@
-import type { IQuery } from '@point-hub/papi'
+import type { IPagination, IQuery } from '@point-hub/papi'
 
+import { IRetrieveChartOfAccountOutput } from '../repositories/retrieve.repository'
 import {
   IRetrieveAllChartOfAccountOutput,
   IRetrieveAllChartOfAccountRepository,
@@ -13,6 +14,10 @@ export interface IDeps {
 }
 export interface IOptions {
   session: unknown
+}
+export interface IOutput {
+  data: IRetrieveChartOfAccountOutput[]
+  pagination: IPagination
 }
 
 export class RetrieveAllChartOfAccountUseCase {

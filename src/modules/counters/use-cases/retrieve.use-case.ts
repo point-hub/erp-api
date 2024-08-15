@@ -13,8 +13,8 @@ export interface IOutput {
   _id: string
   code: string
   name: string
-  created_date: string
-  updated_date: string
+  created_date: Date
+  updated_date: Date
 }
 
 export class RetrieveCounterUseCase {
