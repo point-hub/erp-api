@@ -1,4 +1,4 @@
-import type { ICreateOutput, ISchemaValidation } from '@point-hub/papi'
+import type { ISchemaValidation } from '@point-hub/papi'
 
 import { ChartOfAccountTypeTypeEntity } from '../entity'
 import { ICreateChartOfAccountTypeRepository } from '../repositories/create.repository'
@@ -15,9 +15,12 @@ export interface IDeps {
 export interface IOptions {
   session?: unknown
 }
+export interface IOutput {
+  inserted_id: string
+}
 
 export class CreateChartOfAccountTypeUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<ICreateOutput> {
+  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input, createValidation)
     // 2. define entity

@@ -1,5 +1,3 @@
-import type { IRetrieveOutput } from '@point-hub/papi'
-
 import { IRetrieveChartOfAccountTypeRepository } from '../repositories/retrieve.repository'
 
 export interface IInput {
@@ -11,9 +9,15 @@ export interface IDeps {
 export interface IOptions {
   session: unknown
 }
+export interface IOutput {
+  _id: string
+  name: string
+  created_date: Date
+  updated_date: Date
+}
 
 export class RetrieveChartOfAccountTypeUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IRetrieveOutput> {
+  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
     // 1. database operation
     const response = await deps.retrieveChartOfAccountTypeRepository.handle(input._id, options)
     // 2. output

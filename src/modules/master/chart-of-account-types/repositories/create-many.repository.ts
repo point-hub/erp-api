@@ -1,10 +1,12 @@
-import type { ICreateManyOutput, ICreateManyRepository, IDatabase, IDocument } from '@point-hub/papi'
+import type { IDatabase, IDocument } from '@point-hub/papi'
 
 import { collectionName } from '../entity'
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface ICreateManyChartOfAccountTypeOutput extends ICreateManyOutput {}
-export interface ICreateManyChartOfAccountTypeRepository extends ICreateManyRepository {
+export interface ICreateManyChartOfAccountTypeOutput {
+  inserted_count: number
+  inserted_ids: string[]
+}
+export interface ICreateManyChartOfAccountTypeRepository {
   handle(documents: IDocument[], options?: unknown): Promise<ICreateManyChartOfAccountTypeOutput>
 }
 

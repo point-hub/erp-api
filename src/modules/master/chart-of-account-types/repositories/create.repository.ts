@@ -1,10 +1,11 @@
-import type { ICreateOutput, ICreateRepository, IDatabase, IDocument } from '@point-hub/papi'
+import type { IDatabase, IDocument } from '@point-hub/papi'
 
 import { collectionName } from '../entity'
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface ICreateChartOfAccountTypeOutput extends ICreateOutput {}
-export interface ICreateChartOfAccountTypeRepository extends ICreateRepository {
+export interface ICreateChartOfAccountTypeOutput {
+  inserted_id: string
+}
+export interface ICreateChartOfAccountTypeRepository {
   handle(document: IDocument, options?: unknown): Promise<ICreateChartOfAccountTypeOutput>
 }
 
