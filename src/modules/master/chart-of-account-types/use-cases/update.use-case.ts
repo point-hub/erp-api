@@ -28,16 +28,12 @@ export class UpdateChartOfAccountTypeUseCase {
     // 1. validate schema
     await deps.schemaValidation(input, updateValidation)
     // 2. define entity
-    const chartOfAccountTypeEntity = new ChartOfAccountTypeTypeEntity({
+    const typeEntity = new ChartOfAccountTypeTypeEntity({
       name: input.data.name,
     })
-    chartOfAccountTypeEntity.generateUpdatedDate()
+    typeEntity.generateUpdatedDate()
     // 3. database operation
-    const response = await deps.updateChartOfAccountTypeRepository.handle(
-      input._id,
-      chartOfAccountTypeEntity.data,
-      options,
-    )
+    const response = await deps.updateChartOfAccountTypeRepository.handle(input._id, typeEntity.data, options)
     // 4. output
     return {
       matched_count: response.matched_count,

@@ -24,11 +24,11 @@ export class CreateChartOfAccountTypeUseCase {
     // 1. validate schema
     await deps.schemaValidation(input, createValidation)
     // 2. define entity
-    const exampleEntity = new ChartOfAccountTypeTypeEntity({
+    const typeEntity = new ChartOfAccountTypeTypeEntity({
       name: input.name,
     })
-    exampleEntity.generateCreatedDate()
-    const cleanEntity = deps.cleanObject(exampleEntity.data)
+    typeEntity.generateCreatedDate()
+    const cleanEntity = deps.cleanObject(typeEntity.data)
     // 3. database operation
     const response = await deps.createChartOfAccountTypeRepository.handle(cleanEntity, options)
     // 4. output
