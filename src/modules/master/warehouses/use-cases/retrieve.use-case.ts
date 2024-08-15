@@ -1,5 +1,3 @@
-import type { IRetrieveOutput } from '@point-hub/papi'
-
 import { IRetrieveWarehouseRepository } from '../repositories/retrieve.repository'
 
 export interface IInput {
@@ -11,9 +9,24 @@ export interface IDeps {
 export interface IOptions {
   session: unknown
 }
+export interface IOutput {
+  _id: string
+  branch: {
+    _id: string
+    code: string
+    name: string
+  }
+  code: string
+  name: string
+  address: string
+  phone: string
+  notes: string
+  created_date: string
+  updated_date: string
+}
 
 export class RetrieveWarehouseUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IRetrieveOutput> {
+  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
     // 1. database operation
     const response = await deps.retrieveWarehouseRepository.handle(input._id, options)
     // 2. output
@@ -22,6 +35,9 @@ export class RetrieveWarehouseUseCase {
       branch: response.branch,
       code: response.code,
       name: response.name,
+      address: response.address,
+      phone: response.phone,
+      notes: response.notes,
       created_date: response.created_date,
       updated_date: response.updated_date,
     }
