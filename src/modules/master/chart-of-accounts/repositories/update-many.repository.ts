@@ -1,10 +1,12 @@
-import type { IDatabase, IDocument, IUpdateManyOutput, IUpdateManyRepository } from '@point-hub/papi'
+import type { IDatabase, IDocument } from '@point-hub/papi'
 
 import { collectionName } from '../entity'
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface IUpdateManyChartOfAccountOutput extends IUpdateManyOutput {}
-export interface IUpdateManyChartOfAccountRepository extends IUpdateManyRepository {
+export interface IUpdateManyChartOfAccountOutput {
+  matched_count: number
+  modified_count: number
+}
+export interface IUpdateManyChartOfAccountRepository {
   handle(filter: IDocument, document: IDocument, options?: unknown): Promise<IUpdateManyChartOfAccountOutput>
 }
 

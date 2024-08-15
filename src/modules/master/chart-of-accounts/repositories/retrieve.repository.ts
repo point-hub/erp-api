@@ -1,19 +1,30 @@
-import type { IDatabase, IPipeline, IRetrieveOutput, IRetrieveRepository } from '@point-hub/papi'
+import type { IDatabase, IPipeline } from '@point-hub/papi'
 
+import { IAuthBy } from '../../users/interface'
 import { collectionName } from '../entity'
 
-export interface IRetrieveChartOfAccountOutput extends IRetrieveOutput {
+export interface IRetrieveChartOfAccountOutput {
+  _id?: string
   number?: string
   name?: string
   subledger?: string
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  category?: any
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  type?: any
+  category?: {
+    _id: string
+    code: string
+    name: string
+  }
+  type?: {
+    _id: string
+    code: string
+    name: string
+  }
+  notes?: string
+  created_by?: IAuthBy
+  updated_by?: IAuthBy
   created_date?: Date
   updated_date?: Date
 }
-export interface IRetrieveChartOfAccountRepository extends IRetrieveRepository {
+export interface IRetrieveChartOfAccountRepository {
   handle(_id: string, options?: unknown): Promise<IRetrieveChartOfAccountOutput>
 }
 
@@ -30,8 +41,6 @@ export class RetrieveChartOfAccountRepository implements IRetrieveChartOfAccount
     pipeline.push(...this.aggregateJoinTypes())
 
     const response = await this.database.collection(collectionName).aggregate(pipeline, {}, options)
-
-    console.log(response)
 
     return {
       _id: response.data[0]._id as string,

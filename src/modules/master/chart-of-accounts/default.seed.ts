@@ -436,7 +436,7 @@ export const seeds = [
     type: 'income',
     category: 'other income',
     number: 41101,
-    name: 'fullfillment',
+    name: 'income (expense) payment difference',
   },
   {
     type: 'income',

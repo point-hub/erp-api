@@ -1,7 +1,7 @@
-import type { ISchemaValidation, IUpdateOutput } from '@point-hub/papi'
+import type { ISchemaValidation } from '@point-hub/papi'
 
 import { ChartOfAccountEntity } from '../entity'
-import { IUpdateChartOfAccountRepository } from '../repositories/update.repository'
+import { IUpdateChartOfAccountOutput, IUpdateChartOfAccountRepository } from '../repositories/update.repository'
 import { updateValidation } from '../validations/update.validation'
 
 export interface IInput {
@@ -11,6 +11,7 @@ export interface IInput {
     number?: string
     name?: string
     subledger?: string
+    notes?: string
   }
 }
 export interface IDeps {
@@ -23,7 +24,7 @@ export interface IOptions {
 }
 
 export class UpdateChartOfAccountUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IUpdateOutput> {
+  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IUpdateChartOfAccountOutput> {
     // 1. validate schema
     await deps.schemaValidation(input, updateValidation)
     // 2. define entity
@@ -32,6 +33,7 @@ export class UpdateChartOfAccountUseCase {
       number: Number(input.data.number),
       name: input.data.name,
       subledger: input.data.subledger,
+      notes: input.data.notes,
     })
     chartOfAccountEntity.generateUpdatedDate()
     // 3. database operation

@@ -1,6 +1,9 @@
-import type { IQuery, IRetrieveAllOutput } from '@point-hub/papi'
+import type { IQuery } from '@point-hub/papi'
 
-import { IRetrieveAllChartOfAccountRepository } from '../repositories/retrieve-all.repository'
+import {
+  IRetrieveAllChartOfAccountOutput,
+  IRetrieveAllChartOfAccountRepository,
+} from '../repositories/retrieve-all.repository'
 
 export interface IInput {
   query: IQuery
@@ -13,7 +16,7 @@ export interface IOptions {
 }
 
 export class RetrieveAllChartOfAccountUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IRetrieveAllOutput> {
+  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IRetrieveAllChartOfAccountOutput> {
     // 1. database operation
     const response = await deps.retrieveAllChartOfAccountRepository.handle(input.query, options)
     // 2. output

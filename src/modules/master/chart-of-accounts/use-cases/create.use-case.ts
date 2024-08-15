@@ -1,7 +1,7 @@
-import type { ICreateOutput, ISchemaValidation } from '@point-hub/papi'
+import type { ISchemaValidation } from '@point-hub/papi'
 
 import { ChartOfAccountEntity } from '../entity'
-import { ICreateChartOfAccountRepository } from '../repositories/create.repository'
+import { ICreateChartOfAccountOutput, ICreateChartOfAccountRepository } from '../repositories/create.repository'
 import { createValidation } from '../validations/create.validation'
 
 export interface IInput {
@@ -10,6 +10,7 @@ export interface IInput {
   number?: string
   name?: string
   subledger?: string
+  notes?: string
 }
 export interface IDeps {
   cleanObject(object: object): object
@@ -21,7 +22,7 @@ export interface IOptions {
 }
 
 export class CreateChartOfAccountUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<ICreateOutput> {
+  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<ICreateChartOfAccountOutput> {
     // 1. validate schema
     await deps.schemaValidation(input, createValidation)
     // 2. define entity
@@ -31,6 +32,7 @@ export class CreateChartOfAccountUseCase {
       number: Number(input.number) ? Number(input.number) : undefined,
       name: input.name,
       subledger: input.subledger,
+      notes: input.notes,
     })
     exampleEntity.generateCreatedDate()
     const cleanEntity = deps.cleanObject(exampleEntity.data)

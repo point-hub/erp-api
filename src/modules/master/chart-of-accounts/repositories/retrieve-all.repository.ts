@@ -1,13 +1,13 @@
-import type { IAggregateOutput, IAggregateRepository, IDatabase, IPagination, IPipeline, IQuery } from '@point-hub/papi'
+import type { IDatabase, IPagination, IPipeline, IQuery } from '@point-hub/papi'
 
 import { collectionName } from '../entity'
 import { IRetrieveChartOfAccountOutput } from './retrieve.repository'
 
-export interface IRetrieveAllChartOfAccountOutput extends IAggregateOutput {
+export interface IRetrieveAllChartOfAccountOutput {
   data: IRetrieveChartOfAccountOutput[]
   pagination: IPagination
 }
-export interface IRetrieveAllChartOfAccountRepository extends IAggregateRepository {
+export interface IRetrieveAllChartOfAccountRepository {
   handle(query: IQuery, options?: unknown): Promise<IRetrieveAllChartOfAccountOutput>
 }
 
@@ -19,7 +19,6 @@ export class RetrieveAllChartOfAccountRepository implements IRetrieveAllChartOfA
 
     pipeline.push(...this.aggregateJoinCategories())
     pipeline.push(...this.aggregateJoinTypes())
-    pipeline.push({ $addFields: { number: { $toString: '$number' } } })
     pipeline.push(...this.aggregateFilters(query))
 
     const response = await this.database.collection(collectionName).aggregate(pipeline, query, options)
@@ -85,6 +84,6 @@ export class RetrieveAllChartOfAccountRepository implements IRetrieveAllChartOfA
       return []
     }
 
-    return [{ $addFields: { number: { $toString: '$number' } } }, { $match: { $and: filtersAnd } }]
+    return [{ $match: { $and: filtersAnd } }]
   }
 }
