@@ -1,6 +1,6 @@
 export const createValidation = {
   code: ['required', 'string'],
   name: ['required', 'string'],
-  permission: ['required', 'string'],
+  permission: ['required'],
   notes: ['string'],
 }
