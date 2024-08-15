@@ -28,7 +28,7 @@ export class CreateChartOfAccountTypeUseCase {
     const cleanEntity = deps.cleanObject(exampleEntity.data)
     // 3. database operation
     const response = await deps.createChartOfAccountTypeRepository.handle(cleanEntity, options)
-    // 4. response
+    // 4. output
     return { inserted_id: response.inserted_id }
   }
 }

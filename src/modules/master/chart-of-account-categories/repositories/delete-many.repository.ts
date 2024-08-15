@@ -1,10 +1,11 @@
-import type { IDatabase, IDeleteManyOutput, IDeleteManyRepository } from '@point-hub/papi'
+import type { IDatabase } from '@point-hub/papi'
 
 import { collectionName } from '../entity'
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface IDeleteManyChartOfAccountCategoryOutput extends IDeleteManyOutput {}
-export interface IDeleteManyChartOfAccountCategoryRepository extends IDeleteManyRepository {
+export interface IDeleteManyChartOfAccountCategoryOutput {
+  deleted_count: number
+}
+export interface IDeleteManyChartOfAccountCategoryRepository {
   handle(_ids: string[], options?: unknown): Promise<IDeleteManyChartOfAccountCategoryOutput>
 }
 

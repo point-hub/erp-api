@@ -12,8 +12,6 @@ export interface IRetrieveAllCounterRepository extends IAggregateRepository {
 }
 
 export class RetrieveAllCounterRepository implements IRetrieveAllCounterRepository {
-  public collection = collectionName
-
   constructor(public database: IDatabase) {}
 
   async handle(query: IQuery, options?: unknown): Promise<IRetrieveAllCounterOutput> {
@@ -27,7 +25,7 @@ export class RetrieveAllCounterRepository implements IRetrieveAllCounterReposito
       pipeline.push({ $match: { $and: filters } })
     }
 
-    const response = await this.database.collection(this.collection).aggregate(pipeline, query, options)
+    const response = await this.database.collection(collectionName).aggregate(pipeline, query, options)
 
     return {
       data: response.data as IRetrieveCounterOutput[],

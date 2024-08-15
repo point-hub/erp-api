@@ -2,8 +2,10 @@ import type { IDatabase, IDocument, IUpdateOutput, IUpdateRepository } from '@po
 
 import { collectionName } from '../entity'
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface IUpdateChartOfAccountCategoryOutput extends IUpdateOutput {}
+export interface IUpdateChartOfAccountCategoryOutput extends IUpdateOutput {
+  matched_count: number
+  modified_count: number
+}
 export interface IUpdateChartOfAccountCategoryRepository extends IUpdateRepository {
   handle(_id: string, document: IDocument, options?: unknown): Promise<IUpdateChartOfAccountCategoryOutput>
 }

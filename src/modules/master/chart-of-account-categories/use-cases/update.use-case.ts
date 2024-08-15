@@ -1,4 +1,4 @@
-import type { ISchemaValidation, IUpdateOutput } from '@point-hub/papi'
+import type { ISchemaValidation } from '@point-hub/papi'
 
 import { ChartOfAccountCategoryEntity } from '../entity'
 import { IUpdateChartOfAccountCategoryRepository } from '../repositories/update.repository'
@@ -7,10 +7,8 @@ import { updateValidation } from '../validations/update.validation'
 export interface IInput {
   _id: string
   data: {
-    category_id?: string
-    number?: string
+    type_id?: string
     name?: string
-    subledger?: string
   }
 }
 export interface IDeps {
@@ -21,13 +19,18 @@ export interface IDeps {
 export interface IOptions {
   session?: unknown
 }
+export interface IOutput {
+  matched_count: number
+  modified_count: number
+}
 
 export class UpdateChartOfAccountCategoryUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IUpdateOutput> {
+  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input, updateValidation)
     // 2. define entity
     const chartOfAccountCategoryEntity = new ChartOfAccountCategoryEntity({
+      type_id: input.data.type_id,
       name: input.data.name,
     })
     chartOfAccountCategoryEntity.generateUpdatedDate()

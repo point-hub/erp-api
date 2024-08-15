@@ -34,7 +34,7 @@ export class UpdateAllocationUseCase {
     allocationEntity.generateUpdatedDate()
     // 3. database operation
     const response = await deps.updateAllocationRepository.handle(input._id, allocationEntity.data, options)
-    // 4. response
+    // 4. output
     return {
       matched_count: response.matched_count,
       modified_count: response.modified_count,

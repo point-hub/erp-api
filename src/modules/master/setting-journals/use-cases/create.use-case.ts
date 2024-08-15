@@ -43,7 +43,7 @@ export class CreateSettingJournalUseCase {
       { count: Number(counters.data[0].count) + 1 },
       options,
     )
-    // 4. response
+    // 4. output
     return { inserted_id: response.inserted_id }
   }
 }

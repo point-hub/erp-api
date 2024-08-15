@@ -42,7 +42,7 @@ export class UpdateItemUseCase {
     itemEntity.generateUpdatedDate()
     // 3. database operation
     const response = await deps.updateItemRepository.handle(input._id, itemEntity.data, options)
-    // 4. response
+    // 4. output
     return {
       matched_count: response.matched_count,
       modified_count: response.modified_count,
