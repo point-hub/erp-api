@@ -1,0 +1,5 @@
+export { CreateRoleRepository } from './create.repository'
+export { DeleteRoleRepository } from './delete.repository'
+export { RetrieveRoleRepository } from './retrieve.repository'
+export { RetrieveAllRoleRepository } from './retrieve-all.repository'
+export { UpdateRoleRepository } from './update.repository'

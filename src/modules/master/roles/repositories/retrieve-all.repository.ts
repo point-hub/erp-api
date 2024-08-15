@@ -1,48 +1,91 @@
-import type { IAggregateOutput, IAggregateRepository, IDatabase, IPipeline, IQuery } from '@point-hub/papi'
+import type { IDatabase, IPagination, IPipeline, IQuery } from '@point-hub/papi'
 
 import { collectionName } from '../entity'
 import { IRetrieveRoleOutput } from './retrieve.repository'
 
-export interface IRetrieveAllRoleOutput extends IAggregateOutput {
+export interface IRetrieveAllRoleOutput {
   data: IRetrieveRoleOutput[]
+  pagination: IPagination
 }
-export interface IRetrieveAllRoleRepository extends IAggregateRepository {
+export interface IRetrieveAllRoleRepository {
   handle(query: IQuery, options?: unknown): Promise<IRetrieveAllRoleOutput>
 }
 
 export class RetrieveAllRoleRepository implements IRetrieveAllRoleRepository {
-  public collection = collectionName
-
   constructor(public database: IDatabase) {}
 
   async handle(query: IQuery, options?: unknown): Promise<IRetrieveAllRoleOutput> {
     const pipeline: IPipeline[] = []
 
-    const filters = [] // filter keys using "and" logic
-    const filterAll = [] // filter keys using "or" logic
+    pipeline.push(...this.aggregateFilters(query))
+    pipeline.push(...this.aggregateJoinCreatedBy())
+    pipeline.push(...this.aggregateJoinUpdatedBy())
 
-    if (query.filter?.search) {
-      filterAll.push({ code: { $regex: query.filter?.search, $options: 'i' } })
-      filterAll.push({ name: { $regex: query.filter?.search, $options: 'i' } })
-      filterAll.push({ address: { $regex: query.filter?.search, $options: 'i' } })
-      filterAll.push({ phone: { $regex: query.filter?.search, $options: 'i' } })
-      filters.push({ $or: filterAll })
-    }
-
-    if (query.filter?.code) filters.push({ code: { $regex: query.filter?.code, $options: 'i' } })
-    if (query.filter?.name) filters.push({ name: { $regex: query.filter?.name, $options: 'i' } })
-    if (query.filter?.address) filters.push({ address: { $regex: query.filter?.address, $options: 'i' } })
-    if (query.filter?.phone) filters.push({ phone: { $regex: query.filter?.phone, $options: 'i' } })
-
-    if (filters.length) {
-      pipeline.push({ $match: { $and: filters } })
-    }
-
-    const response = await this.database.collection(this.collection).aggregate(pipeline, query, options)
+    const response = await this.database.collection(collectionName).aggregate(pipeline, query, options)
 
     return {
-      data: response.data as IRetrieveRoleOutput[],
+      data: response.data as unknown as IRetrieveRoleOutput[],
       pagination: response.pagination,
     }
+  }
+
+  private aggregateJoinCreatedBy() {
+    return [
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'created_by',
+          foreignField: '_id',
+          pipeline: [{ $project: { _id: 1, username: 1, name: 1, email: 1 } }],
+          as: 'created_by',
+        },
+      },
+      {
+        $unwind: {
+          path: '$created_by',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+    ]
+  }
+
+  private aggregateJoinUpdatedBy() {
+    return [
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'updated_by',
+          foreignField: '_id',
+          pipeline: [{ $project: { _id: 1, username: 1, name: 1, email: 1 } }],
+          as: 'updated_by',
+        },
+      },
+      {
+        $unwind: {
+          path: '$updated_by',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+    ]
+  }
+
+  private aggregateFilters(query: IQuery) {
+    const filtersAnd = [] // filter keys using "and" logic
+    const filtersOr = [] // filter keys using "or" logic
+
+    if (query.filter?.search) {
+      filtersOr.push({ code: { $regex: query.filter?.search, $options: 'i' } })
+      filtersOr.push({ name: { $regex: query.filter?.search, $options: 'i' } })
+      filtersAnd.push({ $or: filtersOr })
+    }
+
+    if (query.filter?.code) filtersAnd.push({ code: { $regex: query.filter?.code, $options: 'i' } })
+    if (query.filter?.name) filtersAnd.push({ name: { $regex: query.filter?.name, $options: 'i' } })
+
+    if (!filtersAnd.length) {
+      return []
+    }
+
+    return [{ $match: { $and: filtersAnd } }]
   }
 }

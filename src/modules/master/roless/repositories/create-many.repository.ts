@@ -1,12 +1,10 @@
-import type { IDatabase, IDocument } from '@point-hub/papi'
+import type { ICreateManyOutput, ICreateManyRepository, IDatabase, IDocument } from '@point-hub/papi'
 
 import { collectionName } from '../entity'
 
-export interface ICreateManyRoleOutput {
-  inserted_count: number
-  inserted_ids: string[]
-}
-export interface ICreateManyRoleRepository {
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface ICreateManyRoleOutput extends ICreateManyOutput {}
+export interface ICreateManyRoleRepository extends ICreateManyRepository {
   handle(documents: IDocument[], options?: unknown): Promise<ICreateManyRoleOutput>
 }
 

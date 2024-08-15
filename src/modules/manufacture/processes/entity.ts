@@ -1,6 +1,6 @@
 import { IProcessEntity } from './interface'
 
-export const collectionName = 'machines'
+export const collectionName = 'processes'
 
 export class ProcessEntity {
   constructor(public data: IProcessEntity) {}

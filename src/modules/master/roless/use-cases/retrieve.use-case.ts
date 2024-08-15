@@ -13,8 +13,8 @@ export interface IOutput {
   _id: string
   code: string
   name: string
-  permission: { [key: string]: boolean | { [key: string]: boolean } }
-  notes: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  permission: { [key: string]: any }
   created_date: string
   updated_date: string
 }
@@ -29,7 +29,6 @@ export class RetrieveRoleUseCase {
       code: response.code,
       name: response.name,
       permission: response.permission,
-      notes: response.notes,
       created_date: response.created_date,
       updated_date: response.updated_date,
     }

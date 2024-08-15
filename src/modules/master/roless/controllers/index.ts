@@ -1,0 +1,5 @@
+export { createRoleController } from './create.controller'
+export { deleteRoleController } from './delete.controller'
+export { retrieveRoleController } from './retrieve.controller'
+export { retrieveAllRoleController } from './retrieve-all.controller'
+export { updateRoleController } from './update.controller'

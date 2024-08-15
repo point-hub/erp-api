@@ -28,13 +28,8 @@ export class RetrieveAuthUserRepository implements IRetrieveAuthUserRepository {
 
     pipeline.push(...this.aggregateJoinRole())
 
-    const query: IQuery = {
-      page: filter.page,
-      page_size: filter.page_size,
-      sort: filter.sort,
-    }
-    const aggregateResult = await this.database.collection(collectionName).aggregate(pipeline, query, options)
-
+    const aggregateResult = await this.database.collection(collectionName).aggregate(pipeline, {}, options)
+    console.log('agg', aggregateResult.data[0])
     return {
       data: [
         {
@@ -60,8 +55,6 @@ export class RetrieveAuthUserRepository implements IRetrieveAuthUserRepository {
           as: 'role',
         },
       },
-      { $unwind: '$role' },
-      { $unset: ['role_id'] },
     ]
   }
 }

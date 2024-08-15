@@ -2,21 +2,16 @@ import type { ISchemaValidation } from '@point-hub/papi'
 
 import { IRetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
 import { IUpdateCounterRepository } from '@/modules/counters/repositories/update.repository'
-import { IAuth } from '@/modules/master/users/interface'
 
 import { RoleEntity } from '../entity'
 import { ICreateRoleRepository } from '../repositories/create.repository'
 import { createValidation } from '../validations/create.validation'
 
 export interface IInput {
-  auth: IAuth
-  data: {
-    code?: string
-    name?: string
-    permission?: { [key: string]: boolean | { [key: string]: boolean } }
-    phone?: string
-    notes?: string
-  }
+  code?: string
+  name?: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  permission?: { [key: string]: any }
 }
 export interface IDeps {
   cleanObject(object: object): object
@@ -35,23 +30,20 @@ export interface IOutput {
 export class CreateRoleUseCase {
   static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
     // 1. validate schema
-    await deps.schemaValidation(input.data, createValidation)
+    await deps.schemaValidation(input, createValidation)
     // 2. define entity
-    console.log(input.auth)
     const roleEntity = new RoleEntity({
-      code: input.data.code,
-      name: input.data.name,
-      permission: input.data.permission,
-      notes: input.data.notes,
-      created_by: input.auth._id,
+      code: input.code,
+      name: input.name,
+      permission: input.permission,
     })
     roleEntity.generateCreatedDate()
     const cleanEntity = deps.cleanObject(roleEntity.data)
     // 3. database operation
     // 3.1 create role
     const response = await deps.createRoleRepository.handle(cleanEntity, options)
-    // 3.2. update counter
-    const counters = await deps.retrieveAllRepository.handle({ filter: { name: 'roles' } }, options)
+    // 3.2. update code counter
+    const counters = await deps.retrieveAllRepository.handle({ filter: { name: 'role-code' } }, options)
     await deps.updateRepository.handle(counters.data[0]._id, { count: Number(counters.data[0].count) + 1 }, options)
     // 4. output
     return { inserted_id: response.inserted_id }

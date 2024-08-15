@@ -1,12 +1,10 @@
-import type { IDatabase, IDocument } from '@point-hub/papi'
+import type { IDatabase, IDocument, IUpdateOutput, IUpdateRepository } from '@point-hub/papi'
 
 import { collectionName } from '../entity'
 
-export interface IUpdateRoleOutput {
-  matched_count: number
-  modified_count: number
-}
-export interface IUpdateRoleRepository {
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface IUpdateRoleOutput extends IUpdateOutput {}
+export interface IUpdateRoleRepository extends IUpdateRepository {
   handle(_id: string, document: IDocument, options?: unknown): Promise<IUpdateRoleOutput>
 }
 

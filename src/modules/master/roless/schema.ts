@@ -27,10 +27,6 @@ export const schema: ISchema[] = [
           bsonType: 'string',
           description: 'The name for the role',
         },
-        notes: {
-          bsonType: 'string',
-          description: 'The notes for the role',
-        },
       },
     },
   },
