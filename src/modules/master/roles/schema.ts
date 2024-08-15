@@ -17,7 +17,7 @@ export const schema: ISchema[] = [
     uniqueIfExists: [[]],
     schema: {
       bsonType: 'object',
-      required: ['code', 'name'],
+      required: ['code', 'name', 'permission'],
       properties: {
         code: {
           bsonType: 'string',
@@ -26,6 +26,10 @@ export const schema: ISchema[] = [
         name: {
           bsonType: 'string',
           description: 'The name for the role',
+        },
+        permission: {
+          bsonType: 'string',
+          description: 'The permission for the role',
         },
         notes: {
           bsonType: 'string',

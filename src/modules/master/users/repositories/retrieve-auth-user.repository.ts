@@ -1,4 +1,4 @@
-import type { IAggregateOutput, IAggregateRepository, IDatabase, IDocument, IPipeline, IQuery } from '@point-hub/papi'
+import type { IAggregateOutput, IAggregateRepository, IDatabase, IDocument, IPipeline } from '@point-hub/papi'
 
 import { collectionName } from '../entity'
 
@@ -55,6 +55,8 @@ export class RetrieveAuthUserRepository implements IRetrieveAuthUserRepository {
           as: 'role',
         },
       },
+      { $unwind: '$role' },
+      { $unset: ['role_id'] },
     ]
   }
 }

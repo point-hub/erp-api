@@ -31,8 +31,8 @@ export default class DbSeedCommand extends BaseConsoleCommand {
   async handle(): Promise<void> {
     try {
       await this.dbConnection.open()
-      const fileName = (this.opts['--filename'] as string) ?? 'seed'
-      await this.seed(this.args['module'], this.args['collection'], fileName)
+      // const fileName = (this.opts['--filename'] as string) ?? 'seed'
+      // await this.seed(this.args['module'], this.args['collection'], fileName)
     } catch (error) {
       console.error(error)
     } finally {
