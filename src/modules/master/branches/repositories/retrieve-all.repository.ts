@@ -81,6 +81,12 @@ export class RetrieveAllBranchRepository implements IRetrieveAllBranchRepository
       filtersAnd.push({ $or: filtersOr })
     }
 
+    if (query.filter?.label) {
+      filtersOr.push({ code: { $regex: query.filter?.search, $options: 'i' } })
+      filtersOr.push({ name: { $regex: query.filter?.search, $options: 'i' } })
+      filtersAnd.push({ $or: filtersOr })
+    }
+
     if (query.filter?.code) filtersAnd.push({ code: { $regex: query.filter?.code, $options: 'i' } })
     if (query.filter?.name) filtersAnd.push({ name: { $regex: query.filter?.name, $options: 'i' } })
     if (query.filter?.address) filtersAnd.push({ address: { $regex: query.filter?.address, $options: 'i' } })
