@@ -1,11 +1,13 @@
+export interface INestedBoolean {
+  [key: string]: boolean | { [key: string]: boolean }
+}
+
 export interface IPermissionEntity {
-  _id?: string
-  code?: string
-  name?: string
-  address?: string
-  phone?: string
-  created_by?: string
-  updated_by?: string
-  created_date?: Date
-  updated_date?: Date
+  master: INestedBoolean
+  purchasing: INestedBoolean
+  sales: INestedBoolean
+  finance: INestedBoolean
+  manufacture: INestedBoolean
+  inventory: INestedBoolean
+  accounting: INestedBoolean
 }

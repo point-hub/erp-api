@@ -1,7 +1,10 @@
-import type { IPagination, IQuery } from '@point-hub/papi'
+import type { IQuery } from '@point-hub/papi'
 
-import { IRetrievePermissionOutput } from '../repositories/retrieve.repository'
 import { IRetrieveAllPermissionRepository } from '../repositories/retrieve-all.repository'
+
+export interface INestedBoolean {
+  [key: string]: boolean | { [key: string]: boolean }
+}
 
 export interface IInput {
   query: IQuery
@@ -13,8 +16,13 @@ export interface IOptions {
   session: unknown
 }
 export interface IOutput {
-  data: IRetrievePermissionOutput[]
-  pagination: IPagination
+  master: INestedBoolean
+  purchasing: INestedBoolean
+  sales: INestedBoolean
+  finance: INestedBoolean
+  manufacture: INestedBoolean
+  inventory: INestedBoolean
+  accounting: INestedBoolean
 }
 
 export class RetrieveAllPermissionUseCase {
@@ -22,9 +30,6 @@ export class RetrieveAllPermissionUseCase {
     // 1. database operation
     const response = await deps.retrieveAllPermissionRepository.handle(input.query, options)
     // 2. output
-    return {
-      data: response.data,
-      pagination: response.pagination,
-    }
+    return response
   }
 }

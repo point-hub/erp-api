@@ -1,12 +1,22 @@
-import type { IAggregateOutput, IAggregateRepository, IDatabase, IPipeline, IQuery } from '@point-hub/papi'
+import type { IDatabase, IPipeline, IQuery } from '@point-hub/papi'
 
 import { collectionName } from '../entity'
-import { IRetrievePermissionOutput } from './retrieve.repository'
 
-export interface IRetrieveAllPermissionOutput extends IAggregateOutput {
-  data: IRetrievePermissionOutput[]
+export interface INestedBoolean {
+  [key: string]: boolean | { [key: string]: boolean }
 }
-export interface IRetrieveAllPermissionRepository extends IAggregateRepository {
+
+export interface IRetrieveAllPermissionOutput {
+  master: INestedBoolean
+  purchasing: INestedBoolean
+  sales: INestedBoolean
+  finance: INestedBoolean
+  manufacture: INestedBoolean
+  inventory: INestedBoolean
+  accounting: INestedBoolean
+}
+
+export interface IRetrieveAllPermissionRepository {
   handle(query: IQuery, options?: unknown): Promise<IRetrieveAllPermissionOutput>
 }
 
@@ -19,8 +29,13 @@ export class RetrieveAllPermissionRepository implements IRetrieveAllPermissionRe
     const response = await this.database.collection(collectionName).aggregate(pipeline, query, options)
 
     return {
-      data: response.data as IRetrievePermissionOutput[],
-      pagination: response.pagination,
+      master: response.data[0].master as INestedBoolean,
+      purchasing: response.data[0].purchasing as INestedBoolean,
+      sales: response.data[0].sales as INestedBoolean,
+      manufacture: response.data[0].manufacture as INestedBoolean,
+      finance: response.data[0].finance as INestedBoolean,
+      inventory: response.data[0].inventory as INestedBoolean,
+      accounting: response.data[0].master as INestedBoolean,
     }
   }
 }

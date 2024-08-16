@@ -1,5 +1,1 @@
-export { createPermissionController } from './create.controller'
-export { deletePermissionController } from './delete.controller'
-export { retrievePermissionController } from './retrieve.controller'
 export { retrieveAllPermissionController } from './retrieve-all.controller'
-export { updatePermissionController } from './update.controller'
