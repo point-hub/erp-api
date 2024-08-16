@@ -13,7 +13,7 @@ import { collectionName } from './entity'
 export const schema: ISchema[] = [
   {
     collection: collectionName,
-    unique: [['number'], ['number', 'name']],
+    unique: [['number', 'name']],
     uniqueIfExists: [[]],
     schema: {
       bsonType: 'object',
@@ -24,7 +24,7 @@ export const schema: ISchema[] = [
           description: 'The category id for the chart of account',
         },
         number: {
-          bsonType: 'number',
+          bsonType: 'string',
           description: 'The number for the chart of account',
         },
         name: {

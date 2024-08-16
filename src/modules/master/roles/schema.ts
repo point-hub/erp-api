@@ -28,7 +28,7 @@ export const schema: ISchema[] = [
           description: 'The name for the role',
         },
         permission: {
-          bsonType: 'string',
+          bsonType: 'object',
           description: 'The permission for the role',
         },
         notes: {

@@ -18,7 +18,7 @@ export const seed = async (dbConnection: IDatabase, options: unknown) => {
 
 export const seeds = [
   {
-    code: 'RL0001',
+    code: 'R0001',
     name: 'Super Admin',
     permission: {
       master: {
