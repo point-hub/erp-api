@@ -7,6 +7,7 @@ import { updateValidation } from '../validations/update.validation'
 export interface IInput {
   _id: string
   data: {
+    type_id?: string
     category_id?: string
     number?: string
     name?: string
@@ -30,6 +31,7 @@ export interface IOutput {
 export class UpdateChartOfAccountUseCase {
   static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
     // 1. validate schema
+    console.log(input)
     await deps.schemaValidation(input, updateValidation)
     // 2. define entity
     const chartOfAccountEntity = new ChartOfAccountEntity({
