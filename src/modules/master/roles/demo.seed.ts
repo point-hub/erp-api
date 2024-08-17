@@ -33,7 +33,11 @@ export const seed = async (dbConnection: IDatabase, options: unknown) => {
     seed.name = faker.lorem.words({ min: 1, max: 3 })
     seed.permission = permission
     await createRoleRepository.handle(seed, options)
-    await updateCounterRepository.handle(counters.data[0]._id, { count: Number(counters.data[0].count) + 1 }, options)
+    await updateCounterRepository.handle(
+      counters.data[0]._id,
+      { count: Number(counters.data[0].count) + index },
+      options,
+    )
   }
 }
 
