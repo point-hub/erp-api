@@ -7,9 +7,9 @@ export default class DbSeedCommand extends BaseConsoleCommand {
 
   constructor() {
     super({
-      name: 'db:default',
-      description: 'Seed default database',
-      summary: 'Seed default database',
+      name: 'db:demo',
+      description: 'Seed demo database',
+      summary: 'Seed demo database',
       arguments: [],
       options: [],
     })
@@ -20,12 +20,7 @@ export default class DbSeedCommand extends BaseConsoleCommand {
       await this.dbConnection.open()
       session = this.dbConnection.startSession()
       session.startTransaction()
-      await this.seeds(['counters'], { session })
-      await this.seeds(['master/permissions'], { session })
       await this.seeds(['master/roles'], { session })
-      await this.seeds(['master/users'], { session })
-      await this.seeds(['master/chart-of-accounts'], { session })
-      await this.seeds(['master/setting-journals'], { session })
     } catch (error) {
       console.error(error)
       await session?.abortTransaction()
@@ -38,7 +33,7 @@ export default class DbSeedCommand extends BaseConsoleCommand {
   private async seeds(directories: string[], options: unknown): Promise<void> {
     for (const directory of directories) {
       // import seed function
-      const { seed } = await import(`@/modules/${directory}/default.seed`)
+      const { seed } = await import(`@/modules/${directory}/demo.seed`)
       // seed database
       await seed(this.dbConnection, options)
     }

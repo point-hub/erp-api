@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker'
 import { type IDatabase } from '@point-hub/papi'
 
 import { RetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
@@ -25,12 +26,15 @@ export const seed = async (dbConnection: IDatabase, options: unknown) => {
 
   // insert new seeder data
   const permission = await retrieveAllpermissionRepository.handle({}, options)
+  const counters = await retrieveAllCounterRepository.handle({ filter: { name: 'roles' } }, options)
   replacePermission(permission, true)
-  for (const seed of seeds) {
+
+  for (let index = 1; index <= 30; index++) {
+    const seed: ISeed = {}
+    seed.code = `${counters.data[0].code}${Number(counters.data[0].count) + index}`
+    seed.name = faker.lorem.words({ min: 1, max: 3 })
     seed.permission = permission
     await createRoleRepository.handle(seed, options)
-    // 3.2. update counter
-    const counters = await retrieveAllCounterRepository.handle({ filter: { name: 'roles' } }, options)
     await updateCounterRepository.handle(counters.data[0]._id, { count: Number(counters.data[0].count) + 1 }, options)
   }
 }
@@ -47,10 +51,3 @@ const replacePermission = (obj: any, newValue: boolean) => {
     }
   }
 }
-
-export const seeds: ISeed[] = [
-  {
-    code: 'R0001',
-    name: 'Super Admin',
-  },
-]

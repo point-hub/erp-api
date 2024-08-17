@@ -25,7 +25,6 @@ export const seed = async (dbConnection: IDatabase, options: unknown) => {
           options,
         )
         if (account?.data?.length) {
-          console.log(account.data)
           journal.chart_of_account_id = account.data[0]._id
         }
       }
