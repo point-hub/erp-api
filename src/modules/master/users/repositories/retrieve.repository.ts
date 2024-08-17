@@ -12,7 +12,6 @@ export interface IRetrieveUserOutput {
     code: string
     name: string
   }
-  code: string
   name: string
   username: string
   email: string

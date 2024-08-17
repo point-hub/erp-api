@@ -18,7 +18,6 @@ export interface IOutput {
 }
 export interface IInput {
   role_id: string
-  code: string
   name: string
   username: string
   email: string
@@ -46,7 +45,6 @@ export class SignupUseCase {
     const codeVerification = deps.generateVerificationCode()
     const userEntity = new UserEntity({
       role_id: input.role_id,
-      code: input.code,
       name: input.name,
       username: input.username,
       email: input.email,
@@ -57,15 +55,7 @@ export class SignupUseCase {
     userEntity.generateCreatedDate()
     const cleanEntity = deps.cleanObject(userEntity.data)
     // 3. database operation
-    // 3.1. signup new user
     const responseSignup = await deps.signupRepository.handle(cleanEntity, options)
-    // 3.2. update code counter
-    const counters = await deps.retrieveAllCounterRepository.handle({ filter: { name: 'user-code' } }, options)
-    await deps.updateCounterRepository.handle(
-      counters.data[0]._id,
-      { count: Number(counters.data[0].count) + 1 },
-      options,
-    )
     // 4. get user recorded data
     const responseUser = await deps.retrieveUserRepository.handle({ _id: responseSignup.inserted_id }, options)
     // 5. return response

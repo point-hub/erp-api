@@ -3,7 +3,6 @@ export interface IUserEntity {
   role_id?: string
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   role?: { [key: string]: any }
-  code?: string
   name?: string
   username?: string
   trimmed_username?: string // for checking unique username by ignoring spaces

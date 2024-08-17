@@ -23,7 +23,6 @@ export const retrieveUserController: IController = async (controllerInput: ICont
       json: {
         _id: response._id,
         role: response.role,
-        code: response.code,
         name: response.name,
         username: response.username,
         email: response.email,

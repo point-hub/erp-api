@@ -8,7 +8,6 @@ export interface IInput {
   _id: string
   data: {
     role_id?: string
-    code?: string
     name?: string
     username?: string
     email?: string
@@ -30,7 +29,6 @@ export class UpdateUserUseCase {
     // 2. define entity
     const userEntity = new UserEntity({
       role_id: input.data.role_id,
-      code: input.data.code,
       name: input.data.name,
       username: input.data.username,
       email: input.data.email,
