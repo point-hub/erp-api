@@ -92,16 +92,23 @@ export class RetrieveAllWarehouseRepository implements IRetrieveAllWarehouseRepo
   }
 
   private aggregateFilters(query: IQuery) {
-    const filtersAnd = [] // filter keys using "and" logic
-    const filtersOr = [] // filter keys using "or" logic
+    const filtersAnd = []
 
     if (query.filter?.search) {
+      const filtersOr = []
       filtersOr.push({ code: { $regex: query.filter?.search, $options: 'i' } })
       filtersOr.push({ name: { $regex: query.filter?.search, $options: 'i' } })
       filtersOr.push({ address: { $regex: query.filter?.search, $options: 'i' } })
       filtersOr.push({ phone: { $regex: query.filter?.search, $options: 'i' } })
       filtersOr.push({ 'branch.code': { $regex: query.filter?.search, $options: 'i' } })
       filtersOr.push({ 'branch.name': { $regex: query.filter?.search, $options: 'i' } })
+      filtersAnd.push({ $or: filtersOr })
+    }
+
+    if (query.filter?.label) {
+      const filtersOr = []
+      filtersOr.push({ code: { $regex: query.filter?.label, $options: 'i' } })
+      filtersOr.push({ name: { $regex: query.filter?.label, $options: 'i' } })
       filtersAnd.push({ $or: filtersOr })
     }
 
