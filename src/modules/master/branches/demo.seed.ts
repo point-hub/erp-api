@@ -6,7 +6,7 @@ import { UpdateCounterRepository } from '@/modules/counters/repositories/update.
 
 import { IPermissionEntity } from '../permissions/interface'
 import { RetrieveAllPermissionRepository } from '../permissions/repositories/retrieve-all.repository'
-import { CreateRoleRepository } from './repositories/create.repository'
+import { CreateBranchRepository } from './repositories/create.repository'
 
 export interface ISeed {
   code?: string
@@ -15,24 +15,24 @@ export interface ISeed {
 }
 
 export const seed = async (dbConnection: IDatabase, options: unknown) => {
-  console.info(`[seed] roles data`)
+  console.info(`[seed] branches data`)
   // prepare repository
-  const createRoleRepository = new CreateRoleRepository(dbConnection)
+  const createBranchRepository = new CreateBranchRepository(dbConnection)
   const retrieveAllpermissionRepository = new RetrieveAllPermissionRepository(dbConnection)
   const retrieveAllCounterRepository = new RetrieveAllCounterRepository(dbConnection)
   const updateCounterRepository = new UpdateCounterRepository(dbConnection)
 
   // insert new seeder data
   const permission = await retrieveAllpermissionRepository.handle({}, options)
-  const counters = await retrieveAllCounterRepository.handle({ filter: { name: 'roles' } }, options)
+  const counters = await retrieveAllCounterRepository.handle({ filter: { name: 'branches' } }, options)
   replacePermission(permission, true)
 
-  for (let index = 1; index <= 30; index++) {
+  for (let index = 0; index < 30; index++) {
     const seed: ISeed = {}
     seed.code = `${counters.data[0].code}${(Number(counters.data[0].count) + index).toString().padStart(4, '0')}`
     seed.name = faker.lorem.words({ min: 1, max: 3 })
     seed.permission = permission
-    await createRoleRepository.handle(seed, options)
+    await createBranchRepository.handle(seed, options)
     await updateCounterRepository.handle(counters.data[0]._id, { count: Number(counters.data[0].count) + 1 }, options)
   }
 }

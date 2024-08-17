@@ -14,9 +14,10 @@ export interface ISeed {
 }
 
 export const seed = async (dbConnection: IDatabase, options: unknown) => {
-  console.info(`[seed] roles data`)
+  console.info(`[truncate] roles data`)
   // delete all data inside collection
   await dbConnection.collection('roles').deleteAll(options)
+  console.info(`[seed] roles data`)
   // prepare repository
   const createRoleRepository = new CreateRoleRepository(dbConnection)
   const retrieveAllpermissionRepository = new RetrieveAllPermissionRepository(dbConnection)
@@ -29,7 +30,7 @@ export const seed = async (dbConnection: IDatabase, options: unknown) => {
   for (const seed of seeds) {
     seed.permission = permission
     await createRoleRepository.handle(seed, options)
-    // 3.2. update counter
+    // update counter
     const counters = await retrieveAllCounterRepository.handle({ filter: { name: 'roles' } }, options)
     await updateCounterRepository.handle(counters.data[0]._id, { count: Number(counters.data[0].count) + 1 }, options)
   }

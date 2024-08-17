@@ -40,9 +40,9 @@ export class UpdateWarehouseUseCase {
       branch_id: input.data.branch_id,
       code: input.data.code,
       name: input.data.name,
-      address: input.data.address,
-      phone: input.data.phone,
-      notes: input.data.notes,
+      address: input.data.address ?? '',
+      phone: input.data.phone ?? '',
+      notes: input.data.notes ?? '',
       updated_by: input.auth._id,
     })
     warehouseEntity.generateUpdatedDate()

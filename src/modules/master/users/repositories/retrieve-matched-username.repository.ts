@@ -2,6 +2,7 @@ import type { IDatabase, IPipeline, IQuery, IRetrieveAllOutput } from '@point-hu
 import { IAggregateRepository } from '@point-hub/papi'
 import { IAggregateOutput } from '@point-hub/papi'
 import { IPagination } from '@point-hub/papi'
+import { pathToFileURL } from 'bun'
 
 import { collectionName } from '../entity'
 
@@ -60,7 +61,12 @@ export class RetrieveMatchedUsernameRepository implements IRetrieveMatchedUserna
           as: 'role',
         },
       },
-      { $unwind: '$role' },
+      {
+        $unwind: {
+          path: '$role',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
       { $unset: ['role_id'] },
     ]
   }

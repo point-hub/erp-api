@@ -70,10 +70,10 @@ export class RetrieveAllBranchRepository implements IRetrieveAllBranchRepository
   }
 
   private aggregateFilters(query: IQuery) {
-    const filtersAnd = [] // filter keys using "and" logic
-    const filtersOr = [] // filter keys using "or" logic
+    const filtersAnd = []
 
     if (query.filter?.search) {
+      const filtersOr = []
       filtersOr.push({ code: { $regex: query.filter?.search, $options: 'i' } })
       filtersOr.push({ name: { $regex: query.filter?.search, $options: 'i' } })
       filtersOr.push({ address: { $regex: query.filter?.search, $options: 'i' } })
@@ -82,8 +82,9 @@ export class RetrieveAllBranchRepository implements IRetrieveAllBranchRepository
     }
 
     if (query.filter?.label) {
-      filtersOr.push({ code: { $regex: query.filter?.search, $options: 'i' } })
-      filtersOr.push({ name: { $regex: query.filter?.search, $options: 'i' } })
+      const filtersOr = []
+      filtersOr.push({ code: { $regex: query.filter?.label, $options: 'i' } })
+      filtersOr.push({ name: { $regex: query.filter?.label, $options: 'i' } })
       filtersAnd.push({ $or: filtersOr })
     }
 

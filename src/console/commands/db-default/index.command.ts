@@ -20,6 +20,12 @@ export default class DbSeedCommand extends BaseConsoleCommand {
       await this.dbConnection.open()
       session = this.dbConnection.startSession()
       session.startTransaction()
+
+      // only delete existing data
+      await this.seeds(['master/branches'], { session })
+      await this.seeds(['master/warehouses'], { session })
+
+      // delete existing data and add default value
       await this.seeds(['counters'], { session })
       await this.seeds(['master/permissions'], { session })
       await this.seeds(['master/roles'], { session })
