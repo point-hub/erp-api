@@ -1,4 +1,3 @@
-import { faker } from '@faker-js/faker'
 import { type IDatabase } from '@point-hub/papi'
 
 import { RetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
@@ -30,7 +29,7 @@ export const seed = async (dbConnection: IDatabase, options: unknown) => {
   for (let index = 1; index <= 30; index++) {
     const seed: ISeed = {}
     seed.code = `${counters.data[0].code}${(Number(counters.data[0].count) + index).toString().padStart(4, '0')}`
-    seed.name = faker.lorem.words({ min: 1, max: 3 })
+    seed.name = `Role ${index.toString().padStart(4, '0')}`
     seed.permission = permission
     await createRoleRepository.handle(seed, options)
     await updateCounterRepository.handle(

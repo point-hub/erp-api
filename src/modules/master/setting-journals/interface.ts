@@ -12,7 +12,7 @@ export interface ISettingJournalEntity {
     account?: string
     subledger?: string
     editable?: boolean
-    position?: 'debit' | 'credit'
+    position?: 'Debit' | 'Credit'
   }[]
   created_by?: string
   updated_by?: string

@@ -3,6 +3,7 @@ import { type IDatabase } from '@point-hub/papi'
 import { CreateChartOfAccountCategoryRepository } from '@/modules/master/chart-of-account-categories/repositories/create.repository'
 import { CreateChartOfAccountTypeRepository } from '@/modules/master/chart-of-account-types/repositories/create.repository'
 import { CreateChartOfAccountRepository } from '@/modules/master/chart-of-accounts/repositories/create.repository'
+import { toTitleCase } from '@/utils/titlecase'
 
 export interface ISeed {
   type?: string
@@ -28,7 +29,7 @@ export const seed = async (dbConnection: IDatabase, options: unknown) => {
   const types = uniqueTypes.map((el) => el.type)
   for (const type of types) {
     // insert account type
-    const typeResponse = await createChartOfAccountTypeRepository.handle({ name: type }, options)
+    const typeResponse = await createChartOfAccountTypeRepository.handle({ name: toTitleCase(type) }, options)
     const filteredCategorySeeds = seeds.filter((el) => el.type === type)
     const uniqueCategories = [...new Map(filteredCategorySeeds.map((el) => [el.category, el])).values()]
     const categories = uniqueCategories.map((el) => el.category)
@@ -37,7 +38,7 @@ export const seed = async (dbConnection: IDatabase, options: unknown) => {
       const categoryResponse = await createChartOfAccountCategoryRepository.handle(
         {
           type_id: typeResponse.inserted_id,
-          name: category,
+          name: toTitleCase(category),
         },
         options,
       )
@@ -49,8 +50,8 @@ export const seed = async (dbConnection: IDatabase, options: unknown) => {
           {
             category_id: categoryResponse.inserted_id,
             number: account.number,
-            name: account.name,
-            subledger: account.subledger ?? '',
+            name: toTitleCase(account.name),
+            subledger: toTitleCase(account.subledger),
           },
           options,
         )

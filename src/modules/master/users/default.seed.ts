@@ -25,7 +25,7 @@ export const seed = async (dbConnection: IDatabase, options: unknown) => {
     {
       role_id: roles.data[0]._id,
       username: 'gmbtest',
-      name: 'gmbtest',
+      name: 'Ganesha Mandiri',
       email: 'gmbtest@gmail.com',
       trimmed_username: 'gmbtest',
       trimmed_email: 'gmbtest@gmail.com',
