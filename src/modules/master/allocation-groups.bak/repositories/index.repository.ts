@@ -1,5 +1,0 @@
-export { CreateAllocationGroupRepository } from './create.repository'
-export { DeleteAllocationGroupRepository } from './delete.repository'
-export { RetrieveAllocationGroupRepository } from './retrieve.repository'
-export { RetrieveAllAllocationGroupRepository } from './retrieve-all.repository'
-export { UpdateAllocationGroupRepository } from './update.repository'
