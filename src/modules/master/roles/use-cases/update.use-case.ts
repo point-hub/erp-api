@@ -38,7 +38,7 @@ export class UpdateRoleUseCase {
       code: input.data.code,
       name: input.data.name,
       permission: input.data.permission,
-      notes: input.data.notes,
+      notes: input.data.notes ?? '',
       updated_by: input.auth._id,
     })
     roleEntity.generateUpdatedDate()

@@ -79,6 +79,12 @@ export class RetrieveAllRoleRepository implements IRetrieveAllRoleRepository {
       filtersAnd.push({ $or: filtersOr })
     }
 
+    if (query.filter?.label) {
+      filtersOr.push({ code: { $regex: query.filter?.label, $options: 'i' } })
+      filtersOr.push({ name: { $regex: query.filter?.label, $options: 'i' } })
+      filtersAnd.push({ $or: filtersOr })
+    }
+
     if (query.filter?.code) filtersAnd.push({ code: { $regex: query.filter?.code, $options: 'i' } })
     if (query.filter?.name) filtersAnd.push({ name: { $regex: query.filter?.name, $options: 'i' } })
 

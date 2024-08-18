@@ -54,6 +54,7 @@ export class RetrieveAllChartOfAccountCategoryRepository implements IRetrieveAll
       filtersAnd.push({ $or: filtersOr })
     }
 
+    if (query.filter?.type_id) filtersAnd.push({ 'type._id': { $eq: query.filter?.type_id } })
     if (query.filter?.name) filtersAnd.push({ name: { $regex: query.filter?.name, $options: 'i' } })
     if (query.filter?.type) filtersAnd.push({ 'type.name': { $regex: query.filter?.type, $options: 'i' } })
 

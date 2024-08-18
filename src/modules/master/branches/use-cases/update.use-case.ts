@@ -38,9 +38,9 @@ export class UpdateBranchUseCase {
     const branchEntity = new BranchEntity({
       code: input.data.code,
       name: input.data.name,
-      address: input.data.address,
-      phone: input.data.phone,
-      notes: input.data.notes,
+      address: input.data.address ?? '',
+      phone: input.data.phone ?? '',
+      notes: input.data.notes ?? '',
       updated_by: input.auth._id,
     })
     branchEntity.generateUpdatedDate()
