@@ -21,8 +21,8 @@ export class RetrieveCustomerGroupRepository implements IRetrieveCustomerGroupRe
       _id: response._id,
       code: response.code as string,
       name: response.name as string,
-      created_date: response.created_date as string,
-      updated_date: response.updated_date as string,
+      created_date: response.created_date as Date,
+      updated_date: response.updated_date as Date,
     }
   }
 }

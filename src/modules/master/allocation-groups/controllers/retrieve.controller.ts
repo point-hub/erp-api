@@ -48,8 +48,6 @@ export const retrieveAllocationGroupController: IController = async (controllerI
         _id: response._id,
         code: response.code,
         name: response.name,
-        address: response.address,
-        phone: response.phone,
         notes: response.notes,
         created_date: response.created_date,
         updated_date: response.updated_date,

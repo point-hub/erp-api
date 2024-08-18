@@ -22,10 +22,7 @@ export const retrieveChartOfAccountTypeController: IController = async (controll
       status: 200,
       json: {
         _id: response._id,
-        category_id: response.category_id,
-        number: response.number,
         name: response.name,
-        subledger: response.subledger,
         created_date: response.created_date,
         updated_date: response.updated_date,
       },
