@@ -33,16 +33,3 @@ export const seed = async (dbConnection: IDatabase, options: unknown) => {
     )
   }
 }
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const replacePermission = (obj: any, newValue: boolean) => {
-  for (const key in obj) {
-    if (Object.prototype.hasOwnProperty.call(obj, key)) {
-      if (typeof obj[key] === 'object' && obj[key] !== null) {
-        replacePermission(obj[key], newValue)
-      } else {
-        obj[key] = newValue
-      }
-    }
-  }
-}

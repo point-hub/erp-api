@@ -13,7 +13,6 @@ export interface IOutput {
   _id: string
   code: string
   name: string
-  notes: string
   created_date: Date
   updated_date: Date
 }
@@ -27,7 +26,6 @@ export class RetrieveAllocationGroupUseCase {
       _id: response._id,
       code: response.code,
       name: response.name,
-      notes: response.notes,
       created_date: response.created_date,
       updated_date: response.updated_date,
     }

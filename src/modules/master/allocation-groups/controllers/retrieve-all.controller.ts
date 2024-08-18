@@ -21,7 +21,7 @@ export const retrieveAllAllocationGroupController: IController = async (controll
     const retrieveAllAllocationGroupRepository = new RetrieveAllAllocationGroupRepository(controllerInput.dbConnection)
     // 3. handle business rules
     // 3.1 check authenticated user
-    const verifyTokenResponse = await VerifyTokenUseCase.handle(
+    await VerifyTokenUseCase.handle(
       {
         token: controllerInput.httpRequest.signedCookies.POINTHUB_ACCESS,
         secret: authConfig.secret,
@@ -35,8 +35,7 @@ export const retrieveAllAllocationGroupController: IController = async (controll
       },
       { session },
     )
-    console.log(verifyTokenResponse)
-    // 3.2 retrieve all allocation group
+    // 3.2 retrieve all
     const response = await RetrieveAllAllocationGroupUseCase.handle(
       { query: controllerInput.httpRequest.query },
       { retrieveAllAllocationGroupRepository },

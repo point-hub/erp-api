@@ -1,26 +1,16 @@
 import type { ISchemaValidation } from '@point-hub/papi'
 
-import { ICreateCounterRepository } from '@/modules/counters/repositories/create.repository'
-import { IRetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
-import { IAuth } from '@/modules/master/users/interface'
-
 import { AllocationGroupEntity } from '../entity'
 import { ICreateAllocationGroupRepository } from '../repositories/create.repository'
 import { createValidation } from '../validations/create.validation'
 
 export interface IInput {
-  auth: IAuth
-  data: {
-    code?: string
-    name?: string
-    notes?: string
-  }
+  code?: string
+  name?: string
 }
 export interface IDeps {
   cleanObject(object: object): object
   createAllocationGroupRepository: ICreateAllocationGroupRepository
-  retrieveAllCounterRepository: IRetrieveAllCounterRepository
-  createCounterRepository: ICreateCounterRepository
   schemaValidation: ISchemaValidation
 }
 export interface IOptions {
@@ -33,34 +23,16 @@ export interface IOutput {
 export class CreateAllocationGroupUseCase {
   static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
     // 1. validate schema
-    await deps.schemaValidation(input.data, createValidation)
+    await deps.schemaValidation(input, createValidation)
     // 2. define entity
     const allocationGroupEntity = new AllocationGroupEntity({
-      code: input.data.code,
-      name: input.data.name,
-      notes: input.data.notes,
-      created_by: input.auth._id,
+      code: input.code,
+      name: input.name,
     })
     allocationGroupEntity.generateCreatedDate()
     const cleanEntity = deps.cleanObject(allocationGroupEntity.data)
     // 3. database operation
-    // 3.1 create allocation group
     const response = await deps.createAllocationGroupRepository.handle(cleanEntity, options)
-    // 3.2. update counter
-    const counters = await deps.retrieveAllCounterRepository.handle(
-      { filter: { name: 'allocation_groups', code: input.data.code } },
-      options,
-    )
-    if (!counters.data.length) {
-      await deps.createCounterRepository.handle(
-        {
-          name: 'allocation_groups',
-          code: input.data.code,
-          count: 0,
-        },
-        options,
-      )
-    }
     // 4. output
     return { inserted_id: response.inserted_id }
   }

@@ -27,10 +27,6 @@ export const schema: ISchema[] = [
           bsonType: 'string',
           description: 'The name for the allocation group',
         },
-        notes: {
-          bsonType: 'string',
-          description: 'The notes for the allocation group',
-        },
       },
     },
   },

@@ -23,7 +23,7 @@ export default class AllocationGroupFactory extends BaseFactory<IAllocationGroup
   }
 
   async createMany(count: number) {
-    const createManyAllocationGroupRepository = new CreateManyAllocationGroupRepository(this.dbConnection)
-    return await createManyAllocationGroupRepository.handle(this.makeMany(count))
+    const createManyRepository = new CreateManyAllocationGroupRepository(this.dbConnection)
+    return await createManyRepository.handle(this.makeMany(count))
   }
 }

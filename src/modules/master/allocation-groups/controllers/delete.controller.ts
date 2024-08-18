@@ -21,7 +21,7 @@ export const deleteAllocationGroupController: IController = async (controllerInp
     const deleteAllocationGroupRepository = new DeleteAllocationGroupRepository(controllerInput.dbConnection)
     // 3. handle business logic
     // 3.1 check authenticated user
-    const verifyTokenResponse = await VerifyTokenUseCase.handle(
+    await VerifyTokenUseCase.handle(
       {
         token: controllerInput.httpRequest.signedCookies.POINTHUB_ACCESS,
         secret: authConfig.secret,
@@ -35,8 +35,7 @@ export const deleteAllocationGroupController: IController = async (controllerInp
       },
       { session },
     )
-    console.log(verifyTokenResponse)
-    // 3.2 delete allocation group
+    // 3.2 delete
     const response = await DeleteAllocationGroupUseCase.handle(
       { _id: controllerInput.httpRequest.params.id, reason: controllerInput.httpRequest.body.reason },
       { schemaValidation, deleteAllocationGroupRepository },

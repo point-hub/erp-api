@@ -1,7 +1,7 @@
+import { objClean } from '@point-hub/express-utils'
 import type { IController, IControllerInput } from '@point-hub/papi'
 
 import authConfig from '@/config/auth'
-import { IAuth } from '@/modules/master/users/interface'
 import { RetrieveAuthUserRepository } from '@/modules/master/users/repositories/retrieve-auth-user.repository'
 import { VerifyTokenUseCase } from '@/modules/master/users/use-cases/verify-token.use-case'
 import { verifyToken } from '@/modules/master/users/utils/jwt'
@@ -36,14 +36,14 @@ export const updateAllocationGroupController: IController = async (controllerInp
       },
       { session },
     )
-    // 3.2 update
+    console.log(verifyTokenResponse)
+    // 3.2 update allocation group
     const response = await UpdateAllocationGroupUseCase.handle(
       {
-        auth: verifyTokenResponse as IAuth,
         _id: controllerInput.httpRequest.params.id,
         data: controllerInput.httpRequest.body,
       },
-      { schemaValidation, updateAllocationGroupRepository },
+      { cleanObject: objClean, schemaValidation, updateAllocationGroupRepository },
     )
     await session.commitTransaction()
     // 4. return response to client

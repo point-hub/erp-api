@@ -1,11 +1,10 @@
-import type { IDatabase, IDocument } from '@point-hub/papi'
+import type { ICreateOutput, ICreateRepository, IDatabase, IDocument } from '@point-hub/papi'
 
 import { collectionName } from '../entity'
 
-export interface ICreateAllocationGroupOutput {
-  inserted_id: string
-}
-export interface ICreateAllocationGroupRepository {
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface ICreateAllocationGroupOutput extends ICreateOutput {}
+export interface ICreateAllocationGroupRepository extends ICreateRepository {
   handle(document: IDocument, options?: unknown): Promise<ICreateAllocationGroupOutput>
 }
 

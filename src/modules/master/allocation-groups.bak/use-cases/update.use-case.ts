@@ -1,22 +1,18 @@
 import type { ISchemaValidation } from '@point-hub/papi'
 
-import { IAuth } from '@/modules/master/users/interface'
-
 import { AllocationGroupEntity } from '../entity'
 import { IUpdateAllocationGroupRepository } from '../repositories/update.repository'
 import { updateValidation } from '../validations/update.validation'
 
 export interface IInput {
-  auth: IAuth
   _id: string
   data: {
     code?: string
     name?: string
-    notes?: string
-    updated_by?: string
   }
 }
 export interface IDeps {
+  cleanObject(object: object): object
   schemaValidation: ISchemaValidation
   updateAllocationGroupRepository: IUpdateAllocationGroupRepository
 }
@@ -36,8 +32,6 @@ export class UpdateAllocationGroupUseCase {
     const allocationGroupEntity = new AllocationGroupEntity({
       code: input.data.code,
       name: input.data.name,
-      notes: input.data.notes ?? '',
-      updated_by: input.auth._id,
     })
     allocationGroupEntity.generateUpdatedDate()
     // 3. database operation

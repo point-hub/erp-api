@@ -2,6 +2,9 @@ import { objClean } from '@point-hub/express-utils'
 import type { IController, IControllerInput } from '@point-hub/papi'
 
 import authConfig from '@/config/auth'
+import { CreateCounterRepository } from '@/modules/counters/repositories/create.repository'
+import { RetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
+import { IAuth } from '@/modules/master/users/interface'
 import { RetrieveAuthUserRepository } from '@/modules/master/users/repositories/retrieve-auth-user.repository'
 import { VerifyTokenUseCase } from '@/modules/master/users/use-cases/verify-token.use-case'
 import { verifyToken } from '@/modules/master/users/utils/jwt'
@@ -20,6 +23,8 @@ export const createAllocationGroupController: IController = async (controllerInp
     // 2. define repository
     const retrieveAuthUserRepository = new RetrieveAuthUserRepository(controllerInput.dbConnection)
     const createAllocationGroupRepository = new CreateAllocationGroupRepository(controllerInput.dbConnection)
+    const createCounterRepository = new CreateCounterRepository(controllerInput.dbConnection)
+    const retrieveAllCounterRepository = new RetrieveAllCounterRepository(controllerInput.dbConnection)
     // 3. handle business rules
     // 3.1 check authenticated user
     const verifyTokenResponse = await VerifyTokenUseCase.handle(
@@ -36,13 +41,17 @@ export const createAllocationGroupController: IController = async (controllerInp
       },
       { session },
     )
-    console.log(verifyTokenResponse)
-    // 3.2 create allocation group
+    // 3.2 create
     const response = await CreateAllocationGroupUseCase.handle(
-      controllerInput.httpRequest.body,
+      {
+        auth: verifyTokenResponse as IAuth,
+        data: controllerInput.httpRequest.body,
+      },
       {
         cleanObject: objClean,
         createAllocationGroupRepository,
+        createCounterRepository,
+        retrieveAllCounterRepository,
         schemaValidation,
       },
       { session },

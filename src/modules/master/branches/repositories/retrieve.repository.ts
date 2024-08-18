@@ -53,8 +53,8 @@ export class RetrieveBranchRepository implements IRetrieveBranchRepository {
         username: updated_by?.username as string,
         email: updated_by?.email as string,
       },
-      created_date: response.data[0].created_date as string,
-      updated_date: response.data[0].updated_date as string,
+      created_date: response.data[0].created_date as Date,
+      updated_date: response.data[0].updated_date as Date,
     }
   }
 
