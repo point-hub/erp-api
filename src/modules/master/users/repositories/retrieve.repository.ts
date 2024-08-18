@@ -12,6 +12,10 @@ export interface IRetrieveUserOutput {
     code: string
     name: string
   }
+  default_branch: string
+  default_warehouse: string
+  branches: string[]
+  warehouses: string[]
   name: string
   username: string
   email: string
@@ -63,10 +67,13 @@ export class RetrieveUserRepository implements IRetrieveUserRepository {
     return {
       _id: aggregateResult.data[0]._id as string,
       role: aggregateResult.data[0].role as { code: string; name: string },
-      code: aggregateResult.data[0].code as string,
       name: aggregateResult.data[0].name as string,
       username: aggregateResult.data[0].username as string,
       email: aggregateResult.data[0].email as string,
+      default_branch: aggregateResult.data[0].default_branch as string,
+      default_warehouse: aggregateResult.data[0].default_warehouse as string,
+      branches: aggregateResult.data[0].branches as string[],
+      warehouses: aggregateResult.data[0].warehouses as string[],
       created_date: aggregateResult.data[0].created_date as Date,
       updated_date: aggregateResult.data[0].updated_date as Date,
     }

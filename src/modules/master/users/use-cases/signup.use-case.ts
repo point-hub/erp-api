@@ -22,6 +22,10 @@ export interface IInput {
   username: string
   email: string
   password: string
+  default_branch: string
+  branches: string[]
+  default_warehouse: string
+  warehouses: string[]
 }
 export interface IDeps {
   signupRepository: ICreateUserRepository
@@ -51,6 +55,10 @@ export class SignupUseCase {
       password: input.password ? await deps.hashPassword(input.password) : '',
       email_verification_code: codeVerification,
       is_email_verified: true,
+      default_branch: input.default_branch,
+      default_warehouse: input.default_warehouse,
+      branches: input.branches,
+      warehouses: input.warehouses,
     })
     userEntity.generateCreatedDate()
     const cleanEntity = deps.cleanObject(userEntity.data)

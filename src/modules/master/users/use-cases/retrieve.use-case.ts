@@ -23,6 +23,10 @@ export class RetrieveUserUseCase {
       name: response.name,
       username: response.username,
       email: response.email,
+      default_branch: response.default_branch,
+      default_warehouse: response.default_warehouse,
+      branches: response.branches,
+      warehouses: response.warehouses,
       created_date: response.created_date,
       updated_date: response.updated_date,
     }

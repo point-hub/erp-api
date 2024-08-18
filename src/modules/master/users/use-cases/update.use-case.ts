@@ -11,6 +11,10 @@ export interface IInput {
     name?: string
     username?: string
     email?: string
+    default_branch: string
+    default_warehouse: string
+    branches: string[]
+    warehouses: string[]
   }
 }
 export interface IDeps {
@@ -32,6 +36,10 @@ export class UpdateUserUseCase {
       name: input.data.name,
       username: input.data.username,
       email: input.data.email,
+      default_branch: input.data.default_branch,
+      default_warehouse: input.data.default_warehouse,
+      branches: input.data.branches,
+      warehouses: input.data.warehouses,
     })
     userEntity.generateUpdatedDate()
     // 3. database operation
