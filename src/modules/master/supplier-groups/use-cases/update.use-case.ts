@@ -1,18 +1,22 @@
 import type { ISchemaValidation } from '@point-hub/papi'
 
+import { IAuth } from '@/modules/master/users/interface'
+
 import { SupplierGroupEntity } from '../entity'
 import { IUpdateSupplierGroupRepository } from '../repositories/update.repository'
 import { updateValidation } from '../validations/update.validation'
 
 export interface IInput {
+  auth: IAuth
   _id: string
   data: {
     code?: string
     name?: string
+    notes?: string
+    updated_by?: string
   }
 }
 export interface IDeps {
-  cleanObject(object: object): object
   schemaValidation: ISchemaValidation
   updateSupplierGroupRepository: IUpdateSupplierGroupRepository
 }
@@ -32,6 +36,8 @@ export class UpdateSupplierGroupUseCase {
     const supplierGroupEntity = new SupplierGroupEntity({
       code: input.data.code,
       name: input.data.name,
+      notes: input.data.notes ?? '',
+      updated_by: input.auth._id,
     })
     supplierGroupEntity.generateUpdatedDate()
     // 3. database operation

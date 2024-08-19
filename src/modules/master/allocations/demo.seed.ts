@@ -24,7 +24,7 @@ export const seed = async (dbConnection: IDatabase, options: unknown) => {
 
   // insert new seeder data
   const allocationGroups = await retrieveAllAllocationGroupRepository.handle({ page_size: 30 }, options)
-  const counters = await retrieveAllCounterRepository.handle({ filter: { name: 'allocations' } }, options)
+  const counters = await retrieveAllCounterRepository.handle({ filter: { name: 'allocation_groups' } }, options)
 
   for (let index = 1; index <= 30; index++) {
     const seed: ISeed = {}

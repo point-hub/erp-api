@@ -26,6 +26,8 @@ export default class DbSeedCommand extends BaseConsoleCommand {
       await this.seeds(['master/warehouses'], { session })
       await this.seeds(['master/allocation-groups'], { session })
       await this.seeds(['master/allocations'], { session })
+      await this.seeds(['master/supplier-groups'], { session })
+      await this.seeds(['master/suppliers'], { session })
 
       // delete existing data and add default value
       await this.seeds(['counters'], { session })

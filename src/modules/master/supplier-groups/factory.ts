@@ -23,7 +23,7 @@ export default class SupplierGroupFactory extends BaseFactory<ISupplierGroupEnti
   }
 
   async createMany(count: number) {
-    const createManyRepository = new CreateManySupplierGroupRepository(this.dbConnection)
-    return await createManyRepository.handle(this.makeMany(count))
+    const createManySupplierGroupRepository = new CreateManySupplierGroupRepository(this.dbConnection)
+    return await createManySupplierGroupRepository.handle(this.makeMany(count))
   }
 }
