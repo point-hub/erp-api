@@ -29,7 +29,7 @@ export class RetrieveAuthUserRepository implements IRetrieveAuthUserRepository {
     pipeline.push(...this.aggregateJoinRole())
 
     const aggregateResult = await this.database.collection(collectionName).aggregate(pipeline, {}, options)
-    console.log('agg', aggregateResult.data[0])
+
     return {
       data: [
         {

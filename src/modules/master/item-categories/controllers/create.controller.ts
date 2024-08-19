@@ -36,7 +36,6 @@ export const createItemCategoryController: IController = async (controllerInput:
       },
       { session },
     )
-    console.log(verifyTokenResponse)
     // 3.2 create item category
     const response = await CreateItemCategoryUseCase.handle(
       controllerInput.httpRequest.body,

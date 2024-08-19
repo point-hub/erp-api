@@ -36,7 +36,6 @@ export const updateItemCategoryController: IController = async (controllerInput:
       },
       { session },
     )
-    console.log(verifyTokenResponse)
     // 3.2 update item category
     const response = await UpdateItemCategoryUseCase.handle(
       {

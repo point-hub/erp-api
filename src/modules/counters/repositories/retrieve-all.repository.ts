@@ -19,6 +19,7 @@ export class RetrieveAllCounterRepository implements IRetrieveAllCounterReposito
 
     const filters = []
 
+    if (query.filter?.code) filters.push({ code: { $regex: query.filter?.code, $options: 'i' } })
     if (query.filter?.name) filters.push({ name: { $regex: query.filter?.name, $options: 'i' } })
 
     if (filters.length) {

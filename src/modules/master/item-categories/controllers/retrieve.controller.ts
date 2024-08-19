@@ -35,7 +35,6 @@ export const retrieveItemCategoryController: IController = async (controllerInpu
       },
       { session },
     )
-    console.log(verifyTokenResponse)
     // 3.2 retrieve item category
     const response = await RetrieveItemCategoryUseCase.handle(
       { _id: controllerInput.httpRequest.params.id },

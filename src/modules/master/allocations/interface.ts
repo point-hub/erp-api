@@ -3,6 +3,7 @@ export interface IAllocationEntity {
   allocation_group_id?: string
   code?: string
   name?: string
+  notes?: string
   created_by?: string
   updated_by?: string
   created_date?: Date

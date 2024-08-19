@@ -1,5 +1,3 @@
-import type { IRetrieveOutput } from '@point-hub/papi'
-
 import { IRetrieveAllocationRepository } from '../repositories/retrieve.repository'
 
 export interface IInput {
@@ -11,9 +9,22 @@ export interface IDeps {
 export interface IOptions {
   session: unknown
 }
+export interface IOutput {
+  _id: string
+  allocation_group: {
+    _id: string
+    code: string
+    name: string
+  }
+  code: string
+  name: string
+  notes: string
+  created_date: Date
+  updated_date: Date
+}
 
 export class RetrieveAllocationUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IRetrieveOutput> {
+  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
     // 1. database operation
     const response = await deps.retrieveAllocationRepository.handle(input._id, options)
     // 2. output
@@ -22,6 +33,7 @@ export class RetrieveAllocationUseCase {
       allocation_group: response.allocation_group,
       code: response.code,
       name: response.name,
+      notes: response.notes,
       created_date: response.created_date,
       updated_date: response.updated_date,
     }

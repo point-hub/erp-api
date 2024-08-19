@@ -19,6 +19,10 @@ export const schema: ISchema[] = [
       bsonType: 'object',
       required: ['allocation_group_id', 'code', 'name'],
       properties: {
+        allocation_group_id: {
+          bsonType: 'objectId',
+          description: 'The code for the allocation',
+        },
         code: {
           bsonType: 'string',
           description: 'The code for the allocation',
@@ -26,6 +30,10 @@ export const schema: ISchema[] = [
         name: {
           bsonType: 'string',
           description: 'The name for the allocation',
+        },
+        notes: {
+          bsonType: 'string',
+          description: 'The notes for the allocation',
         },
       },
     },

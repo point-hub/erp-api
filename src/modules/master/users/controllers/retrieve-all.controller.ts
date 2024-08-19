@@ -35,7 +35,6 @@ export const retrieveAllUserController: IController = async (controllerInput: IC
       },
       { session },
     )
-    console.log(verifyTokenResponse)
     // 3.2 retrieve all user
     const response = await RetrieveAllUserUseCase.handle(
       { query: controllerInput.httpRequest.query },

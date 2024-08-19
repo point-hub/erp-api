@@ -1,10 +1,12 @@
-import type { ICreateManyOutput, ICreateManyRepository, IDatabase, IDocument } from '@point-hub/papi'
+import type { IDatabase, IDocument } from '@point-hub/papi'
 
 import { collectionName } from '../entity'
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface ICreateManyAllocationOutput extends ICreateManyOutput {}
-export interface ICreateManyAllocationRepository extends ICreateManyRepository {
+export interface ICreateManyAllocationOutput {
+  inserted_count: number
+  inserted_ids: string[]
+}
+export interface ICreateManyAllocationRepository {
   handle(documents: IDocument[], options?: unknown): Promise<ICreateManyAllocationOutput>
 }
 

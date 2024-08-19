@@ -35,7 +35,6 @@ export const deleteItemCategoryController: IController = async (controllerInput:
       },
       { session },
     )
-    console.log(verifyTokenResponse)
     // 3.2 delete item category
     const response = await DeleteItemCategoryUseCase.handle(
       { _id: controllerInput.httpRequest.params.id, reason: controllerInput.httpRequest.body.reason },

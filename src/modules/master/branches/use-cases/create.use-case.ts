@@ -37,7 +37,6 @@ export class CreateBranchUseCase {
     // 1. validate schema
     await deps.schemaValidation(input.data, createValidation)
     // 2. define entity
-    console.log(input.auth)
     const branchEntity = new BranchEntity({
       code: input.data.code,
       name: input.data.name,

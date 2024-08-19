@@ -1,28 +1,36 @@
-import type { ISchemaValidation, IUpdateOutput } from '@point-hub/papi'
+import type { ISchemaValidation } from '@point-hub/papi'
+
+import { IAuth } from '@/modules/master/users/interface'
 
 import { AllocationEntity } from '../entity'
 import { IUpdateAllocationRepository } from '../repositories/update.repository'
 import { updateValidation } from '../validations/update.validation'
 
 export interface IInput {
+  auth: IAuth
   _id: string
   data: {
     allocation_group_id?: string
     code?: string
     name?: string
+    notes?: string
+    updated_by?: string
   }
 }
 export interface IDeps {
-  cleanObject(object: object): object
   schemaValidation: ISchemaValidation
   updateAllocationRepository: IUpdateAllocationRepository
 }
 export interface IOptions {
   session?: unknown
 }
+export interface IOutput {
+  matched_count: number
+  modified_count: number
+}
 
 export class UpdateAllocationUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IUpdateOutput> {
+  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input, updateValidation)
     // 2. define entity
@@ -30,6 +38,8 @@ export class UpdateAllocationUseCase {
       allocation_group_id: input.data.allocation_group_id,
       code: input.data.code,
       name: input.data.name,
+      notes: input.data.notes ?? '',
+      updated_by: input.auth._id,
     })
     allocationEntity.generateUpdatedDate()
     // 3. database operation

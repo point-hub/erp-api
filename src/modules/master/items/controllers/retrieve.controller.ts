@@ -16,7 +16,6 @@ export const retrieveItemController: IController = async (controllerInput: ICont
       { _id: controllerInput.httpRequest.params.id },
       { retrieveItemRepository },
     )
-    console.log('retrieve')
     await session.commitTransaction()
     // 4. return response to client
     return {

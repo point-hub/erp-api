@@ -75,7 +75,6 @@ export class RetrieveSettingJournalRepository implements IRetrieveSettingJournal
         },
       },
     )
-    // console.log(pipeline)
     const response = await this.database.collection(this.collection).aggregate(pipeline, {}, options)
 
     return {
