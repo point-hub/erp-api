@@ -10,19 +10,22 @@ interface IItemCategory {
   name: string
 }
 
+interface IChartOfAccount {
+  _id: string
+  number: string
+  name: string
+}
+
 export interface IRetrieveItemOutput {
   _id: string
+  chart_of_account: IChartOfAccount
+  category: IItemCategory
   code: string
   name: string
-  address: string
-  phone: string
-  email: string
-  bank_name: string
-  bank_branch: string
-  bank_account_name: string
-  bank_account_number: string
+  unit: string
+  have_production_number: boolean
+  have_an_expiry_date: boolean
   notes: string
-  category: IItemCategory
   created_by: IAuthBy
   updated_by: IAuthBy
   created_date: Date
@@ -40,6 +43,7 @@ export class RetrieveItemRepository implements IRetrieveItemRepository {
 
     pipeline.push(...this.aggregateFilters(_id))
     pipeline.push(...this.aggregateJoinItemCategory())
+    pipeline.push(...this.aggregateJoinChartOfAccount())
     pipeline.push(...this.aggregateJoinCreatedBy())
     pipeline.push(...this.aggregateJoinUpdatedBy())
 
@@ -52,18 +56,19 @@ export class RetrieveItemRepository implements IRetrieveItemRepository {
       _id: response.data[0]._id as string,
       code: response.data[0].code as string,
       name: response.data[0].name as string,
-      address: response.data[0].address as string,
-      phone: response.data[0].phone as string,
-      email: response.data[0].email as string,
-      bank_name: response.data[0].bank_name as string,
-      bank_branch: response.data[0].bank_branch as string,
-      bank_account_name: response.data[0].bank_account_number as string,
-      bank_account_number: response.data[0].bank_account_name as string,
+      unit: response.data[0].unit as string,
+      have_production_number: response.data[0].have_production_number as boolean,
+      have_an_expiry_date: response.data[0].have_an_expiry_date as boolean,
       notes: response.data[0].notes as string,
       category: {
         _id: (response.data[0].category as IItemCategory)._id as string,
         code: (response.data[0].category as IItemCategory).code as string,
         name: (response.data[0].category as IItemCategory).name as string,
+      },
+      chart_of_account: {
+        _id: (response.data[0].chart_of_account as IChartOfAccount)._id as string,
+        number: (response.data[0].chart_of_account as IChartOfAccount).number as string,
+        name: (response.data[0].chart_of_account as IChartOfAccount).name as string,
       },
       created_by: {
         _id: created_by?._id as string,
@@ -140,6 +145,27 @@ export class RetrieveItemRepository implements IRetrieveItemRepository {
         },
       },
       { $unset: ['category_id'] },
+    ]
+  }
+
+  private aggregateJoinChartOfAccount() {
+    return [
+      {
+        $lookup: {
+          from: 'chart_of_accounts',
+          localField: 'chart_of_account_id',
+          foreignField: '_id',
+          pipeline: [{ $project: { _id: 1, number: 1, name: 1 } }],
+          as: 'chart_of_account',
+        },
+      },
+      {
+        $unwind: {
+          path: '$chart_of_account',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      { $unset: ['chart_of_account_id'] },
     ]
   }
 

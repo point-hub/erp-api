@@ -18,6 +18,7 @@ export class RetrieveAllItemRepository implements IRetrieveAllItemRepository {
     const pipeline: IPipeline[] = []
 
     pipeline.push(...this.aggregateJoinItemCategory())
+    pipeline.push(...this.aggregateJoinChartOfAccount())
     pipeline.push(...this.aggregateFilters(query))
     pipeline.push(...this.aggregateJoinCreatedBy())
     pipeline.push(...this.aggregateJoinUpdatedBy())
@@ -91,6 +92,27 @@ export class RetrieveAllItemRepository implements IRetrieveAllItemRepository {
     ]
   }
 
+  private aggregateJoinChartOfAccount() {
+    return [
+      {
+        $lookup: {
+          from: 'chart_of_accounts',
+          localField: 'chart_of_account_id',
+          foreignField: '_id',
+          pipeline: [{ $project: { _id: 1, number: 1, name: 1 } }],
+          as: 'chart_of_account',
+        },
+      },
+      {
+        $unwind: {
+          path: '$chart_of_account',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      { $unset: ['chart_of_account_id'] },
+    ]
+  }
+
   private aggregateFilters(query: IQuery) {
     const filtersAnd = []
 
@@ -98,10 +120,12 @@ export class RetrieveAllItemRepository implements IRetrieveAllItemRepository {
       const filtersOr = []
       filtersOr.push({ code: { $regex: query.filter?.search, $options: 'i' } })
       filtersOr.push({ name: { $regex: query.filter?.search, $options: 'i' } })
-      filtersOr.push({ address: { $regex: query.filter?.search, $options: 'i' } })
+      filtersOr.push({ unit: { $regex: query.filter?.search, $options: 'i' } })
       filtersOr.push({ phone: { $regex: query.filter?.search, $options: 'i' } })
       filtersOr.push({ 'category.code': { $regex: query.filter?.search, $options: 'i' } })
       filtersOr.push({ 'category.name': { $regex: query.filter?.search, $options: 'i' } })
+      filtersOr.push({ 'chart_of_account.number': { $regex: query.filter?.search, $options: 'i' } })
+      filtersOr.push({ 'chart_of_account.name': { $regex: query.filter?.search, $options: 'i' } })
       filtersAnd.push({ $or: filtersOr })
     }
 
@@ -114,13 +138,20 @@ export class RetrieveAllItemRepository implements IRetrieveAllItemRepository {
 
     if (query.filter?.code) filtersAnd.push({ code: { $regex: query.filter?.code, $options: 'i' } })
     if (query.filter?.name) filtersAnd.push({ name: { $regex: query.filter?.name, $options: 'i' } })
-    if (query.filter?.address) filtersAnd.push({ address: { $regex: query.filter?.address, $options: 'i' } })
+    if (query.filter?.unit) filtersAnd.push({ unit: { $regex: query.filter?.unit, $options: 'i' } })
     if (query.filter?.phone) filtersAnd.push({ phone: { $regex: query.filter?.phone, $options: 'i' } })
     if (query.filter?.category)
       filtersAnd.push({
         $or: [
           { 'category.code': { $regex: query.filter?.category, $options: 'i' } },
           { 'category.name': { $regex: query.filter?.category, $options: 'i' } },
+        ],
+      })
+    if (query.filter?.chart_of_account)
+      filtersAnd.push({
+        $or: [
+          { 'chart_of_account.number': { $regex: query.filter?.chart_of_account, $options: 'i' } },
+          { 'chart_of_account.name': { $regex: query.filter?.chart_of_account, $options: 'i' } },
         ],
       })
 

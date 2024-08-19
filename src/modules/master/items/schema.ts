@@ -17,11 +17,15 @@ export const schema: ISchema[] = [
     uniqueIfExists: [[]],
     schema: {
       bsonType: 'object',
-      required: ['category_id', 'code', 'name'],
+      required: ['category_id', 'chart_of_account_id', 'code', 'name'],
       properties: {
         category_id: {
           bsonType: 'objectId',
-          description: 'The code for the item',
+          description: 'The category for the item',
+        },
+        chart_of_account_id: {
+          bsonType: 'objectId',
+          description: 'The chart of account for the item',
         },
         code: {
           bsonType: 'string',
@@ -30,6 +34,10 @@ export const schema: ISchema[] = [
         name: {
           bsonType: 'string',
           description: 'The name for the item',
+        },
+        unit: {
+          bsonType: 'string',
+          description: 'The unit for the item',
         },
         notes: {
           bsonType: 'string',

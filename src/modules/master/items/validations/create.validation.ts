@@ -1,7 +1,8 @@
 export const createValidation = {
+  chart_of_account_id: ['required', 'string'],
   category_id: ['required', 'string'],
   code: ['required', 'string'],
   name: ['required', 'string'],
-  email: ['email'],
+  unit: ['required', 'string'],
   notes: ['string'],
 }

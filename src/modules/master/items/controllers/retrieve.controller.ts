@@ -49,7 +49,7 @@ export const retrieveItemController: IController = async (controllerInput: ICont
         category: response.category,
         code: response.code,
         name: response.name,
-        address: response.address,
+        unit: response.unit,
         phone: response.phone,
         email: response.email,
         bank_name: response.bank_name,

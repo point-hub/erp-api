@@ -16,15 +16,16 @@ export interface IOutput {
     code: string
     name: string
   }
+  chart_of_account: {
+    _id: string
+    number: string
+    name: string
+  }
   code: string
   name: string
-  address: string
-  phone: string
-  email: string
-  bank_name: string
-  bank_branch: string
-  bank_account_name: string
-  bank_account_number: string
+  unit: string
+  have_production_number: boolean
+  have_an_expiry_date: boolean
   notes: string
   created_date: Date
   updated_date: Date
@@ -37,16 +38,13 @@ export class RetrieveItemUseCase {
     // 2. output
     return {
       _id: response._id,
+      chart_of_account: response.chart_of_account,
       category: response.category,
       code: response.code,
       name: response.name,
-      address: response.address,
-      phone: response.phone,
-      email: response.email,
-      bank_name: response.bank_name,
-      bank_branch: response.bank_branch,
-      bank_account_name: response.bank_account_name,
-      bank_account_number: response.bank_account_number,
+      unit: response.unit,
+      have_production_number: response.have_production_number,
+      have_an_expiry_date: response.have_an_expiry_date,
       notes: response.notes,
       created_date: response.created_date,
       updated_date: response.updated_date,

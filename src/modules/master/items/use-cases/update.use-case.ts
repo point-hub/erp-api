@@ -11,15 +11,12 @@ export interface IInput {
   _id: string
   data: {
     category_id?: string
+    chart_of_account_id?: string
     code?: string
     name?: string
-    address?: string
-    phone?: string
-    email?: string
-    bank_name?: string
-    bank_branch?: string
-    bank_account_name?: string
-    bank_account_number?: string
+    unit?: string
+    have_production_number?: boolean
+    have_an_expiry_date?: boolean
     notes?: string
     updated_by?: string
   }
@@ -43,15 +40,12 @@ export class UpdateItemUseCase {
     // 2. define entity
     const itemEntity = new ItemEntity({
       category_id: input.data.category_id,
+      chart_of_account_id: input.data.chart_of_account_id,
       code: input.data.code,
       name: input.data.name,
-      address: input.data.address,
-      phone: input.data.phone,
-      email: input.data.email,
-      bank_name: input.data.bank_name,
-      bank_branch: input.data.bank_branch,
-      bank_account_name: input.data.bank_account_name,
-      bank_account_number: input.data.bank_account_number,
+      unit: input.data.unit,
+      have_production_number: input.data.have_production_number,
+      have_an_expiry_date: input.data.have_an_expiry_date,
       notes: input.data.notes ?? '',
       updated_by: input.auth._id,
     })

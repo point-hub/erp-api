@@ -3,15 +3,13 @@ export interface IItemEntity {
   category_id?: string
   code?: string
   name?: string
-  address?: string
-  phone?: string
-  email?: string
+  unit?: string
   notes?: string
-  // bank info
-  bank_name?: string
-  bank_branch?: string
-  bank_account_name?: string
-  bank_account_number?: string
+  // chart of account
+  chart_of_account_id?: string
+  // dna
+  have_production_number?: boolean
+  have_an_expiry_date?: boolean
   // meta
   created_by?: string
   updated_by?: string
