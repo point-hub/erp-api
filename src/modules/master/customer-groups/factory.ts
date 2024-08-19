@@ -23,7 +23,7 @@ export default class CustomerGroupFactory extends BaseFactory<ICustomerGroupEnti
   }
 
   async createMany(count: number) {
-    const createManyRepository = new CreateManyCustomerGroupRepository(this.dbConnection)
-    return await createManyRepository.handle(this.makeMany(count))
+    const createManyCustomerGroupRepository = new CreateManyCustomerGroupRepository(this.dbConnection)
+    return await createManyCustomerGroupRepository.handle(this.makeMany(count))
   }
 }

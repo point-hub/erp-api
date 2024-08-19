@@ -19,6 +19,10 @@ export const schema: ISchema[] = [
       bsonType: 'object',
       required: ['customer_group_id', 'code', 'name'],
       properties: {
+        customer_group_id: {
+          bsonType: 'objectId',
+          description: 'The code for the customer',
+        },
         code: {
           bsonType: 'string',
           description: 'The code for the customer',
@@ -26,6 +30,10 @@ export const schema: ISchema[] = [
         name: {
           bsonType: 'string',
           description: 'The name for the customer',
+        },
+        notes: {
+          bsonType: 'string',
+          description: 'The notes for the customer',
         },
       },
     },

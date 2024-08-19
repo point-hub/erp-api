@@ -1,5 +1,0 @@
-export { CreateSupplierRepository } from './create.repository'
-export { DeleteSupplierRepository } from './delete.repository'
-export { RetrieveSupplierRepository } from './retrieve.repository'
-export { RetrieveAllSupplierRepository } from './retrieve-all.repository'
-export { UpdateSupplierRepository } from './update.repository'

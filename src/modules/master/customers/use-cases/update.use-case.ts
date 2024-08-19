@@ -1,10 +1,13 @@
-import type { ISchemaValidation, IUpdateOutput } from '@point-hub/papi'
+import type { ISchemaValidation } from '@point-hub/papi'
+
+import { IAuth } from '@/modules/master/users/interface'
 
 import { CustomerEntity } from '../entity'
 import { IUpdateCustomerRepository } from '../repositories/update.repository'
 import { updateValidation } from '../validations/update.validation'
 
 export interface IInput {
+  auth: IAuth
   _id: string
   data: {
     customer_group_id?: string
@@ -13,24 +16,28 @@ export interface IInput {
     address?: string
     phone?: string
     email?: string
-    notes?: string
     bank_name?: string
     bank_branch?: string
     bank_account_name?: string
     bank_account_number?: string
+    notes?: string
+    updated_by?: string
   }
 }
 export interface IDeps {
-  cleanObject(object: object): object
   schemaValidation: ISchemaValidation
   updateCustomerRepository: IUpdateCustomerRepository
 }
 export interface IOptions {
   session?: unknown
 }
+export interface IOutput {
+  matched_count: number
+  modified_count: number
+}
 
 export class UpdateCustomerUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IUpdateOutput> {
+  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input, updateValidation)
     // 2. define entity
@@ -41,11 +48,12 @@ export class UpdateCustomerUseCase {
       address: input.data.address,
       phone: input.data.phone,
       email: input.data.email,
-      notes: input.data.notes,
       bank_name: input.data.bank_name,
       bank_branch: input.data.bank_branch,
       bank_account_name: input.data.bank_account_name,
       bank_account_number: input.data.bank_account_number,
+      notes: input.data.notes ?? '',
+      updated_by: input.auth._id,
     })
     customerEntity.generateUpdatedDate()
     // 3. database operation

@@ -1,5 +1,0 @@
-export { createSupplierController } from './create.controller'
-export { deleteSupplierController } from './delete.controller'
-export { retrieveSupplierController } from './retrieve.controller'
-export { retrieveAllSupplierController } from './retrieve-all.controller'
-export { updateSupplierController } from './update.controller'

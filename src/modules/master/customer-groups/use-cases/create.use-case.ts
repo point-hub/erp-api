@@ -1,16 +1,26 @@
 import type { ISchemaValidation } from '@point-hub/papi'
 
+import { ICreateCounterRepository } from '@/modules/counters/repositories/create.repository'
+import { IRetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
+import { IAuth } from '@/modules/master/users/interface'
+
 import { CustomerGroupEntity } from '../entity'
 import { ICreateCustomerGroupRepository } from '../repositories/create.repository'
 import { createValidation } from '../validations/create.validation'
 
 export interface IInput {
-  code?: string
-  name?: string
+  auth: IAuth
+  data: {
+    code?: string
+    name?: string
+    notes?: string
+  }
 }
 export interface IDeps {
   cleanObject(object: object): object
   createCustomerGroupRepository: ICreateCustomerGroupRepository
+  retrieveAllCounterRepository: IRetrieveAllCounterRepository
+  createCounterRepository: ICreateCounterRepository
   schemaValidation: ISchemaValidation
 }
 export interface IOptions {
@@ -23,16 +33,34 @@ export interface IOutput {
 export class CreateCustomerGroupUseCase {
   static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
     // 1. validate schema
-    await deps.schemaValidation(input, createValidation)
+    await deps.schemaValidation(input.data, createValidation)
     // 2. define entity
     const customerGroupEntity = new CustomerGroupEntity({
-      code: input.code,
-      name: input.name,
+      code: input.data.code,
+      name: input.data.name,
+      notes: input.data.notes,
+      created_by: input.auth._id,
     })
     customerGroupEntity.generateCreatedDate()
     const cleanEntity = deps.cleanObject(customerGroupEntity.data)
     // 3. database operation
+    // 3.1 create customer group
     const response = await deps.createCustomerGroupRepository.handle(cleanEntity, options)
+    // 3.2. update counter
+    const counters = await deps.retrieveAllCounterRepository.handle(
+      { filter: { name: 'customer_groups', code: input.data.code } },
+      options,
+    )
+    if (!counters.data.length) {
+      await deps.createCounterRepository.handle(
+        {
+          name: 'customer_groups',
+          code: input.data.code,
+          count: 0,
+        },
+        options,
+      )
+    }
     // 4. output
     return { inserted_id: response.inserted_id }
   }

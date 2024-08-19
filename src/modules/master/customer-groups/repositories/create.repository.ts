@@ -1,10 +1,11 @@
-import type { ICreateOutput, ICreateRepository, IDatabase, IDocument } from '@point-hub/papi'
+import type { IDatabase, IDocument } from '@point-hub/papi'
 
 import { collectionName } from '../entity'
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface ICreateCustomerGroupOutput extends ICreateOutput {}
-export interface ICreateCustomerGroupRepository extends ICreateRepository {
+export interface ICreateCustomerGroupOutput {
+  inserted_id: string
+}
+export interface ICreateCustomerGroupRepository {
   handle(document: IDocument, options?: unknown): Promise<ICreateCustomerGroupOutput>
 }
 
