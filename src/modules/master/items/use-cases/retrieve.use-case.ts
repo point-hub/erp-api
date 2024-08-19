@@ -1,5 +1,3 @@
-import type { IRetrieveOutput } from '@point-hub/papi'
-
 import { IRetrieveItemRepository } from '../repositories/retrieve.repository'
 
 export interface IInput {
@@ -11,21 +9,45 @@ export interface IDeps {
 export interface IOptions {
   session: unknown
 }
+export interface IOutput {
+  _id: string
+  category: {
+    _id: string
+    code: string
+    name: string
+  }
+  code: string
+  name: string
+  address: string
+  phone: string
+  email: string
+  bank_name: string
+  bank_branch: string
+  bank_account_name: string
+  bank_account_number: string
+  notes: string
+  created_date: Date
+  updated_date: Date
+}
 
 export class RetrieveItemUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IRetrieveOutput> {
+  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
     // 1. database operation
     const response = await deps.retrieveItemRepository.handle(input._id, options)
     // 2. output
     return {
       _id: response._id,
-      chart_of_account: response.chart_of_account,
       category: response.category,
       code: response.code,
       name: response.name,
-      unit: response.unit,
-      have_production_number: response.have_production_number,
-      have_an_expiry_date: response.have_an_expiry_date,
+      address: response.address,
+      phone: response.phone,
+      email: response.email,
+      bank_name: response.bank_name,
+      bank_branch: response.bank_branch,
+      bank_account_name: response.bank_account_name,
+      bank_account_number: response.bank_account_number,
+      notes: response.notes,
       created_date: response.created_date,
       updated_date: response.updated_date,
     }

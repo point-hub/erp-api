@@ -1,5 +1,12 @@
 import type { IController, IControllerInput } from '@point-hub/papi'
 
+import authConfig from '@/config/auth'
+import { RetrieveAuthUserRepository } from '@/modules/master/users/repositories/retrieve-auth-user.repository'
+import { VerifyTokenUseCase } from '@/modules/master/users/use-cases/verify-token.use-case'
+import { verifyToken } from '@/modules/master/users/utils/jwt'
+import { throwApiError } from '@/utils/throw-api-error'
+import { schemaValidation } from '@/utils/validation'
+
 import { RetrieveItemRepository } from '../repositories/retrieve.repository'
 import { RetrieveItemUseCase } from '../use-cases/retrieve.use-case'
 
@@ -10,8 +17,25 @@ export const retrieveItemController: IController = async (controllerInput: ICont
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
+    const retrieveAuthUserRepository = new RetrieveAuthUserRepository(controllerInput.dbConnection)
     const retrieveItemRepository = new RetrieveItemRepository(controllerInput.dbConnection)
     // 3. handle business rules
+    // 3.1 check authenticated user
+    await VerifyTokenUseCase.handle(
+      {
+        token: controllerInput.httpRequest.signedCookies.POINTHUB_ACCESS,
+        secret: authConfig.secret,
+        project_id: controllerInput.httpRequest.query.project_id,
+      },
+      {
+        schemaValidation,
+        throwApiError,
+        retrieveAuthUserRepository,
+        verifyToken,
+      },
+      { session },
+    )
+    // 3.2 retrieve
     const response = await RetrieveItemUseCase.handle(
       { _id: controllerInput.httpRequest.params.id },
       { retrieveItemRepository },
@@ -22,13 +46,17 @@ export const retrieveItemController: IController = async (controllerInput: ICont
       status: 200,
       json: {
         _id: response._id,
-        chart_of_account: response.chart_of_account,
         category: response.category,
         code: response.code,
         name: response.name,
-        unit: response.unit,
-        have_production_number: response.have_production_number,
-        have_an_expiry_date: response.have_an_expiry_date,
+        address: response.address,
+        phone: response.phone,
+        email: response.email,
+        bank_name: response.bank_name,
+        bank_branch: response.bank_branch,
+        bank_account_name: response.bank_account_name,
+        bank_account_number: response.bank_account_number,
+        notes: response.notes,
         created_date: response.created_date,
         updated_date: response.updated_date,
       },

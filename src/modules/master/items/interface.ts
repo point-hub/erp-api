@@ -1,12 +1,18 @@
 export interface IItemEntity {
   _id?: string
   category_id?: string
-  chart_of_account_id?: string
   code?: string
   name?: string
-  unit?: string
-  have_production_number?: boolean
-  have_an_expiry_date?: boolean
+  address?: string
+  phone?: string
+  email?: string
+  notes?: string
+  // bank info
+  bank_name?: string
+  bank_branch?: string
+  bank_account_name?: string
+  bank_account_number?: string
+  // meta
   created_by?: string
   updated_by?: string
   created_date?: Date

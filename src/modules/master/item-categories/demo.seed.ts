@@ -19,7 +19,7 @@ export const seed = async (dbConnection: IDatabase, options: unknown) => {
   // insert new seeder data
   for (let index = 1; index <= 30; index++) {
     const seed: ISeed = {}
-    seed.code = 'SG' + index.toString().padStart(2, 'X')
+    seed.code = 'IC' + index.toString().padStart(2, 'X')
     seed.name = faker.location.city()
     await createItemCategoryRepository.handle(seed, options)
 

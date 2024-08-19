@@ -1,6 +1,5 @@
-import type { IPagination, IQuery } from '@point-hub/papi'
+import type { IQuery, IRetrieveAllOutput } from '@point-hub/papi'
 
-import { IRetrieveItemOutput } from '../repositories/retrieve.repository'
 import { IRetrieveAllItemRepository } from '../repositories/retrieve-all.repository'
 
 export interface IInput {
@@ -12,13 +11,9 @@ export interface IDeps {
 export interface IOptions {
   session: unknown
 }
-export interface IOutput {
-  data: IRetrieveItemOutput[]
-  pagination: IPagination
-}
 
 export class RetrieveAllItemUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IRetrieveAllOutput> {
     // 1. database operation
     const response = await deps.retrieveAllItemRepository.handle(input.query, options)
     // 2. output

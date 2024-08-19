@@ -1,11 +1,10 @@
-import type { IDatabase } from '@point-hub/papi'
+import type { IDatabase, IDeleteOutput, IDeleteRepository } from '@point-hub/papi'
 
 import { collectionName } from '../entity'
 
-export interface IDeleteItemOutput {
-  deleted_count: number
-}
-export interface IDeleteItemRepository {
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface IDeleteItemOutput extends IDeleteOutput {}
+export interface IDeleteItemRepository extends IDeleteRepository {
   handle(_id: string, options?: unknown): Promise<IDeleteItemOutput>
 }
 
