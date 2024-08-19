@@ -21,6 +21,7 @@ export const deleteItemCategoryController: IController = async (controllerInput:
     const deleteItemCategoryRepository = new DeleteItemCategoryRepository(controllerInput.dbConnection)
     // 3. handle business logic
     // 3.1 check authenticated user
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const verifyTokenResponse = await VerifyTokenUseCase.handle(
       {
         token: controllerInput.httpRequest.signedCookies.POINTHUB_ACCESS,

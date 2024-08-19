@@ -21,6 +21,7 @@ export const retrieveItemCategoryController: IController = async (controllerInpu
     const retrieveItemCategoryRepository = new RetrieveItemCategoryRepository(controllerInput.dbConnection)
     // 3. handle business rules
     // 3.1 check authenticated user
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const verifyTokenResponse = await VerifyTokenUseCase.handle(
       {
         token: controllerInput.httpRequest.signedCookies.POINTHUB_ACCESS,

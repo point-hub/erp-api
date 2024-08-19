@@ -21,6 +21,7 @@ export const retrieveAllUserController: IController = async (controllerInput: IC
     const retrieveAllUserRepository = new RetrieveAllUserRepository(controllerInput.dbConnection)
     // 3. handle business rules
     // 3.1 check authenticated user
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const verifyTokenResponse = await VerifyTokenUseCase.handle(
       {
         token: controllerInput.httpRequest.signedCookies.POINTHUB_ACCESS,
