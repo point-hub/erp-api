@@ -23,7 +23,7 @@ export default class ItemCategoryFactory extends BaseFactory<IItemCategoryEntity
   }
 
   async createMany(count: number) {
-    const createManyRepository = new CreateManyItemCategoryRepository(this.dbConnection)
-    return await createManyRepository.handle(this.makeMany(count))
+    const createManyItemCategoryRepository = new CreateManyItemCategoryRepository(this.dbConnection)
+    return await createManyItemCategoryRepository.handle(this.makeMany(count))
   }
 }

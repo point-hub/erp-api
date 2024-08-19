@@ -1,7 +1,7 @@
-import { objClean } from '@point-hub/express-utils'
 import type { IController, IControllerInput } from '@point-hub/papi'
 
 import authConfig from '@/config/auth'
+import { IAuth } from '@/modules/master/users/interface'
 import { RetrieveAuthUserRepository } from '@/modules/master/users/repositories/retrieve-auth-user.repository'
 import { VerifyTokenUseCase } from '@/modules/master/users/use-cases/verify-token.use-case'
 import { verifyToken } from '@/modules/master/users/utils/jwt'
@@ -22,7 +22,6 @@ export const updateItemCategoryController: IController = async (controllerInput:
     const updateItemCategoryRepository = new UpdateItemCategoryRepository(controllerInput.dbConnection)
     // 3. handle business rules
     // 3.1 check authenticated user
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const verifyTokenResponse = await VerifyTokenUseCase.handle(
       {
         token: controllerInput.httpRequest.signedCookies.POINTHUB_ACCESS,
@@ -37,13 +36,14 @@ export const updateItemCategoryController: IController = async (controllerInput:
       },
       { session },
     )
-    // 3.2 update item category
+    // 3.2 update
     const response = await UpdateItemCategoryUseCase.handle(
       {
+        auth: verifyTokenResponse as IAuth,
         _id: controllerInput.httpRequest.params.id,
         data: controllerInput.httpRequest.body,
       },
-      { cleanObject: objClean, schemaValidation, updateItemCategoryRepository },
+      { schemaValidation, updateItemCategoryRepository },
     )
     await session.commitTransaction()
     // 4. return response to client

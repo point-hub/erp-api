@@ -1,10 +1,12 @@
-import type { IDatabase, IDocument, IUpdateOutput, IUpdateRepository } from '@point-hub/papi'
+import type { IDatabase, IDocument } from '@point-hub/papi'
 
 import { collectionName } from '../entity'
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface IUpdateItemCategoryOutput extends IUpdateOutput {}
-export interface IUpdateItemCategoryRepository extends IUpdateRepository {
+export interface IUpdateItemCategoryOutput {
+  matched_count: number
+  modified_count: number
+}
+export interface IUpdateItemCategoryRepository {
   handle(_id: string, document: IDocument, options?: unknown): Promise<IUpdateItemCategoryOutput>
 }
 

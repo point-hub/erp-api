@@ -21,8 +21,7 @@ export const retrieveAllItemCategoryController: IController = async (controllerI
     const retrieveAllItemCategoryRepository = new RetrieveAllItemCategoryRepository(controllerInput.dbConnection)
     // 3. handle business rules
     // 3.1 check authenticated user
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const verifyTokenResponse = await VerifyTokenUseCase.handle(
+    await VerifyTokenUseCase.handle(
       {
         token: controllerInput.httpRequest.signedCookies.POINTHUB_ACCESS,
         secret: authConfig.secret,
@@ -36,7 +35,7 @@ export const retrieveAllItemCategoryController: IController = async (controllerI
       },
       { session },
     )
-    // 3.2 retrieve all item category
+    // 3.2 retrieve all
     const response = await RetrieveAllItemCategoryUseCase.handle(
       { query: controllerInput.httpRequest.query },
       { retrieveAllItemCategoryRepository },

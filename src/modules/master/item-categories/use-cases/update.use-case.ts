@@ -1,18 +1,22 @@
 import type { ISchemaValidation } from '@point-hub/papi'
 
+import { IAuth } from '@/modules/master/users/interface'
+
 import { ItemCategoryEntity } from '../entity'
 import { IUpdateItemCategoryRepository } from '../repositories/update.repository'
 import { updateValidation } from '../validations/update.validation'
 
 export interface IInput {
+  auth: IAuth
   _id: string
   data: {
     code?: string
     name?: string
+    notes?: string
+    updated_by?: string
   }
 }
 export interface IDeps {
-  cleanObject(object: object): object
   schemaValidation: ISchemaValidation
   updateItemCategoryRepository: IUpdateItemCategoryRepository
 }
@@ -32,6 +36,8 @@ export class UpdateItemCategoryUseCase {
     const itemCategoryEntity = new ItemCategoryEntity({
       code: input.data.code,
       name: input.data.name,
+      notes: input.data.notes ?? '',
+      updated_by: input.auth._id,
     })
     itemCategoryEntity.generateUpdatedDate()
     // 3. database operation

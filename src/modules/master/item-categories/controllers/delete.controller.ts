@@ -21,8 +21,7 @@ export const deleteItemCategoryController: IController = async (controllerInput:
     const deleteItemCategoryRepository = new DeleteItemCategoryRepository(controllerInput.dbConnection)
     // 3. handle business logic
     // 3.1 check authenticated user
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const verifyTokenResponse = await VerifyTokenUseCase.handle(
+    await VerifyTokenUseCase.handle(
       {
         token: controllerInput.httpRequest.signedCookies.POINTHUB_ACCESS,
         secret: authConfig.secret,
@@ -36,7 +35,7 @@ export const deleteItemCategoryController: IController = async (controllerInput:
       },
       { session },
     )
-    // 3.2 delete item category
+    // 3.2 delete
     const response = await DeleteItemCategoryUseCase.handle(
       { _id: controllerInput.httpRequest.params.id, reason: controllerInput.httpRequest.body.reason },
       { schemaValidation, deleteItemCategoryRepository },

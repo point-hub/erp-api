@@ -1,10 +1,11 @@
-import type { ICreateOutput, ICreateRepository, IDatabase, IDocument } from '@point-hub/papi'
+import type { IDatabase, IDocument } from '@point-hub/papi'
 
 import { collectionName } from '../entity'
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface ICreateItemCategoryOutput extends ICreateOutput {}
-export interface ICreateItemCategoryRepository extends ICreateRepository {
+export interface ICreateItemCategoryOutput {
+  inserted_id: string
+}
+export interface ICreateItemCategoryRepository {
   handle(document: IDocument, options?: unknown): Promise<ICreateItemCategoryOutput>
 }
 
