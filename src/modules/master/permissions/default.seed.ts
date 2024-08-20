@@ -110,7 +110,7 @@ export const seeds = [
         delete: false,
         approval: false,
       },
-      purchase_receives: {
+      receive_orders: {
         read: false,
         create: false,
         update: false,
