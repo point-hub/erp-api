@@ -3,7 +3,7 @@ import type { ISchemaValidation, TypeCodeStatus } from '@point-hub/papi'
 import type { IOptions as IOptionsApiError } from '@/utils/throw-api-error'
 
 import { UserEntity } from '../entity'
-import { IRetrieveAllUserRepository } from '../repositories/retrieve-all.repository'
+import { IRetrieveMatchedUsernameRepository } from '../repositories/retrieve-matched-username.repository'
 import { signinValidation } from '../validations/signin.validation'
 
 export interface IInput {
@@ -11,7 +11,7 @@ export interface IInput {
   password: string
 }
 export interface IDeps {
-  retrieveMatchedUsernameRepository: IRetrieveAllUserRepository
+  retrieveMatchedUsernameRepository: IRetrieveMatchedUsernameRepository
   cleanObject(object: object): object
   schemaValidation: ISchemaValidation
   verifyPassword(password: string, hash: string): Promise<boolean>

@@ -5,8 +5,8 @@ import authConfig from '@/config/auth'
 import { throwApiError } from '@/utils/throw-api-error'
 import { schemaValidation } from '@/utils/validation'
 
-import { RetrieveAllUserRepository } from '../repositories/retrieve-all.repository'
 import { RetrieveAuthUserRepository } from '../repositories/retrieve-auth-user.repository'
+import { RetrieveMatchedUsernameRepository } from '../repositories/retrieve-matched-username.repository'
 import { VerifyPasswordUseCase } from '../use-cases/verify-password.use-case'
 import { VerifyTokenUseCase } from '../use-cases/verify-token.use-case'
 import { verifyToken } from '../utils/jwt'
@@ -19,7 +19,7 @@ export const verifyPasswordController: IController = async (controllerInput: ICo
     session.startTransaction()
     // 2. define repository
     const retrieveAuthUserRepository = new RetrieveAuthUserRepository(controllerInput.dbConnection)
-    const retrieveMatchedUsernameRepository = new RetrieveAllUserRepository(controllerInput.dbConnection)
+    const retrieveMatchedUsernameRepository = new RetrieveMatchedUsernameRepository(controllerInput.dbConnection)
     // 3. handle business rules
     const verifyTokenResponse = await VerifyTokenUseCase.handle(
       {
