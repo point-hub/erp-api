@@ -25,6 +25,8 @@ import masterSuppliersRouter from './modules/master/suppliers/router'
 import masterUserRouter from './modules/master/users/router'
 import masterAuthRouter from './modules/master/users/router-auth'
 import masterWarehousesRouter from './modules/master/warehouses/router'
+// purchasing
+import purchasingPurchaseRequestsRouter from './modules/purchasing/purchase-requests/router'
 
 export default async function (baseRouterInput: IBaseAppInput) {
   const app: Express = express()
@@ -55,6 +57,8 @@ export default async function (baseRouterInput: IBaseAppInput) {
   app.use('/v1/master/allocations', await masterAllocationsRouter(baseRouterInput))
   app.use('/v1/master/item-categories', await masterItemCategoriesRouter(baseRouterInput))
   app.use('/v1/master/items', await masterItemsRouter(baseRouterInput))
+  // purchasing
+  app.use('/v1/purchasing/purchase-requests', await purchasingPurchaseRequestsRouter(baseRouterInput))
   // manufacture
   app.use('/v1/manufacture/machines', await manufactureMachinesRouter(baseRouterInput))
   app.use('/v1/manufacture/processes', await manufactureProcessesRouter(baseRouterInput))
