@@ -116,6 +116,7 @@ export class RetrieveAllWarehouseRepository implements IRetrieveAllWarehouseRepo
     if (query.filter?.name) filtersAnd.push({ name: { $regex: query.filter?.name, $options: 'i' } })
     if (query.filter?.address) filtersAnd.push({ address: { $regex: query.filter?.address, $options: 'i' } })
     if (query.filter?.phone) filtersAnd.push({ phone: { $regex: query.filter?.phone, $options: 'i' } })
+    if (query.filter?.branch_id) filtersAnd.push({ 'branch._id': { $eq: query.filter?.branch_id } })
     if (query.filter?.branch)
       filtersAnd.push({
         $or: [

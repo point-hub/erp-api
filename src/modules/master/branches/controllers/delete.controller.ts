@@ -7,6 +7,7 @@ import { verifyToken } from '@/modules/master/users/utils/jwt'
 import { throwApiError } from '@/utils/throw-api-error'
 import { schemaValidation } from '@/utils/validation'
 
+import { RetrieveAllWarehouseRepository } from '../../warehouses/repositories/retrieve-all.repository'
 import { DeleteBranchRepository } from '../repositories/delete.repository'
 import { DeleteBranchUseCase } from '../use-cases/delete.use-case'
 
@@ -18,6 +19,7 @@ export const deleteBranchController: IController = async (controllerInput: ICont
     session.startTransaction()
     // 2. define repository
     const retrieveAuthUserRepository = new RetrieveAuthUserRepository(controllerInput.dbConnection)
+    const retrieveAllWarehouseRepository = new RetrieveAllWarehouseRepository(controllerInput.dbConnection)
     const deleteBranchRepository = new DeleteBranchRepository(controllerInput.dbConnection)
     // 3. handle business logic
     // 3.1 check authenticated user
@@ -38,7 +40,7 @@ export const deleteBranchController: IController = async (controllerInput: ICont
     // 3.2 delete
     const response = await DeleteBranchUseCase.handle(
       { _id: controllerInput.httpRequest.params.id, reason: controllerInput.httpRequest.body.reason },
-      { schemaValidation, deleteBranchRepository },
+      { schemaValidation, retrieveAllWarehouseRepository, deleteBranchRepository, throwApiError },
       { session },
     )
     await session.commitTransaction()
