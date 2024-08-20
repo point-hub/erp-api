@@ -7,6 +7,7 @@ import { verifyToken } from '@/modules/master/users/utils/jwt'
 import { throwApiError } from '@/utils/throw-api-error'
 import { schemaValidation } from '@/utils/validation'
 
+import { RetrieveAllSupplierRepository } from '../../suppliers/repositories/retrieve-all.repository'
 import { DeleteSupplierGroupRepository } from '../repositories/delete.repository'
 import { DeleteSupplierGroupUseCase } from '../use-cases/delete.use-case'
 
@@ -18,6 +19,7 @@ export const deleteSupplierGroupController: IController = async (controllerInput
     session.startTransaction()
     // 2. define repository
     const retrieveAuthUserRepository = new RetrieveAuthUserRepository(controllerInput.dbConnection)
+    const retrieveAllSupplierRepository = new RetrieveAllSupplierRepository(controllerInput.dbConnection)
     const deleteSupplierGroupRepository = new DeleteSupplierGroupRepository(controllerInput.dbConnection)
     // 3. handle business logic
     // 3.1 check authenticated user
@@ -38,7 +40,7 @@ export const deleteSupplierGroupController: IController = async (controllerInput
     // 3.2 delete
     const response = await DeleteSupplierGroupUseCase.handle(
       { _id: controllerInput.httpRequest.params.id, reason: controllerInput.httpRequest.body.reason },
-      { schemaValidation, deleteSupplierGroupRepository },
+      { schemaValidation, retrieveAllSupplierRepository, deleteSupplierGroupRepository, throwApiError },
       { session },
     )
     await session.commitTransaction()

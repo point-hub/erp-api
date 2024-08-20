@@ -140,6 +140,7 @@ export class RetrieveAllItemRepository implements IRetrieveAllItemRepository {
     if (query.filter?.name) filtersAnd.push({ name: { $regex: query.filter?.name, $options: 'i' } })
     if (query.filter?.unit) filtersAnd.push({ unit: { $regex: query.filter?.unit, $options: 'i' } })
     if (query.filter?.phone) filtersAnd.push({ phone: { $regex: query.filter?.phone, $options: 'i' } })
+    if (query.filter?.category_id) filtersAnd.push({ 'category._id': { $eq: query.filter?.category_id } })
     if (query.filter?.category)
       filtersAnd.push({
         $or: [

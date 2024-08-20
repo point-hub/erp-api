@@ -7,6 +7,7 @@ import { verifyToken } from '@/modules/master/users/utils/jwt'
 import { throwApiError } from '@/utils/throw-api-error'
 import { schemaValidation } from '@/utils/validation'
 
+import { RetrieveAllCustomerRepository } from '../../customers/repositories/retrieve-all.repository'
 import { DeleteCustomerGroupRepository } from '../repositories/delete.repository'
 import { DeleteCustomerGroupUseCase } from '../use-cases/delete.use-case'
 
@@ -18,6 +19,7 @@ export const deleteCustomerGroupController: IController = async (controllerInput
     session.startTransaction()
     // 2. define repository
     const retrieveAuthUserRepository = new RetrieveAuthUserRepository(controllerInput.dbConnection)
+    const retrieveAllCustomerRepository = new RetrieveAllCustomerRepository(controllerInput.dbConnection)
     const deleteCustomerGroupRepository = new DeleteCustomerGroupRepository(controllerInput.dbConnection)
     // 3. handle business logic
     // 3.1 check authenticated user
@@ -38,7 +40,7 @@ export const deleteCustomerGroupController: IController = async (controllerInput
     // 3.2 delete
     const response = await DeleteCustomerGroupUseCase.handle(
       { _id: controllerInput.httpRequest.params.id, reason: controllerInput.httpRequest.body.reason },
-      { schemaValidation, deleteCustomerGroupRepository },
+      { schemaValidation, retrieveAllCustomerRepository, deleteCustomerGroupRepository, throwApiError },
       { session },
     )
     await session.commitTransaction()

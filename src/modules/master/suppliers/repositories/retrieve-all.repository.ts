@@ -116,6 +116,8 @@ export class RetrieveAllSupplierRepository implements IRetrieveAllSupplierReposi
     if (query.filter?.name) filtersAnd.push({ name: { $regex: query.filter?.name, $options: 'i' } })
     if (query.filter?.address) filtersAnd.push({ address: { $regex: query.filter?.address, $options: 'i' } })
     if (query.filter?.phone) filtersAnd.push({ phone: { $regex: query.filter?.phone, $options: 'i' } })
+    if (query.filter?.supplier_group_id)
+      filtersAnd.push({ 'supplier_group._id': { $eq: query.filter?.supplier_group_id } })
     if (query.filter?.supplier_group)
       filtersAnd.push({
         $or: [

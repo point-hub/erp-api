@@ -7,7 +7,9 @@ import { verifyToken } from '@/modules/master/users/utils/jwt'
 import { throwApiError } from '@/utils/throw-api-error'
 import { schemaValidation } from '@/utils/validation'
 
+import { RetrieveAllUserRepository } from '../../users/repositories/retrieve-all.repository'
 import { DeleteRoleRepository } from '../repositories/delete.repository'
+import { RetrieveRoleRepository } from '../repositories/retrieve.repository'
 import { DeleteRoleUseCase } from '../use-cases/delete.use-case'
 
 export const deleteRoleController: IController = async (controllerInput: IControllerInput) => {
@@ -18,6 +20,8 @@ export const deleteRoleController: IController = async (controllerInput: IContro
     session.startTransaction()
     // 2. define repository
     const retrieveAuthUserRepository = new RetrieveAuthUserRepository(controllerInput.dbConnection)
+    const retrieveAllUserRepository = new RetrieveAllUserRepository(controllerInput.dbConnection)
+    const retrieveRoleRepository = new RetrieveRoleRepository(controllerInput.dbConnection)
     const deleteRoleRepository = new DeleteRoleRepository(controllerInput.dbConnection)
     // 3. handle business logic
     // 3.1 check authenticated user
@@ -38,7 +42,7 @@ export const deleteRoleController: IController = async (controllerInput: IContro
     // 3.2 delete
     const response = await DeleteRoleUseCase.handle(
       { _id: controllerInput.httpRequest.params.id, reason: controllerInput.httpRequest.body.reason },
-      { schemaValidation, deleteRoleRepository },
+      { schemaValidation, retrieveRoleRepository, retrieveAllUserRepository, deleteRoleRepository, throwApiError },
       { session },
     )
     await session.commitTransaction()

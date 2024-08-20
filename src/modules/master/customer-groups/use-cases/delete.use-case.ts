@@ -1,5 +1,8 @@
-import type { ISchemaValidation } from '@point-hub/papi'
+import type { ISchemaValidation, TypeCodeStatus } from '@point-hub/papi'
 
+import type { IOptions as IOptionsApiError } from '@/utils/throw-api-error'
+
+import { IRetrieveAllCustomerRepository } from '../../customers/repositories/retrieve-all.repository'
 import { IDeleteCustomerGroupRepository } from '../repositories/delete.repository'
 import { deleteValidation } from '../validations/delete.validation'
 
@@ -9,7 +12,9 @@ export interface IInput {
 }
 export interface IDeps {
   schemaValidation: ISchemaValidation
+  retrieveAllCustomerRepository: IRetrieveAllCustomerRepository
   deleteCustomerGroupRepository: IDeleteCustomerGroupRepository
+  throwApiError(codeStatus: TypeCodeStatus, options?: IOptionsApiError): void
 }
 export interface IOptions {
   session?: unknown
@@ -22,9 +27,23 @@ export class DeleteCustomerGroupUseCase {
   static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input, deleteValidation)
-    // 2. database operation
+    // 2. check if doesn't have any relationship
+    const customers = await deps.retrieveAllCustomerRepository.handle(
+      { filter: { customer_group_id: input._id } },
+      options,
+    )
+    if (customers.pagination.total_document) {
+      deps.throwApiError(422, {
+        errors: {
+          reason: [
+            'Delete failed, Customer Group cannot be deleted because they are used as a reference in the master customer',
+          ],
+        },
+      })
+    }
+    // 3. database operation
     const response = await deps.deleteCustomerGroupRepository.handle(input._id, options)
-    // 3. output
+    // 4. output
     return { deleted_count: response.deleted_count }
   }
 }

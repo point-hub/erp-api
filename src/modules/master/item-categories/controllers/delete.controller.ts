@@ -7,7 +7,9 @@ import { verifyToken } from '@/modules/master/users/utils/jwt'
 import { throwApiError } from '@/utils/throw-api-error'
 import { schemaValidation } from '@/utils/validation'
 
+import { RetrieveAllItemRepository } from '../../items/repositories/retrieve-all.repository'
 import { DeleteItemCategoryRepository } from '../repositories/delete.repository'
+import { RetrieveItemCategoryRepository } from '../repositories/retrieve.repository'
 import { DeleteItemCategoryUseCase } from '../use-cases/delete.use-case'
 
 export const deleteItemCategoryController: IController = async (controllerInput: IControllerInput) => {
@@ -18,6 +20,8 @@ export const deleteItemCategoryController: IController = async (controllerInput:
     session.startTransaction()
     // 2. define repository
     const retrieveAuthUserRepository = new RetrieveAuthUserRepository(controllerInput.dbConnection)
+    const retrieveAllItemRepository = new RetrieveAllItemRepository(controllerInput.dbConnection)
+    const retrieveItemCategoryRepository = new RetrieveItemCategoryRepository(controllerInput.dbConnection)
     const deleteItemCategoryRepository = new DeleteItemCategoryRepository(controllerInput.dbConnection)
     // 3. handle business logic
     // 3.1 check authenticated user
@@ -38,7 +42,13 @@ export const deleteItemCategoryController: IController = async (controllerInput:
     // 3.2 delete
     const response = await DeleteItemCategoryUseCase.handle(
       { _id: controllerInput.httpRequest.params.id, reason: controllerInput.httpRequest.body.reason },
-      { schemaValidation, deleteItemCategoryRepository },
+      {
+        schemaValidation,
+        deleteItemCategoryRepository,
+        retrieveAllItemRepository,
+        retrieveItemCategoryRepository,
+        throwApiError,
+      },
       { session },
     )
     await session.commitTransaction()

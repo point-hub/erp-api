@@ -1,5 +1,8 @@
-import type { ISchemaValidation } from '@point-hub/papi'
+import type { ISchemaValidation, TypeCodeStatus } from '@point-hub/papi'
 
+import type { IOptions as IOptionsApiError } from '@/utils/throw-api-error'
+
+import { IRetrieveAllAllocationRepository } from '../../allocations/repositories/retrieve-all.repository'
 import { IDeleteAllocationGroupRepository } from '../repositories/delete.repository'
 import { deleteValidation } from '../validations/delete.validation'
 
@@ -9,7 +12,9 @@ export interface IInput {
 }
 export interface IDeps {
   schemaValidation: ISchemaValidation
+  retrieveAllAllocationRepository: IRetrieveAllAllocationRepository
   deleteAllocationGroupRepository: IDeleteAllocationGroupRepository
+  throwApiError(codeStatus: TypeCodeStatus, options?: IOptionsApiError): void
 }
 export interface IOptions {
   session?: unknown
@@ -22,9 +27,23 @@ export class DeleteAllocationGroupUseCase {
   static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input, deleteValidation)
-    // 2. database operation
+    // 2. check if doesn't have any relationship
+    const allocations = await deps.retrieveAllAllocationRepository.handle(
+      { filter: { allocation_group_id: input._id } },
+      options,
+    )
+    if (allocations.pagination.total_document) {
+      deps.throwApiError(422, {
+        errors: {
+          reason: [
+            'Delete failed, Allocation Group cannot be deleted because they are used as a reference in the master allocation',
+          ],
+        },
+      })
+    }
+    // 3. database operation
     const response = await deps.deleteAllocationGroupRepository.handle(input._id, options)
-    // 3. output
+    // 4. output
     return { deleted_count: response.deleted_count }
   }
 }

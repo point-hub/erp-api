@@ -112,6 +112,8 @@ export class RetrieveAllAllocationRepository implements IRetrieveAllAllocationRe
 
     if (query.filter?.code) filtersAnd.push({ code: { $regex: query.filter?.code, $options: 'i' } })
     if (query.filter?.name) filtersAnd.push({ name: { $regex: query.filter?.name, $options: 'i' } })
+    if (query.filter?.allocation_group_id)
+      filtersAnd.push({ 'allocation_group._id': { $eq: query.filter?.allocation_group_id } })
     if (query.filter?.allocation_group)
       filtersAnd.push({
         $or: [

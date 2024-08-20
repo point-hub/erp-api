@@ -55,6 +55,7 @@ export class RetrieveAllUserRepository implements IRetrieveAllUserRepository {
 
     if (query.filter?.code) filtersAnd.push({ code: { $regex: query.filter?.code, $options: 'i' } })
     if (query.filter?.name) filtersAnd.push({ name: { $regex: query.filter?.name, $options: 'i' } })
+    if (query.filter?.role_id) filtersAnd.push({ 'role._id': { $eq: query.filter?.role_id } })
     if (query.filter?.role)
       filtersAnd.push({
         $or: [

@@ -7,6 +7,7 @@ import { verifyToken } from '@/modules/master/users/utils/jwt'
 import { throwApiError } from '@/utils/throw-api-error'
 import { schemaValidation } from '@/utils/validation'
 
+import { RetrieveAllAllocationRepository } from '../../allocations/repositories/retrieve-all.repository'
 import { DeleteAllocationGroupRepository } from '../repositories/delete.repository'
 import { DeleteAllocationGroupUseCase } from '../use-cases/delete.use-case'
 
@@ -18,6 +19,7 @@ export const deleteAllocationGroupController: IController = async (controllerInp
     session.startTransaction()
     // 2. define repository
     const retrieveAuthUserRepository = new RetrieveAuthUserRepository(controllerInput.dbConnection)
+    const retrieveAllAllocationRepository = new RetrieveAllAllocationRepository(controllerInput.dbConnection)
     const deleteAllocationGroupRepository = new DeleteAllocationGroupRepository(controllerInput.dbConnection)
     // 3. handle business logic
     // 3.1 check authenticated user
@@ -38,7 +40,7 @@ export const deleteAllocationGroupController: IController = async (controllerInp
     // 3.2 delete
     const response = await DeleteAllocationGroupUseCase.handle(
       { _id: controllerInput.httpRequest.params.id, reason: controllerInput.httpRequest.body.reason },
-      { schemaValidation, deleteAllocationGroupRepository },
+      { schemaValidation, retrieveAllAllocationRepository, deleteAllocationGroupRepository, throwApiError },
       { session },
     )
     await session.commitTransaction()

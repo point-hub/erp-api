@@ -116,6 +116,8 @@ export class RetrieveAllCustomerRepository implements IRetrieveAllCustomerReposi
     if (query.filter?.name) filtersAnd.push({ name: { $regex: query.filter?.name, $options: 'i' } })
     if (query.filter?.address) filtersAnd.push({ address: { $regex: query.filter?.address, $options: 'i' } })
     if (query.filter?.phone) filtersAnd.push({ phone: { $regex: query.filter?.phone, $options: 'i' } })
+    if (query.filter?.customer_group_id)
+      filtersAnd.push({ 'customer_group._id': { $eq: query.filter?.customer_group_id } })
     if (query.filter?.customer_group)
       filtersAnd.push({
         $or: [
