@@ -27,6 +27,11 @@ import masterAuthRouter from './modules/master/users/router-auth'
 import masterWarehousesRouter from './modules/master/warehouses/router'
 // purchasing
 import purchasingPurchaseRequestsRouter from './modules/purchasing/purchase-requests/router'
+import purchasingPurchaseOrdersRouter from './modules/purchasing/purchase-requests/router'
+import purchasingDownPaymentsRouter from './modules/purchasing/purchase-requests/router'
+import purchasingReceiveOrdersRouter from './modules/purchasing/purchase-requests/router'
+import purchasingInvoicesRouter from './modules/purchasing/purchase-requests/router'
+import purchasingPaymentOrdersRouter from './modules/purchasing/purchase-requests/router'
 
 export default async function (baseRouterInput: IBaseAppInput) {
   const app: Express = express()
@@ -59,6 +64,11 @@ export default async function (baseRouterInput: IBaseAppInput) {
   app.use('/v1/master/items', await masterItemsRouter(baseRouterInput))
   // purchasing
   app.use('/v1/purchasing/purchase-requests', await purchasingPurchaseRequestsRouter(baseRouterInput))
+  app.use('/v1/purchasing/purchase-orders', await purchasingPurchaseOrdersRouter(baseRouterInput))
+  app.use('/v1/purchasing/down-payments', await purchasingDownPaymentsRouter(baseRouterInput))
+  app.use('/v1/purchasing/receive-orders', await purchasingReceiveOrdersRouter(baseRouterInput))
+  app.use('/v1/purchasing/invoices', await purchasingInvoicesRouter(baseRouterInput))
+  app.use('/v1/purchasing/payment-orders', await purchasingPaymentOrdersRouter(baseRouterInput))
   // manufacture
   app.use('/v1/manufacture/machines', await manufactureMachinesRouter(baseRouterInput))
   app.use('/v1/manufacture/processes', await manufactureProcessesRouter(baseRouterInput))
