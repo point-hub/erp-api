@@ -1,6 +1,7 @@
 import { objClean } from '@point-hub/express-utils'
 import type { IController, IControllerInput } from '@point-hub/papi'
 
+import { throwApiError } from '@/utils/throw-api-error'
 import { schemaValidation } from '@/utils/validation'
 
 import { UpdateSettingJournalRepository } from '../repositories/update.repository'
@@ -20,7 +21,7 @@ export const updateSettingJournalController: IController = async (controllerInpu
         _id: controllerInput.httpRequest.params.id,
         data: controllerInput.httpRequest.body,
       },
-      { cleanObject: objClean, schemaValidation, updateSettingJournalRepository },
+      { cleanObject: objClean, schemaValidation, updateSettingJournalRepository, throwApiError },
     )
     await session.commitTransaction()
     // 4. return response to client

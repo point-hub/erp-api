@@ -1,4 +1,6 @@
-import type { ISchemaValidation, IUpdateOutput } from '@point-hub/papi'
+import type { ISchemaValidation, IUpdateOutput, TypeCodeStatus } from '@point-hub/papi'
+
+import type { IOptions as IOptionsApiError } from '@/utils/throw-api-error'
 
 import { SettingJournalEntity } from '../entity'
 import { IUpdateSettingJournalRepository } from '../repositories/update.repository'
@@ -16,6 +18,7 @@ export interface IDeps {
   cleanObject(object: object): object
   schemaValidation: ISchemaValidation
   updateSettingJournalRepository: IUpdateSettingJournalRepository
+  throwApiError(codeStatus: TypeCodeStatus, options: IOptionsApiError): void
 }
 export interface IOptions {
   session?: unknown
@@ -24,7 +27,22 @@ export interface IOptions {
 export class UpdateSettingJournalUseCase {
   static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IUpdateOutput> {
     // 1. validate schema
-    await deps.schemaValidation(input, updateValidation)
+    await deps.schemaValidation(input.data, updateValidation)
+    const errors: { [key: string]: string[] } = {}
+    if (input.data.journals) {
+      for (let index = 0; index < input.data.journals.length; index++) {
+        if (input.data.journals[index].editable && !input.data.journals[index].chart_of_account_id) {
+          const key = `journals.${index}.chart_of_account_id`
+          errors[key] = [`The chart of account field is required.`]
+        }
+      }
+      if (Object.keys(errors).length > 0) {
+        deps.throwApiError(422, {
+          errors: errors,
+        })
+      }
+    }
+
     // 2. define entity
     const settingJournalEntity = new SettingJournalEntity({
       module: input.data.module,
