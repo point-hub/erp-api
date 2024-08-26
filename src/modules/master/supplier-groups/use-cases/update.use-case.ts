@@ -31,7 +31,7 @@ export interface IOutput {
 export class UpdateSupplierGroupUseCase {
   static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
     // 1. validate schema
-    await deps.schemaValidation(input, updateValidation)
+    await deps.schemaValidation(input.data, updateValidation)
     // 2. define entity
     const supplierGroupEntity = new SupplierGroupEntity({
       code: input.data.code,

@@ -1,11 +1,10 @@
 // https://www.npmjs.com/package/validatorjs
 
 export const updateValidation = {
-  _id: ['required', 'string'],
-  'data.type_id': ['required', 'string'],
-  'data.category_id': ['required', 'string'],
-  'data.number': ['required', 'string'],
-  'data.name': ['required', 'string'],
-  'data.subledger': ['string'],
-  'data.notes': ['string'],
+  type_id: ['required', 'string'],
+  category_id: ['required', 'string'],
+  number: ['required', 'string'],
+  name: ['required', 'string'],
+  subledger: ['string'],
+  notes: ['string'],
 }

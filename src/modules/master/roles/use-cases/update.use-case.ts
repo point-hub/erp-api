@@ -32,7 +32,7 @@ export interface IOutput {
 export class UpdateRoleUseCase {
   static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
     // 1. validate schema
-    await deps.schemaValidation(input, updateValidation)
+    await deps.schemaValidation(input.data, updateValidation)
     // 2. define entity
     const roleEntity = new RoleEntity({
       code: input.data.code,

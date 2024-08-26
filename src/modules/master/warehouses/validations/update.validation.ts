@@ -1,9 +1,8 @@
 export const updateValidation = {
-  _id: ['required', 'string'],
-  'data.branch_id': ['required', 'string'],
-  'data.code': ['required', 'string'],
-  'data.name': ['required', 'string'],
-  'data.address': ['string'],
-  'data.phone': ['string'],
-  'data.notes': ['string'],
+  branch_id: ['required', 'string'],
+  code: ['required', 'string'],
+  name: ['required', 'string'],
+  address: ['string'],
+  phone: ['string'],
+  notes: ['string'],
 }

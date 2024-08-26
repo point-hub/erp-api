@@ -31,7 +31,7 @@ export interface IOutput {
 export class UpdateCustomerGroupUseCase {
   static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
     // 1. validate schema
-    await deps.schemaValidation(input, updateValidation)
+    await deps.schemaValidation(input.data, updateValidation)
     // 2. define entity
     const customerGroupEntity = new CustomerGroupEntity({
       code: input.data.code,
