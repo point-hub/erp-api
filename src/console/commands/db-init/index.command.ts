@@ -35,7 +35,7 @@ export default class DbInitCommand extends BaseConsoleCommand {
             await dbConnection.createCollection(iterator.collection)
           }
 
-          console.info(`[schema] ${iterator.collection} - update schema`, iterator.schema)
+          console.info(`[schema] ${iterator.collection} - update schema`)
           await dbConnection.updateSchema(iterator.collection, iterator.schema)
 
           for (const unique of iterator.unique) {

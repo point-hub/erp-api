@@ -4,6 +4,7 @@ import { IBaseAppInput } from './app'
 import countersRouter from './modules/counters/router'
 import healthRouter from './modules/health/router'
 // manufacture
+import manufactureFormulasRouter from './modules/manufacture/formulas/router'
 import manufactureMachinesRouter from './modules/manufacture/machines/router'
 import manufactureProcessesRouter from './modules/manufacture/processes/router'
 // master
@@ -72,6 +73,7 @@ export default async function (baseRouterInput: IBaseAppInput) {
   // manufacture
   app.use('/v1/manufacture/machines', await manufactureMachinesRouter(baseRouterInput))
   app.use('/v1/manufacture/processes', await manufactureProcessesRouter(baseRouterInput))
+  app.use('/v1/manufacture/formulas', await manufactureFormulasRouter(baseRouterInput))
 
   return app
 }
