@@ -295,6 +295,9 @@ export const seeds = [
       inventory_report: {
         read: false,
       },
+      inventory_value_report: {
+        read: false,
+      },
     },
     accounting: {
       menu: false,
