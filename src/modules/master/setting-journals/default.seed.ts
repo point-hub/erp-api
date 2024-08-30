@@ -2,7 +2,6 @@ import { type IDatabase } from '@point-hub/papi'
 
 import { RetrieveAllChartOfAccountRepository } from '@/modules/master/chart-of-accounts/repositories/retrieve-all.repository'
 import { CreateSettingJournalRepository } from '@/modules/master/setting-journals/repositories/create.repository'
-import { toTitleCase } from '@/utils/titlecase'
 
 import { ISettingJournalEntity } from './interface'
 
@@ -16,9 +15,6 @@ export const seed = async (dbConnection: IDatabase, options: unknown) => {
   // seed
   for (const feature of seeds) {
     for (const journal of feature.journals ?? []) {
-      journal.account = toTitleCase(journal.account)
-      journal.subledger = toTitleCase(journal.subledger)
-      journal.position = toTitleCase(journal.position) as 'Debit' | 'Credit'
       if (journal.editable) {
         const account = await retrieveAllChartOfAccountRepository.handle({ filter: { name: journal.account } }, options)
         if (account?.data?.length) {
@@ -26,8 +22,6 @@ export const seed = async (dbConnection: IDatabase, options: unknown) => {
         }
       }
     }
-    feature.module = toTitleCase(feature.module)
-    feature.feature = toTitleCase(feature.feature)
     await createSettingJournalRepository.handle(feature, options)
   }
 }
@@ -38,16 +32,19 @@ export const seeds: ISettingJournalEntity[] = [
     feature: 'down payment',
     journals: [
       {
-        description: 'jumlah uang muka yang harus dibayarkan ke supplier',
-        account: 'purchase down payment',
-        subledger: 'supplier',
-        position: 'Debit',
+        account: 'down payment for purchase',
+        description: 'account for down payment sent to supplier',
+        position: 'debit',
+        value: 1000000,
         editable: true,
+        category: 'uang muka pembelian',
+        subledger: 'supplier',
       },
       {
-        description: 'akun cash atau bank tergantung metode pembayaran yang dipakai',
         account: 'cash / bank ',
-        position: 'Credit',
+        description: 'account depends on the payment method used',
+        position: 'credit',
+        value: 1000000,
       },
     ],
   },
@@ -57,28 +54,42 @@ export const seeds: ISettingJournalEntity[] = [
     journals: [
       {
         account: 'account payable',
-        description: 'jumlah hutang yang harus dibayarkan ke supplier',
-        position: 'Credit',
+        description: 'account for debt to supplier',
+        position: 'credit',
+        value: 484848.17,
+        editable: true,
+        category: 'account payable',
         subledger: 'supplier',
-        editable: true,
-      },
-      {
-        account: 'income tax receivable',
-        description: 'jumlah PPN yang dibayarkan kepada supplier',
-        position: 'Debit',
-        editable: true,
-      },
-      {
-        account: 'payment difference',
-        description: 'pendapatan (beban) selisih pembayaran',
-        position: 'Debit',
-        editable: true,
       },
       {
         account: 'inventory',
-        description: 'akun sediaan tergantung dari coa yang ada di master item',
-        position: 'Debit',
-        subledger: 'item',
+        description: 'account depends on master item',
+        position: 'debit',
+        value: 436800.16,
+      },
+      {
+        account: 'income tax receivable',
+        description: 'account for income tax receivable',
+        position: 'debit',
+        value: 48048.02,
+        editable: true,
+        category: 'income tax receivable',
+      },
+      {
+        account: 'income from payment differences',
+        description: 'account for income from payment differences',
+        position: 'debit',
+        value: 0,
+        editable: true,
+        category: 'non operational revenue',
+      },
+      {
+        account: 'expense from payment differences',
+        description: 'account for expense from payment differences',
+        position: 'credit',
+        value: 0.01,
+        editable: true,
+        category: 'non operational revenue',
       },
     ],
   },
@@ -87,16 +98,19 @@ export const seeds: ISettingJournalEntity[] = [
     feature: 'down payment',
     journals: [
       {
-        account: 'sales down payment',
-        description: 'jumlah uang muka yang diterima dari customer ',
-        position: 'Credit',
-        subledger: 'customer',
+        account: 'down payment for sales',
+        description: 'account for down payment received from customer',
+        position: 'credit',
+        value: 100000,
         editable: true,
+        category: 'non operational revenue',
+        subledger: 'customer',
       },
       {
         account: 'cash / bank',
-        description: 'diambil dari modul cash atau bank',
-        position: 'Debit',
+        description: 'account depends on the payment method used',
+        position: 'debit',
+        value: 100000,
       },
     ],
   },
@@ -106,15 +120,17 @@ export const seeds: ISettingJournalEntity[] = [
     journals: [
       {
         account: 'cost of sales',
-        description: 'jumlah rupiah barang yang dikeluarkan ',
-        position: 'Debit',
+        description: 'account for cost of sales',
+        position: 'debit',
+        value: 100000,
         editable: true,
+        category: 'non operational revenue',
       },
       {
         account: 'inventory',
-        description: 'diambil dari master item yang dikeluarkan pada delivery note',
-        position: 'Credit',
-        subledger: 'item',
+        description: 'account depends on master item',
+        position: 'credit',
+        value: 100000,
       },
     ],
   },
@@ -124,22 +140,26 @@ export const seeds: ISettingJournalEntity[] = [
     journals: [
       {
         account: 'account receivable',
-        description: 'jumlah Piutang yang harus diterima dari supplier',
-        position: 'Debit',
-        subledger: 'customer',
+        description: 'account for debt from customer',
+        position: 'debit',
+        value: 100000,
         editable: true,
+        category: 'account receivable',
+        subledger: 'customer',
       },
       {
         account: 'income tax payable',
-        description: 'jumlah PPN yang diterima dari customer',
-        position: 'Credit',
+        description: 'account for income tax payable',
+        position: 'credit',
+        value: 100000,
         editable: true,
+        category: 'income tax payable',
       },
       {
         account: 'inventory',
-        description: 'akun sediaan tergantung dari coa yang ada di master item',
-        position: 'Credit',
-        subledger: 'item',
+        description: 'account depends on master item',
+        position: 'credit',
+        value: 100000,
       },
     ],
   },
@@ -148,18 +168,18 @@ export const seeds: ISettingJournalEntity[] = [
     feature: 'stock correction',
     journals: [
       {
-        account: 'difference stock expense',
-        description:
-          'jumlah rupiah barang yang selisih ketika ada pengurangan stock, jika ada penambahan jumlah stock maka posisi dibalik',
-        position: 'Debit',
+        account: 'stock cost difference',
+        description: 'account for stock cost difference',
+        position: 'debit',
+        value: 100000,
         editable: true,
+        category: 'non operational revenue',
       },
       {
         account: 'inventory',
-        description:
-          'diambil dari master item yang dikeluarkan pada stock correction,jika ada penambahan jumlah stock maka posisi dibalik',
-        position: 'Credit',
-        subledger: 'item',
+        description: 'account depends on master item',
+        position: 'credit',
+        value: 100000,
       },
     ],
   },
@@ -168,22 +188,19 @@ export const seeds: ISettingJournalEntity[] = [
     feature: 'transfer item',
     journals: [
       {
-        account: 'inventory in distribution',
-        description: 'jumlah item yang dalam proses pengiriman, jika ada item yang selisih maka dibalik secara posisi',
-        position: 'Debit',
-        subledger: 'item',
+        account: 'inventory in transit',
+        description: 'account for inventory in transit between warehouse',
+        position: 'debit',
+        value: 100000,
         editable: true,
+        category: 'inventory',
+        subledger: 'item',
       },
       {
         account: 'inventory',
-        description: 'diambil dari master item yang dalam proses pengiriman',
-        position: 'Credit',
-        subledger: 'item',
-      },
-      {
-        account: 'difference stock expense',
-        description: 'jumlah selisih item yang belum diterima',
-        position: 'Debit',
+        description: 'account depends on master item',
+        position: 'credit',
+        value: 100000,
       },
     ],
   },
@@ -193,16 +210,27 @@ export const seeds: ISettingJournalEntity[] = [
     journals: [
       {
         account: 'inventory',
-        description: 'diambil dari master item yang dalam proses pengiriman',
-        position: 'Credit',
+        description: 'account depends on master item',
+        position: 'credit',
+        value: 100000,
+      },
+      {
+        account: 'inventory in transit',
+        description: 'account for inventory in transit between warehouse',
+        position: 'debit',
+        value: 100000,
+        editable: true,
+        category: 'inventory',
         subledger: 'item',
       },
       {
-        account: 'inventory in distribution',
-        description: 'jumlah item yang dalam proses pengiriman',
-        position: 'Debit',
-        subledger: 'item',
+        account: 'stock difference',
+        description: 'account for stock difference between item sent and received',
+        position: 'debit',
+        value: 100000,
         editable: true,
+        category: 'inventory',
+        subledger: 'item',
       },
     ],
   },
@@ -212,9 +240,11 @@ export const seeds: ISettingJournalEntity[] = [
     journals: [
       {
         account: 'retained earning',
-        description: 'jumlah nominal account yang dicut off,posisinya bisa credit or Debit',
-        position: 'Debit',
+        description: 'account for retained earning',
+        position: 'debit',
+        value: 100000,
         editable: true,
+        category: 'retained earning',
       },
     ],
   },
@@ -223,18 +253,19 @@ export const seeds: ISettingJournalEntity[] = [
     feature: 'processing in',
     journals: [
       {
-        account: 'work in process inventory',
-        description: 'jumlah inventory yang dalam proses produksi',
-        position: 'Debit',
-        subledger: 'item',
+        account: 'goods in process',
+        description: 'account for goods in process',
+        position: 'debit',
+        value: 100000,
         editable: true,
+        category: 'inventory',
+        subledger: 'item',
       },
       {
-        account: 'raw material inventory',
-        description:
-          'jumlah bahan baku yang dipakai untuk proses produksi,diambil dari account yang digunakan pada item',
-        position: 'Credit',
-        subledger: 'item',
+        account: 'raw material',
+        description: 'account depends on master item',
+        position: 'credit',
+        value: 100000,
       },
     ],
   },
@@ -243,17 +274,19 @@ export const seeds: ISettingJournalEntity[] = [
     feature: 'processing out',
     journals: [
       {
-        account: 'finished good inventory',
-        description: 'jumlah item hasil produksi, diambil dari account yang ada diitem ',
-        position: 'Debit',
-        subledger: 'item',
+        account: 'finished goods',
+        description: 'account depends on master item',
+        position: 'debit',
+        value: 100000,
       },
       {
-        account: 'work in process inventory',
-        description: 'jumlah inventory yang dalam proses produksi',
-        position: 'Credit',
-        subledger: 'item',
+        account: 'goods in process',
+        description: 'account for goods in process',
+        position: 'credit',
+        value: 100000,
         editable: true,
+        category: 'inventory',
+        subledger: 'item',
       },
     ],
   },

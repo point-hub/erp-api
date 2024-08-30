@@ -65,6 +65,9 @@ export class RetrieveSettingJournalRepository implements IRetrieveSettingJournal
               position: '$journals.position',
               subledger: '$journals.subledger',
               editable: '$journals.editable',
+              category: '$journals.category',
+              type: '$journals.type',
+              value: '$journals.value',
               chart_of_account: {
                 _id: '$lookup_chart_of_accounts._id',
                 number: '$lookup_chart_of_accounts.number',
