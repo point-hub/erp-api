@@ -26,24 +26,25 @@ export const seed = async (dbConnection: IDatabase, options: unknown) => {
   const createChartOfAccountRepository = new CreateChartOfAccountRepository(dbConnection)
   // insert new seeder data
   const uniqueTypes = [...new Map(seeds.map((el) => [el.type, el])).values()]
-  const types = uniqueTypes.map((el) => el.type)
-  for (const type of types) {
+  for (const type of uniqueTypes) {
     // insert account type
-    const typeResponse = await createChartOfAccountTypeRepository.handle({ name: toTitleCase(type) }, options)
-    const filteredCategorySeeds = seeds.filter((el) => el.type === type)
+    const typeResponse = await createChartOfAccountTypeRepository.handle(
+      { code: toTitleCase(type.type_code), name: toTitleCase(type.type) },
+      options,
+    )
+    const filteredCategorySeeds = seeds.filter((el) => el.type_code === type.type_code)
     const uniqueCategories = [...new Map(filteredCategorySeeds.map((el) => [el.category, el])).values()]
-    const categories = uniqueCategories.map((el) => el.category)
-    for (const category of categories) {
+    for (const category of uniqueCategories) {
       // insert account category
       const categoryResponse = await createChartOfAccountCategoryRepository.handle(
         {
           type_id: typeResponse.inserted_id,
-          name: toTitleCase(category),
+          code: toTitleCase(category.category_code),
+          name: toTitleCase(category.category),
         },
         options,
       )
-      const filteredAccountSeeds = seeds.filter((el) => el.category === category)
-      const accounts = filteredAccountSeeds.filter((el) => el.category === category)
+      const accounts = seeds.filter((el) => el.category_code === category.category_code)
       for (const account of accounts) {
         // insert account
         await createChartOfAccountRepository.handle(

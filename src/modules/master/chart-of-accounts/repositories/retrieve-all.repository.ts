@@ -36,7 +36,7 @@ export class RetrieveAllChartOfAccountRepository implements IRetrieveAllChartOfA
           from: 'chart_of_account_categories',
           localField: 'category_id',
           foreignField: '_id',
-          pipeline: [{ $project: { _id: 1, type_id: 1, name: 1 } }],
+          pipeline: [{ $project: { _id: 1, type_id: 1, code: 1, name: 1 } }],
           as: 'category',
         },
       },
@@ -52,7 +52,7 @@ export class RetrieveAllChartOfAccountRepository implements IRetrieveAllChartOfA
           from: 'chart_of_account_types',
           localField: 'category.type_id',
           foreignField: '_id',
-          pipeline: [{ $project: { _id: 1, name: 1 } }],
+          pipeline: [{ $project: { _id: 1, code: 1, name: 1 } }],
           as: 'type',
         },
       },
@@ -79,6 +79,11 @@ export class RetrieveAllChartOfAccountRepository implements IRetrieveAllChartOfA
     if (query.filter?.subledger) filtersAnd.push({ subledger: { $regex: query.filter?.subledger, $options: 'i' } })
     if (query.filter?.type) filtersAnd.push({ 'type.name': { $regex: query.filter?.type, $options: 'i' } })
     if (query.filter?.category) filtersAnd.push({ 'category.name': { $regex: query.filter?.category, $options: 'i' } })
+
+    if (query.filter?.type_code) filtersAnd.push({ 'type.code': { $eq: query.filter?.type } })
+    if (query.filter?.category_code) filtersAnd.push({ 'category.code': { $eq: query.filter?.category } })
+
+    console.log(filtersAnd)
 
     if (!filtersAnd.length) {
       return []
