@@ -13,7 +13,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.1.0",
-    "@eslint/js": "^9.9.0",
+    "@eslint/js": "^9.9.1",
     "@faker-js/faker": "^8.4.1",
     "@types/compression": "^1.7.5",
     "@types/cookie-parser": "^1.4.7",
@@ -23,14 +23,14 @@
     "@types/supertest": "^6.0.2",
     "@types/uuid": "^10.0.0",
     "@types/validatorjs": "^3.15.5",
-    "@typescript-eslint/eslint-plugin": "^8.1.0",
-    "@typescript-eslint/parser": "^8.1.0",
-    "bun-types": "^1.1.23",
-    "eslint": "^9.9.0",
+    "@typescript-eslint/eslint-plugin": "^8.3.0",
+    "@typescript-eslint/parser": "^8.3.0",
+    "bun-types": "^1.1.26",
+    "eslint": "^9.9.1",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-simple-import-sort": "^12.1.1",
-    "husky": "^9.1.4",
+    "husky": "^9.1.5",
     "prettier": "^3.3.3",
     "supertest": "^7.0.0"
   },
@@ -38,7 +38,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "@point-hub/express-utils": "0.2.5",
+    "@point-hub/express-utils": "0.2.7",
     "@point-hub/papi": "^0.5.9",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
