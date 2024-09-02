@@ -35,7 +35,7 @@ export class RetrieveAllPermissionRepository implements IRetrieveAllPermissionRe
       manufacture: response.data[0].manufacture as INestedBoolean,
       finance: response.data[0].finance as INestedBoolean,
       inventory: response.data[0].inventory as INestedBoolean,
-      accounting: response.data[0].master as INestedBoolean,
+      accounting: response.data[0].accounting as INestedBoolean,
     }
   }
 }

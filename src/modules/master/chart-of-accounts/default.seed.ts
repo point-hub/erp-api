@@ -3,7 +3,6 @@ import { type IDatabase } from '@point-hub/papi'
 import { CreateChartOfAccountCategoryRepository } from '@/modules/master/chart-of-account-categories/repositories/create.repository'
 import { CreateChartOfAccountTypeRepository } from '@/modules/master/chart-of-account-types/repositories/create.repository'
 import { CreateChartOfAccountRepository } from '@/modules/master/chart-of-accounts/repositories/create.repository'
-import { toTitleCase } from '@/utils/titlecase'
 
 export interface ISeed {
   type?: string
@@ -29,7 +28,7 @@ export const seed = async (dbConnection: IDatabase, options: unknown) => {
   for (const type of uniqueTypes) {
     // insert account type
     const typeResponse = await createChartOfAccountTypeRepository.handle(
-      { code: toTitleCase(type.type_code), name: toTitleCase(type.type) },
+      { code: type.type_code, name: type.type },
       options,
     )
     const filteredCategorySeeds = seeds.filter((el) => el.type_code === type.type_code)
@@ -39,8 +38,8 @@ export const seed = async (dbConnection: IDatabase, options: unknown) => {
       const categoryResponse = await createChartOfAccountCategoryRepository.handle(
         {
           type_id: typeResponse.inserted_id,
-          code: toTitleCase(category.category_code),
-          name: toTitleCase(category.category),
+          code: category.category_code,
+          name: category.category,
         },
         options,
       )
@@ -51,8 +50,8 @@ export const seed = async (dbConnection: IDatabase, options: unknown) => {
           {
             category_id: categoryResponse.inserted_id,
             number: account.number,
-            name: toTitleCase(account.name),
-            subledger: toTitleCase(account.subledger),
+            name: account.name,
+            subledger: account.subledger,
           },
           options,
         )

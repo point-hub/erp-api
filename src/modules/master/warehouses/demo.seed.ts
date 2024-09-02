@@ -30,7 +30,7 @@ export const seed = async (dbConnection: IDatabase, options: unknown) => {
     const seed: ISeed = {}
     seed.branch_id = branches.data[randomNumberBetween(0, 29)]._id
     seed.code = `${counters.data[0].code}${(Number(counters.data[0].count) + index).toString().padStart(4, '0')}`
-    seed.name = `${faker.location.city()}`
+    seed.name = `${faker.location.city()} ${(Number(counters.data[0].count) + index).toString().padStart(2, '0')}`
     await createWarehouseRepository.handle(seed, options)
     await updateCounterRepository.handle(
       counters.data[0]._id,

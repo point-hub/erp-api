@@ -24,7 +24,7 @@ export const seed = async (dbConnection: IDatabase, options: unknown) => {
   for (let index = 1; index <= 30; index++) {
     const seed: ISeed = {}
     seed.code = `${counters.data[0].code}${(Number(counters.data[0].count) + index).toString().padStart(4, '0')}`
-    seed.name = `${faker.location.city()}`
+    seed.name = `${faker.location.city()} ${(Number(counters.data[0].count) + index).toString().padStart(2, '0')}`
     await createBranchRepository.handle(seed, options)
     await updateCounterRepository.handle(
       counters.data[0]._id,

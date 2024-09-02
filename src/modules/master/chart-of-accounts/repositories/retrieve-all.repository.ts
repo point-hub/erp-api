@@ -80,10 +80,8 @@ export class RetrieveAllChartOfAccountRepository implements IRetrieveAllChartOfA
     if (query.filter?.type) filtersAnd.push({ 'type.name': { $regex: query.filter?.type, $options: 'i' } })
     if (query.filter?.category) filtersAnd.push({ 'category.name': { $regex: query.filter?.category, $options: 'i' } })
 
-    if (query.filter?.type_code) filtersAnd.push({ 'type.code': { $eq: query.filter?.type } })
-    if (query.filter?.category_code) filtersAnd.push({ 'category.code': { $eq: query.filter?.category } })
-
-    console.log(filtersAnd)
+    if (query.filter?.type_code) filtersAnd.push({ 'type.code': { $eq: query.filter?.type_code } })
+    if (query.filter?.category_code) filtersAnd.push({ 'category.code': { $eq: query.filter?.category_code } })
 
     if (!filtersAnd.length) {
       return []
