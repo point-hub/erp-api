@@ -13,6 +13,7 @@ export interface IOutput {
   _id: string
   allocation_group: {
     _id: string
+    label: string
     code: string
     name: string
   }

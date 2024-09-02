@@ -6,6 +6,7 @@ import { collectionName } from '../entity'
 
 interface IBranch {
   _id: string
+  label: string
   code: string
   name: string
 }
@@ -50,9 +51,10 @@ export class RetrieveWarehouseRepository implements IRetrieveWarehouseRepository
       phone: response.data[0].phone as string,
       notes: response.data[0].notes as string,
       branch: {
-        _id: (response.data[0].branch as IBranch)._id as string,
-        code: (response.data[0].branch as IBranch).code as string,
-        name: (response.data[0].branch as IBranch).name as string,
+        _id: (response.data[0].branch as IBranch)._id,
+        label: (response.data[0].branch as IBranch).label,
+        code: (response.data[0].branch as IBranch).code,
+        name: (response.data[0].branch as IBranch).name,
       },
       created_by: {
         _id: created_by?._id as string,
@@ -126,6 +128,13 @@ export class RetrieveWarehouseRepository implements IRetrieveWarehouseRepository
         $unwind: {
           path: '$branch',
           preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $addFields: {
+          'branch.label': {
+            $concat: ['[', '$branch.code', '] ', '$branch.name'],
+          },
         },
       },
       { $unset: ['branch_id'] },

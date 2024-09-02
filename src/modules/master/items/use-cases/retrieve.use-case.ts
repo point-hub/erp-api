@@ -13,11 +13,13 @@ export interface IOutput {
   _id: string
   category: {
     _id: string
+    label: string
     code: string
     name: string
   }
   chart_of_account: {
     _id: string
+    label: string
     number: string
     name: string
   }

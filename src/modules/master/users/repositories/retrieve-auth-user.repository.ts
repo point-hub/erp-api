@@ -60,6 +60,13 @@ export class RetrieveAuthUserRepository implements IRetrieveAuthUserRepository {
         },
       },
       { $unwind: '$role' },
+      {
+        $addFields: {
+          'role.label': {
+            $concat: ['[', '$role.code', '] ', '$role.name'],
+          },
+        },
+      },
       { $unset: ['role_id'] },
     ]
   }

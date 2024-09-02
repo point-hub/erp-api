@@ -6,12 +6,14 @@ import { collectionName } from '../entity'
 
 interface IItemCategory {
   _id: string
+  label: string
   code: string
   name: string
 }
 
 interface IChartOfAccount {
   _id: string
+  label: string
   number: string
   name: string
 }
@@ -61,14 +63,16 @@ export class RetrieveItemRepository implements IRetrieveItemRepository {
       have_an_expiry_date: response.data[0].have_an_expiry_date as boolean,
       notes: response.data[0].notes as string,
       category: {
-        _id: (response.data[0].category as IItemCategory)._id as string,
-        code: (response.data[0].category as IItemCategory).code as string,
-        name: (response.data[0].category as IItemCategory).name as string,
+        _id: (response.data[0].category as IItemCategory)._id,
+        label: (response.data[0].category as IItemCategory).label,
+        code: (response.data[0].category as IItemCategory).code,
+        name: (response.data[0].category as IItemCategory).name,
       },
       chart_of_account: {
-        _id: (response.data[0].chart_of_account as IChartOfAccount)._id as string,
-        number: (response.data[0].chart_of_account as IChartOfAccount).number as string,
-        name: (response.data[0].chart_of_account as IChartOfAccount).name as string,
+        _id: (response.data[0].chart_of_account as IChartOfAccount)._id,
+        label: (response.data[0].chart_of_account as IChartOfAccount).label,
+        number: (response.data[0].chart_of_account as IChartOfAccount).number,
+        name: (response.data[0].chart_of_account as IChartOfAccount).name,
       },
       created_by: {
         _id: created_by?._id as string,
@@ -144,6 +148,13 @@ export class RetrieveItemRepository implements IRetrieveItemRepository {
           preserveNullAndEmptyArrays: true,
         },
       },
+      {
+        $addFields: {
+          'category.label': {
+            $concat: ['[', '$category.code', '] ', '$category.name'],
+          },
+        },
+      },
       { $unset: ['category_id'] },
     ]
   }
@@ -163,6 +174,13 @@ export class RetrieveItemRepository implements IRetrieveItemRepository {
         $unwind: {
           path: '$chart_of_account',
           preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $addFields: {
+          'chart_of_account.label': {
+            $concat: ['[', '$chart_of_account.code', '] ', '$chart_of_account.name'],
+          },
         },
       },
       { $unset: ['chart_of_account_id'] },

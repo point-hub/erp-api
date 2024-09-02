@@ -10,6 +10,7 @@ export interface IRetrieveUserOutput {
   _id: string
   role: {
     _id: string
+    label: string
     code: string
     name: string
   }
@@ -56,6 +57,13 @@ export class RetrieveUserRepository implements IRetrieveUserRepository {
         },
       },
     })
+    pipeline.push({
+      $addFields: {
+        'role.label': {
+          $concat: ['[', '$role.code', '] ', '$role.name'],
+        },
+      },
+    })
     pipeline.push({ $unset: ['role_id'] })
 
     const query: IQuery = {
@@ -67,7 +75,7 @@ export class RetrieveUserRepository implements IRetrieveUserRepository {
 
     return {
       _id: aggregateResult.data[0]._id as string,
-      role: aggregateResult.data[0].role as { _id: string; code: string; name: string },
+      role: aggregateResult.data[0].role as { _id: string; label: string; code: string; name: string },
       name: aggregateResult.data[0].name as string,
       username: aggregateResult.data[0].username as string,
       email: aggregateResult.data[0].email as string,

@@ -53,6 +53,13 @@ export class RetrieveSettingJournalRepository implements IRetrieveSettingJournal
         },
       },
       {
+        $addFields: {
+          'lookup_chart_of_account.label': {
+            $concat: ['[', '$lookup_chart_of_accounts.code', '] ', '$lookup_chart_of_accounts.name'],
+          },
+        },
+      },
+      {
         $group: {
           _id: '$_id',
           module: { $first: '$module' },
@@ -70,6 +77,7 @@ export class RetrieveSettingJournalRepository implements IRetrieveSettingJournal
               value: '$journals.value',
               chart_of_account: {
                 _id: '$lookup_chart_of_accounts._id',
+                label: '$lookup_chart_of_accounts.label',
                 number: '$lookup_chart_of_accounts.number',
                 name: '$lookup_chart_of_accounts.name',
               },

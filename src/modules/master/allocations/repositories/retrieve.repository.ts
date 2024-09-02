@@ -6,6 +6,7 @@ import { collectionName } from '../entity'
 
 interface IAllocationGroup {
   _id: string
+  label: string
   code: string
   name: string
 }
@@ -46,9 +47,10 @@ export class RetrieveAllocationRepository implements IRetrieveAllocationReposito
       name: response.data[0].name as string,
       notes: response.data[0].notes as string,
       allocation_group: {
-        _id: (response.data[0].allocation_group as IAllocationGroup)._id as string,
-        code: (response.data[0].allocation_group as IAllocationGroup).code as string,
-        name: (response.data[0].allocation_group as IAllocationGroup).name as string,
+        _id: (response.data[0].allocation_group as IAllocationGroup)._id,
+        label: (response.data[0].allocation_group as IAllocationGroup).label,
+        code: (response.data[0].allocation_group as IAllocationGroup).code,
+        name: (response.data[0].allocation_group as IAllocationGroup).name,
       },
       created_by: {
         _id: created_by?._id as string,
@@ -122,6 +124,13 @@ export class RetrieveAllocationRepository implements IRetrieveAllocationReposito
         $unwind: {
           path: '$allocation_group',
           preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $addFields: {
+          'allocation_group.label': {
+            $concat: ['[', '$allocation_group.code', '] ', '$allocation_group.name'],
+          },
         },
       },
       { $unset: ['allocation_group_id'] },

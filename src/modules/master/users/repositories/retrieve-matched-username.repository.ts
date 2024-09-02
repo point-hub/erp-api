@@ -66,6 +66,13 @@ export class RetrieveMatchedUsernameRepository implements IRetrieveMatchedUserna
           preserveNullAndEmptyArrays: true,
         },
       },
+      {
+        $addFields: {
+          'role.label': {
+            $concat: ['[', '$role.code', '] ', '$role.name'],
+          },
+        },
+      },
       { $unset: ['role_id'] },
     ]
   }

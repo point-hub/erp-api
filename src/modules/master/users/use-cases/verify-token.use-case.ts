@@ -49,7 +49,7 @@ export class VerifyTokenUseCase {
       { user_id: decodedToken.sub, project_id: input.project_id },
       options,
     )
-    console.log(authUser)
+
     // 4. return response
     return {
       _id: authUser.data[0]._id as string,

@@ -6,6 +6,7 @@ import { collectionName } from '../entity'
 
 interface ICustomerGroup {
   _id: string
+  label: string
   code: string
   name: string
 }
@@ -61,21 +62,22 @@ export class RetrieveCustomerRepository implements IRetrieveCustomerRepository {
       bank_account_number: response.data[0].bank_account_name as string,
       notes: response.data[0].notes as string,
       customer_group: {
-        _id: (response.data[0].customer_group as ICustomerGroup)._id as string,
-        code: (response.data[0].customer_group as ICustomerGroup).code as string,
-        name: (response.data[0].customer_group as ICustomerGroup).name as string,
+        _id: (response.data[0].customer_group as ICustomerGroup)._id,
+        label: (response.data[0].customer_group as ICustomerGroup).label,
+        code: (response.data[0].customer_group as ICustomerGroup).code,
+        name: (response.data[0].customer_group as ICustomerGroup).name,
       },
       created_by: {
-        _id: created_by?._id as string,
-        name: created_by?.name as string,
-        username: created_by?.username as string,
-        email: created_by?.email as string,
+        _id: created_by?._id,
+        name: created_by?.name,
+        username: created_by?.username,
+        email: created_by?.email,
       },
       updated_by: {
-        _id: updated_by?._id as string,
-        name: updated_by?.name as string,
-        username: updated_by?.username as string,
-        email: updated_by?.email as string,
+        _id: updated_by?._id,
+        name: updated_by?.name,
+        username: updated_by?.username,
+        email: updated_by?.email,
       },
       created_date: response.data[0].created_date as Date,
       updated_date: response.data[0].updated_date as Date,
@@ -137,6 +139,13 @@ export class RetrieveCustomerRepository implements IRetrieveCustomerRepository {
         $unwind: {
           path: '$customer_group',
           preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $addFields: {
+          'customer_group.label': {
+            $concat: ['[', '$customer_group.code', '] ', '$customer_group.name'],
+          },
         },
       },
       { $unset: ['customer_group_id'] },
