@@ -158,7 +158,7 @@ export class RetrieveItemRepository implements IRetrieveItemRepository {
       {
         $addFields: {
           'chart_of_account.label': {
-            $concat: ['[', '$chart_of_account.code', '] ', '$chart_of_account.name'],
+            $concat: ['[', '$chart_of_account.number', '] ', '$chart_of_account.name'],
           },
         },
       },
