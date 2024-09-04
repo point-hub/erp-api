@@ -86,11 +86,15 @@ export class RetrieveAuthUserRepository implements IRetrieveAuthUserRepository {
           as: 'default_branch',
         },
       },
-      { $unwind: '$default_branch' },
+      { $unwind: { path: '$default_branch', preserveNullAndEmptyArrays: true } },
       {
         $addFields: {
           'default_branch.label': {
-            $concat: ['[', '$default_branch.code', '] ', '$default_branch.name'],
+            $cond: {
+              if: { $ne: [{ $type: '$default_branch' }, 'missing'] },
+              then: { $concat: ['[', '$default_branch.code', '] ', '$default_branch.name'] },
+              else: '$$REMOVE',
+            },
           },
         },
       },
@@ -142,11 +146,15 @@ export class RetrieveAuthUserRepository implements IRetrieveAuthUserRepository {
           as: 'default_warehouse',
         },
       },
-      { $unwind: '$default_warehouse' },
+      { $unwind: { path: '$default_warehouse', preserveNullAndEmptyArrays: true } },
       {
         $addFields: {
           'default_warehouse.label': {
-            $concat: ['[', '$default_warehouse.code', '] ', '$default_warehouse.name'],
+            $cond: {
+              if: { $ne: [{ $type: '$default_warehouse' }, 'missing'] },
+              then: { $concat: ['[', '$default_warehouse.code', '] ', '$default_warehouse.name'] },
+              else: '$$REMOVE',
+            },
           },
         },
       },

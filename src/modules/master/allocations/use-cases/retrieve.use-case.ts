@@ -17,6 +17,7 @@ export interface IOutput {
     code: string
     name: string
   }
+  label: string
   code: string
   name: string
   notes: string
@@ -32,6 +33,7 @@ export class RetrieveAllocationUseCase {
     return {
       _id: response._id,
       allocation_group: response.allocation_group,
+      label: response.label,
       code: response.code,
       name: response.name,
       notes: response.notes,

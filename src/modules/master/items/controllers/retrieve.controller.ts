@@ -48,6 +48,7 @@ export const retrieveItemController: IController = async (controllerInput: ICont
         _id: response._id,
         chart_of_account: response.chart_of_account,
         category: response.category,
+        label: response.label,
         code: response.code,
         name: response.name,
         unit: response.unit,

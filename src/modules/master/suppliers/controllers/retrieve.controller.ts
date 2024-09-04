@@ -47,6 +47,7 @@ export const retrieveSupplierController: IController = async (controllerInput: I
       json: {
         _id: response._id,
         supplier_group: response.supplier_group,
+        label: response.label,
         code: response.code,
         name: response.name,
         address: response.address,

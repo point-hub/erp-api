@@ -23,6 +23,7 @@ export interface IOutput {
     number: string
     name: string
   }
+  label: string
   code: string
   name: string
   unit: string
@@ -42,6 +43,7 @@ export class RetrieveItemUseCase {
       _id: response._id,
       chart_of_account: response.chart_of_account,
       category: response.category,
+      label: response.label,
       code: response.code,
       name: response.name,
       unit: response.unit,

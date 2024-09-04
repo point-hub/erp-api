@@ -47,6 +47,7 @@ export const retrieveWarehouseController: IController = async (controllerInput: 
       json: {
         _id: response._id,
         branch: response.branch,
+        label: response.label,
         code: response.code,
         name: response.name,
         address: response.address,

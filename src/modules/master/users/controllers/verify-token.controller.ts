@@ -42,11 +42,11 @@ export const verifyTokenController: IController = async (controllerInput: IContr
         email: response.email,
         username: response.username,
         name: response.name,
-        role: response.role,
         default_branch: response.default_branch,
         branches: response.branches,
         default_warehouse: response.default_warehouse,
         warehouses: response.warehouses,
+        role: response.role,
       },
     }
   } catch (error) {

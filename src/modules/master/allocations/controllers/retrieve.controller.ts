@@ -47,6 +47,7 @@ export const retrieveAllocationController: IController = async (controllerInput:
       json: {
         _id: response._id,
         allocation_group: response.allocation_group,
+        label: response.label,
         code: response.code,
         name: response.name,
         notes: response.notes,

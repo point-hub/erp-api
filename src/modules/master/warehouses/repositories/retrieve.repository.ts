@@ -13,6 +13,7 @@ interface IBranch {
 
 export interface IRetrieveWarehouseOutput {
   _id: string
+  label: string
   code: string
   name: string
   address: string
@@ -40,34 +41,18 @@ export class RetrieveWarehouseRepository implements IRetrieveWarehouseRepository
     pipeline.push(...this.aggregateJoinUpdatedBy())
 
     const response = await this.database.collection(collectionName).aggregate(pipeline, {}, options)
-    const created_by = response.data[0].created_by as IAuthBy
-    const updated_by = response.data[0].updated_by as IAuthBy
 
     return {
-      _id: response.data[0]._id as string,
-      code: response.data[0].code as string,
-      name: response.data[0].name as string,
-      address: response.data[0].address as string,
-      phone: response.data[0].phone as string,
-      notes: response.data[0].notes as string,
-      branch: {
-        _id: (response.data[0].branch as IBranch)._id,
-        label: (response.data[0].branch as IBranch).label,
-        code: (response.data[0].branch as IBranch).code,
-        name: (response.data[0].branch as IBranch).name,
-      },
-      created_by: {
-        _id: created_by?._id as string,
-        name: created_by?.name as string,
-        username: created_by?.username as string,
-        email: created_by?.email as string,
-      },
-      updated_by: {
-        _id: updated_by?._id as string,
-        name: updated_by?.name as string,
-        username: updated_by?.username as string,
-        email: updated_by?.email as string,
-      },
+      _id: `${response.data[0]._id}`,
+      label: `${response.data[0].code}`,
+      code: `${response.data[0].code}`,
+      name: `${response.data[0].name}`,
+      address: `${response.data[0].address ?? ''}`,
+      phone: `${response.data[0].phone ?? ''}`,
+      notes: `${response.data[0].notes ?? ''}`,
+      branch: response.data[0].branch as IBranch,
+      created_by: response.data[0].created_by as IAuthBy,
+      updated_by: response.data[0].updated_by as IAuthBy,
       created_date: response.data[0].created_date as Date,
       updated_date: response.data[0].updated_date as Date,
     }

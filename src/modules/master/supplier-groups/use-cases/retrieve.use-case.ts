@@ -11,6 +11,7 @@ export interface IOptions {
 }
 export interface IOutput {
   _id: string
+  label: string
   code: string
   name: string
   notes: string
@@ -25,6 +26,7 @@ export class RetrieveSupplierGroupUseCase {
     // 2. output
     return {
       _id: response._id,
+      label: response.label,
       code: response.code,
       name: response.name,
       notes: response.notes,

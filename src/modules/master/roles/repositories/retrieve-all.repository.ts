@@ -20,6 +20,7 @@ export class RetrieveAllRoleRepository implements IRetrieveAllRoleRepository {
     pipeline.push(...this.aggregateFilters(query))
     pipeline.push(...this.aggregateJoinCreatedBy())
     pipeline.push(...this.aggregateJoinUpdatedBy())
+    pipeline.push(...this.aggregateAddFields())
 
     const response = await this.database.collection(collectionName).aggregate(pipeline, query, options)
 
@@ -93,5 +94,17 @@ export class RetrieveAllRoleRepository implements IRetrieveAllRoleRepository {
     }
 
     return [{ $match: { $and: filtersAnd } }]
+  }
+
+  private aggregateAddFields() {
+    return [
+      {
+        $addFields: {
+          label: {
+            $concat: ['[', '$code', '] ', '$name'],
+          },
+        },
+      },
+    ]
   }
 }

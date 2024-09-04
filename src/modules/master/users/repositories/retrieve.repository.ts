@@ -40,38 +40,14 @@ export class RetrieveUserRepository implements IRetrieveUserRepository {
         _id: filter._id,
       },
     })
-    // join role
-    pipeline.push({
-      $lookup: {
-        from: 'roles',
-        localField: 'role_id',
-        foreignField: '_id',
-        pipeline: [{ $project: { code: 1, name: 1 } }],
-        as: 'role',
-      },
-    })
-    pipeline.push({
-      $set: {
-        role: {
-          $arrayElemAt: ['$role', 0],
-        },
-      },
-    })
-    pipeline.push({
-      $addFields: {
-        'role.label': {
-          $concat: ['[', '$role.code', '] ', '$role.name'],
-        },
-      },
-    })
-    pipeline.push({ $unset: ['role_id'] })
 
-    const query: IQuery = {
-      page: filter.page,
-      page_size: filter.page_size,
-      sort: filter.sort,
-    }
-    const aggregateResult = await this.database.collection(collectionName).aggregate(pipeline, query, options)
+    pipeline.push(...this.aggregateJoinRole())
+    pipeline.push(...this.aggregateJoinDefaultBranch())
+    pipeline.push(...this.aggregateJoinBranches())
+    pipeline.push(...this.aggregateJoinDefaultWarehouse())
+    pipeline.push(...this.aggregateJoinWarehouses())
+
+    const aggregateResult = await this.database.collection(collectionName).aggregate(pipeline, {}, options)
 
     return {
       _id: aggregateResult.data[0]._id as string,
@@ -86,5 +62,140 @@ export class RetrieveUserRepository implements IRetrieveUserRepository {
       created_date: aggregateResult.data[0].created_date as Date,
       updated_date: aggregateResult.data[0].updated_date as Date,
     }
+  }
+
+  private aggregateJoinRole() {
+    return [
+      {
+        $lookup: {
+          from: 'roles',
+          localField: 'role_id',
+          foreignField: '_id',
+          pipeline: [{ $project: { _id: 1, code: 1, name: 1, permission: 1 } }],
+          as: 'role',
+        },
+      },
+      { $unwind: '$role' },
+      {
+        $addFields: {
+          'role.label': {
+            $concat: ['[', '$role.code', '] ', '$role.name'],
+          },
+        },
+      },
+      { $unset: ['role_id'] },
+    ]
+  }
+
+  private aggregateJoinDefaultBranch() {
+    return [
+      {
+        $lookup: {
+          from: 'branches',
+          localField: 'default_branch',
+          foreignField: '_id',
+          pipeline: [{ $project: { _id: 1, code: 1, name: 1 } }],
+          as: 'default_branch',
+        },
+      },
+      { $unwind: { path: '$default_branch', preserveNullAndEmptyArrays: true } },
+      {
+        $addFields: {
+          'default_branch.label': {
+            $concat: ['[', '$default_branch.code', '] ', '$default_branch.name'],
+          },
+        },
+      },
+    ]
+  }
+
+  private aggregateJoinBranches() {
+    return [
+      {
+        $lookup: {
+          from: 'branches',
+          localField: 'branches',
+          foreignField: '_id',
+          pipeline: [{ $project: { _id: 1, code: 1, name: 1 } }],
+          as: 'branches',
+        },
+      },
+      {
+        $addFields: {
+          branches: {
+            $map: {
+              input: '$branches',
+              as: 'branch',
+              in: {
+                $mergeObjects: [
+                  '$$branch',
+                  {
+                    label: {
+                      $concat: ['[', '$$branch.code', '] ', '$$branch.name'],
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        },
+      },
+    ]
+  }
+
+  private aggregateJoinDefaultWarehouse() {
+    return [
+      {
+        $lookup: {
+          from: 'warehouses',
+          localField: 'default_warehouse',
+          foreignField: '_id',
+          pipeline: [{ $project: { _id: 1, code: 1, name: 1 } }],
+          as: 'default_warehouse',
+        },
+      },
+      { $unwind: { path: '$default_warehouse', preserveNullAndEmptyArrays: true } },
+      {
+        $addFields: {
+          'default_warehouse.label': {
+            $concat: ['[', '$default_warehouse.code', '] ', '$default_warehouse.name'],
+          },
+        },
+      },
+    ]
+  }
+
+  private aggregateJoinWarehouses() {
+    return [
+      {
+        $lookup: {
+          from: 'warehouses',
+          localField: 'warehouses',
+          foreignField: '_id',
+          pipeline: [{ $project: { _id: 1, code: 1, name: 1 } }],
+          as: 'warehouses',
+        },
+      },
+      {
+        $addFields: {
+          warehouses: {
+            $map: {
+              input: '$warehouses',
+              as: 'warehouse',
+              in: {
+                $mergeObjects: [
+                  '$$warehouse',
+                  {
+                    label: {
+                      $concat: ['[', '$$warehouse.code', '] ', '$$warehouse.name'],
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        },
+      },
+    ]
   }
 }

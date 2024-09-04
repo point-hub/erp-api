@@ -6,6 +6,7 @@ import { IChartOfAccountCategory, IChartOfAccountType } from '../interface'
 
 export interface IRetrieveChartOfAccountOutput {
   _id: string
+  label: string
   number: string
   name: string
   subledger: string
@@ -42,10 +43,11 @@ export class RetrieveChartOfAccountRepository implements IRetrieveChartOfAccount
     const response = await this.database.collection(collectionName).aggregate(pipeline, {}, options)
 
     return {
-      _id: response.data[0]._id as string,
-      number: response.data[0].number as string,
-      name: response.data[0].name as string,
-      subledger: response.data[0].subledger as string,
+      _id: `${response.data[0]._id}`,
+      label: `[${response.data[0].number}] ${response.data[0].name}`,
+      number: `${response.data[0].number}`,
+      name: `${response.data[0].name}`,
+      subledger: `${response.data[0].subledger ?? ''}`,
       category: {
         _id: (response.data[0].category as IChartOfAccountCategory)._id as string,
         name: (response.data[0].category as IChartOfAccountCategory).name as string,
@@ -54,7 +56,7 @@ export class RetrieveChartOfAccountRepository implements IRetrieveChartOfAccount
         _id: (response.data[0].type as IChartOfAccountType)._id as string,
         name: (response.data[0].type as IChartOfAccountType).name as string,
       },
-      notes: response.data[0].notes as string,
+      notes: `${response.data[0].notes ?? ''}`,
       created_by: response.data[0].created_by as IAuthBy,
       updated_by: response.data[0].updated_by as IAuthBy,
       created_date: response.data[0].created_date as Date,

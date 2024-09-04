@@ -47,6 +47,7 @@ export const retrieveCustomerController: IController = async (controllerInput: I
       json: {
         _id: response._id,
         customer_group: response.customer_group,
+        label: response.label,
         code: response.code,
         name: response.name,
         address: response.address,

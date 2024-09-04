@@ -17,6 +17,7 @@ export interface IOutput {
     code: string
     name: string
   }
+  label: string
   code: string
   name: string
   address: string
@@ -39,6 +40,7 @@ export class RetrieveCustomerUseCase {
     return {
       _id: response._id,
       customer_group: response.customer_group,
+      label: response.label,
       code: response.code,
       name: response.name,
       address: response.address,

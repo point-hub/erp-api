@@ -11,6 +11,7 @@ export interface IOptions {
 }
 export interface IOutput {
   _id: string
+  label: string
   code: string
   name: string
   permission: { [key: string]: boolean | { [key: string]: boolean } }
@@ -26,6 +27,7 @@ export class RetrieveRoleUseCase {
     // 2. output
     return {
       _id: response._id,
+      label: response.label,
       code: response.code,
       name: response.name,
       permission: response.permission,

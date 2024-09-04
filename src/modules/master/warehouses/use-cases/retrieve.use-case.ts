@@ -17,6 +17,7 @@ export interface IOutput {
     code: string
     name: string
   }
+  label: string
   code: string
   name: string
   address: string
@@ -34,6 +35,7 @@ export class RetrieveWarehouseUseCase {
     return {
       _id: response._id,
       branch: response.branch,
+      label: response.label,
       code: response.code,
       name: response.name,
       address: response.address,

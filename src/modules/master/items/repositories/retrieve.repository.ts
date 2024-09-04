@@ -22,6 +22,7 @@ export interface IRetrieveItemOutput {
   _id: string
   chart_of_account: IChartOfAccount
   category: IItemCategory
+  label: string
   code: string
   name: string
   unit: string
@@ -51,41 +52,19 @@ export class RetrieveItemRepository implements IRetrieveItemRepository {
 
     const response = await this.database.collection(collectionName).aggregate(pipeline, {}, options)
 
-    const created_by = response.data[0].created_by as IAuthBy
-    const updated_by = response.data[0].updated_by as IAuthBy
-
     return {
-      _id: response.data[0]._id as string,
-      code: response.data[0].code as string,
-      name: response.data[0].name as string,
-      unit: response.data[0].unit as string,
+      _id: `${response.data[0]._id}`,
+      label: `[${response.data[0].code}] ${response.data[0].name}`,
+      code: `${response.data[0].code}`,
+      name: `${response.data[0].name}`,
+      unit: `${response.data[0].unit}`,
       have_production_number: response.data[0].have_production_number as boolean,
       have_an_expiry_date: response.data[0].have_an_expiry_date as boolean,
-      notes: response.data[0].notes as string,
-      category: {
-        _id: (response.data[0].category as IItemCategory)._id,
-        label: (response.data[0].category as IItemCategory).label,
-        code: (response.data[0].category as IItemCategory).code,
-        name: (response.data[0].category as IItemCategory).name,
-      },
-      chart_of_account: {
-        _id: (response.data[0].chart_of_account as IChartOfAccount)._id,
-        label: (response.data[0].chart_of_account as IChartOfAccount).label,
-        number: (response.data[0].chart_of_account as IChartOfAccount).number,
-        name: (response.data[0].chart_of_account as IChartOfAccount).name,
-      },
-      created_by: {
-        _id: created_by?._id as string,
-        name: created_by?.name as string,
-        username: created_by?.username as string,
-        email: created_by?.email as string,
-      },
-      updated_by: {
-        _id: updated_by?._id as string,
-        name: updated_by?.name as string,
-        username: updated_by?.username as string,
-        email: updated_by?.email as string,
-      },
+      notes: `${response.data[0].notes ?? ''}`,
+      category: response.data[0].category as IItemCategory,
+      chart_of_account: response.data[0].chart_of_account as IChartOfAccount,
+      created_by: response.data[0].created_by as IAuthBy,
+      updated_by: response.data[0].updated_by as IAuthBy,
       created_date: response.data[0].created_date as Date,
       updated_date: response.data[0].updated_date as Date,
     }

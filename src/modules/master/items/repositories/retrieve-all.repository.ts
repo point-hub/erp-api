@@ -22,6 +22,7 @@ export class RetrieveAllItemRepository implements IRetrieveAllItemRepository {
     pipeline.push(...this.aggregateFilters(query))
     pipeline.push(...this.aggregateJoinCreatedBy())
     pipeline.push(...this.aggregateJoinUpdatedBy())
+    pipeline.push(...this.aggregateAddFields())
 
     const response = await this.database.collection(collectionName).aggregate(pipeline, query, options)
 
@@ -161,5 +162,17 @@ export class RetrieveAllItemRepository implements IRetrieveAllItemRepository {
     }
 
     return [{ $match: { $and: filtersAnd } }]
+  }
+
+  private aggregateAddFields() {
+    return [
+      {
+        $addFields: {
+          label: {
+            $concat: ['[', '$code', '] ', '$name'],
+          },
+        },
+      },
+    ]
   }
 }

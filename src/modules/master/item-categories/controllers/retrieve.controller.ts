@@ -46,6 +46,7 @@ export const retrieveItemCategoryController: IController = async (controllerInpu
       status: 200,
       json: {
         _id: response._id,
+        label: response.label,
         code: response.code,
         name: response.name,
         notes: response.notes,

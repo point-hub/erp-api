@@ -46,6 +46,7 @@ export const retrieveRoleController: IController = async (controllerInput: ICont
       status: 200,
       json: {
         _id: response._id,
+        label: response.label,
         code: response.code,
         name: response.name,
         permission: response.permission,
