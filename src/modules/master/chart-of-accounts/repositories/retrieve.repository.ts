@@ -10,14 +10,8 @@ export interface IRetrieveChartOfAccountOutput {
   number: string
   name: string
   subledger: string
-  category: {
-    _id: string
-    name: string
-  }
-  type: {
-    _id: string
-    name: string
-  }
+  category: IChartOfAccountCategory
+  type: IChartOfAccountType
   notes: string
   created_by: IAuthBy
   updated_by: IAuthBy
@@ -44,18 +38,12 @@ export class RetrieveChartOfAccountRepository implements IRetrieveChartOfAccount
 
     return {
       _id: `${response.data[0]._id}`,
-      label: `[${response.data[0].number}] ${response.data[0].name}`,
+      label: `${response.data[0].name}`,
       number: `${response.data[0].number}`,
       name: `${response.data[0].name}`,
       subledger: `${response.data[0].subledger ?? ''}`,
-      category: {
-        _id: (response.data[0].category as IChartOfAccountCategory)._id as string,
-        name: (response.data[0].category as IChartOfAccountCategory).name as string,
-      },
-      type: {
-        _id: (response.data[0].type as IChartOfAccountType)._id as string,
-        name: (response.data[0].type as IChartOfAccountType).name as string,
-      },
+      category: response.data[0].category as IChartOfAccountCategory,
+      type: response.data[0].type as IChartOfAccountType,
       notes: `${response.data[0].notes ?? ''}`,
       created_by: response.data[0].created_by as IAuthBy,
       updated_by: response.data[0].updated_by as IAuthBy,

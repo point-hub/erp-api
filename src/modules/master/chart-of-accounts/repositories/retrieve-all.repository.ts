@@ -96,7 +96,7 @@ export class RetrieveAllChartOfAccountRepository implements IRetrieveAllChartOfA
       {
         $addFields: {
           label: {
-            $concat: ['[', '$code', '] ', '$name'],
+            $concat: ['[', '$number', '] ', '$name'],
           },
         },
       },

@@ -43,19 +43,23 @@ export class RetrieveSettingJournalRepository implements IRetrieveSettingJournal
           localField: 'journals.chart_of_account_id',
           foreignField: '_id',
           pipeline: [{ $project: { number: 1, name: 1 } }],
-          as: 'lookup_chart_of_accounts',
+          as: 'lookup_chart_of_account',
         },
       },
       {
         $unwind: {
-          path: '$lookup_chart_of_accounts',
+          path: '$lookup_chart_of_account',
           preserveNullAndEmptyArrays: true,
         },
       },
       {
         $addFields: {
           'lookup_chart_of_account.label': {
-            $concat: ['[', '$lookup_chart_of_accounts.code', '] ', '$lookup_chart_of_accounts.name'],
+            $cond: {
+              if: { $ne: [{ $type: '$lookup_chart_of_account' }, 'missing'] },
+              then: { $concat: ['[', '$lookup_chart_of_account.number', '] ', '$lookup_chart_of_account.name'] },
+              else: '$$REMOVE',
+            },
           },
         },
       },
@@ -76,10 +80,10 @@ export class RetrieveSettingJournalRepository implements IRetrieveSettingJournal
               type: '$journals.type',
               value: '$journals.value',
               chart_of_account: {
-                _id: '$lookup_chart_of_accounts._id',
-                label: '$lookup_chart_of_accounts.label',
-                number: '$lookup_chart_of_accounts.number',
-                name: '$lookup_chart_of_accounts.name',
+                _id: '$lookup_chart_of_account._id',
+                label: '$lookup_chart_of_account.label',
+                number: '$lookup_chart_of_account.number',
+                name: '$lookup_chart_of_account.name',
               },
             },
           },
