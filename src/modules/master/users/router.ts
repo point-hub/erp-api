@@ -16,6 +16,13 @@ const makeRouter = async (routerInput: IBaseAppInput): Promise<Router> => {
     }),
   )
   router.get(
+    '/authorized-users',
+    await makeController({
+      controller: controller.retrieveAuthorizedUsersController,
+      dbConnection: routerInput.dbConnection,
+    }),
+  )
+  router.get(
     '/:id',
     await makeController({
       controller: controller.retrieveUserController,

@@ -1,6 +1,7 @@
 export { deleteUserController } from './delete.controller'
 export { retrieveUserController } from './retrieve.controller'
 export { retrieveAllUserController } from './retrieve-all.controller'
+export { retrieveAuthorizedUsersController } from './retrieve-authorized-users.controller'
 export { retrieveExistingEmailController } from './retrieve-existing-email.controller'
 export { retrieveExistingUsernameController } from './retrieve-existing-username.controller'
 export { signinController } from './signin.controller'
