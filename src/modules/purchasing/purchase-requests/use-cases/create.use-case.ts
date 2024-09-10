@@ -81,6 +81,8 @@ export class CreatePurchaseRequestUseCase {
     await deps.schemaValidation(input.data, createValidation)
     // 2. define entity
     const purchaseRequestEntity = new PurchaseRequestEntity({
+      rev: 0,
+      form_number: 'PR0001XI',
       required_date: input.data.required_date,
       branch: input.data.branch,
       items: input.data.items,

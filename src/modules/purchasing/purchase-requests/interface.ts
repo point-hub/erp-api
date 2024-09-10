@@ -1,5 +1,7 @@
 export interface IPurchaseRequestEntity {
   _id?: string
+  form_number: string
+  rev: number
   branch?: {
     _id?: string
     label?: string

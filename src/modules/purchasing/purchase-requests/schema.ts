@@ -13,19 +13,19 @@ import { collectionName } from './entity'
 export const schema: ISchema[] = [
   {
     collection: collectionName,
-    unique: [['code'], ['name']],
+    unique: [['form_number', 'rev']],
     uniqueIfExists: [[]],
     schema: {
       bsonType: 'object',
-      required: ['code', 'name'],
+      required: ['form_number', 'rev', 'allocation._id'],
       properties: {
-        code: {
+        form_number: {
           bsonType: 'string',
-          description: 'The code for the purchase request',
+          description: 'The form_number for the purchase request',
         },
-        name: {
-          bsonType: 'string',
-          description: 'The name for the purchase request',
+        rev: {
+          bsonType: 'number',
+          description: 'The number of revisiion for the purchase request start with 0 for no revision',
         },
         notes: {
           bsonType: 'string',

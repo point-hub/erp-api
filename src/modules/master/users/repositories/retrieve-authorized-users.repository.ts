@@ -44,6 +44,10 @@ export class RetrieveAuthorizedUsersRepository implements IRetrieveAuthorizedUse
 
     pipeline.push({ $match: { [query.filter?.permission]: true } })
 
+    pipeline.push({
+      $project: { _id: 1, name: 1, username: 1, email: 1, label: 1 },
+    })
+
     const response = await this.database.collection(this.collection).aggregate(pipeline, { page_size: 9999 }, options)
 
     return {
