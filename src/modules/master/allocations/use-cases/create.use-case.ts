@@ -59,7 +59,6 @@ export class CreateAllocationUseCase {
       { filter: { name: 'allocation_groups', code: (await allocationGroup).code } },
       options,
     )
-    console.log((await allocationGroup).code, counters)
     await deps.updateCounterRepository.handle(
       counters.data[0]._id,
       { count: Number(counters.data[0].count) + 1 },

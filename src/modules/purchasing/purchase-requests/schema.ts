@@ -17,7 +17,7 @@ export const schema: ISchema[] = [
     uniqueIfExists: [[]],
     schema: {
       bsonType: 'object',
-      required: ['form_number', 'rev', 'allocation._id'],
+      required: ['form_number', 'rev'],
       properties: {
         form_number: {
           bsonType: 'string',

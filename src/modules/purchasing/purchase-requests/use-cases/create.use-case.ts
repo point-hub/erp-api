@@ -1,5 +1,6 @@
 import type { ISchemaValidation } from '@point-hub/papi'
 
+import { ICreateCounterRepository } from '@/modules/counters/repositories/create.repository'
 import { IRetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
 import { IUpdateCounterRepository } from '@/modules/counters/repositories/update.repository'
 import { IAuth } from '@/modules/master/users/interface'
@@ -64,9 +65,11 @@ export interface IInput {
 export interface IDeps {
   cleanObject(object: object): object
   createPurchaseRequestRepository: ICreatePurchaseRequestRepository
-  retrieveAllRepository: IRetrieveAllCounterRepository
-  updateRepository: IUpdateCounterRepository
+  retrieveAllCounterRepository: IRetrieveAllCounterRepository
+  createCounterRepository: ICreateCounterRepository
+  updateCounterRepository: IUpdateCounterRepository
   schemaValidation: ISchemaValidation
+  dateFormat(date: Date | number | string, format: string): string
 }
 export interface IOptions {
   session?: unknown
@@ -74,15 +77,38 @@ export interface IOptions {
 export interface IOutput {
   inserted_id: string
 }
-
 export class CreatePurchaseRequestUseCase {
   static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input.data, createValidation)
+    // a
+    let code = 'PR' + deps.dateFormat(new Date(), 'yyMM')
+    const counters = await deps.retrieveAllCounterRepository.handle(
+      { filter: { name: 'purchasing.purchase_requests', code: code } },
+      options,
+    )
+    if (!counters.data.length) {
+      await deps.createCounterRepository.handle(
+        {
+          name: 'purchasing.purchase_requests',
+          code: code,
+          count: 1,
+        },
+        options,
+      )
+      code += '0001'
+    } else {
+      code += (Number(counters.data[0].count) + 1).toString().padStart(4, '0')
+      await deps.updateCounterRepository.handle(
+        counters.data[0]._id,
+        { count: Number(counters.data[0].count) + 1 },
+        options,
+      )
+    }
     // 2. define entity
     const purchaseRequestEntity = new PurchaseRequestEntity({
       rev: 0,
-      form_number: 'PR0001XI',
+      form_number: code,
       required_date: input.data.required_date,
       branch: input.data.branch,
       items: input.data.items,
@@ -100,9 +126,6 @@ export class CreatePurchaseRequestUseCase {
     // 3. database operation
     // 3.1 create purchase request
     const response = await deps.createPurchaseRequestRepository.handle(cleanEntity, options)
-    // 3.2. update counter
-    // const counters = await deps.retrieveAllRepository.handle({ filter: { name: 'purchase_requests' } }, options)
-    // await deps.updateRepository.handle(counters.data[0]._id, { count: Number(counters.data[0].count) + 1 }, options)
     // 4. output
     return { inserted_id: response.inserted_id }
   }
