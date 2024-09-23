@@ -119,6 +119,7 @@ export class CreatePurchaseRequestUseCase {
         name: input.auth.name,
         username: input.auth.username,
         email: input.auth.email,
+        label: input.auth.username,
       },
     })
     purchaseRequestEntity.generateCreatedDate()
