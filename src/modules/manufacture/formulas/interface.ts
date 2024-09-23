@@ -1,7 +1,7 @@
 export interface IFormulaEntity {
   id?: string
   name?: string
-  finished_goods: {
+  finished_goods?: {
     item?: {
       _id: string
       label: string
@@ -11,7 +11,7 @@ export interface IFormulaEntity {
     }
     quantity: number
   }[]
-  raw_materials: {
+  raw_materials?: {
     item?: {
       _id: string
       label: string

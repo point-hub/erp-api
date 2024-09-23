@@ -4,15 +4,47 @@ import { IAuthBy } from '@/modules/master/users/interface'
 
 import { collectionName } from '../entity'
 
-export interface IRetrievePurchaseRequestOutput {
+export interface IBranch {
   _id: string
   code: string
   name: string
-  address: string
-  phone: string
+  label: string
+}
+
+export interface IItem {
+  _id: string
+  code: string
+  name: string
+  unit: string
+  label: string
+}
+
+export interface IAllocation {
+  _id: string
+  code: string
+  name: string
+  label: string
+}
+
+export interface IItems {
+  item: IItem
+  quantity: string
   notes: string
+  allocation: IAllocation
+}
+
+export interface IRetrievePurchaseRequestOutput {
+  _id: string
+  rev: number
+  form_number: string
+  required_date: Date
+  branch: IBranch
+  items: IItems[]
+  notes: string
+  approval_to: IAuthBy
   created_by: IAuthBy
   updated_by: IAuthBy
+  approval_date: Date
   created_date: Date
   updated_date: Date
 }
@@ -27,75 +59,24 @@ export class RetrievePurchaseRequestRepository implements IRetrievePurchaseReque
     const pipeline: IPipeline[] = []
 
     pipeline.push(...this.aggregateFilters(_id))
-    pipeline.push(...this.aggregateJoinCreatedBy())
-    pipeline.push(...this.aggregateJoinUpdatedBy())
 
     const response = await this.database.collection(collectionName).aggregate(pipeline, {}, options)
-    const created_by = response.data[0].created_by as IAuthBy
-    const updated_by = response.data[0].updated_by as IAuthBy
 
     return {
       _id: response.data[0]._id as string,
-      code: response.data[0].code as string,
-      name: response.data[0].name as string,
-      address: response.data[0].address as string,
-      phone: response.data[0].phone as string,
+      rev: response.data[0].rev as number,
+      form_number: response.data[0].form_number as string,
+      required_date: response.data[0].required_date as Date,
+      branch: response.data[0].branch as IBranch,
+      items: response.data[0].items as IItems[],
       notes: response.data[0].notes as string,
-      created_by: {
-        _id: created_by?._id as string,
-        name: created_by?.name as string,
-        username: created_by?.username as string,
-        email: created_by?.email as string,
-      },
-      updated_by: {
-        _id: updated_by?._id as string,
-        name: updated_by?.name as string,
-        username: updated_by?.username as string,
-        email: updated_by?.email as string,
-      },
+      approval_to: response.data[0].approval_to as IAuthBy,
+      created_by: response.data[0].created_by as IAuthBy,
+      updated_by: response.data[0].updated_by as IAuthBy,
+      approval_date: response.data[0].approval_date as Date,
       created_date: response.data[0].created_date as Date,
       updated_date: response.data[0].updated_date as Date,
     }
-  }
-
-  private aggregateJoinCreatedBy() {
-    return [
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'created_by',
-          foreignField: '_id',
-          pipeline: [{ $project: { _id: 1, username: 1, name: 1, email: 1 } }],
-          as: 'created_by',
-        },
-      },
-      {
-        $unwind: {
-          path: '$created_by',
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-    ]
-  }
-
-  private aggregateJoinUpdatedBy() {
-    return [
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'updated_by',
-          foreignField: '_id',
-          pipeline: [{ $project: { _id: 1, username: 1, name: 1, email: 1 } }],
-          as: 'updated_by',
-        },
-      },
-      {
-        $unwind: {
-          path: '$updated_by',
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-    ]
   }
 
   private aggregateFilters(_id: string) {
