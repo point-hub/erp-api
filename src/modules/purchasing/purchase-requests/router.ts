@@ -43,6 +43,13 @@ const makeRouter = async (routerInput: IBaseAppInput): Promise<Router> => {
       dbConnection: routerInput.dbConnection,
     }),
   )
+  router.post(
+    '/:id/send-email-approval',
+    await makeController({
+      controller: controller.sendEmailApprovalController,
+      dbConnection: routerInput.dbConnection,
+    }),
+  )
 
   return router
 }

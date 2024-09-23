@@ -20,6 +20,7 @@ export interface IUserEntity {
 
 export interface IAuthBy {
   _id: string
+  label: string
   name: string
   username: string
   email: string

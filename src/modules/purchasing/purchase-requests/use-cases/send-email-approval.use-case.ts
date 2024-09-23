@@ -3,24 +3,20 @@ import type { ISchemaValidation } from '@point-hub/papi'
 import { IAuth } from '@/modules/master/users/interface'
 
 import { PurchaseRequestEntity } from '../entity'
-import { IUpdatePurchaseRequestRepository } from '../repositories/update.repository'
-import { updateValidation } from '../validations/update.validation'
+import { ISendEmailApprovalRepository } from '../repositories/send-email-approval.repository'
+import { sendEmailApprovalValidation } from '../validations/send-email-approval.validation'
 
 export interface IInput {
   auth: IAuth
   _id: string
   data: {
-    code?: string
-    name?: string
-    address?: string
-    phone?: string
-    notes?: string
+    approval_to?: string
     updated_by?: string
   }
 }
 export interface IDeps {
   schemaValidation: ISchemaValidation
-  updatePurchaseRequestRepository: IUpdatePurchaseRequestRepository
+  updatePurchaseRequestRepository: ISendEmailApprovalRepository
 }
 export interface IOptions {
   session?: unknown
@@ -30,17 +26,12 @@ export interface IOutput {
   modified_count: number
 }
 
-export class UpdatePurchaseRequestUseCase {
+export class SendEmailApprovalUseCase {
   static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
     // 1. validate schema
-    await deps.schemaValidation(input, updateValidation)
+    await deps.schemaValidation(input, sendEmailApprovalValidation)
     // 2. define entity
     const purchaseRequestEntity = new PurchaseRequestEntity({
-      code: input.data.code,
-      name: input.data.name,
-      address: input.data.address ?? '',
-      phone: input.data.phone ?? '',
-      notes: input.data.notes ?? '',
       updated_by: {
         _id: input.auth._id,
         name: input.auth.name,
