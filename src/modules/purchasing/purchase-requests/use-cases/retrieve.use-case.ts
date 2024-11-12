@@ -19,6 +19,7 @@ export interface IOutput {
   branch: IBranch
   details: IDetails[]
   notes: string
+  approval_status: 'pending' | 'approved' | 'rejected'
   approval_to: IAuthBy
   created_by: IAuthBy
   updated_by: IAuthBy
@@ -40,6 +41,7 @@ export class RetrievePurchaseRequestUseCase {
       branch: response.branch,
       details: response.details,
       notes: response.notes,
+      approval_status: response.approval_status,
       approval_to: response.approval_to,
       created_by: response.created_by,
       updated_by: response.updated_by,

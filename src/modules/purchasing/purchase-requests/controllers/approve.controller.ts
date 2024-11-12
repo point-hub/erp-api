@@ -1,16 +1,17 @@
 import type { IController, IControllerInput } from '@point-hub/papi'
 
 import authConfig from '@/config/auth'
+import { IAuth } from '@/modules/master/users/interface'
 import { RetrieveAuthUserRepository } from '@/modules/master/users/repositories/retrieve-auth-user.repository'
 import { VerifyTokenUseCase } from '@/modules/master/users/use-cases/verify-token.use-case'
 import { verifyToken } from '@/modules/master/users/utils/jwt'
 import { throwApiError } from '@/utils/throw-api-error'
 import { schemaValidation } from '@/utils/validation'
 
-import { RetrievePurchaseRequestRepository } from '../repositories/retrieve.repository'
-import { RetrievePurchaseRequestUseCase } from '../use-cases/retrieve.use-case'
+import { ApprovePurchaseRequestRepository } from '../repositories/approve.repository'
+import { ApprovePurchaseRequestUseCase } from '../use-cases/approve.use-case'
 
-export const retrievePurchaseRequestController: IController = async (controllerInput: IControllerInput) => {
+export const approvePurchaseRequestController: IController = async (controllerInput: IControllerInput) => {
   let session
   try {
     // 1. start session for transactional
@@ -18,10 +19,10 @@ export const retrievePurchaseRequestController: IController = async (controllerI
     session.startTransaction()
     // 2. define repository
     const retrieveAuthUserRepository = new RetrieveAuthUserRepository(controllerInput.dbConnection)
-    const retrievePurchaseRequestRepository = new RetrievePurchaseRequestRepository(controllerInput.dbConnection)
+    const approvePurchaseRequestRepository = new ApprovePurchaseRequestRepository(controllerInput.dbConnection)
     // 3. handle business rules
     // 3.1 check authenticated user
-    await VerifyTokenUseCase.handle(
+    const verifyTokenResponse = await VerifyTokenUseCase.handle(
       {
         token: controllerInput.httpRequest.signedCookies.POINTHUB_ACCESS,
         secret: authConfig.secret,
@@ -35,30 +36,21 @@ export const retrievePurchaseRequestController: IController = async (controllerI
       },
       { session },
     )
-    // 3.2 retrieve
-    const response = await RetrievePurchaseRequestUseCase.handle(
-      { _id: controllerInput.httpRequest.params.id },
-      { retrievePurchaseRequestRepository },
+    // 3.2 approve
+    const response = await ApprovePurchaseRequestUseCase.handle(
+      {
+        auth: verifyTokenResponse as IAuth,
+        _id: controllerInput.httpRequest.params.id,
+      },
+      { schemaValidation, approvePurchaseRequestRepository },
     )
     await session.commitTransaction()
     // 4. return response to client
     return {
       status: 200,
       json: {
-        _id: response._id,
-        revised_count: response.revised_count,
-        form_number: response.form_number,
-        required_date: response.required_date,
-        branch: response.branch,
-        details: response.details,
-        notes: response.notes,
-        approval_status: response.approval_status,
-        approval_to: response.approval_to,
-        created_by: response.created_by,
-        updated_by: response.updated_by,
-        approval_date: response.approval_date,
-        created_date: response.created_date,
-        updated_date: response.updated_date,
+        matched_count: response.matched_count,
+        modified_count: response.modified_count,
       },
     }
   } catch (error) {

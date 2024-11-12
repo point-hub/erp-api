@@ -18,6 +18,7 @@ export interface IInput {
     details: IDetail[]
     notes?: string
     approval_to: IAuthBy
+    approval_status: 'pending' | 'rejected' | 'approved'
     created_date?: Date
   }
 }
@@ -74,6 +75,7 @@ export class CreatePurchaseRequestUseCase {
       details: input.data.details,
       notes: input.data.notes,
       approval_to: input.data.approval_to,
+      approval_status: 'pending',
       created_by: {
         lookup_from: 'users',
         label: input.auth.username,

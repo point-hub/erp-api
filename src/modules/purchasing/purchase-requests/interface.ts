@@ -56,12 +56,11 @@ export interface IPurchaseRequestEntity {
   request_approval_by?: IAuthBy
   request_approval_to?: IAuthBy
   request_approval_date?: Date
-  request_approval_status?: 'pending' | 'approved' | 'rejected'
   // state form approval
   approval_date?: Date
   approval_reason?: string
   approval_to?: IAuthBy
-  is_approved?: boolean
+  approval_status?: 'pending' | 'approved' | 'rejected'
   // state request delete form
   request_delete_by?: IAuthBy
   request_delete_to?: IAuthBy

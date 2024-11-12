@@ -1,5 +1,7 @@
+export { approvePurchaseRequestController } from './approve.controller'
 export { createPurchaseRequestController } from './create.controller'
 export { deletePurchaseRequestController } from './delete.controller'
+export { rejectPurchaseRequestController } from './reject.controller'
 export { retrievePurchaseRequestController } from './retrieve.controller'
 export { retrieveAllPurchaseRequestController } from './retrieve-all.controller'
 export { updatePurchaseRequestController } from './update.controller'

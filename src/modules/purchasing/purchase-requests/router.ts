@@ -43,6 +43,20 @@ const makeRouter = async (routerInput: IBaseAppInput): Promise<Router> => {
       dbConnection: routerInput.dbConnection,
     }),
   )
+  router.post(
+    '/:id/approve',
+    await makeController({
+      controller: controller.approvePurchaseRequestController,
+      dbConnection: routerInput.dbConnection,
+    }),
+  )
+  router.post(
+    '/:id/reject',
+    await makeController({
+      controller: controller.rejectPurchaseRequestController,
+      dbConnection: routerInput.dbConnection,
+    }),
+  )
 
   return router
 }

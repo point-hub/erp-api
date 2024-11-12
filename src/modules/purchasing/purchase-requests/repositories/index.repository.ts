@@ -1,5 +1,6 @@
 export { CreatePurchaseRequestRepository } from './create.repository'
 export { DeletePurchaseRequestRepository } from './delete.repository'
+export { RejectPurchaseRequestRepository } from './reject.repository'
 export { RetrievePurchaseRequestRepository } from './retrieve.repository'
 export { RetrieveAllPurchaseRequestRepository } from './retrieve-all.repository'
 export { UpdatePurchaseRequestRepository } from './update.repository'

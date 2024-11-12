@@ -41,6 +41,7 @@ export interface IRetrievePurchaseRequestOutput {
   branch: IBranch
   details: IDetails[]
   notes: string
+  approval_status: 'pending' | 'approved' | 'rejected'
   approval_to: IAuthBy
   created_by: IAuthBy
   updated_by: IAuthBy
@@ -70,6 +71,7 @@ export class RetrievePurchaseRequestRepository implements IRetrievePurchaseReque
       branch: response.data[0].branch as IBranch,
       details: response.data[0].details as IDetails[],
       notes: response.data[0].notes as string,
+      approval_status: response.data[0].approval_status as 'pending' | 'approved' | 'rejected',
       approval_to: response.data[0].approval_to as IAuthBy,
       created_by: response.data[0].created_by as IAuthBy,
       updated_by: response.data[0].updated_by as IAuthBy,
