@@ -13,7 +13,7 @@ export interface IOptions {
 }
 export interface IOutput {
   _id: string
-  rev: number
+  revised_count: number
   form_number: string
   required_date: Date
   branch: IBranch
@@ -34,7 +34,7 @@ export class RetrieveSalesQuotationUseCase {
     // 2. output
     return {
       _id: response._id,
-      rev: response.rev,
+      revised_count: response.revised_count,
       form_number: response.form_number,
       required_date: response.required_date,
       branch: response.branch,

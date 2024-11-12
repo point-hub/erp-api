@@ -35,20 +35,7 @@ export class UpdatePurchaseRequestUseCase {
     // 1. validate schema
     await deps.schemaValidation(input, updateValidation)
     // 2. define entity
-    const purchaseRequestEntity = new PurchaseRequestEntity({
-      code: input.data.code,
-      name: input.data.name,
-      address: input.data.address ?? '',
-      phone: input.data.phone ?? '',
-      notes: input.data.notes ?? '',
-      updated_by: {
-        _id: input.auth._id,
-        name: input.auth.name,
-        username: input.auth.username,
-        email: input.auth.email,
-        label: input.auth.username,
-      },
-    })
+    const purchaseRequestEntity = new PurchaseRequestEntity({})
     purchaseRequestEntity.generateUpdatedDate()
     // 3. database operation
     const response = await deps.updatePurchaseRequestRepository.handle(input._id, purchaseRequestEntity.data, options)

@@ -35,7 +35,7 @@ export interface IItems {
 
 export interface IRetrieveSalesQuotationOutput {
   _id: string
-  rev: number
+  revised_count: number
   form_number: string
   required_date: Date
   branch: IBranch
@@ -64,7 +64,7 @@ export class RetrieveSalesQuotationRepository implements IRetrieveSalesQuotation
 
     return {
       _id: response.data[0]._id as string,
-      rev: response.data[0].rev as number,
+      revised_count: response.data[0].revised_count as number,
       form_number: response.data[0].form_number as string,
       required_date: response.data[0].required_date as Date,
       branch: response.data[0].branch as IBranch,

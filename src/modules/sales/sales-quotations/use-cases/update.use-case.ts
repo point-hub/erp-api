@@ -35,20 +35,7 @@ export class UpdateSalesQuotationUseCase {
     // 1. validate schema
     await deps.schemaValidation(input, updateValidation)
     // 2. define entity
-    const salesQuotationEntity = new SalesQuotationEntity({
-      code: input.data.code,
-      name: input.data.name,
-      address: input.data.address ?? '',
-      phone: input.data.phone ?? '',
-      notes: input.data.notes ?? '',
-      updated_by: {
-        _id: input.auth._id,
-        name: input.auth.name,
-        username: input.auth.username,
-        email: input.auth.email,
-        label: input.auth.username,
-      },
-    })
+    const salesQuotationEntity = new SalesQuotationEntity({})
     salesQuotationEntity.generateUpdatedDate()
     // 3. database operation
     const response = await deps.updateSalesQuotationRepository.handle(input._id, salesQuotationEntity.data, options)

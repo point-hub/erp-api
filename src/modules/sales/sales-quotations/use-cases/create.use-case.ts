@@ -67,14 +67,14 @@ export class CreateSalesQuotationUseCase {
     }
     // 2. define entity
     const salesQuotationEntity = new SalesQuotationEntity({
-      rev: 0,
+      revised_count: 0,
       form_number: formNumber,
       required_date: input.data.required_date,
       branch: input.data.branch,
       details: input.data.details,
       notes: input.data.notes,
       approval_to: input.data.approval_to,
-      created_by: { ...input.auth, label: input.auth.username },
+      // created_by: { ...input.auth, label: input.auth.username },
     })
     salesQuotationEntity.generateCreatedDate()
     const cleanEntity = deps.cleanObject(salesQuotationEntity.data)
