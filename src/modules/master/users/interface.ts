@@ -19,10 +19,9 @@ export interface IUserEntity {
 }
 
 export interface IAuthBy {
+  lookup_from: string
   _id: string
   label: string
-  name: string
-  username: string
   email: string
 }
 

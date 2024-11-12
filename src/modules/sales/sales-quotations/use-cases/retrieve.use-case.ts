@@ -1,12 +1,12 @@
 import { IAuthBy } from '@/modules/master/users/interface'
 
-import { IBranch, IDetails, IRetrievePurchaseRequestRepository } from '../repositories/retrieve.repository'
+import { IBranch, IItems, IRetrieveSalesQuotationRepository } from '../repositories/retrieve.repository'
 
 export interface IInput {
   _id: string
 }
 export interface IDeps {
-  retrievePurchaseRequestRepository: IRetrievePurchaseRequestRepository
+  retrieveSalesQuotationRepository: IRetrieveSalesQuotationRepository
 }
 export interface IOptions {
   session: unknown
@@ -17,7 +17,7 @@ export interface IOutput {
   form_number: string
   required_date: Date
   branch: IBranch
-  details: IDetails[]
+  items: IItems[]
   notes: string
   approval_to: IAuthBy
   created_by: IAuthBy
@@ -27,10 +27,10 @@ export interface IOutput {
   updated_date: Date
 }
 
-export class RetrievePurchaseRequestUseCase {
+export class RetrieveSalesQuotationUseCase {
   static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
     // 1. database operation
-    const response = await deps.retrievePurchaseRequestRepository.handle(input._id, options)
+    const response = await deps.retrieveSalesQuotationRepository.handle(input._id, options)
     // 2. output
     return {
       _id: response._id,
@@ -38,7 +38,7 @@ export class RetrievePurchaseRequestUseCase {
       form_number: response.form_number,
       required_date: response.required_date,
       branch: response.branch,
-      details: response.details,
+      items: response.items,
       notes: response.notes,
       approval_to: response.approval_to,
       created_by: response.created_by,

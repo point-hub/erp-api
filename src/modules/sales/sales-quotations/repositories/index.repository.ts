@@ -1,0 +1,5 @@
+export { CreateSalesQuotationRepository } from './create.repository'
+export { DeleteSalesQuotationRepository } from './delete.repository'
+export { RetrieveSalesQuotationRepository } from './retrieve.repository'
+export { RetrieveAllSalesQuotationRepository } from './retrieve-all.repository'
+export { UpdateSalesQuotationRepository } from './update.repository'

@@ -26,20 +26,20 @@ export interface IAllocation {
   label: string
 }
 
-export interface IDetails {
+export interface IItems {
   item: IItem
   quantity: string
   notes: string
   allocation: IAllocation
 }
 
-export interface IRetrievePurchaseRequestOutput {
+export interface IRetrieveSalesQuotationOutput {
   _id: string
   rev: number
   form_number: string
   required_date: Date
   branch: IBranch
-  details: IDetails[]
+  items: IItems[]
   notes: string
   approval_to: IAuthBy
   created_by: IAuthBy
@@ -48,14 +48,14 @@ export interface IRetrievePurchaseRequestOutput {
   created_date: Date
   updated_date: Date
 }
-export interface IRetrievePurchaseRequestRepository {
-  handle(_id: string, options?: unknown): Promise<IRetrievePurchaseRequestOutput>
+export interface IRetrieveSalesQuotationRepository {
+  handle(_id: string, options?: unknown): Promise<IRetrieveSalesQuotationOutput>
 }
 
-export class RetrievePurchaseRequestRepository implements IRetrievePurchaseRequestRepository {
+export class RetrieveSalesQuotationRepository implements IRetrieveSalesQuotationRepository {
   constructor(public database: IDatabase) {}
 
-  async handle(_id: string, options?: unknown): Promise<IRetrievePurchaseRequestOutput> {
+  async handle(_id: string, options?: unknown): Promise<IRetrieveSalesQuotationOutput> {
     const pipeline: IPipeline[] = []
 
     pipeline.push(...this.aggregateFilters(_id))
@@ -68,7 +68,7 @@ export class RetrievePurchaseRequestRepository implements IRetrievePurchaseReque
       form_number: response.data[0].form_number as string,
       required_date: response.data[0].required_date as Date,
       branch: response.data[0].branch as IBranch,
-      details: response.data[0].details as IDetails[],
+      items: response.data[0].items as IItems[],
       notes: response.data[0].notes as string,
       approval_to: response.data[0].approval_to as IAuthBy,
       created_by: response.data[0].created_by as IAuthBy,

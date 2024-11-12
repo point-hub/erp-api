@@ -7,10 +7,10 @@ import { verifyToken } from '@/modules/master/users/utils/jwt'
 import { throwApiError } from '@/utils/throw-api-error'
 import { schemaValidation } from '@/utils/validation'
 
-import { RetrievePurchaseRequestRepository } from '../repositories/retrieve.repository'
-import { RetrievePurchaseRequestUseCase } from '../use-cases/retrieve.use-case'
+import { RetrieveSalesQuotationRepository } from '../repositories/retrieve.repository'
+import { RetrieveSalesQuotationUseCase } from '../use-cases/retrieve.use-case'
 
-export const retrievePurchaseRequestController: IController = async (controllerInput: IControllerInput) => {
+export const retrieveSalesQuotationController: IController = async (controllerInput: IControllerInput) => {
   let session
   try {
     // 1. start session for transactional
@@ -18,7 +18,7 @@ export const retrievePurchaseRequestController: IController = async (controllerI
     session.startTransaction()
     // 2. define repository
     const retrieveAuthUserRepository = new RetrieveAuthUserRepository(controllerInput.dbConnection)
-    const retrievePurchaseRequestRepository = new RetrievePurchaseRequestRepository(controllerInput.dbConnection)
+    const retrieveSalesQuotationRepository = new RetrieveSalesQuotationRepository(controllerInput.dbConnection)
     // 3. handle business rules
     // 3.1 check authenticated user
     await VerifyTokenUseCase.handle(
@@ -36,9 +36,9 @@ export const retrievePurchaseRequestController: IController = async (controllerI
       { session },
     )
     // 3.2 retrieve
-    const response = await RetrievePurchaseRequestUseCase.handle(
+    const response = await RetrieveSalesQuotationUseCase.handle(
       { _id: controllerInput.httpRequest.params.id },
-      { retrievePurchaseRequestRepository },
+      { retrieveSalesQuotationRepository },
     )
     await session.commitTransaction()
     // 4. return response to client
@@ -50,7 +50,7 @@ export const retrievePurchaseRequestController: IController = async (controllerI
         form_number: response.form_number,
         required_date: response.required_date,
         branch: response.branch,
-        details: response.details,
+        items: response.items,
         notes: response.notes,
         approval_to: response.approval_to,
         created_by: response.created_by,

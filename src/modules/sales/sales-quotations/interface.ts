@@ -37,11 +37,12 @@ export interface IFormReference {
   form_number: string
 }
 
-export interface IPurchaseRequestEntity {
+export interface ISalesQuotationEntity {
   _id?: string
   form_date?: string
   form_number?: string
   revised_count?: number
+  is_revised?: boolean
   required_date?: string
   branch?: IBranch
   details?: IDetail[]

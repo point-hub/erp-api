@@ -5,9 +5,9 @@ import { IRetrieveAllCounterRepository } from '@/modules/counters/repositories/r
 import { IUpdateCounterRepository } from '@/modules/counters/repositories/update.repository'
 import { IAuth, IAuthBy } from '@/modules/master/users/interface'
 
-import { PurchaseRequestEntity } from '../entity'
+import { SalesQuotationEntity } from '../entity'
 import { IBranch, IDetail } from '../interface'
-import { ICreatePurchaseRequestRepository } from '../repositories/create.repository'
+import { ICreateSalesQuotationRepository } from '../repositories/create.repository'
 import { createValidation } from '../validations/create.validation'
 
 export interface IInput {
@@ -23,7 +23,7 @@ export interface IInput {
 }
 export interface IDeps {
   cleanObject(object: object): object
-  createPurchaseRequestRepository: ICreatePurchaseRequestRepository
+  createSalesQuotationRepository: ICreateSalesQuotationRepository
   retrieveAllCounterRepository: IRetrieveAllCounterRepository
   createCounterRepository: ICreateCounterRepository
   updateCounterRepository: IUpdateCounterRepository
@@ -36,7 +36,7 @@ export interface IOptions {
 export interface IOutput {
   inserted_id: string
 }
-export class CreatePurchaseRequestUseCase {
+export class CreateSalesQuotationUseCase {
   static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input.data, createValidation)
@@ -44,13 +44,13 @@ export class CreatePurchaseRequestUseCase {
     const code = 'PR' + deps.dateFormat(new Date(), 'yyMM')
     let formNumber = code
     const counters = await deps.retrieveAllCounterRepository.handle(
-      { filter: { name: 'purchasing.purchase_requests', code: code } },
+      { filter: { name: 'sales.sales_quotations', code: code } },
       options,
     )
     if (!counters.data.length) {
       await deps.createCounterRepository.handle(
         {
-          name: 'purchasing.purchase_requests',
+          name: 'sales.sales_quotations',
           code: code,
           count: 1,
         },
@@ -66,26 +66,21 @@ export class CreatePurchaseRequestUseCase {
       )
     }
     // 2. define entity
-    const purchaseRequestEntity = new PurchaseRequestEntity({
-      revised_count: 0,
+    const salesQuotationEntity = new SalesQuotationEntity({
+      rev: 0,
       form_number: formNumber,
       required_date: input.data.required_date,
       branch: input.data.branch,
       details: input.data.details,
       notes: input.data.notes,
       approval_to: input.data.approval_to,
-      created_by: {
-        lookup_from: 'users',
-        label: input.auth.username,
-        _id: input.auth._id,
-        email: input.auth.email,
-      },
+      created_by: { ...input.auth, label: input.auth.username },
     })
-    purchaseRequestEntity.generateCreatedDate()
-    const cleanEntity = deps.cleanObject(purchaseRequestEntity.data)
+    salesQuotationEntity.generateCreatedDate()
+    const cleanEntity = deps.cleanObject(salesQuotationEntity.data)
     // 3. database operation
-    // 3.1 create purchase request
-    const response = await deps.createPurchaseRequestRepository.handle(cleanEntity, options)
+    // 3.1 create sales quotation
+    const response = await deps.createSalesQuotationRepository.handle(cleanEntity, options)
     // 4. output
     return { inserted_id: response.inserted_id }
   }
