@@ -1,6 +1,7 @@
 import type { IController, IControllerInput } from '@point-hub/papi'
 
 import authConfig from '@/config/auth'
+import { IAuth } from '@/modules/master/users/interface'
 import { RetrieveAuthUserRepository } from '@/modules/master/users/repositories/retrieve-auth-user.repository'
 import { VerifyTokenUseCase } from '@/modules/master/users/use-cases/verify-token.use-case'
 import { verifyToken } from '@/modules/master/users/utils/jwt'
@@ -21,7 +22,7 @@ export const retrieveAllPurchaseRequestController: IController = async (controll
     const retrieveAllPurchaseRequestRepository = new RetrieveAllPurchaseRequestRepository(controllerInput.dbConnection)
     // 3. handle business rules
     // 3.1 check authenticated user
-    await VerifyTokenUseCase.handle(
+    const verifyTokenResponse = await VerifyTokenUseCase.handle(
       {
         token: controllerInput.httpRequest.signedCookies.POINTHUB_ACCESS,
         secret: authConfig.secret,
@@ -37,7 +38,7 @@ export const retrieveAllPurchaseRequestController: IController = async (controll
     )
     // 3.2 retrieve all
     const response = await RetrieveAllPurchaseRequestUseCase.handle(
-      { query: controllerInput.httpRequest.query },
+      { query: controllerInput.httpRequest.query, auth: verifyTokenResponse as IAuth },
       { retrieveAllPurchaseRequestRepository },
     )
     await session.commitTransaction()

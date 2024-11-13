@@ -1,6 +1,6 @@
 import type { IDatabase, IPipeline } from '@point-hub/papi'
 
-import { IAuthBy } from '@/modules/master/users/interface'
+import { IAuthReference } from '@/modules/master/users/interface'
 
 import { collectionName } from '../entity'
 
@@ -20,8 +20,8 @@ export interface IRetrieveWarehouseOutput {
   phone: string
   notes: string
   branch: IBranch
-  created_by: IAuthBy
-  updated_by: IAuthBy
+  created_by: IAuthReference
+  updated_by: IAuthReference
   created_date: Date
   updated_date: Date
 }
@@ -51,8 +51,8 @@ export class RetrieveWarehouseRepository implements IRetrieveWarehouseRepository
       phone: `${response.data[0].phone ?? ''}`,
       notes: `${response.data[0].notes ?? ''}`,
       branch: response.data[0].branch as IBranch,
-      created_by: response.data[0].created_by as IAuthBy,
-      updated_by: response.data[0].updated_by as IAuthBy,
+      created_by: response.data[0].created_by as IAuthReference,
+      updated_by: response.data[0].updated_by as IAuthReference,
       created_date: response.data[0].created_date as Date,
       updated_date: response.data[0].updated_date as Date,
     }

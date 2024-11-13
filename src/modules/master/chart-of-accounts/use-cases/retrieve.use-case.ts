@@ -1,4 +1,4 @@
-import { IAuthBy } from '../../users/interface'
+import { IAuthReference } from '../../users/interface'
 import { IChartOfAccountCategory, IChartOfAccountType } from '../interface'
 import { IRetrieveChartOfAccountRepository } from '../repositories/retrieve.repository'
 
@@ -20,8 +20,8 @@ export interface IOutput {
   name: string
   subledger: string
   notes: string
-  created_by: IAuthBy
-  updated_by: IAuthBy
+  created_by: IAuthReference
+  updated_by: IAuthReference
   created_date: Date
   updated_date: Date
 }

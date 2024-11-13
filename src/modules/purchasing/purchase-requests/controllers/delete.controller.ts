@@ -1,6 +1,7 @@
 import type { IController, IControllerInput } from '@point-hub/papi'
 
 import authConfig from '@/config/auth'
+import { IAuth } from '@/modules/master/users/interface'
 import { RetrieveAuthUserRepository } from '@/modules/master/users/repositories/retrieve-auth-user.repository'
 import { VerifyTokenUseCase } from '@/modules/master/users/use-cases/verify-token.use-case'
 import { verifyToken } from '@/modules/master/users/utils/jwt'
@@ -21,7 +22,7 @@ export const deletePurchaseRequestController: IController = async (controllerInp
     const deletePurchaseRequestRepository = new DeletePurchaseRequestRepository(controllerInput.dbConnection)
     // 3. handle business logic
     // 3.1 check authenticated user
-    await VerifyTokenUseCase.handle(
+    const verifyTokenResponse = await VerifyTokenUseCase.handle(
       {
         token: controllerInput.httpRequest.signedCookies.POINTHUB_ACCESS,
         secret: authConfig.secret,
@@ -37,7 +38,11 @@ export const deletePurchaseRequestController: IController = async (controllerInp
     )
     // 3.2 delete
     const response = await DeletePurchaseRequestUseCase.handle(
-      { _id: controllerInput.httpRequest.params.id, reason: controllerInput.httpRequest.body.reason },
+      {
+        _id: controllerInput.httpRequest.params.id,
+        auth: verifyTokenResponse as IAuth,
+        reason: controllerInput.httpRequest.body.reason,
+      },
       { schemaValidation, deletePurchaseRequestRepository },
       { session },
     )
@@ -45,7 +50,10 @@ export const deletePurchaseRequestController: IController = async (controllerInp
     // return response to client
     return {
       status: 200,
-      json: { deleted_count: response.deleted_count },
+      json: {
+        matched_count: response.matched_count,
+        modified_count: response.modified_count,
+      },
     }
   } catch (error) {
     await session?.abortTransaction()

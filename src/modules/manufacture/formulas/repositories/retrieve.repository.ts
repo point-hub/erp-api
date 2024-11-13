@@ -1,6 +1,6 @@
 import type { IDatabase, IPipeline } from '@point-hub/papi'
 
-import { IAuthBy } from '@/modules/master/users/interface'
+import { IAuthReference } from '@/modules/master/users/interface'
 
 import { collectionName } from '../entity'
 
@@ -9,8 +9,8 @@ export interface IRetrieveFormulaOutput {
   code: string
   name: string
   notes: string
-  created_by: IAuthBy
-  updated_by: IAuthBy
+  created_by: IAuthReference
+  updated_by: IAuthReference
   created_date: Date
   updated_date: Date
 }
@@ -29,8 +29,8 @@ export class RetrieveFormulaRepository implements IRetrieveFormulaRepository {
     pipeline.push(...this.aggregateJoinUpdatedBy())
 
     const response = await this.database.collection(collectionName).aggregate(pipeline, {}, options)
-    const created_by = response.data[0].created_by as IAuthBy
-    const updated_by = response.data[0].updated_by as IAuthBy
+    const created_by = response.data[0].created_by as IAuthReference
+    const updated_by = response.data[0].updated_by as IAuthReference
 
     return {
       _id: response.data[0]._id as string,
@@ -39,14 +39,12 @@ export class RetrieveFormulaRepository implements IRetrieveFormulaRepository {
       notes: response.data[0].notes as string,
       created_by: {
         _id: created_by?._id as string,
-        name: created_by?.name as string,
-        username: created_by?.username as string,
+        label: created_by?.label as string,
         email: created_by?.email as string,
       },
       updated_by: {
         _id: updated_by?._id as string,
-        name: updated_by?.name as string,
-        username: updated_by?.username as string,
+        label: updated_by?.label as string,
         email: updated_by?.email as string,
       },
       created_date: response.data[0].created_date as Date,

@@ -1,10 +1,13 @@
 import type { ISchemaValidation } from '@point-hub/papi'
 
+import { IAuth } from '@/modules/master/users/interface'
+
 import { IDeletePurchaseRequestRepository } from '../repositories/delete.repository'
 import { deleteValidation } from '../validations/delete.validation'
 
 export interface IInput {
   _id: string
+  auth: IAuth
   reason: string
 }
 export interface IDeps {
@@ -15,7 +18,8 @@ export interface IOptions {
   session?: unknown
 }
 export interface IOutput {
-  deleted_count: number
+  matched_count: number
+  modified_count: number
 }
 
 export class DeletePurchaseRequestUseCase {
@@ -23,8 +27,21 @@ export class DeletePurchaseRequestUseCase {
     // 1. validate schema
     await deps.schemaValidation(input, deleteValidation)
     // 2. database operation
-    const response = await deps.deletePurchaseRequestRepository.handle(input._id, options)
+    const response = await deps.deletePurchaseRequestRepository.handle(
+      input._id,
+      {
+        deleted_by: {
+          _id: input.auth._id,
+          label: input.auth.username,
+          email: input.auth.email,
+        },
+        deleted_reason: input.reason,
+        deleted_date: new Date(),
+        is_deleted: true,
+      },
+      options,
+    )
     // 3. output
-    return { deleted_count: response.deleted_count }
+    return { matched_count: response.matched_count, modified_count: response.modified_count }
   }
 }

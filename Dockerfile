@@ -8,5 +8,5 @@ RUN bun install --frozen-lock
 COPY --chown=node:node . .
 
 ENV NODE_ENV=production
-EXPOSE 3000 3001
+EXPOSE 3000
 CMD ["bun", "run", "start"]

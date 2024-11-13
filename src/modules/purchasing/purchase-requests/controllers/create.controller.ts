@@ -1,9 +1,12 @@
 import { objClean } from '@point-hub/express-utils'
 import type { IController, IControllerInput } from '@point-hub/papi'
+import { format } from 'date-fns'
 
 import authConfig from '@/config/auth'
+import { CreateCounterRepository } from '@/modules/counters/repositories/create.repository'
 import { RetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
 import { UpdateCounterRepository } from '@/modules/counters/repositories/update.repository'
+import { generateFormNumber } from '@/modules/counters/utils/generate'
 import { IAuth } from '@/modules/master/users/interface'
 import { RetrieveAuthUserRepository } from '@/modules/master/users/repositories/retrieve-auth-user.repository'
 import { VerifyTokenUseCase } from '@/modules/master/users/use-cases/verify-token.use-case'
@@ -23,8 +26,9 @@ export const createPurchaseRequestController: IController = async (controllerInp
     // 2. define repository
     const retrieveAuthUserRepository = new RetrieveAuthUserRepository(controllerInput.dbConnection)
     const createPurchaseRequestRepository = new CreatePurchaseRequestRepository(controllerInput.dbConnection)
-    const updateRepository = new UpdateCounterRepository(controllerInput.dbConnection)
-    const retrieveAllRepository = new RetrieveAllCounterRepository(controllerInput.dbConnection)
+    const createCounterRepository = new CreateCounterRepository(controllerInput.dbConnection)
+    const updateCounterRepository = new UpdateCounterRepository(controllerInput.dbConnection)
+    const retrieveAllCounterRepository = new RetrieveAllCounterRepository(controllerInput.dbConnection)
     // 3. handle business rules
     // 3.1 check authenticated user
     const verifyTokenResponse = await VerifyTokenUseCase.handle(
@@ -50,9 +54,12 @@ export const createPurchaseRequestController: IController = async (controllerInp
       {
         cleanObject: objClean,
         createPurchaseRequestRepository,
-        updateRepository,
-        retrieveAllRepository,
+        createCounterRepository,
+        updateCounterRepository,
+        retrieveAllCounterRepository,
         schemaValidation,
+        generateFormNumber,
+        dateFormat: format,
       },
       { session },
     )

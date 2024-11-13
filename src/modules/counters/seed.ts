@@ -19,29 +19,4 @@ export const seeds = [
     code: 'WH',
     count: 0,
   },
-  {
-    name: 'allocation-code',
-    code: 'AL',
-    count: 0,
-  },
-  {
-    name: 'supplier-code',
-    code: 'SP',
-    count: 0,
-  },
-  {
-    name: 'customer-code',
-    code: 'CS',
-    count: 0,
-  },
-  {
-    name: 'item-categories',
-    code: 'CAT',
-    count: 0,
-  },
-  {
-    name: 'items',
-    code: 'A',
-    count: 0,
-  },
 ]

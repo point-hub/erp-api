@@ -1,55 +1,90 @@
 import type { ISchemaValidation } from '@point-hub/papi'
 
-import { IAuth } from '@/modules/master/users/interface'
+import { ICreateCounterRepository } from '@/modules/counters/repositories/create.repository'
+import { IRetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
+import { IUpdateCounterRepository } from '@/modules/counters/repositories/update.repository'
+import { IGenerateFormNumber } from '@/modules/counters/utils/generate'
+import { IAuth, IAuthReference } from '@/modules/master/users/interface'
 
 import { PurchaseRequestEntity } from '../entity'
+import { IBranchReference, IDetail, TypeApprovalStatus } from '../interface'
+import { ICreatePurchaseRequestRepository } from '../repositories/create.repository'
 import { IUpdatePurchaseRequestRepository } from '../repositories/update.repository'
-import { updateValidation } from '../validations/update.validation'
+import { createValidation } from '../validations/create.validation'
 
 export interface IInput {
-  auth: IAuth
   _id: string
+  auth: IAuth
   data: {
-    code?: string
-    name?: string
-    address?: string
-    phone?: string
+    revised_count: number
+    form_number: string
+    required_date: Date
+    branch: IBranchReference
+    details: IDetail[]
     notes?: string
-    updated_by?: string
+    approval_to: IAuthReference
+    approval_status: TypeApprovalStatus
+    created_date?: Date
   }
 }
 export interface IDeps {
+  cleanObject(object: object): object
+  createPurchaseRequestRepository: ICreatePurchaseRequestRepository
+  retrieveAllCounterRepository: IRetrieveAllCounterRepository
+  createCounterRepository: ICreateCounterRepository
+  updateCounterRepository: IUpdateCounterRepository
   schemaValidation: ISchemaValidation
+  generateFormNumber: IGenerateFormNumber
   updatePurchaseRequestRepository: IUpdatePurchaseRequestRepository
+  dateFormat(date: Date | number | string, format: string): string
 }
 export interface IOptions {
   session?: unknown
 }
 export interface IOutput {
-  matched_count: number
-  modified_count: number
+  inserted_id: string
 }
-
 export class UpdatePurchaseRequestUseCase {
   static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
     // 1. validate schema
-    await deps.schemaValidation(input, updateValidation)
-    // 2. define entity
+    await deps.schemaValidation(input.data, createValidation)
+    // 3. define entity
     const purchaseRequestEntity = new PurchaseRequestEntity({
-      code: input.data.code,
-      name: input.data.name,
-      address: input.data.address ?? '',
-      phone: input.data.phone ?? '',
-      notes: input.data.notes ?? '',
-      updated_by: input.auth._id,
+      revised_count: input.data.revised_count,
+      form_number: input.data.form_number,
+      required_date: input.data.required_date,
+      branch: input.data.branch,
+      details: input.data.details,
+      notes: input.data.notes,
+      is_revised: false,
+      is_finished: false,
+      approval_request_by: {
+        _id: input.auth._id,
+        label: input.auth.username,
+        email: input.auth.email,
+      },
+      approval_request_date: new Date(),
+      approval_to: input.data.approval_to,
+      approval_status: 'pending',
+      created_by: {
+        _id: input.auth._id,
+        label: input.auth.username,
+        email: input.auth.email,
+      },
+      created_date: new Date(),
     })
-    purchaseRequestEntity.generateUpdatedDate()
-    // 3. database operation
-    const response = await deps.updatePurchaseRequestRepository.handle(input._id, purchaseRequestEntity.data, options)
-    // 4. output
-    return {
-      matched_count: response.matched_count,
-      modified_count: response.modified_count,
-    }
+    const cleanEntity = deps.cleanObject(purchaseRequestEntity.data)
+    // 4. database operation
+    const response = await deps.createPurchaseRequestRepository.handle(cleanEntity, options)
+
+    await deps.updatePurchaseRequestRepository.handle(
+      input._id,
+      {
+        is_revised: true,
+      },
+      options,
+    )
+    // 5. output
+    return { inserted_id: response.inserted_id }
   }
 }

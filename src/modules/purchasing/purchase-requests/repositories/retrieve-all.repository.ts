@@ -1,5 +1,7 @@
 import type { IDatabase, IPagination, IPipeline, IQuery } from '@point-hub/papi'
 
+import { IAuth } from '@/modules/master/users/interface'
+
 import { collectionName } from '../entity'
 import { IRetrievePurchaseRequestOutput } from './retrieve.repository'
 
@@ -8,20 +10,24 @@ export interface IRetrieveAllPurchaseRequestOutput {
   pagination: IPagination
 }
 export interface IRetrieveAllPurchaseRequestRepository {
-  handle(query: IQuery, options?: unknown): Promise<IRetrieveAllPurchaseRequestOutput>
+  handle(data: { query: IQuery; auth: IAuth }, options?: unknown): Promise<IRetrieveAllPurchaseRequestOutput>
+}
+export interface IData {
+  query: IQuery
+  auth: IAuth
 }
 
 export class RetrieveAllPurchaseRequestRepository implements IRetrieveAllPurchaseRequestRepository {
   constructor(public database: IDatabase) {}
 
-  async handle(query: IQuery, options?: unknown): Promise<IRetrieveAllPurchaseRequestOutput> {
+  async handle(data: IData, options?: unknown): Promise<IRetrieveAllPurchaseRequestOutput> {
     const pipeline: IPipeline[] = []
 
-    pipeline.push(...this.aggregateFilters(query))
+    pipeline.push(...this.aggregateFilters(data.auth, data.query))
     pipeline.push(...this.aggregateJoinCreatedBy())
     pipeline.push(...this.aggregateJoinUpdatedBy())
 
-    const response = await this.database.collection(collectionName).aggregate(pipeline, query, options)
+    const response = await this.database.collection(collectionName).aggregate(pipeline, data.query, options)
 
     return {
       data: response.data as unknown as IRetrievePurchaseRequestOutput[],
@@ -69,7 +75,7 @@ export class RetrieveAllPurchaseRequestRepository implements IRetrieveAllPurchas
     ]
   }
 
-  private aggregateFilters(query: IQuery) {
+  private aggregateFilters(auth: IAuth, query: IQuery) {
     const filtersAnd = []
 
     if (query.filter?.search) {
@@ -90,8 +96,9 @@ export class RetrieveAllPurchaseRequestRepository implements IRetrieveAllPurchas
 
     if (query.filter?.code) filtersAnd.push({ code: { $regex: query.filter?.code, $options: 'i' } })
     if (query.filter?.name) filtersAnd.push({ name: { $regex: query.filter?.name, $options: 'i' } })
-    if (query.filter?.address) filtersAnd.push({ address: { $regex: query.filter?.address, $options: 'i' } })
-    if (query.filter?.phone) filtersAnd.push({ phone: { $regex: query.filter?.phone, $options: 'i' } })
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    filtersAnd.push({ 'branch._id': { $in: auth.branches.map((item: any) => item._id) } })
+    filtersAnd.push({ is_revised: false })
 
     if (!filtersAnd.length) {
       return []
