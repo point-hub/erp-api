@@ -1,5 +1,4 @@
 export const updateValidation = {
-  _id: ['required', 'string'],
   required_date: ['required'],
   'branch._id': ['required'],
   'details.*.item._id': ['required'],

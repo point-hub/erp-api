@@ -32,7 +32,7 @@ const makeRouter = async (routerInput: IBaseAppInput): Promise<Router> => {
     }),
   )
   // Update Purchase Request
-  router.patch(
+  router.post(
     '/:id',
     await makeController({
       controller: controller.updatePurchaseRequestController,

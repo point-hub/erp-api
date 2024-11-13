@@ -39,14 +39,12 @@ export class RetrieveMachineRepository implements IRetrieveMachineRepository {
       notes: response.data[0].notes as string,
       created_by: {
         _id: created_by?._id as string,
-        name: created_by?.name as string,
-        username: created_by?.username as string,
+        label: created_by?.label as string,
         email: created_by?.email as string,
       },
       updated_by: {
         _id: updated_by?._id as string,
-        name: updated_by?.name as string,
-        username: updated_by?.username as string,
+        label: updated_by?.label as string,
         email: updated_by?.email as string,
       },
       created_date: response.data[0].created_date as Date,

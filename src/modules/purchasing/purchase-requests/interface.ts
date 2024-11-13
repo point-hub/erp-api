@@ -58,6 +58,7 @@ export interface IPurchaseRequestEntity {
   form_date?: string
   form_number?: string
   revised_count?: number
+  is_revised?: boolean
   is_finished?: boolean
   form_references?: IFormReference[]
 }

@@ -77,6 +77,7 @@ export class CreatePurchaseRequestUseCase {
       details: input.data.details,
       notes: input.data.notes,
       is_finished: false,
+      is_revised: false,
       approval_request_by: {
         _id: input.auth._id,
         label: input.auth.username,
