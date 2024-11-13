@@ -1,6 +1,6 @@
 import type { IDatabase, IPipeline } from '@point-hub/papi'
 
-import { IAuthBy } from '@/modules/master/users/interface'
+import { IAuthReference } from '@/modules/master/users/interface'
 
 import { collectionName } from '../entity'
 
@@ -9,8 +9,8 @@ export interface IRetrieveFormulaOutput {
   code: string
   name: string
   notes: string
-  created_by: IAuthBy
-  updated_by: IAuthBy
+  created_by: IAuthReference
+  updated_by: IAuthReference
   created_date: Date
   updated_date: Date
 }
@@ -29,8 +29,8 @@ export class RetrieveFormulaRepository implements IRetrieveFormulaRepository {
     pipeline.push(...this.aggregateJoinUpdatedBy())
 
     const response = await this.database.collection(collectionName).aggregate(pipeline, {}, options)
-    const created_by = response.data[0].created_by as IAuthBy
-    const updated_by = response.data[0].updated_by as IAuthBy
+    const created_by = response.data[0].created_by as IAuthReference
+    const updated_by = response.data[0].updated_by as IAuthReference
 
     return {
       _id: response.data[0]._id as string,

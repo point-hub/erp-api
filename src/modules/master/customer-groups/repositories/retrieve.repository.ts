@@ -1,6 +1,6 @@
 import type { IDatabase, IPipeline } from '@point-hub/papi'
 
-import { IAuthBy } from '@/modules/master/users/interface'
+import { IAuthReference } from '@/modules/master/users/interface'
 
 import { collectionName } from '../entity'
 
@@ -10,8 +10,8 @@ export interface IRetrieveCustomerGroupOutput {
   code: string
   name: string
   notes: string
-  created_by: IAuthBy
-  updated_by: IAuthBy
+  created_by: IAuthReference
+  updated_by: IAuthReference
   created_date: Date
   updated_date: Date
 }
@@ -37,8 +37,8 @@ export class RetrieveCustomerGroupRepository implements IRetrieveCustomerGroupRe
       code: `${response.data[0].code}`,
       name: `${response.data[0].name}`,
       notes: `${response.data[0].notes ?? ''}`,
-      created_by: response.data[0].created_by as IAuthBy,
-      updated_by: response.data[0].updated_by as IAuthBy,
+      created_by: response.data[0].created_by as IAuthReference,
+      updated_by: response.data[0].updated_by as IAuthReference,
       created_date: response.data[0].created_date as Date,
       updated_date: response.data[0].updated_date as Date,
     }

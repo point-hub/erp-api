@@ -7,7 +7,7 @@ import * as controller from './controllers/index'
 
 const makeRouter = async (routerInput: IBaseAppInput): Promise<Router> => {
   const router = Router()
-
+  // Create Purchase Request
   router.post(
     '/',
     await makeController({
@@ -15,6 +15,7 @@ const makeRouter = async (routerInput: IBaseAppInput): Promise<Router> => {
       dbConnection: routerInput.dbConnection,
     }),
   )
+  // Retrieve All Purchase Request
   router.get(
     '/',
     await makeController({
@@ -22,6 +23,7 @@ const makeRouter = async (routerInput: IBaseAppInput): Promise<Router> => {
       dbConnection: routerInput.dbConnection,
     }),
   )
+  // Retrieve Purchase Request
   router.get(
     '/:id',
     await makeController({
@@ -29,6 +31,7 @@ const makeRouter = async (routerInput: IBaseAppInput): Promise<Router> => {
       dbConnection: routerInput.dbConnection,
     }),
   )
+  // Update Purchase Request
   router.patch(
     '/:id',
     await makeController({
@@ -36,6 +39,7 @@ const makeRouter = async (routerInput: IBaseAppInput): Promise<Router> => {
       dbConnection: routerInput.dbConnection,
     }),
   )
+  // Delete Purchase Request
   router.post(
     '/:id/delete',
     await makeController({
@@ -43,6 +47,7 @@ const makeRouter = async (routerInput: IBaseAppInput): Promise<Router> => {
       dbConnection: routerInput.dbConnection,
     }),
   )
+  // Approve Purchase Request
   router.post(
     '/:id/approve',
     await makeController({
@@ -50,6 +55,7 @@ const makeRouter = async (routerInput: IBaseAppInput): Promise<Router> => {
       dbConnection: routerInput.dbConnection,
     }),
   )
+  // Reject Purchase Request
   router.post(
     '/:id/reject',
     await makeController({

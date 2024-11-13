@@ -41,6 +41,7 @@ export const rejectPurchaseRequestController: IController = async (controllerInp
       {
         auth: verifyTokenResponse as IAuth,
         _id: controllerInput.httpRequest.params.id,
+        reason: controllerInput.httpRequest.body.reason,
       },
       { schemaValidation, rejectPurchaseRequestRepository },
     )

@@ -1,35 +1,28 @@
-import { IAuthBy } from '@/modules/master/users/interface'
+import { IAuthReference } from '@/modules/master/users/interface'
 
-export interface IBranch {
+export type TypeApprovalStatus = 'pending' | 'approved' | 'rejected'
+
+export interface IBranchReference {
   _id?: string
-  _ref?: string
   label?: string
-  code?: string
-  name?: string
 }
 
-export interface IItem {
+export interface IAllocationReference {
   _id?: string
-  _ref?: string
   label?: string
-  code?: string
-  name?: string
+}
+
+export interface IItemReference {
+  _id?: string
+  label?: string
   unit?: string
 }
 
-export interface IAllocation {
-  _id?: string
-  _ref?: string
-  label?: string
-  code?: string
-  name?: string
-}
-
 export interface IDetail {
-  item?: IItem
+  item?: IItemReference
   notes?: string
   quantity?: number
-  allocation?: IAllocation
+  allocation?: IAllocationReference
 }
 
 export interface IFormReference {
@@ -39,39 +32,32 @@ export interface IFormReference {
 
 export interface IPurchaseRequestEntity {
   _id?: string
-  form_date?: string
-  form_number?: string
-  revised_count?: number
-  required_date?: string
-  branch?: IBranch
+  required_date?: Date
+  branch?: IBranchReference
   details?: IDetail[]
   notes?: string
   // state create
-  created_by?: IAuthBy
+  created_by?: IAuthReference
   created_date?: Date
   // state update
-  updated_by?: IAuthBy
+  updated_by?: IAuthReference
   updated_date?: Date
-  // state form request approval
-  request_approval_by?: IAuthBy
-  request_approval_to?: IAuthBy
-  request_approval_date?: Date
   // state form approval
+  approval_request_by?: IAuthReference
+  approval_request_date?: Date
+  approval_to?: IAuthReference
   approval_date?: Date
-  approval_reason?: string
-  approval_to?: IAuthBy
-  approval_status?: 'pending' | 'approved' | 'rejected'
-  // state request delete form
-  request_delete_by?: IAuthBy
-  request_delete_to?: IAuthBy
-  request_delete_date?: Date
-  request_delete_status?: 'pending' | 'approved' | 'rejected'
+  approval_status?: TypeApprovalStatus
+  rejected_reason?: string
   // state delete form
+  deleted_by?: IAuthReference
   deleted_date?: Date
   deleted_reason?: string
-  deleted_by?: IAuthBy
   is_deleted?: boolean
-  // status
-  form_status?: 'open' | 'done'
+  // state of form
+  form_date?: string
+  form_number?: string
+  revised_count?: number
+  is_finished?: boolean
   form_references?: IFormReference[]
 }

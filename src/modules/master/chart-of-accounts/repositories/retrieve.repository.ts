@@ -1,6 +1,6 @@
 import type { IDatabase, IPipeline } from '@point-hub/papi'
 
-import { IAuthBy } from '../../users/interface'
+import { IAuthReference } from '../../users/interface'
 import { collectionName } from '../entity'
 import { IChartOfAccountCategory, IChartOfAccountType } from '../interface'
 
@@ -13,8 +13,8 @@ export interface IRetrieveChartOfAccountOutput {
   category: IChartOfAccountCategory
   type: IChartOfAccountType
   notes: string
-  created_by: IAuthBy
-  updated_by: IAuthBy
+  created_by: IAuthReference
+  updated_by: IAuthReference
   created_date: Date
   updated_date: Date
 }
@@ -45,8 +45,8 @@ export class RetrieveChartOfAccountRepository implements IRetrieveChartOfAccount
       category: response.data[0].category as IChartOfAccountCategory,
       type: response.data[0].type as IChartOfAccountType,
       notes: `${response.data[0].notes ?? ''}`,
-      created_by: response.data[0].created_by as IAuthBy,
-      updated_by: response.data[0].updated_by as IAuthBy,
+      created_by: response.data[0].created_by as IAuthReference,
+      updated_by: response.data[0].updated_by as IAuthReference,
       created_date: response.data[0].created_date as Date,
       updated_date: response.data[0].updated_date as Date,
     }

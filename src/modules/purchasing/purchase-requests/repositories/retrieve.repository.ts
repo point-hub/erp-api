@@ -1,6 +1,6 @@
 import type { IDatabase, IPipeline } from '@point-hub/papi'
 
-import { IAuthBy } from '@/modules/master/users/interface'
+import { IAuthReference } from '@/modules/master/users/interface'
 
 import { collectionName } from '../entity'
 
@@ -42,12 +42,17 @@ export interface IRetrievePurchaseRequestOutput {
   details: IDetails[]
   notes: string
   approval_status: 'pending' | 'approved' | 'rejected'
-  approval_to: IAuthBy
-  created_by: IAuthBy
-  updated_by: IAuthBy
+  approval_to: IAuthReference
+  rejected_reason: string
+  created_by: IAuthReference
+  updated_by: IAuthReference
   approval_date: Date
   created_date: Date
   updated_date: Date
+  deleted_by: IAuthReference
+  deleted_date: Date
+  deleted_reason: string
+  is_deleted: boolean
 }
 export interface IRetrievePurchaseRequestRepository {
   handle(_id: string, options?: unknown): Promise<IRetrievePurchaseRequestOutput>
@@ -72,12 +77,17 @@ export class RetrievePurchaseRequestRepository implements IRetrievePurchaseReque
       details: response.data[0].details as IDetails[],
       notes: response.data[0].notes as string,
       approval_status: response.data[0].approval_status as 'pending' | 'approved' | 'rejected',
-      approval_to: response.data[0].approval_to as IAuthBy,
-      created_by: response.data[0].created_by as IAuthBy,
-      updated_by: response.data[0].updated_by as IAuthBy,
+      approval_to: response.data[0].approval_to as IAuthReference,
+      rejected_reason: response.data[0].rejected_reason as string,
+      created_by: response.data[0].created_by as IAuthReference,
+      updated_by: response.data[0].updated_by as IAuthReference,
       approval_date: response.data[0].approval_date as Date,
       created_date: response.data[0].created_date as Date,
       updated_date: response.data[0].updated_date as Date,
+      deleted_by: response.data[0].deleted_by as IAuthReference,
+      deleted_date: response.data[0].deleted_date as Date,
+      deleted_reason: response.data[0].deleted_reason as string,
+      is_deleted: response.data[0].is_deleted as boolean,
     }
   }
 

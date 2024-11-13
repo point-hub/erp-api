@@ -18,13 +18,11 @@ export interface IUserEntity {
   updated_date?: Date
 }
 
-export interface IAuthBy {
-  lookup_from?: string
-  _id: string
+export interface IAuthReference {
+  referenced_from?: string
+  _id?: string
   label?: string
-  email: string
-  name?: string
-  username?: string
+  email?: string
 }
 
 export interface IAuth {

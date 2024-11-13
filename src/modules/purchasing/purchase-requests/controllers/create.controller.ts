@@ -6,6 +6,7 @@ import authConfig from '@/config/auth'
 import { CreateCounterRepository } from '@/modules/counters/repositories/create.repository'
 import { RetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
 import { UpdateCounterRepository } from '@/modules/counters/repositories/update.repository'
+import { generateFormNumber } from '@/modules/counters/utils/generate'
 import { IAuth } from '@/modules/master/users/interface'
 import { RetrieveAuthUserRepository } from '@/modules/master/users/repositories/retrieve-auth-user.repository'
 import { VerifyTokenUseCase } from '@/modules/master/users/use-cases/verify-token.use-case'
@@ -57,6 +58,7 @@ export const createPurchaseRequestController: IController = async (controllerInp
         updateCounterRepository,
         retrieveAllCounterRepository,
         schemaValidation,
+        generateFormNumber,
         dateFormat: format,
       },
       { session },

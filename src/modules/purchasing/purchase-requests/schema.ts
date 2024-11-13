@@ -17,7 +17,7 @@ export const schema: ISchema[] = [
     uniqueIfExists: [[]],
     schema: {
       bsonType: 'object',
-      required: ['form_number', 'revised_count', 'branch._id', 'details.item._id', 'details.allocation._id'],
+      required: ['form_number', 'revised_count'],
       properties: {
         form_number: {
           bsonType: 'string',
@@ -27,17 +27,73 @@ export const schema: ISchema[] = [
           bsonType: 'number',
           description: 'The number of revision for the purchase request start with 0 for no revision',
         },
+        branch: {
+          bsonType: 'object',
+          description: 'Authenticated user who perform create form',
+          required: ['_id', 'label'],
+          properties: {
+            _id: {
+              bsonType: 'objectId',
+              description: '',
+            },
+            label: {
+              bsonType: 'string',
+              description: '',
+            },
+          },
+        },
         notes: {
           bsonType: 'string',
-          description: 'The notes for the purchase request',
+          description: '',
+        },
+        details: {
+          bsonType: 'array',
+          description: '',
+          items: {
+            bsonType: 'object',
+            properties: {
+              item: {
+                bsonType: 'object',
+                description: 'Authenticated user who perform create form',
+                required: ['_id', 'label'],
+                properties: {
+                  _id: {
+                    bsonType: 'objectId',
+                    description: '',
+                  },
+                  label: {
+                    bsonType: 'string',
+                    description: '',
+                  },
+                },
+              },
+              allocation: {
+                bsonType: 'object',
+                description: 'Authenticated user who perform create form',
+                required: ['_id', 'label'],
+                properties: {
+                  _id: {
+                    bsonType: 'objectId',
+                    description: '',
+                  },
+                  label: {
+                    bsonType: 'string',
+                    description: '',
+                  },
+                },
+              },
+            },
+          },
         },
         created_by: {
           bsonType: 'object',
           description: 'Authenticated user who perform create form',
-        },
-        'created_by.label': {
-          bsonType: 'string',
-          description: 'xx',
+          properties: {
+            label: {
+              bsonType: 'string',
+              description: '',
+            },
+          },
         },
       },
     },

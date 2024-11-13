@@ -3,22 +3,23 @@ import type { ISchemaValidation } from '@point-hub/papi'
 import { ICreateCounterRepository } from '@/modules/counters/repositories/create.repository'
 import { IRetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
 import { IUpdateCounterRepository } from '@/modules/counters/repositories/update.repository'
-import { IAuth, IAuthBy } from '@/modules/master/users/interface'
+import { IGenerateFormNumber } from '@/modules/counters/utils/generate'
+import { IAuth, IAuthReference } from '@/modules/master/users/interface'
 
-import { PurchaseRequestEntity } from '../entity'
-import { IBranch, IDetail } from '../interface'
+import { formNumberPrefix, PurchaseRequestEntity } from '../entity'
+import { IBranchReference, IDetail, TypeApprovalStatus } from '../interface'
 import { ICreatePurchaseRequestRepository } from '../repositories/create.repository'
 import { createValidation } from '../validations/create.validation'
 
 export interface IInput {
   auth: IAuth
   data: {
-    required_date: string
-    branch: IBranch
+    required_date: Date
+    branch: IBranchReference
     details: IDetail[]
     notes?: string
-    approval_to: IAuthBy
-    approval_status: 'pending' | 'rejected' | 'approved'
+    approval_to: IAuthReference
+    approval_status: TypeApprovalStatus
     created_date?: Date
   }
 }
@@ -29,6 +30,7 @@ export interface IDeps {
   createCounterRepository: ICreateCounterRepository
   updateCounterRepository: IUpdateCounterRepository
   schemaValidation: ISchemaValidation
+  generateFormNumber: IGenerateFormNumber
   dateFormat(date: Date | number | string, format: string): string
 }
 export interface IOptions {
@@ -42,7 +44,7 @@ export class CreatePurchaseRequestUseCase {
     // 1. validate schema
     await deps.schemaValidation(input.data, createValidation)
     // 2. generate form number
-    const code = 'PR' + deps.dateFormat(new Date(), 'yyMM')
+    const code = formNumberPrefix + deps.dateFormat(new Date(), 'yyMM')
     let formNumber = code
     const counters = await deps.retrieveAllCounterRepository.handle(
       { filter: { name: 'purchasing.purchase_requests', code: code } },
@@ -66,7 +68,7 @@ export class CreatePurchaseRequestUseCase {
         options,
       )
     }
-    // 2. define entity
+    // 3. define entity
     const purchaseRequestEntity = new PurchaseRequestEntity({
       revised_count: 0,
       form_number: formNumber,
@@ -74,21 +76,26 @@ export class CreatePurchaseRequestUseCase {
       branch: input.data.branch,
       details: input.data.details,
       notes: input.data.notes,
+      is_finished: false,
+      approval_request_by: {
+        _id: input.auth._id,
+        label: input.auth.username,
+        email: input.auth.email,
+      },
+      approval_request_date: new Date(),
       approval_to: input.data.approval_to,
       approval_status: 'pending',
       created_by: {
-        lookup_from: 'users',
-        label: input.auth.username,
         _id: input.auth._id,
+        label: input.auth.username,
         email: input.auth.email,
       },
+      created_date: new Date(),
     })
-    purchaseRequestEntity.generateCreatedDate()
     const cleanEntity = deps.cleanObject(purchaseRequestEntity.data)
-    // 3. database operation
-    // 3.1 create purchase request
+    // 4. database operation
     const response = await deps.createPurchaseRequestRepository.handle(cleanEntity, options)
-    // 4. output
+    // 5. output
     return { inserted_id: response.inserted_id }
   }
 }

@@ -1,4 +1,4 @@
-import { IAuthBy } from '@/modules/master/users/interface'
+import { IAuthReference } from '@/modules/master/users/interface'
 
 import { IBranch, IItems, IRetrieveSalesQuotationRepository } from '../repositories/retrieve.repository'
 
@@ -19,9 +19,9 @@ export interface IOutput {
   branch: IBranch
   items: IItems[]
   notes: string
-  approval_to: IAuthBy
-  created_by: IAuthBy
-  updated_by: IAuthBy
+  approval_to: IAuthReference
+  created_by: IAuthReference
+  updated_by: IAuthReference
   approval_date: Date
   created_date: Date
   updated_date: Date

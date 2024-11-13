@@ -3,7 +3,7 @@ import type { ISchemaValidation } from '@point-hub/papi'
 import { ICreateCounterRepository } from '@/modules/counters/repositories/create.repository'
 import { IRetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
 import { IUpdateCounterRepository } from '@/modules/counters/repositories/update.repository'
-import { IAuth, IAuthBy } from '@/modules/master/users/interface'
+import { IAuth, IAuthReference } from '@/modules/master/users/interface'
 
 import { SalesQuotationEntity } from '../entity'
 import { IBranch, IDetail } from '../interface'
@@ -17,7 +17,7 @@ export interface IInput {
     branch: IBranch
     details: IDetail[]
     notes?: string
-    approval_to: IAuthBy
+    approval_to: IAuthReference
     created_date?: Date
   }
 }

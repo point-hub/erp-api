@@ -1,4 +1,4 @@
-import { IAuthBy } from '@/modules/master/users/interface'
+import { IAuthReference } from '@/modules/master/users/interface'
 
 import { IBranch, IDetails, IRetrievePurchaseRequestRepository } from '../repositories/retrieve.repository'
 
@@ -20,12 +20,17 @@ export interface IOutput {
   details: IDetails[]
   notes: string
   approval_status: 'pending' | 'approved' | 'rejected'
-  approval_to: IAuthBy
-  created_by: IAuthBy
-  updated_by: IAuthBy
+  approval_to: IAuthReference
+  rejected_reason: string
+  created_by: IAuthReference
+  updated_by: IAuthReference
   approval_date: Date
   created_date: Date
   updated_date: Date
+  deleted_by: IAuthReference
+  deleted_date: Date
+  deleted_reason: string
+  is_deleted: boolean
 }
 
 export class RetrievePurchaseRequestUseCase {
@@ -43,11 +48,16 @@ export class RetrievePurchaseRequestUseCase {
       notes: response.notes,
       approval_status: response.approval_status,
       approval_to: response.approval_to,
+      rejected_reason: response.rejected_reason,
       created_by: response.created_by,
       updated_by: response.updated_by,
       approval_date: response.approval_date,
       created_date: response.created_date,
       updated_date: response.updated_date,
+      deleted_by: response.deleted_by,
+      deleted_date: response.deleted_date,
+      deleted_reason: response.deleted_reason,
+      is_deleted: response.is_deleted,
     }
   }
 }
