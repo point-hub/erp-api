@@ -1,13 +1,12 @@
 import type { ISchemaValidation } from '@point-hub/papi'
 
-import { dbConnection } from '@/database/database'
 import { ICreateCounterRepository } from '@/modules/counters/repositories/create.repository'
 import { IRetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
 import { IUpdateCounterRepository } from '@/modules/counters/repositories/update.repository'
 import { IGenerateFormNumber } from '@/modules/counters/utils/generate-form-number'
 import { IAuth, IAuthReference } from '@/modules/master/users/interface'
 
-import { formNumberPrefix, PurchaseRequestEntity } from '../entity'
+import { PurchaseRequestEntity } from '../entity'
 import { IBranchReference, IDetail, TypeApprovalStatus } from '../interface'
 import { ICreatePurchaseRequestRepository } from '../repositories/create.repository'
 import { createValidation } from '../validations/create.validation'

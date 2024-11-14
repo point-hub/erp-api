@@ -3,7 +3,6 @@ import type { ISchemaValidation } from '@point-hub/papi'
 import { ICreateCounterRepository } from '@/modules/counters/repositories/create.repository'
 import { IRetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
 import { IUpdateCounterRepository } from '@/modules/counters/repositories/update.repository'
-import { IGenerateFormNumber } from '@/modules/counters/utils/generate-form-number'
 import { IAuth, IAuthReference } from '@/modules/master/users/interface'
 
 import { PurchaseRequestEntity } from '../entity'
@@ -34,7 +33,6 @@ export interface IDeps {
   createCounterRepository: ICreateCounterRepository
   updateCounterRepository: IUpdateCounterRepository
   schemaValidation: ISchemaValidation
-  generateFormNumber: IGenerateFormNumber
   updatePurchaseRequestRepository: IUpdatePurchaseRequestRepository
   dateFormat(date: Date | number | string, format: string): string
 }
