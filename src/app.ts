@@ -64,6 +64,11 @@ export const createApp = async (appInput: IBaseAppInput): Promise<Express> => {
 
   app.use(BaseErrorHandler.mongodbErrorHandlerMiddleware())
 
+  // app.use((err, req, res, next) => {
+  //   console.log(JSON.stringify(err.errInfo))
+  //   next(err)
+  // })
+
   app.use(BaseErrorHandler.errorHandlerMiddleware)
 
   return app

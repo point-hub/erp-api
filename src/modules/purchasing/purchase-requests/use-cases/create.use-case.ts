@@ -1,9 +1,10 @@
 import type { ISchemaValidation } from '@point-hub/papi'
 
+import { dbConnection } from '@/database/database'
 import { ICreateCounterRepository } from '@/modules/counters/repositories/create.repository'
 import { IRetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
 import { IUpdateCounterRepository } from '@/modules/counters/repositories/update.repository'
-import { IGenerateFormNumber } from '@/modules/counters/utils/generate'
+import { IGenerateFormNumber } from '@/modules/counters/utils/generate-form-number'
 import { IAuth, IAuthReference } from '@/modules/master/users/interface'
 
 import { formNumberPrefix, PurchaseRequestEntity } from '../entity'
@@ -44,30 +45,7 @@ export class CreatePurchaseRequestUseCase {
     // 1. validate schema
     await deps.schemaValidation(input.data, createValidation)
     // 2. generate form number
-    const code = formNumberPrefix + deps.dateFormat(new Date(), 'yyMM')
-    let formNumber = code
-    const counters = await deps.retrieveAllCounterRepository.handle(
-      { filter: { name: 'purchasing.purchase_requests', code: code } },
-      options,
-    )
-    if (!counters.data.length) {
-      await deps.createCounterRepository.handle(
-        {
-          name: 'purchasing.purchase_requests',
-          code: code,
-          count: 1,
-        },
-        options,
-      )
-      formNumber += '0001'
-    } else {
-      formNumber += (Number(counters.data[0].count) + 1).toString().padStart(4, '0')
-      await deps.updateCounterRepository.handle(
-        counters.data[0]._id,
-        { count: Number(counters.data[0].count) + 1 },
-        options,
-      )
-    }
+    const formNumber = await deps.generateFormNumber.handle('PR', 'purchasing.purchase_requests', options)
     // 3. define entity
     const purchaseRequestEntity = new PurchaseRequestEntity({
       revised_count: 0,

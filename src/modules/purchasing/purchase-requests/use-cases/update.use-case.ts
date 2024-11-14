@@ -3,7 +3,7 @@ import type { ISchemaValidation } from '@point-hub/papi'
 import { ICreateCounterRepository } from '@/modules/counters/repositories/create.repository'
 import { IRetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
 import { IUpdateCounterRepository } from '@/modules/counters/repositories/update.repository'
-import { IGenerateFormNumber } from '@/modules/counters/utils/generate'
+import { IGenerateFormNumber } from '@/modules/counters/utils/generate-form-number'
 import { IAuth, IAuthReference } from '@/modules/master/users/interface'
 
 import { PurchaseRequestEntity } from '../entity'
@@ -76,7 +76,6 @@ export class UpdatePurchaseRequestUseCase {
     const cleanEntity = deps.cleanObject(purchaseRequestEntity.data)
     // 4. database operation
     const response = await deps.createPurchaseRequestRepository.handle(cleanEntity, options)
-
     await deps.updatePurchaseRequestRepository.handle(
       input._id,
       {
