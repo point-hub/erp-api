@@ -31,7 +31,6 @@ export class ApprovePurchaseOrderUseCase {
       approval_date: new Date(),
       approval_status: 'approved',
     })
-    purchaseOrderEntity.generateUpdatedDate()
     // 3. database operation
     const response = await deps.approvePurchaseOrderRepository.handle(input._id, purchaseOrderEntity.data, options)
     // 4. output

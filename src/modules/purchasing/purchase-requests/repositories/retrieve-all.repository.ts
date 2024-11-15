@@ -94,8 +94,9 @@ export class RetrieveAllPurchaseRequestRepository implements IRetrieveAllPurchas
       filtersAnd.push({ $or: filtersOr })
     }
 
-    if (query.filter?.code) filtersAnd.push({ code: { $regex: query.filter?.code, $options: 'i' } })
-    if (query.filter?.name) filtersAnd.push({ name: { $regex: query.filter?.name, $options: 'i' } })
+    if (query.filter?.is_finished) filtersAnd.push({ is_finished: { $eq: JSON.parse(query.filter?.is_finished) } })
+    if (query.filter?.is_deleted) filtersAnd.push({ is_deleted: { $exists: false } })
+    if (query.filter?.approval_status) filtersAnd.push({ approval_status: { $eq: query.filter?.approval_status } })
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     filtersAnd.push({ 'branch._id': { $in: auth.branches.map((item: any) => item._id) } })
     filtersAnd.push({ is_revised: false })

@@ -9,6 +9,7 @@ import { rejectValidation } from '../validations/reject.validation'
 export interface IInput {
   auth: IAuth
   _id: string
+  reason: string
 }
 export interface IDeps {
   schemaValidation: ISchemaValidation
@@ -30,8 +31,8 @@ export class RejectPurchaseOrderUseCase {
     const purchaseOrderEntity = new PurchaseOrderEntity({
       approval_date: new Date(),
       approval_status: 'rejected',
+      rejected_reason: input.reason,
     })
-    purchaseOrderEntity.generateUpdatedDate()
     // 3. database operation
     const response = await deps.rejectPurchaseOrderRepository.handle(input._id, purchaseOrderEntity.data, options)
     // 4. output

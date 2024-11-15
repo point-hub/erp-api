@@ -1,11 +1,6 @@
 import type { IController, IControllerInput } from '@point-hub/papi'
 
-import authConfig from '@/config/auth'
-import { RetrieveAuthUserRepository } from '@/modules/master/users/repositories/retrieve-auth-user.repository'
-import { VerifyTokenUseCase } from '@/modules/master/users/use-cases/verify-token.use-case'
-import { verifyToken } from '@/modules/master/users/utils/jwt'
-import { throwApiError } from '@/utils/throw-api-error'
-import { schemaValidation } from '@/utils/validation'
+import { verifyUserToken } from '@/modules/master/users/utils/verify-user-token'
 
 import { RetrievePurchaseOrderRepository } from '../repositories/retrieve.repository'
 import { RetrievePurchaseOrderUseCase } from '../use-cases/retrieve.use-case'
@@ -17,24 +12,10 @@ export const retrievePurchaseOrderController: IController = async (controllerInp
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const retrieveAuthUserRepository = new RetrieveAuthUserRepository(controllerInput.dbConnection)
     const retrievePurchaseOrderRepository = new RetrievePurchaseOrderRepository(controllerInput.dbConnection)
     // 3. handle business rules
     // 3.1 check authenticated user
-    await VerifyTokenUseCase.handle(
-      {
-        token: controllerInput.httpRequest.signedCookies.POINTHUB_ACCESS,
-        secret: authConfig.secret,
-        project_id: controllerInput.httpRequest.query.project_id,
-      },
-      {
-        schemaValidation,
-        throwApiError,
-        retrieveAuthUserRepository,
-        verifyToken,
-      },
-      { session },
-    )
+    await verifyUserToken(controllerInput, session)
     // 3.2 retrieve
     const response = await RetrievePurchaseOrderUseCase.handle(
       { _id: controllerInput.httpRequest.params.id },
@@ -54,11 +35,16 @@ export const retrievePurchaseOrderController: IController = async (controllerInp
         notes: response.notes,
         approval_status: response.approval_status,
         approval_to: response.approval_to,
+        rejected_reason: response.rejected_reason,
         created_by: response.created_by,
         updated_by: response.updated_by,
         approval_date: response.approval_date,
         created_date: response.created_date,
         updated_date: response.updated_date,
+        deleted_by: response.deleted_by,
+        deleted_date: response.deleted_date,
+        deleted_reason: response.deleted_reason,
+        is_deleted: response.is_deleted,
       },
     }
   } catch (error) {

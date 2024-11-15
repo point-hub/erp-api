@@ -7,7 +7,7 @@ import * as controller from './controllers/index'
 
 const makeRouter = async (routerInput: IBaseAppInput): Promise<Router> => {
   const router = Router()
-
+  // Create Purchase Order
   router.post(
     '/',
     await makeController({
@@ -15,6 +15,7 @@ const makeRouter = async (routerInput: IBaseAppInput): Promise<Router> => {
       dbConnection: routerInput.dbConnection,
     }),
   )
+  // Retrieve All Purchase Order
   router.get(
     '/',
     await makeController({
@@ -22,6 +23,7 @@ const makeRouter = async (routerInput: IBaseAppInput): Promise<Router> => {
       dbConnection: routerInput.dbConnection,
     }),
   )
+  // Retrieve Purchase Order
   router.get(
     '/:id',
     await makeController({
@@ -29,13 +31,15 @@ const makeRouter = async (routerInput: IBaseAppInput): Promise<Router> => {
       dbConnection: routerInput.dbConnection,
     }),
   )
-  router.patch(
+  // Update Purchase Order
+  router.post(
     '/:id',
     await makeController({
       controller: controller.updatePurchaseOrderController,
       dbConnection: routerInput.dbConnection,
     }),
   )
+  // Delete Purchase Order
   router.post(
     '/:id/delete',
     await makeController({
@@ -43,6 +47,7 @@ const makeRouter = async (routerInput: IBaseAppInput): Promise<Router> => {
       dbConnection: routerInput.dbConnection,
     }),
   )
+  // Approve Purchase Order
   router.post(
     '/:id/approve',
     await makeController({
@@ -50,6 +55,7 @@ const makeRouter = async (routerInput: IBaseAppInput): Promise<Router> => {
       dbConnection: routerInput.dbConnection,
     }),
   )
+  // Reject Purchase Order
   router.post(
     '/:id/reject',
     await makeController({

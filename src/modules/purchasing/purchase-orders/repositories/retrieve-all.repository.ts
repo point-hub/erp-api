@@ -98,6 +98,7 @@ export class RetrieveAllPurchaseOrderRepository implements IRetrieveAllPurchaseO
     if (query.filter?.name) filtersAnd.push({ name: { $regex: query.filter?.name, $options: 'i' } })
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     filtersAnd.push({ 'branch._id': { $in: auth.branches.map((item: any) => item._id) } })
+    filtersAnd.push({ is_revised: false })
 
     if (!filtersAnd.length) {
       return []

@@ -12,7 +12,7 @@ export interface ISeed {
 }
 
 export const seed = async (dbConnection: IDatabase, options: unknown) => {
-  console.info(`[seed] purchase requests data`)
+  console.info(`[seed] purchase orders data`)
   // prepare repository
   const createPurchaseOrderRepository = new CreatePurchaseOrderRepository(dbConnection)
   const retrieveAllCounterRepository = new RetrieveAllCounterRepository(dbConnection)
