@@ -5,13 +5,16 @@ import { collectionName } from '../entity'
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface ICreateSettingJournalOutput extends ICreateOutput {}
 export interface ICreateSettingJournalRepository extends ICreateRepository {
-  handle(document: IDocument, options?: unknown): Promise<ICreateSettingJournalOutput>
+  handle(document: IDocument): Promise<ICreateSettingJournalOutput>
 }
 
 export class CreateSettingJournalRepository implements ICreateSettingJournalRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(document: IDocument, options?: unknown): Promise<ICreateSettingJournalOutput> {
-    return await this.database.collection(collectionName).create(document, options)
+  async handle(document: IDocument): Promise<ICreateSettingJournalOutput> {
+    return await this.database.collection(collectionName).create(document, this.options)
   }
 }

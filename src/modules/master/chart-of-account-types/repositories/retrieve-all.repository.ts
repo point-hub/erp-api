@@ -8,18 +8,21 @@ export interface IRetrieveAllChartOfAccountTypeOutput {
   pagination: IPagination
 }
 export interface IRetrieveAllChartOfAccountTypeRepository {
-  handle(query: IQuery, options?: unknown): Promise<IRetrieveAllChartOfAccountTypeOutput>
+  handle(query: IQuery): Promise<IRetrieveAllChartOfAccountTypeOutput>
 }
 
 export class RetrieveAllChartOfAccountTypeRepository implements IRetrieveAllChartOfAccountTypeRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(query: IQuery, options?: unknown): Promise<IRetrieveAllChartOfAccountTypeOutput> {
+  async handle(query: IQuery): Promise<IRetrieveAllChartOfAccountTypeOutput> {
     const pipeline: IPipeline[] = []
 
     pipeline.push(...this.aggregateFilters(query))
 
-    const response = await this.database.collection(collectionName).aggregate(pipeline, query, options)
+    const response = await this.database.collection(collectionName).aggregate(pipeline, query, this.options)
 
     return {
       data: response.data as unknown as IRetrieveChartOfAccountTypeOutput[],

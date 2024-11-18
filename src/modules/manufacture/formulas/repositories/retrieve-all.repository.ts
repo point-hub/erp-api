@@ -8,20 +8,23 @@ export interface IRetrieveAllFormulaOutput {
   pagination: IPagination
 }
 export interface IRetrieveAllFormulaRepository {
-  handle(query: IQuery, options?: unknown): Promise<IRetrieveAllFormulaOutput>
+  handle(query: IQuery): Promise<IRetrieveAllFormulaOutput>
 }
 
 export class RetrieveAllFormulaRepository implements IRetrieveAllFormulaRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(query: IQuery, options?: unknown): Promise<IRetrieveAllFormulaOutput> {
+  async handle(query: IQuery): Promise<IRetrieveAllFormulaOutput> {
     const pipeline: IPipeline[] = []
 
     pipeline.push(...this.aggregateFilters(query))
     pipeline.push(...this.aggregateJoinCreatedBy())
     pipeline.push(...this.aggregateJoinUpdatedBy())
 
-    const response = await this.database.collection(collectionName).aggregate(pipeline, query, options)
+    const response = await this.database.collection(collectionName).aggregate(pipeline, query, this.options)
 
     return {
       data: response.data as unknown as IRetrieveFormulaOutput[],

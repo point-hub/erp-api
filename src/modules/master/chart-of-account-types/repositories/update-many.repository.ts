@@ -7,17 +7,20 @@ export interface IUpdateManyChartOfAccountTypeOutput {
   modified_count: number
 }
 export interface IUpdateManyChartOfAccountTypeRepository {
-  handle(filter: IDocument, document: IDocument, options?: unknown): Promise<IUpdateManyChartOfAccountTypeOutput>
+  handle(filter: IDocument, document: IDocument): Promise<IUpdateManyChartOfAccountTypeOutput>
 }
 
 export class UpdateManyChartOfAccountTypeRepository implements IUpdateManyChartOfAccountTypeRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
   async handle(
     filter: IDocument,
     document: IDocument,
     options?: unknown,
   ): Promise<IUpdateManyChartOfAccountTypeOutput> {
-    return await this.database.collection(collectionName).updateMany(filter, document, options)
+    return await this.database.collection(collectionName).updateMany(filter, document, this.options)
   }
 }

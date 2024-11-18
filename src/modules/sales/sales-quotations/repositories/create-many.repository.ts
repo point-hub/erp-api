@@ -7,13 +7,16 @@ export interface ICreateManySalesQuotationOutput {
   inserted_ids: string[]
 }
 export interface ICreateManySalesQuotationRepository {
-  handle(documents: IDocument[], options?: unknown): Promise<ICreateManySalesQuotationOutput>
+  handle(documents: IDocument[]): Promise<ICreateManySalesQuotationOutput>
 }
 
 export class CreateManySalesQuotationRepository implements ICreateManySalesQuotationRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(documents: IDocument[], options?: unknown): Promise<ICreateManySalesQuotationOutput> {
-    return await this.database.collection(collectionName).createMany(documents, options)
+  async handle(documents: IDocument[]): Promise<ICreateManySalesQuotationOutput> {
+    return await this.database.collection(collectionName).createMany(documents, this.options)
   }
 }

@@ -6,13 +6,16 @@ export interface IDeleteMachineOutput {
   deleted_count: number
 }
 export interface IDeleteMachineRepository {
-  handle(_id: string, options?: unknown): Promise<IDeleteMachineOutput>
+  handle(_id: string): Promise<IDeleteMachineOutput>
 }
 
 export class DeleteMachineRepository implements IDeleteMachineRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(_id: string, options?: unknown): Promise<IDeleteMachineOutput> {
-    return await this.database.collection(collectionName).delete(_id, options)
+  async handle(_id: string): Promise<IDeleteMachineOutput> {
+    return await this.database.collection(collectionName).delete(_id, this.options)
   }
 }

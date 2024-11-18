@@ -6,13 +6,16 @@ export interface IDeleteFormulaOutput {
   deleted_count: number
 }
 export interface IDeleteFormulaRepository {
-  handle(_id: string, options?: unknown): Promise<IDeleteFormulaOutput>
+  handle(_id: string): Promise<IDeleteFormulaOutput>
 }
 
 export class DeleteFormulaRepository implements IDeleteFormulaRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(_id: string, options?: unknown): Promise<IDeleteFormulaOutput> {
-    return await this.database.collection(collectionName).delete(_id, options)
+  async handle(_id: string): Promise<IDeleteFormulaOutput> {
+    return await this.database.collection(collectionName).delete(_id, this.options)
   }
 }

@@ -7,13 +7,16 @@ export interface ICreateManyWarehouseOutput {
   inserted_ids: string[]
 }
 export interface ICreateManyWarehouseRepository {
-  handle(documents: IDocument[], options?: unknown): Promise<ICreateManyWarehouseOutput>
+  handle(documents: IDocument[]): Promise<ICreateManyWarehouseOutput>
 }
 
 export class CreateManyWarehouseRepository implements ICreateManyWarehouseRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(documents: IDocument[], options?: unknown): Promise<ICreateManyWarehouseOutput> {
-    return await this.database.collection(collectionName).createMany(documents, options)
+  async handle(documents: IDocument[]): Promise<ICreateManyWarehouseOutput> {
+    return await this.database.collection(collectionName).createMany(documents, this.options)
   }
 }

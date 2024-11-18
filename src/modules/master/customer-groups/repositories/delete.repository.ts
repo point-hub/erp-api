@@ -6,13 +6,16 @@ export interface IDeleteCustomerGroupOutput {
   deleted_count: number
 }
 export interface IDeleteCustomerGroupRepository {
-  handle(_id: string, options?: unknown): Promise<IDeleteCustomerGroupOutput>
+  handle(_id: string): Promise<IDeleteCustomerGroupOutput>
 }
 
 export class DeleteCustomerGroupRepository implements IDeleteCustomerGroupRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(_id: string, options?: unknown): Promise<IDeleteCustomerGroupOutput> {
-    return await this.database.collection(collectionName).delete(_id, options)
+  async handle(_id: string): Promise<IDeleteCustomerGroupOutput> {
+    return await this.database.collection(collectionName).delete(_id, this.options)
   }
 }

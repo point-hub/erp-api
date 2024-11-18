@@ -8,20 +8,23 @@ export interface IRetrieveAllMachineOutput {
   pagination: IPagination
 }
 export interface IRetrieveAllMachineRepository {
-  handle(query: IQuery, options?: unknown): Promise<IRetrieveAllMachineOutput>
+  handle(query: IQuery): Promise<IRetrieveAllMachineOutput>
 }
 
 export class RetrieveAllMachineRepository implements IRetrieveAllMachineRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(query: IQuery, options?: unknown): Promise<IRetrieveAllMachineOutput> {
+  async handle(query: IQuery): Promise<IRetrieveAllMachineOutput> {
     const pipeline: IPipeline[] = []
 
     pipeline.push(...this.aggregateFilters(query))
     pipeline.push(...this.aggregateJoinCreatedBy())
     pipeline.push(...this.aggregateJoinUpdatedBy())
 
-    const response = await this.database.collection(collectionName).aggregate(pipeline, query, options)
+    const response = await this.database.collection(collectionName).aggregate(pipeline, query, this.options)
 
     return {
       data: response.data as unknown as IRetrieveMachineOutput[],

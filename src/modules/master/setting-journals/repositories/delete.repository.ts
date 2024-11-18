@@ -5,13 +5,16 @@ import { collectionName } from '../entity'
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface IDeleteSettingJournalOutput extends IDeleteOutput {}
 export interface IDeleteSettingJournalRepository extends IDeleteRepository {
-  handle(_id: string, options?: unknown): Promise<IDeleteSettingJournalOutput>
+  handle(_id: string): Promise<IDeleteSettingJournalOutput>
 }
 
 export class DeleteSettingJournalRepository implements IDeleteSettingJournalRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(_id: string, options?: unknown): Promise<IDeleteSettingJournalOutput> {
-    return await this.database.collection(collectionName).delete(_id, options)
+  async handle(_id: string): Promise<IDeleteSettingJournalOutput> {
+    return await this.database.collection(collectionName).delete(_id, this.options)
   }
 }

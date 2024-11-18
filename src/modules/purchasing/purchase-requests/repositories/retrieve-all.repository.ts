@@ -18,7 +18,10 @@ export interface IData {
 }
 
 export class RetrieveAllPurchaseRequestRepository implements IRetrieveAllPurchaseRequestRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
   async handle(data: IData, options?: unknown): Promise<IRetrieveAllPurchaseRequestOutput> {
     const pipeline: IPipeline[] = []

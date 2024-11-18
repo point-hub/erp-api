@@ -6,13 +6,16 @@ export interface IDeleteManySupplierGroupOutput {
   deleted_count: number
 }
 export interface IDeleteManySupplierGroupRepository {
-  handle(_ids: string[], options?: unknown): Promise<IDeleteManySupplierGroupOutput>
+  handle(_ids: string[]): Promise<IDeleteManySupplierGroupOutput>
 }
 
 export class DeleteManySupplierGroupRepository implements IDeleteManySupplierGroupRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(ids: string[], options?: unknown): Promise<IDeleteManySupplierGroupOutput> {
-    return await this.database.collection(collectionName).deleteMany(ids, options)
+  async handle(ids: string[]): Promise<IDeleteManySupplierGroupOutput> {
+    return await this.database.collection(collectionName).deleteMany(ids, this.options)
   }
 }

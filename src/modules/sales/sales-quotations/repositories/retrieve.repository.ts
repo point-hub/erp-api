@@ -49,18 +49,21 @@ export interface IRetrieveSalesQuotationOutput {
   updated_date: Date
 }
 export interface IRetrieveSalesQuotationRepository {
-  handle(_id: string, options?: unknown): Promise<IRetrieveSalesQuotationOutput>
+  handle(_id: string): Promise<IRetrieveSalesQuotationOutput>
 }
 
 export class RetrieveSalesQuotationRepository implements IRetrieveSalesQuotationRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(_id: string, options?: unknown): Promise<IRetrieveSalesQuotationOutput> {
+  async handle(_id: string): Promise<IRetrieveSalesQuotationOutput> {
     const pipeline: IPipeline[] = []
 
     pipeline.push(...this.aggregateFilters(_id))
 
-    const response = await this.database.collection(collectionName).aggregate(pipeline, {}, options)
+    const response = await this.database.collection(collectionName).aggregate(pipeline, {}, this.options)
 
     return {
       _id: response.data[0]._id as string,

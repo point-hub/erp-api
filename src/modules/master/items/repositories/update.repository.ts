@@ -7,13 +7,16 @@ export interface IUpdateItemOutput {
   modified_count: number
 }
 export interface IUpdateItemRepository {
-  handle(_id: string, document: IDocument, options?: unknown): Promise<IUpdateItemOutput>
+  handle(_id: string, document: IDocument): Promise<IUpdateItemOutput>
 }
 
 export class UpdateItemRepository implements IUpdateItemRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(_id: string, document: IDocument, options?: unknown): Promise<IUpdateItemOutput> {
+  async handle(_id: string, document: IDocument): Promise<IUpdateItemOutput> {
     return await this.database.collection(collectionName).update(_id, document, options)
   }
 }

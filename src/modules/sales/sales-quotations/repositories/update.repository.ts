@@ -7,13 +7,16 @@ export interface IUpdateSalesQuotationOutput {
   modified_count: number
 }
 export interface IUpdateSalesQuotationRepository {
-  handle(_id: string, document: IDocument, options?: unknown): Promise<IUpdateSalesQuotationOutput>
+  handle(_id: string, document: IDocument): Promise<IUpdateSalesQuotationOutput>
 }
 
 export class UpdateSalesQuotationRepository implements IUpdateSalesQuotationRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(_id: string, document: IDocument, options?: unknown): Promise<IUpdateSalesQuotationOutput> {
+  async handle(_id: string, document: IDocument): Promise<IUpdateSalesQuotationOutput> {
     return await this.database.collection(collectionName).update(_id, document, options)
   }
 }

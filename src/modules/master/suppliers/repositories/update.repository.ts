@@ -7,13 +7,16 @@ export interface IUpdateSupplierOutput {
   modified_count: number
 }
 export interface IUpdateSupplierRepository {
-  handle(_id: string, document: IDocument, options?: unknown): Promise<IUpdateSupplierOutput>
+  handle(_id: string, document: IDocument): Promise<IUpdateSupplierOutput>
 }
 
 export class UpdateSupplierRepository implements IUpdateSupplierRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(_id: string, document: IDocument, options?: unknown): Promise<IUpdateSupplierOutput> {
+  async handle(_id: string, document: IDocument): Promise<IUpdateSupplierOutput> {
     return await this.database.collection(collectionName).update(_id, document, options)
   }
 }

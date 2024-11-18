@@ -31,13 +31,16 @@ export interface IRetrieveSupplierOutput {
   updated_date: Date
 }
 export interface IRetrieveSupplierRepository {
-  handle(_id: string, options?: unknown): Promise<IRetrieveSupplierOutput>
+  handle(_id: string): Promise<IRetrieveSupplierOutput>
 }
 
 export class RetrieveSupplierRepository implements IRetrieveSupplierRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(_id: string, options?: unknown): Promise<IRetrieveSupplierOutput> {
+  async handle(_id: string): Promise<IRetrieveSupplierOutput> {
     const pipeline: IPipeline[] = []
 
     pipeline.push(...this.aggregateFilters(_id))
@@ -45,7 +48,7 @@ export class RetrieveSupplierRepository implements IRetrieveSupplierRepository {
     pipeline.push(...this.aggregateJoinCreatedBy())
     pipeline.push(...this.aggregateJoinUpdatedBy())
 
-    const response = await this.database.collection(collectionName).aggregate(pipeline, {}, options)
+    const response = await this.database.collection(collectionName).aggregate(pipeline, {}, this.options)
 
     return {
       _id: `${response.data[0]._id}`,

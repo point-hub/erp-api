@@ -7,13 +7,16 @@ export interface IUpdateManyMachineOutput {
   modified_count: number
 }
 export interface IUpdateManyMachineRepository {
-  handle(filter: IDocument, document: IDocument, options?: unknown): Promise<IUpdateManyMachineOutput>
+  handle(filter: IDocument, document: IDocument): Promise<IUpdateManyMachineOutput>
 }
 
 export class UpdateManyMachineRepository implements IUpdateManyMachineRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(filter: IDocument, document: IDocument, options?: unknown): Promise<IUpdateManyMachineOutput> {
-    return await this.database.collection(collectionName).updateMany(filter, document, options)
+  async handle(filter: IDocument, document: IDocument): Promise<IUpdateManyMachineOutput> {
+    return await this.database.collection(collectionName).updateMany(filter, document, this.options)
   }
 }

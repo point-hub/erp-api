@@ -6,13 +6,16 @@ export interface IDeleteSalesQuotationOutput {
   deleted_count: number
 }
 export interface IDeleteSalesQuotationRepository {
-  handle(_id: string, options?: unknown): Promise<IDeleteSalesQuotationOutput>
+  handle(_id: string): Promise<IDeleteSalesQuotationOutput>
 }
 
 export class DeleteSalesQuotationRepository implements IDeleteSalesQuotationRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(_id: string, options?: unknown): Promise<IDeleteSalesQuotationOutput> {
-    return await this.database.collection(collectionName).delete(_id, options)
+  async handle(_id: string): Promise<IDeleteSalesQuotationOutput> {
+    return await this.database.collection(collectionName).delete(_id, this.options)
   }
 }

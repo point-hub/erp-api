@@ -5,13 +5,16 @@ import { collectionName } from '../entity'
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface ICreateManySettingJournalOutput extends ICreateManyOutput {}
 export interface ICreateManySettingJournalRepository extends ICreateManyRepository {
-  handle(documents: IDocument[], options?: unknown): Promise<ICreateManySettingJournalOutput>
+  handle(documents: IDocument[]): Promise<ICreateManySettingJournalOutput>
 }
 
 export class CreateManySettingJournalRepository implements ICreateManySettingJournalRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(documents: IDocument[], options?: unknown): Promise<ICreateManySettingJournalOutput> {
-    return await this.database.collection(collectionName).createMany(documents, options)
+  async handle(documents: IDocument[]): Promise<ICreateManySettingJournalOutput> {
+    return await this.database.collection(collectionName).createMany(documents, this.options)
   }
 }

@@ -7,13 +7,16 @@ export interface ICreateManySupplierGroupOutput {
   inserted_ids: string[]
 }
 export interface ICreateManySupplierGroupRepository {
-  handle(documents: IDocument[], options?: unknown): Promise<ICreateManySupplierGroupOutput>
+  handle(documents: IDocument[]): Promise<ICreateManySupplierGroupOutput>
 }
 
 export class CreateManySupplierGroupRepository implements ICreateManySupplierGroupRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(documents: IDocument[], options?: unknown): Promise<ICreateManySupplierGroupOutput> {
-    return await this.database.collection(collectionName).createMany(documents, options)
+  async handle(documents: IDocument[]): Promise<ICreateManySupplierGroupOutput> {
+    return await this.database.collection(collectionName).createMany(documents, this.options)
   }
 }

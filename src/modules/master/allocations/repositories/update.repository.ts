@@ -7,13 +7,16 @@ export interface IUpdateAllocationOutput {
   modified_count: number
 }
 export interface IUpdateAllocationRepository {
-  handle(_id: string, document: IDocument, options?: unknown): Promise<IUpdateAllocationOutput>
+  handle(_id: string, document: IDocument): Promise<IUpdateAllocationOutput>
 }
 
 export class UpdateAllocationRepository implements IUpdateAllocationRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(_id: string, document: IDocument, options?: unknown): Promise<IUpdateAllocationOutput> {
+  async handle(_id: string, document: IDocument): Promise<IUpdateAllocationOutput> {
     return await this.database.collection(collectionName).update(_id, document, options)
   }
 }

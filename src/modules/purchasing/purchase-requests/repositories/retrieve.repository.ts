@@ -55,18 +55,21 @@ export interface IRetrievePurchaseRequestOutput {
   is_deleted: boolean
 }
 export interface IRetrievePurchaseRequestRepository {
-  handle(_id: string, options?: unknown): Promise<IRetrievePurchaseRequestOutput>
+  handle(_id: string): Promise<IRetrievePurchaseRequestOutput>
 }
 
 export class RetrievePurchaseRequestRepository implements IRetrievePurchaseRequestRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(_id: string, options?: unknown): Promise<IRetrievePurchaseRequestOutput> {
+  async handle(_id: string): Promise<IRetrievePurchaseRequestOutput> {
     const pipeline: IPipeline[] = []
 
     pipeline.push(...this.aggregateFilters(_id))
 
-    const response = await this.database.collection(collectionName).aggregate(pipeline, {}, options)
+    const response = await this.database.collection(collectionName).aggregate(pipeline, {}, this.options)
 
     return {
       _id: response.data[0]._id as string,

@@ -7,13 +7,16 @@ export interface IUpdateManyAllocationOutput {
   modified_count: number
 }
 export interface IUpdateManyAllocationRepository {
-  handle(filter: IDocument, document: IDocument, options?: unknown): Promise<IUpdateManyAllocationOutput>
+  handle(filter: IDocument, document: IDocument): Promise<IUpdateManyAllocationOutput>
 }
 
 export class UpdateManyAllocationRepository implements IUpdateManyAllocationRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(filter: IDocument, document: IDocument, options?: unknown): Promise<IUpdateManyAllocationOutput> {
-    return await this.database.collection(collectionName).updateMany(filter, document, options)
+  async handle(filter: IDocument, document: IDocument): Promise<IUpdateManyAllocationOutput> {
+    return await this.database.collection(collectionName).updateMany(filter, document, this.options)
   }
 }

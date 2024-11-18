@@ -8,7 +8,7 @@ export interface ICreateManyAllocationGroupOutput {
 }
 
 export interface ICreateManyAllocationGroupRepository {
-  handle(documents: IDocument[], options?: unknown): Promise<ICreateManyAllocationGroupOutput>
+  handle(documents: IDocument[]): Promise<ICreateManyAllocationGroupOutput>
 }
 
 export class CreateManyAllocationGroupRepository implements ICreateManyAllocationGroupRepository {

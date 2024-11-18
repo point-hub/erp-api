@@ -8,13 +8,16 @@ export interface IRetrieveAllBranchOutput {
   pagination: IPagination
 }
 export interface IRetrieveAllBranchRepository {
-  handle(query: IQuery, options?: unknown): Promise<IRetrieveAllBranchOutput>
+  handle(query: IQuery): Promise<IRetrieveAllBranchOutput>
 }
 
 export class RetrieveAllBranchRepository implements IRetrieveAllBranchRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(query: IQuery, options?: unknown): Promise<IRetrieveAllBranchOutput> {
+  async handle(query: IQuery): Promise<IRetrieveAllBranchOutput> {
     const pipeline: IPipeline[] = []
 
     pipeline.push(...this.aggregateFilters(query))
@@ -22,7 +25,7 @@ export class RetrieveAllBranchRepository implements IRetrieveAllBranchRepository
     pipeline.push(...this.aggregateJoinUpdatedBy())
     pipeline.push(...this.aggregateAddFields())
 
-    const response = await this.database.collection(collectionName).aggregate(pipeline, query, options)
+    const response = await this.database.collection(collectionName).aggregate(pipeline, query, this.options)
 
     return {
       data: response.data as unknown as IRetrieveBranchOutput[],

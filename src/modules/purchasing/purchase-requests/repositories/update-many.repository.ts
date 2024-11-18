@@ -7,13 +7,16 @@ export interface IUpdateManyPurchaseRequestOutput {
   modified_count: number
 }
 export interface IUpdateManyPurchaseRequestRepository {
-  handle(filter: IDocument, document: IDocument, options?: unknown): Promise<IUpdateManyPurchaseRequestOutput>
+  handle(filter: IDocument, document: IDocument): Promise<IUpdateManyPurchaseRequestOutput>
 }
 
 export class UpdateManyPurchaseRequestRepository implements IUpdateManyPurchaseRequestRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(filter: IDocument, document: IDocument, options?: unknown): Promise<IUpdateManyPurchaseRequestOutput> {
-    return await this.database.collection(collectionName).updateMany(filter, document, options)
+  async handle(filter: IDocument, document: IDocument): Promise<IUpdateManyPurchaseRequestOutput> {
+    return await this.database.collection(collectionName).updateMany(filter, document, this.options)
   }
 }

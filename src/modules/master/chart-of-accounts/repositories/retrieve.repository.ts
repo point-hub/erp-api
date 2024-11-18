@@ -19,22 +19,25 @@ export interface IRetrieveChartOfAccountOutput {
   updated_date: Date
 }
 export interface IRetrieveChartOfAccountRepository {
-  handle(_id: string, options?: unknown): Promise<IRetrieveChartOfAccountOutput>
+  handle(_id: string): Promise<IRetrieveChartOfAccountOutput>
 }
 
 export class RetrieveChartOfAccountRepository implements IRetrieveChartOfAccountRepository {
   public collection = collectionName
 
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(_id: string, options?: unknown): Promise<IRetrieveChartOfAccountOutput> {
+  async handle(_id: string): Promise<IRetrieveChartOfAccountOutput> {
     const pipeline: IPipeline[] = []
 
     pipeline.push(...this.aggregateFilter(_id))
     pipeline.push(...this.aggregateJoinCategories())
     pipeline.push(...this.aggregateJoinTypes())
 
-    const response = await this.database.collection(collectionName).aggregate(pipeline, {}, options)
+    const response = await this.database.collection(collectionName).aggregate(pipeline, {}, this.options)
 
     return {
       _id: `${response.data[0]._id}`,

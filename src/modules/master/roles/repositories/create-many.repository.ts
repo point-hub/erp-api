@@ -7,13 +7,16 @@ export interface ICreateManyRoleOutput {
   inserted_ids: string[]
 }
 export interface ICreateManyRoleRepository {
-  handle(documents: IDocument[], options?: unknown): Promise<ICreateManyRoleOutput>
+  handle(documents: IDocument[]): Promise<ICreateManyRoleOutput>
 }
 
 export class CreateManyRoleRepository implements ICreateManyRoleRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(documents: IDocument[], options?: unknown): Promise<ICreateManyRoleOutput> {
-    return await this.database.collection(collectionName).createMany(documents, options)
+  async handle(documents: IDocument[]): Promise<ICreateManyRoleOutput> {
+    return await this.database.collection(collectionName).createMany(documents, this.options)
   }
 }

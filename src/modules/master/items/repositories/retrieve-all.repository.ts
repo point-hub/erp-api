@@ -8,13 +8,16 @@ export interface IRetrieveAllItemOutput {
   pagination: IPagination
 }
 export interface IRetrieveAllItemRepository {
-  handle(query: IQuery, options?: unknown): Promise<IRetrieveAllItemOutput>
+  handle(query: IQuery): Promise<IRetrieveAllItemOutput>
 }
 
 export class RetrieveAllItemRepository implements IRetrieveAllItemRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(query: IQuery, options?: unknown): Promise<IRetrieveAllItemOutput> {
+  async handle(query: IQuery): Promise<IRetrieveAllItemOutput> {
     const pipeline: IPipeline[] = []
 
     pipeline.push(...this.aggregateJoinItemCategory())
@@ -24,7 +27,7 @@ export class RetrieveAllItemRepository implements IRetrieveAllItemRepository {
     pipeline.push(...this.aggregateJoinUpdatedBy())
     pipeline.push(...this.aggregateAddFields())
 
-    const response = await this.database.collection(collectionName).aggregate(pipeline, query, options)
+    const response = await this.database.collection(collectionName).aggregate(pipeline, query, this.options)
 
     return {
       data: response.data as unknown as IRetrieveItemOutput[],

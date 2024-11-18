@@ -7,13 +7,16 @@ export interface IUpdateCustomerGroupOutput {
   modified_count: number
 }
 export interface IUpdateCustomerGroupRepository {
-  handle(_id: string, document: IDocument, options?: unknown): Promise<IUpdateCustomerGroupOutput>
+  handle(_id: string, document: IDocument): Promise<IUpdateCustomerGroupOutput>
 }
 
 export class UpdateCustomerGroupRepository implements IUpdateCustomerGroupRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(_id: string, document: IDocument, options?: unknown): Promise<IUpdateCustomerGroupOutput> {
+  async handle(_id: string, document: IDocument): Promise<IUpdateCustomerGroupOutput> {
     return await this.database.collection(collectionName).update(_id, document, options)
   }
 }

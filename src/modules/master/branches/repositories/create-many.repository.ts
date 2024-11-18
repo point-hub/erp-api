@@ -7,13 +7,16 @@ export interface ICreateManyBranchOutput {
   inserted_ids: string[]
 }
 export interface ICreateManyBranchRepository {
-  handle(documents: IDocument[], options?: unknown): Promise<ICreateManyBranchOutput>
+  handle(documents: IDocument[]): Promise<ICreateManyBranchOutput>
 }
 
 export class CreateManyBranchRepository implements ICreateManyBranchRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(documents: IDocument[], options?: unknown): Promise<ICreateManyBranchOutput> {
-    return await this.database.collection(collectionName).createMany(documents, options)
+  async handle(documents: IDocument[]): Promise<ICreateManyBranchOutput> {
+    return await this.database.collection(collectionName).createMany(documents, this.options)
   }
 }
