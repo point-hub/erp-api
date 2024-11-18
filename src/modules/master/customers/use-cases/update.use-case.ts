@@ -36,7 +36,7 @@ export interface IOutput {
 }
 
 export class UpdateCustomerUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input.data, updateValidation)
     // 2. define entity
@@ -54,7 +54,7 @@ export class UpdateCustomerUseCase {
       notes: input.data.notes ?? '',
       updated_by: input.auth._id,
     })
-    customerEntity.generateUpdatedDate()
+    customerEntity.generateDate('updated_date')
     // 3. database operation
     const response = await deps.updateCustomerRepository.handle(input._id, customerEntity.data, options)
     // 4. output

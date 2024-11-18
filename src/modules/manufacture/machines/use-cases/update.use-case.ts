@@ -27,7 +27,7 @@ export interface IOutput {
 }
 
 export class UpdateMachineUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input, updateValidation)
     // 2. define entity
@@ -37,7 +37,7 @@ export class UpdateMachineUseCase {
       notes: input.data.notes ?? '',
       updated_by: input.auth._id,
     })
-    machineEntity.generateUpdatedDate()
+    machineEntity.generateDate('updated_date')
     // 3. database operation
     const response = await deps.updateMachineRepository.handle(input._id, machineEntity.data, options)
     // 4. output

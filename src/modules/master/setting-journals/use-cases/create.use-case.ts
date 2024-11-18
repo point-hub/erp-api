@@ -23,7 +23,7 @@ export interface IDeps {
 
 
 export class CreateSettingJournalUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<ICreateOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<ICreateOutput> {
     // 1. validate schema
     await deps.schemaValidation(input, createValidation)
     // 2. define entity
@@ -31,11 +31,11 @@ export class CreateSettingJournalUseCase {
       module: input.module,
       feature: input.feature,
     })
-    exampleEntity.generateCreatedDate()
-    const cleanEntity = deps.cleanObject(exampleEntity.data)
+    exampleEntity.generateDate('created_date')
+    const cleanEntity = deps.objClean(exampleEntity.data)
     // 3. database operation
     // 3.1 create setting journal
-    const response = await deps.createSettingJournalRepository.handle(cleanEntity, options)
+    const response = await deps.createSettingJournalRepository.handle(cleanEntity)
     // 3.2. update code counter
     const counters = await deps.retrieveAllCounterRepository.handle({ filter: { name: 'setting-journal' } }, options)
     await deps.updateCounterRepository.handle(

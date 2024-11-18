@@ -18,7 +18,7 @@ export interface IOutput {
 }
 
 export class DeleteChartOfAccountCategoryUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input, deleteValidation)
     // 2. database operation

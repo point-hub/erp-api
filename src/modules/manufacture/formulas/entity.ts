@@ -5,11 +5,11 @@ export const collectionName = 'formulas'
 export class FormulaEntity {
   constructor(public data: IFormulaEntity) {}
 
-  public generateCreatedDate() {
+  public generateDate('created_date') {
     this.data.created_date = new Date()
   }
 
-  public generateUpdatedDate() {
+  public generateDate('updated_date') {
     this.data.updated_date = new Date()
   }
 }

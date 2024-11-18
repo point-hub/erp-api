@@ -3,9 +3,9 @@ import type { IController, IControllerInput } from '@point-hub/papi'
 
 import { GenerateMasterNumber } from '@/modules/counters/utils/generate-master-number'
 import { IAuth } from '@/modules/master/users/interface'
+import { verifyUserToken } from '@/modules/master/users/utils/verify-user-token'
 import { schemaValidation } from '@/utils/validation'
 
-import { verifyUserToken } from '../../users/utils/verify-user-token'
 import { CreateAllocationGroupRepository } from '../repositories/create.repository'
 import { CreateAllocationGroupUseCase } from '../use-cases/create.use-case'
 

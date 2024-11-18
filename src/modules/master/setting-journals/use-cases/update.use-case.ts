@@ -25,7 +25,7 @@ export interface IDeps {
 
 
 export class UpdateSettingJournalUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IUpdateOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IUpdateOutput> {
     // 1. validate schema
     await deps.schemaValidation(input.data, updateValidation)
     const errors: { [key: string]: string[] } = {}
@@ -49,7 +49,7 @@ export class UpdateSettingJournalUseCase {
       feature: input.data.feature,
       journals: input.data.journals,
     })
-    settingJournalEntity.generateUpdatedDate()
+    settingJournalEntity.generateDate('updated_date')
     // 3. database operation
     const response = await deps.updateSettingJournalRepository.handle(input._id, settingJournalEntity.data, options)
     // 4. output

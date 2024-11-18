@@ -14,7 +14,7 @@ export interface IOptions {
 }
 
 export class RetrieveSettingJournalUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IRetrieveOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IRetrieveOutput> {
     // 1. database operation
     const response = await deps.retrieveSettingJournalRepository.handle(input._id, options)
     // 2. output

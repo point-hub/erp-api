@@ -25,7 +25,7 @@ export interface IOutput {
 }
 
 export class CreateChartOfAccountUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input, createValidation)
     // 2. define entity
@@ -37,10 +37,10 @@ export class CreateChartOfAccountUseCase {
       subledger: input.subledger,
       notes: input.notes,
     })
-    exampleEntity.generateCreatedDate()
-    const cleanEntity = deps.cleanObject(exampleEntity.data)
+    exampleEntity.generateDate('created_date')
+    const cleanEntity = deps.objClean(exampleEntity.data)
     // 3. database operation
-    const response = await deps.createChartOfAccountRepository.handle(cleanEntity, options)
+    const response = await deps.createChartOfAccountRepository.handle(cleanEntity)
     // 4. output
     return { inserted_id: response.inserted_id }
   }

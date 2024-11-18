@@ -31,7 +31,7 @@ export interface IOutput {
 }
 
 export class CreateCustomerGroupUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input.data, createValidation)
     // 2. define entity
@@ -41,11 +41,11 @@ export class CreateCustomerGroupUseCase {
       notes: input.data.notes,
       created_by: input.auth._id,
     })
-    customerGroupEntity.generateCreatedDate()
-    const cleanEntity = deps.cleanObject(customerGroupEntity.data)
+    customerGroupEntity.generateDate('created_date')
+    const cleanEntity = deps.objClean(customerGroupEntity.data)
     // 3. database operation
     // 3.1 create customer group
-    const response = await deps.createCustomerGroupRepository.handle(cleanEntity, options)
+    const response = await deps.createCustomerGroupRepository.handle(cleanEntity)
     // 3.2. update counter
     const counters = await deps.retrieveAllCounterRepository.handle(
       { filter: { name: 'customer_groups', code: input.data.code } },

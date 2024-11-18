@@ -21,7 +21,7 @@ export class RetrieveExistingEmailUseCase {
     const userEntity = new UserEntity({
       email: input.email,
     })
-    const cleanEntity = deps.cleanObject(userEntity.data)
+    const cleanEntity = deps.objClean(userEntity.data)
     // 2. validate schema
     await deps.schemaValidation(cleanEntity, retrieveExistingEmailValidation)
     // 3. database operation

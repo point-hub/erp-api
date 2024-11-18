@@ -25,7 +25,7 @@ export interface IOutput {
 }
 
 export class UpdateChartOfAccountCategoryUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input, updateValidation)
     // 2. define entity
@@ -33,7 +33,7 @@ export class UpdateChartOfAccountCategoryUseCase {
       type_id: input.data.type_id,
       name: input.data.name,
     })
-    chartOfAccountCategoryEntity.generateUpdatedDate()
+    chartOfAccountCategoryEntity.generateDate('updated_date')
     // 3. database operation
     const response = await deps.updateChartOfAccountCategoryRepository.handle(
       input._id,

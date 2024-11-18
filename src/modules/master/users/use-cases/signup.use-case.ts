@@ -60,7 +60,7 @@ export class SignupUseCase {
       branches: input.branches,
       warehouses: input.warehouses,
     })
-    userEntity.generateCreatedDate()
+    userEntity.generateDate('created_date')
     userEntity.data = deps.objClean(userEntity.data)
     // 3. database operation
     const responseSignup = await deps.signupRepository.handle(userEntity.data)

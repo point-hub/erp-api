@@ -29,7 +29,7 @@ export interface IOutput {
 }
 
 export class UpdateRoleUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input.data, updateValidation)
     // 2. define entity
@@ -40,7 +40,7 @@ export class UpdateRoleUseCase {
       notes: input.data.notes ?? '',
       updated_by: input.auth._id,
     })
-    roleEntity.generateUpdatedDate()
+    roleEntity.generateDate('updated_date')
     // 3. database operation
     const response = await deps.updateRoleRepository.handle(input._id, roleEntity.data, options)
     // 4. output

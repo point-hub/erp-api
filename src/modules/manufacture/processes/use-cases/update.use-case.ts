@@ -27,7 +27,7 @@ export interface IOutput {
 }
 
 export class UpdateProcessUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input, updateValidation)
     // 2. define entity
@@ -37,7 +37,7 @@ export class UpdateProcessUseCase {
       notes: input.data.notes ?? '',
       updated_by: input.auth._id,
     })
-    processEntity.generateUpdatedDate()
+    processEntity.generateDate('updated_date')
     // 3. database operation
     const response = await deps.updateProcessRepository.handle(input._id, processEntity.data, options)
     // 4. output

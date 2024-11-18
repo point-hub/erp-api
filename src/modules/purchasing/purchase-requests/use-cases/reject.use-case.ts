@@ -16,16 +16,14 @@ export interface IDeps {
   schemaValidation: ISchemaValidation
   rejectPurchaseRequestRepository: IRejectPurchaseRequestRepository
 }
-export interface IOptions {
-  session?: unknown
-}
+
 export interface IOutput {
   matched_count: number
   modified_count: number
 }
 
 export class RejectPurchaseRequestUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input, rejectValidation)
     // 2. define entity

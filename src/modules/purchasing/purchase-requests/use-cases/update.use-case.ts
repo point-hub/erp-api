@@ -43,7 +43,7 @@ export interface IOutput {
   inserted_id: string
 }
 export class UpdatePurchaseRequestUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input.data, createValidation)
     // 3. define entity
@@ -71,16 +71,12 @@ export class UpdatePurchaseRequestUseCase {
       },
       created_date: new Date(),
     })
-    const cleanEntity = deps.cleanObject(purchaseRequestEntity.data)
+    const cleanEntity = deps.objClean(purchaseRequestEntity.data)
     // 4. database operation
-    const response = await deps.createPurchaseRequestRepository.handle(cleanEntity, options)
-    await deps.updatePurchaseRequestRepository.handle(
-      input._id,
-      {
-        is_revised: true,
-      },
-      options,
-    )
+    const response = await deps.createPurchaseRequestRepository.handle(cleanEntity)
+    await deps.updatePurchaseRequestRepository.handle(input._id, {
+      is_revised: true,
+    })
     // 5. output
     return { inserted_id: response.inserted_id }
   }

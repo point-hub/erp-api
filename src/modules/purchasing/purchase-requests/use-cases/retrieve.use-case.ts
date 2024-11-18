@@ -35,7 +35,7 @@ export interface IOutput {
 }
 
 export class RetrievePurchaseRequestUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. database operation
     const response = await deps.retrievePurchaseRequestRepository.handle(input._id, options)
     // 2. output

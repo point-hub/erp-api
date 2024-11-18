@@ -30,7 +30,7 @@ export interface IOutput {
 }
 
 export class CreateProcessUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input.data, createValidation)
     // 2. define entity
@@ -40,10 +40,10 @@ export class CreateProcessUseCase {
       notes: input.data.notes,
       created_by: input.auth._id,
     })
-    processEntity.generateCreatedDate()
-    const cleanEntity = deps.cleanObject(processEntity.data)
+    processEntity.generateDate('created_date')
+    const cleanEntity = deps.objClean(processEntity.data)
     // 3. database operation
-    const response = await deps.createProcessRepository.handle(cleanEntity, options)
+    const response = await deps.createProcessRepository.handle(cleanEntity)
     // 4. output
     return { inserted_id: response.inserted_id }
   }

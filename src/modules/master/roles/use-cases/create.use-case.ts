@@ -33,7 +33,7 @@ export interface IOutput {
 }
 
 export class CreateRoleUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input.data, createValidation)
     // 2. define entity
@@ -44,11 +44,11 @@ export class CreateRoleUseCase {
       notes: input.data.notes,
       created_by: input.auth._id,
     })
-    roleEntity.generateCreatedDate()
-    const cleanEntity = deps.cleanObject(roleEntity.data)
+    roleEntity.generateDate('created_date')
+    const cleanEntity = deps.objClean(roleEntity.data)
     // 3. database operation
     // 3.1 create role
-    const response = await deps.createRoleRepository.handle(cleanEntity, options)
+    const response = await deps.createRoleRepository.handle(cleanEntity)
     // 3.2. update counter
     const counters = await deps.retrieveAllRepository.handle({ filter: { name: 'roles' } }, options)
     await deps.updateRepository.handle(counters.data[0]._id, { count: Number(counters.data[0].count) + 1 }, options)

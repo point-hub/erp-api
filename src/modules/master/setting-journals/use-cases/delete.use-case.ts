@@ -15,7 +15,7 @@ export interface IDeps {
 
 
 export class DeleteSettingJournalUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IDeleteOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IDeleteOutput> {
     // 1. validate schema
     await deps.schemaValidation(input, deleteValidation)
     // 2. database operation

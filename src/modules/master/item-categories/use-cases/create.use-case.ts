@@ -31,7 +31,7 @@ export interface IOutput {
 }
 
 export class CreateItemCategoryUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input.data, createValidation)
     // 2. define entity
@@ -41,11 +41,11 @@ export class CreateItemCategoryUseCase {
       notes: input.data.notes,
       created_by: input.auth._id,
     })
-    itemCategoryEntity.generateCreatedDate()
-    const cleanEntity = deps.cleanObject(itemCategoryEntity.data)
+    itemCategoryEntity.generateDate('created_date')
+    const cleanEntity = deps.objClean(itemCategoryEntity.data)
     // 3. database operation
     // 3.1 create item category
-    const response = await deps.createItemCategoryRepository.handle(cleanEntity, options)
+    const response = await deps.createItemCategoryRepository.handle(cleanEntity)
     // 3.2. update counter
     const counters = await deps.retrieveAllCounterRepository.handle(
       { filter: { name: 'item_categories', code: input.data.code } },

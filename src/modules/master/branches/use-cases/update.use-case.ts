@@ -30,7 +30,7 @@ export interface IOutput {
 }
 
 export class UpdateBranchUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input.data, updateValidation)
     // 2. define entity
@@ -42,7 +42,7 @@ export class UpdateBranchUseCase {
       notes: input.data.notes ?? '',
       updated_by: input.auth._id,
     })
-    branchEntity.generateUpdatedDate()
+    branchEntity.generateDate('updated_date')
     // 3. database operation
     const response = await deps.updateBranchRepository.handle(input._id, branchEntity.data, options)
     // 4. output

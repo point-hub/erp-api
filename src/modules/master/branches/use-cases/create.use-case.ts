@@ -33,7 +33,7 @@ export interface IOutput {
 }
 
 export class CreateBranchUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input.data, createValidation)
     // 2. define entity
@@ -45,11 +45,11 @@ export class CreateBranchUseCase {
       notes: input.data.notes,
       created_by: input.auth._id,
     })
-    branchEntity.generateCreatedDate()
-    const cleanEntity = deps.cleanObject(branchEntity.data)
+    branchEntity.generateDate('created_date')
+    const cleanEntity = deps.objClean(branchEntity.data)
     // 3. database operation
     // 3.1 create branch
-    const response = await deps.createBranchRepository.handle(cleanEntity, options)
+    const response = await deps.createBranchRepository.handle(cleanEntity)
     // 3.2. update counter
     const counters = await deps.retrieveAllRepository.handle({ filter: { name: 'branches' } }, options)
     await deps.updateRepository.handle(counters.data[0]._id, { count: Number(counters.data[0].count) + 1 }, options)

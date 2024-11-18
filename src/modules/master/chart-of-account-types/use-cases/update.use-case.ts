@@ -24,14 +24,14 @@ export interface IOutput {
 }
 
 export class UpdateChartOfAccountTypeUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input, updateValidation)
     // 2. define entity
     const typeEntity = new ChartOfAccountTypeTypeEntity({
       name: input.data.name,
     })
-    typeEntity.generateUpdatedDate()
+    typeEntity.generateDate('updated_date')
     // 3. database operation
     const response = await deps.updateChartOfAccountTypeRepository.handle(input._id, typeEntity.data, options)
     // 4. output

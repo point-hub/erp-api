@@ -41,7 +41,7 @@ export interface IOutput {
 }
 
 export class CreateSupplierUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input.data, createValidation)
     // 2. define entity
@@ -59,11 +59,11 @@ export class CreateSupplierUseCase {
       notes: input.data.notes ?? '',
       created_by: input.auth._id,
     })
-    supplierEntity.generateCreatedDate()
-    const cleanEntity = deps.cleanObject(supplierEntity.data)
+    supplierEntity.generateDate('created_date')
+    const cleanEntity = deps.objClean(supplierEntity.data)
     // 3. database operation
     // 3.1 create supplier
-    const response = await deps.createSupplierRepository.handle(cleanEntity, options)
+    const response = await deps.createSupplierRepository.handle(cleanEntity)
     // 3.2. update counter
     const supplierGroup = deps.retrieveSupplierGroupRepository.handle(
       supplierEntity.data.supplier_group_id as string,

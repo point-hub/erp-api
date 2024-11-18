@@ -28,7 +28,7 @@ export interface IOutput {
 }
 
 export class UpdateItemCategoryUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input.data, updateValidation)
     // 2. define entity
@@ -38,7 +38,7 @@ export class UpdateItemCategoryUseCase {
       notes: input.data.notes ?? '',
       updated_by: input.auth._id,
     })
-    itemCategoryEntity.generateUpdatedDate()
+    itemCategoryEntity.generateDate('updated_date')
     // 3. database operation
     const response = await deps.updateItemCategoryRepository.handle(input._id, itemCategoryEntity.data, options)
     // 4. output

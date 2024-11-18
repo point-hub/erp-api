@@ -28,7 +28,7 @@ export interface IOutput {
 }
 
 export class RetrieveChartOfAccountUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. database operation
     const response = await deps.retrieveChartOfAccountRepository.handle(input._id, options)
     // 2. output

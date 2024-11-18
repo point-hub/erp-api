@@ -30,7 +30,7 @@ export interface IOutput {
 }
 
 export class CreateMachineUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input.data, createValidation)
     // 2. define entity
@@ -40,11 +40,11 @@ export class CreateMachineUseCase {
       notes: input.data.notes,
       created_by: input.auth._id,
     })
-    machineEntity.generateCreatedDate()
-    const cleanEntity = deps.cleanObject(machineEntity.data)
+    machineEntity.generateDate('created_date')
+    const cleanEntity = deps.objClean(machineEntity.data)
     // 3. database operation
     // 3.1 create machine
-    const response = await deps.createMachineRepository.handle(cleanEntity, options)
+    const response = await deps.createMachineRepository.handle(cleanEntity)
     // 3.2. update counter
     const counters = await deps.retrieveAllRepository.handle({ filter: { name: 'machines' } }, options)
     await deps.updateRepository.handle(counters.data[0]._id, { count: Number(counters.data[0].count) + 1 }, options)

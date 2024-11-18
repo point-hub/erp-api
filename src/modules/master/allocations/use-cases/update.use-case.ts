@@ -29,7 +29,7 @@ export interface IOutput {
 }
 
 export class UpdateAllocationUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input.data, updateValidation)
     // 2. define entity
@@ -40,7 +40,7 @@ export class UpdateAllocationUseCase {
       notes: input.data.notes ?? '',
       updated_by: input.auth._id,
     })
-    allocationEntity.generateUpdatedDate()
+    allocationEntity.generateDate('updated_date')
     // 3. database operation
     const response = await deps.updateAllocationRepository.handle(input._id, allocationEntity.data, options)
     // 4. output

@@ -70,7 +70,7 @@ export class CreatePurchaseRequestUseCase {
       },
       created_date: new Date(),
     })
-    const cleanEntity = deps.cleanObject(purchaseRequestEntity.data)
+    const cleanEntity = deps.objClean(purchaseRequestEntity.data)
     // 4. database operation
     const response = await deps.createPurchaseRequestRepository.handle(cleanEntity, options)
     // 5. output
