@@ -1,22 +1,27 @@
-import type { IDatabase, IRetrieveOutput, IRetrieveRepository } from '@point-hub/papi'
+import type { IDatabase } from '@point-hub/papi'
 
 import { collectionName } from '../entity'
 
-export interface IRetrieveCounterOutput extends IRetrieveOutput {
+export interface IRetrieveCounterOutput {
+  _id: string
   code: string
   name: string
   created_date: Date
   updated_date: Date
 }
-export interface IRetrieveCounterRepository extends IRetrieveRepository {
-  handle(_id: string, options?: unknown): Promise<IRetrieveCounterOutput>
+
+export interface IRetrieveCounterRepository {
+  handle(_id: string): Promise<IRetrieveCounterOutput>
 }
 
 export class RetrieveCounterRepository implements IRetrieveCounterRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(_id: string, options?: unknown): Promise<IRetrieveCounterOutput> {
-    const response = await this.database.collection(collectionName).retrieve(_id, options)
+  async handle(_id: string): Promise<IRetrieveCounterOutput> {
+    const response = await this.database.collection(collectionName).retrieve(_id, this.options)
     return {
       _id: response._id,
       code: response.code as string,

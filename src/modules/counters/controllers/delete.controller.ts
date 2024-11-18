@@ -12,7 +12,7 @@ export const deleteCounterController: IController = async (controllerInput: ICon
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const deleteCounterRepository = new DeleteCounterRepository(controllerInput.dbConnection)
+    const deleteCounterRepository = new DeleteCounterRepository(controllerInput.dbConnection, { session })
     // 3. handle business logic
     const response = await DeleteCounterUseCase.handle(
       { _id: controllerInput.httpRequest.params.id },

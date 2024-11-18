@@ -6,19 +6,25 @@ import { RetrieveAllCounterRepository } from '@/modules/counters/repositories/re
 import { UpdateCounterRepository } from '@/modules/counters/repositories/update.repository'
 
 export interface IGenerateFormNumber {
-  handle(prefix: string, filterName: string, options: unknown): Promise<string>
+  handle(prefix: string, filterName: string): Promise<string>
 }
 
 export class GenerateFormNumber implements IGenerateFormNumber {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(prefix: string, filterName: string, options: unknown): Promise<string> {
-    const createCounterRepository = new CreateCounterRepository(this.database)
-    const retrieveAllCounterRepository = new RetrieveAllCounterRepository(this.database)
-    const updateCounterRepository = new UpdateCounterRepository(this.database)
+  async handle(prefix: string, filterName: string): Promise<string> {
+    const createCounterRepository = new CreateCounterRepository(this.database, this.options)
+    const retrieveAllCounterRepository = new RetrieveAllCounterRepository(this.database, this.options)
+    const updateCounterRepository = new UpdateCounterRepository(this.database, this.options)
 
     const code = prefix + format(new Date(), 'yyMM')
-    const counters = await retrieveAllCounterRepository.handle({ filter: { name: filterName, code: code } }, options)
+    const counters = await retrieveAllCounterRepository.handle(
+      { filter: { name: filterName, code: code } },
+      this.options,
+    )
 
     let formNumber = code
 

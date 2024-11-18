@@ -15,21 +15,25 @@ export interface IRetrieveAllocationGroupOutput {
   created_date: Date
   updated_date: Date
 }
+
 export interface IRetrieveAllocationGroupRepository {
-  handle(_id: string, options?: unknown): Promise<IRetrieveAllocationGroupOutput>
+  handle(_id: string): Promise<IRetrieveAllocationGroupOutput>
 }
 
 export class RetrieveAllocationGroupRepository implements IRetrieveAllocationGroupRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(_id: string, options?: unknown): Promise<IRetrieveAllocationGroupOutput> {
+  async handle(_id: string): Promise<IRetrieveAllocationGroupOutput> {
     const pipeline: IPipeline[] = []
 
     pipeline.push(...this.aggregateFilters(_id))
     pipeline.push(...this.aggregateJoinCreatedBy())
     pipeline.push(...this.aggregateJoinUpdatedBy())
 
-    const response = await this.database.collection(collectionName).aggregate(pipeline, {}, options)
+    const response = await this.database.collection(collectionName).aggregate(pipeline, {}, this.options)
 
     return {
       _id: `${response.data[0]._id}`,

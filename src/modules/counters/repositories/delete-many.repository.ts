@@ -1,17 +1,22 @@
-import type { IDatabase, IDeleteManyOutput, IDeleteManyRepository } from '@point-hub/papi'
+import type { IDatabase } from '@point-hub/papi'
 
 import { collectionName } from '../entity'
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface IDeleteManyCounterOutput extends IDeleteManyOutput {}
-export interface IDeleteManyCounterRepository extends IDeleteManyRepository {
-  handle(_ids: string[], options?: unknown): Promise<IDeleteManyCounterOutput>
+export interface IDeleteManyCounterOutput {
+  deleted_count: number
+}
+
+export interface IDeleteManyCounterRepository {
+  handle(_ids: string[]): Promise<IDeleteManyCounterOutput>
 }
 
 export class DeleteManyCounterRepository implements IDeleteManyCounterRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(ids: string[], options?: unknown): Promise<IDeleteManyCounterOutput> {
-    return await this.database.collection(collectionName).deleteMany(ids, options)
+  async handle(ids: string[]): Promise<IDeleteManyCounterOutput> {
+    return await this.database.collection(collectionName).deleteMany(ids, this.options)
   }
 }
