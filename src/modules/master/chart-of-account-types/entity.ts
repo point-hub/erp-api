@@ -1,15 +1,13 @@
 import { IChartOfAccountTypeTypeEntity } from './interface'
 
+export type TypeFieldDate = 'created_date' | 'updated_date'
+
 export const collectionName = 'chart_of_account_types'
 
 export class ChartOfAccountTypeTypeEntity {
   constructor(public data: IChartOfAccountTypeTypeEntity) {}
 
-  public generateCreatedDate() {
-    this.data.created_date = new Date()
-  }
-
-  public generateUpdatedDate() {
-    this.data.updated_date = new Date()
+  public generateDate(field: TypeFieldDate) {
+    this.data[field] = new Date()
   }
 }

@@ -1,15 +1,13 @@
 import { ICustomerGroupEntity } from './interface'
 
+export type TypeFieldDate = 'created_date' | 'updated_date'
+
 export const collectionName = 'customer_groups'
 
 export class CustomerGroupEntity {
   constructor(public data: ICustomerGroupEntity) {}
 
-  public generateCreatedDate() {
-    this.data.created_date = new Date()
-  }
-
-  public generateUpdatedDate() {
-    this.data.updated_date = new Date()
+  public generateDate(field: TypeFieldDate) {
+    this.data[field] = new Date()
   }
 }

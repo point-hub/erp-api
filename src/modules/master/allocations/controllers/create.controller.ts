@@ -41,7 +41,6 @@ export const createAllocationController: IController = async (controllerInput: I
         retrieveAuthUserRepository,
         verifyToken,
       },
-      { session },
     )
     // 3.2 create
     const response = await CreateAllocationUseCase.handle(
