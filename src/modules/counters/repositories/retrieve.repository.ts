@@ -6,6 +6,7 @@ export interface IRetrieveCounterOutput {
   _id: string
   code: string
   name: string
+  count: number
   created_date: Date
   updated_date: Date
 }
@@ -26,6 +27,7 @@ export class RetrieveCounterRepository implements IRetrieveCounterRepository {
       _id: response._id,
       code: response.code as string,
       name: response.name as string,
+      count: response.name as number,
       created_date: response.created_date as Date,
       updated_date: response.updated_date as Date,
     }

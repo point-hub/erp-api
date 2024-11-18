@@ -7,16 +7,20 @@ export interface IRetrieveAuthorizedUsersOutput {
   data: IRetrieveUserOutput[]
   pagination: IPagination
 }
+
 export interface IRetrieveAuthorizedUsersRepository {
-  handle(query: IQuery, options?: unknown): Promise<IRetrieveAuthorizedUsersOutput>
+  handle(query: IQuery): Promise<IRetrieveAuthorizedUsersOutput>
 }
 
 export class RetrieveAuthorizedUsersRepository implements IRetrieveAuthorizedUsersRepository {
   public collection = collectionName
 
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(query: IQuery, options?: unknown): Promise<IRetrieveAuthorizedUsersOutput> {
+  async handle(query: IQuery): Promise<IRetrieveAuthorizedUsersOutput> {
     const pipeline: IPipeline[] = []
 
     pipeline.push({
@@ -48,7 +52,9 @@ export class RetrieveAuthorizedUsersRepository implements IRetrieveAuthorizedUse
       $project: { _id: 1, name: 1, username: 1, email: 1, label: 1 },
     })
 
-    const response = await this.database.collection(this.collection).aggregate(pipeline, { page_size: 9999 }, options)
+    const response = await this.database
+      .collection(this.collection)
+      .aggregate(pipeline, { page_size: 9999 }, this.options)
 
     return {
       data: response.data as unknown as IRetrieveUserOutput[],

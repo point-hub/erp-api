@@ -2,10 +2,10 @@ import type { IDatabase } from '@point-hub/papi'
 
 import { CreateCounterRepository } from '@/modules/counters/repositories/create.repository'
 import { RetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
-import { UpdateCounterRepository } from '@/modules/counters/repositories/update.repository'
+import { throwApiError } from '@/utils/throw-api-error'
 
 export interface IGenerateMasterNumber {
-  handle(prefix: string, name: string): Promise<string>
+  handle(prefix: string, name: string): Promise<void>
 }
 
 export class GenerateMasterNumber implements IGenerateMasterNumber {
@@ -14,34 +14,25 @@ export class GenerateMasterNumber implements IGenerateMasterNumber {
     public options?: Record<string, unknown>,
   ) {}
 
-  async handle(prefix: string, name: string): Promise<string> {
-    const createCounterRepository = new CreateCounterRepository(this.database)
-    const retrieveAllCounterRepository = new RetrieveAllCounterRepository(this.database)
-    const updateCounterRepository = new UpdateCounterRepository(this.database)
+  async handle(prefix: string, name: string): Promise<void> {
+    const createCounterRepository = new CreateCounterRepository(this.database, this.options)
+    const retrieveAllCounterRepository = new RetrieveAllCounterRepository(this.database, this.options)
 
     const code = prefix
-    const counters = await retrieveAllCounterRepository.handle({ filter: { name: name, code: code } }, this.options)
+    const counters = await retrieveAllCounterRepository.handle({ filter: { name: name, code: code } })
 
-    let masterNumber = code
-
-    if (!counters.data.length) {
-      // generate first form number
-      await createCounterRepository.handle(
-        {
-          name: name,
-          code: code,
-          count: 1,
+    if (counters.data.length > 0) {
+      throwApiError(422, {
+        errors: {
+          code: 'The code already exists in database counters',
         },
-        this.options,
-      )
-      masterNumber += '0001'
-    } else {
-      // increment form number
-      const newCount = Number(counters.data[0].count) + 1
-      masterNumber += newCount.toString().padStart(4, '0')
-      await updateCounterRepository.handle(counters.data[0]._id, { count: newCount }, this.options)
+      })
     }
 
-    return masterNumber
+    await createCounterRepository.handle({
+      name: name,
+      code: code,
+      count: 0,
+    })
   }
 }

@@ -6,21 +6,20 @@ import { IRetrieveAllUserRepository } from '../repositories/retrieve-all.reposit
 export interface IInput {
   query: IQuery
 }
+
 export interface IDeps {
   retrieveAllUserRepository: IRetrieveAllUserRepository
 }
-export interface IOptions {
-  session: unknown
-}
+
 export interface IOutput {
   data: IRetrieveUserOutput[]
   pagination: IPagination
 }
 
 export class RetrieveAllUserUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. database operation
-    const response = await deps.retrieveAllUserRepository.handle(input.query, options)
+    const response = await deps.retrieveAllUserRepository.handle(input.query)
     // 2. output
     return {
       data: response.data as IRetrieveUserOutput[],

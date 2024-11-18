@@ -1,6 +1,7 @@
 import { objClean } from '@point-hub/express-utils'
 import type { IController, IControllerInput } from '@point-hub/papi'
 
+import { GenerateMasterNumber } from '@/modules/counters/utils/generate-master-number'
 import { IAuth } from '@/modules/master/users/interface'
 import { schemaValidation } from '@/utils/validation'
 
@@ -18,6 +19,7 @@ export const createAllocationGroupController: IController = async (controllerInp
     const createAllocationGroupRepository = new CreateAllocationGroupRepository(controllerInput.dbConnection, {
       session,
     })
+    const generateMasterNumber = new GenerateMasterNumber(controllerInput.dbConnection, { session })
     // 3. handle business rules
     // 3.1 check authenticated user
     const verifyTokenResponse = await verifyUserToken(controllerInput, { session })
@@ -31,6 +33,7 @@ export const createAllocationGroupController: IController = async (controllerInp
         objClean,
         createAllocationGroupRepository,
         schemaValidation,
+        generateMasterNumber,
       },
     )
     await session.commitTransaction()

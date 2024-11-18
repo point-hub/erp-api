@@ -7,16 +7,20 @@ export interface IRetrieveAllUserOutput {
   data: IRetrieveUserOutput[]
   pagination: IPagination
 }
+
 export interface IRetrieveAllUserRepository {
-  handle(query: IQuery, options?: unknown): Promise<IRetrieveAllUserOutput>
+  handle(query: IQuery): Promise<IRetrieveAllUserOutput>
 }
 
 export class RetrieveAllUserRepository implements IRetrieveAllUserRepository {
   public collection = collectionName
 
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(query: IQuery, options?: unknown): Promise<IRetrieveAllUserOutput> {
+  async handle(query: IQuery): Promise<IRetrieveAllUserOutput> {
     const pipeline: IPipeline[] = []
 
     pipeline.push({
@@ -68,7 +72,7 @@ export class RetrieveAllUserRepository implements IRetrieveAllUserRepository {
       pipeline.push({ $match: { $and: filtersAnd } })
     }
 
-    const response = await this.database.collection(this.collection).aggregate(pipeline, query, options)
+    const response = await this.database.collection(this.collection).aggregate(pipeline, query, this.options)
 
     return {
       data: response.data as unknown as IRetrieveUserOutput[],

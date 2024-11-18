@@ -1,4 +1,4 @@
-import type { IAggregateOutput, IAggregateRepository, IDatabase, IDocument, IPipeline } from '@point-hub/papi'
+import type { IDatabase, IDocument, IPagination, IPipeline } from '@point-hub/papi'
 
 import { collectionName } from '../entity'
 
@@ -6,17 +6,23 @@ export interface IFilter {
   user_id: string
   project_id?: string
 }
-export interface IRetrieveAuthUserOutput extends IAggregateOutput {
-  data: { [key: string]: unknown }[]
+
+export interface IRetrieveAuthUserOutput {
+  data: Record<string, unknown>[]
+  pagination: IPagination
 }
-export interface IRetrieveAuthUserRepository extends IAggregateRepository {
-  handle(filter: IDocument, options?: unknown): Promise<IRetrieveAuthUserOutput>
+
+export interface IRetrieveAuthUserRepository {
+  handle(filter: IDocument): Promise<IRetrieveAuthUserOutput>
 }
 
 export class RetrieveAuthUserRepository implements IRetrieveAuthUserRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(filter: IDocument, options?: unknown): Promise<IAggregateOutput> {
+  async handle(filter: IDocument): Promise<IRetrieveAuthUserOutput> {
     const pipeline: IPipeline[] = []
 
     // match user
@@ -32,7 +38,7 @@ export class RetrieveAuthUserRepository implements IRetrieveAuthUserRepository {
     pipeline.push(...this.aggregateJoinDefaultWarehouse())
     pipeline.push(...this.aggregateJoinWarehouses())
 
-    const aggregateResult = await this.database.collection(collectionName).aggregate(pipeline, {}, options)
+    const aggregateResult = await this.database.collection(collectionName).aggregate(pipeline, {}, this.options)
 
     return {
       data: [

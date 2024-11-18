@@ -1,3 +1,4 @@
+import type { IObjClean } from '@point-hub/express-utils'
 import type { ISchemaValidation, IUpdateOutput } from '@point-hub/papi'
 
 import { UserEntity } from '../entity'
@@ -17,17 +18,15 @@ export interface IInput {
     warehouses: string[]
   }
 }
+
 export interface IDeps {
-  cleanObject(object: object): object
+  objClean: IObjClean
   schemaValidation: ISchemaValidation
   updateUserRepository: IUpdateUserRepository
 }
-export interface IOptions {
-  session?: unknown
-}
 
 export class UpdateUserUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IUpdateOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IUpdateOutput> {
     // 1. validate schema
     await deps.schemaValidation(input, updateValidation)
     // 2. define entity
@@ -42,8 +41,9 @@ export class UpdateUserUseCase {
       warehouses: input.data.warehouses ?? [],
     })
     userEntity.generateUpdatedDate()
+    userEntity.data = deps.objClean(userEntity.data)
     // 3. database operation
-    const response = await deps.updateUserRepository.handle(input._id, userEntity.data, options)
+    const response = await deps.updateUserRepository.handle(input._id, userEntity.data)
     // 4. output
     return {
       matched_count: response.matched_count,

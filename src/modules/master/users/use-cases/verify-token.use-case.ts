@@ -12,15 +12,14 @@ export interface IInput {
   token: string
   secret: string
 }
+
 export interface IDeps {
   retrieveAuthUserRepository: IRetrieveAuthUserRepository
   throwApiError(codeStatus: TypeCodeStatus, options: IOptionsApiError): void
   schemaValidation: ISchemaValidation
   verifyToken(token: string, secret: string): string | JwtPayload
 }
-export interface IOptions {
-  session?: unknown
-}
+
 export interface IOutput {
   _id: string
   email: string
@@ -35,7 +34,7 @@ export interface IOutput {
 }
 
 export class VerifyTokenUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input, verifyTokenValidation)
     // 2. verify token
@@ -45,11 +44,10 @@ export class VerifyTokenUseCase {
       throwApiError(403)
     }
     // 3. database operation
-    const authUser = await deps.retrieveAuthUserRepository.handle(
-      { user_id: decodedToken.sub, project_id: input.project_id },
-      options,
-    )
-
+    const authUser = await deps.retrieveAuthUserRepository.handle({
+      user_id: decodedToken.sub,
+      project_id: input.project_id,
+    })
     // 4. return response
     return {
       _id: authUser.data[0]._id as string,

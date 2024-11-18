@@ -24,6 +24,7 @@ export const retrieveCounterController: IController = async (controllerInput: IC
         _id: response._id,
         code: response.code,
         name: response.name,
+        count: response.count,
         created_date: response.created_date,
         updated_date: response.updated_date,
       },

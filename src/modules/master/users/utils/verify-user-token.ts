@@ -7,8 +7,8 @@ import { verifyToken } from '@/modules/master/users/utils/jwt'
 import { throwApiError } from '@/utils/throw-api-error'
 import { schemaValidation } from '@/utils/validation'
 
-export const verifyUserToken = async (controllerInput: IControllerInput, session: unknown) => {
-  const retrieveAuthUserRepository = new RetrieveAuthUserRepository(controllerInput.dbConnection)
+export const verifyUserToken = async (controllerInput: IControllerInput, options?: Record<string, unknown>) => {
+  const retrieveAuthUserRepository = new RetrieveAuthUserRepository(controllerInput.dbConnection, options)
 
   return await VerifyTokenUseCase.handle(
     {
@@ -22,6 +22,5 @@ export const verifyUserToken = async (controllerInput: IControllerInput, session
       retrieveAuthUserRepository,
       verifyToken,
     },
-    { session },
   )
 }

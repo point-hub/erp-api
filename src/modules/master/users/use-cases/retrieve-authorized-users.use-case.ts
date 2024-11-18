@@ -6,21 +6,20 @@ import { IRetrieveAuthorizedUsersRepository } from '../repositories/retrieve-aut
 export interface IInput {
   query: IQuery
 }
+
 export interface IDeps {
   retrieveAuthorizedUsersRepository: IRetrieveAuthorizedUsersRepository
 }
-export interface IOptions {
-  session: unknown
-}
+
 export interface IOutput {
   data: IRetrieveUserOutput[]
   pagination: IPagination
 }
 
 export class RetrieveAuthorizedUsersUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. database operation
-    const response = await deps.retrieveAuthorizedUsersRepository.handle(input.query, options)
+    const response = await deps.retrieveAuthorizedUsersRepository.handle(input.query)
     // 2. output
     return {
       data: response.data as IRetrieveUserOutput[],

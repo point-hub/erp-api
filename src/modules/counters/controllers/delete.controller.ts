@@ -17,7 +17,6 @@ export const deleteCounterController: IController = async (controllerInput: ICon
     const response = await DeleteCounterUseCase.handle(
       { _id: controllerInput.httpRequest.params.id },
       { schemaValidation, deleteCounterRepository },
-      { session },
     )
     await session.commitTransaction()
     // return response to client

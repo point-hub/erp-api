@@ -10,18 +10,16 @@ export interface IInput {
   username: string
   password: string
 }
+
 export interface IDeps {
   retrieveMatchedUsernameRepository: IRetrieveMatchedUsernameRepository
-  cleanObject(object: object): object
   schemaValidation: ISchemaValidation
   verifyPassword(password: string, hash: string): Promise<boolean>
   throwApiError(codeStatus: TypeCodeStatus, options?: IOptionsApiError): void
   generateAccessToken(_id: string): string
   generateRefreshToken(_id: string): string
 }
-export interface IOptions {
-  session?: unknown
-}
+
 interface IOutput {
   _id: string
   email: string
@@ -39,15 +37,14 @@ interface IOutput {
 }
 
 export class SigninUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation({ username: input.username, password: input.password }, signinValidation)
     // 2. check any matched username / email in database
     const userInput = new UserEntity({ username: input.username })
-    const users = await deps.retrieveMatchedUsernameRepository.handle(
-      { filter: { username: userInput.data.trimmed_username } },
-      options,
-    )
+    const users = await deps.retrieveMatchedUsernameRepository.handle({
+      filter: { username: userInput.data.trimmed_username },
+    })
     // err.1. return error username is invalid
     if (users.data.length === 0) {
       deps.throwApiError(422, {

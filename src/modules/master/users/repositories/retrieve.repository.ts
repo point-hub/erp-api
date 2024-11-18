@@ -6,6 +6,7 @@ export interface IFilter {
   user_id: string
   project_id?: string
 }
+
 export interface IRetrieveUserOutput {
   _id: string
   role: {
@@ -24,14 +25,18 @@ export interface IRetrieveUserOutput {
   created_date: Date
   updated_date: Date
 }
+
 export interface IRetrieveUserRepository {
-  handle(filter: IDocument, options?: unknown): Promise<IRetrieveUserOutput>
+  handle(filter: IDocument): Promise<IRetrieveUserOutput>
 }
 
 export class RetrieveUserRepository implements IRetrieveUserRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(filter: IDocument, options?: unknown): Promise<IRetrieveUserOutput> {
+  async handle(filter: IDocument): Promise<IRetrieveUserOutput> {
     const pipeline: IPipeline[] = []
 
     // match user
@@ -47,7 +52,7 @@ export class RetrieveUserRepository implements IRetrieveUserRepository {
     pipeline.push(...this.aggregateJoinDefaultWarehouse())
     pipeline.push(...this.aggregateJoinWarehouses())
 
-    const aggregateResult = await this.database.collection(collectionName).aggregate(pipeline, {}, options)
+    const aggregateResult = await this.database.collection(collectionName).aggregate(pipeline, {}, this.options)
 
     return {
       _id: aggregateResult.data[0]._id as string,

@@ -15,15 +15,11 @@ export const createCounterController: IController = async (controllerInput: ICon
     // 2. define repository
     const createCounterRepository = new CreateCounterRepository(controllerInput.dbConnection, { session })
     // 3. handle business rules
-    const response = await CreateCounterUseCase.handle(
-      controllerInput.httpRequest.body,
-      {
-        cleanObject: objClean,
-        createCounterRepository,
-        schemaValidation,
-      },
-      { session },
-    )
+    const response = await CreateCounterUseCase.handle(controllerInput.httpRequest.body, {
+      objClean,
+      createCounterRepository,
+      schemaValidation,
+    })
     await session.commitTransaction()
     // 4. return response to client
     return {

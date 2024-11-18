@@ -21,27 +21,27 @@ export const seed = async (dbConnection: IDatabase, options: unknown) => {
 export const seeds: ISeed[] = [
   {
     name: 'roles',
-    code: 'R',
+    code: 'MR',
     count: 0,
   },
   {
     name: 'branches',
-    code: 'B',
+    code: 'MB',
     count: 0,
   },
   {
     name: 'warehouses',
-    code: 'W',
+    code: 'MW',
     count: 0,
   },
   {
     name: 'machines',
-    code: 'M',
+    code: 'MM',
     count: 0,
   },
   {
     name: 'formulas',
-    code: 'F',
+    code: 'MF',
     count: 0,
   },
 ]

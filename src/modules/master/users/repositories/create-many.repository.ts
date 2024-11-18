@@ -1,17 +1,22 @@
-import type { ICreateManyOutput, ICreateManyRepository, IDatabase, IDocument } from '@point-hub/papi'
+import type { IDatabase, IDocument } from '@point-hub/papi'
 
 import { collectionName } from '../entity'
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface ICreateManyUserOutput extends ICreateManyOutput {}
-export interface ICreateManyUserRepository extends ICreateManyRepository {
-  handle(documents: IDocument[], options?: unknown): Promise<ICreateManyUserOutput>
+export interface ICreateManyUserOutput {
+  inserted_count: number
+  inserted_ids: string[]
+}
+export interface ICreateManyUserRepository {
+  handle(documents: IDocument[]): Promise<ICreateManyUserOutput>
 }
 
 export class CreateManyUserRepository implements ICreateManyUserRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(documents: IDocument[], options?: unknown): Promise<ICreateManyUserOutput> {
-    return await this.database.collection(collectionName).createMany(documents, options)
+  async handle(documents: IDocument[]): Promise<ICreateManyUserOutput> {
+    return await this.database.collection(collectionName).createMany(documents, this.options)
   }
 }

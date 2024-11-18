@@ -44,7 +44,7 @@ export class CreatePurchaseRequestUseCase {
     // 1. validate schema
     await deps.schemaValidation(input.data, createValidation)
     // 2. generate form number
-    const formNumber = await deps.generateFormNumber.handle('PR', 'purchasing.purchase_requests', options)
+    const formNumber = await deps.generateFormNumber.handle('PR', 'purchasing.purchase_requests')
     // 3. define entity
     const purchaseRequestEntity = new PurchaseRequestEntity({
       revised_count: 0,
