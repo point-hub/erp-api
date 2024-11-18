@@ -1,3 +1,4 @@
+import { IObjClean } from '@point-hub/express-utils'
 import type { ISchemaValidation } from '@point-hub/papi'
 
 import { ChartOfAccountTypeTypeEntity } from '../entity'
@@ -11,7 +12,7 @@ export interface IInput {
   }
 }
 export interface IDeps {
-  cleanObject(object: object): object
+  objClean: IObjClean
   schemaValidation: ISchemaValidation
   updateChartOfAccountTypeRepository: IUpdateChartOfAccountTypeRepository
 }

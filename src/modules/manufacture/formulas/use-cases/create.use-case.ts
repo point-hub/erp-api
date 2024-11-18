@@ -49,7 +49,7 @@ export interface IInput {
   }
 }
 export interface IDeps {
-  cleanObject(object: object): object
+  objClean: IObjClean
   createFormulaRepository: ICreateFormulaRepository
   retrieveAllRepository: IRetrieveAllCounterRepository
   updateRepository: IUpdateCounterRepository

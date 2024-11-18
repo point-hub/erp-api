@@ -1,3 +1,4 @@
+import { IObjClean } from '@point-hub/express-utils'
 import type { ICreateOutput, ISchemaValidation } from '@point-hub/papi'
 
 import { IRetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
@@ -12,7 +13,7 @@ export interface IInput {
   feature?: string
 }
 export interface IDeps {
-  cleanObject(object: object): object
+  objClean: IObjClean
   createSettingJournalRepository: ICreateSettingJournalRepository
   retrieveAllCounterRepository: IRetrieveAllCounterRepository
   updateCounterRepository: IUpdateCounterRepository

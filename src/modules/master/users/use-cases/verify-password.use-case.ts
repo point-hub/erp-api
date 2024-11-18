@@ -1,3 +1,4 @@
+import { IObjClean } from '@point-hub/express-utils'
 import type { ISchemaValidation, TypeCodeStatus } from '@point-hub/papi'
 
 import type { IOptions as IOptionsApiError } from '@/utils/throw-api-error'
@@ -13,7 +14,7 @@ export interface IInput {
 
 export interface IDeps {
   retrieveMatchedUsernameRepository: IRetrieveMatchedUsernameRepository
-  cleanObject(object: object): object
+  objClean: IObjClean
   schemaValidation: ISchemaValidation
   verifyPassword(password: string, hash: string): Promise<boolean>
   throwApiError(codeStatus: TypeCodeStatus, options?: IOptionsApiError): void

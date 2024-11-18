@@ -1,3 +1,4 @@
+import { IObjClean } from '@point-hub/express-utils'
 import type { ISchemaValidation } from '@point-hub/papi'
 
 import { ChartOfAccountEntity } from '../entity'
@@ -13,7 +14,7 @@ export interface IInput {
   notes?: string
 }
 export interface IDeps {
-  cleanObject(object: object): object
+  objClean: IObjClean
   createChartOfAccountRepository: ICreateChartOfAccountRepository
   schemaValidation: ISchemaValidation
 }

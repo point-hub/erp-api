@@ -1,3 +1,4 @@
+import { IObjClean } from '@point-hub/express-utils'
 import type { ISchemaValidation } from '@point-hub/papi'
 
 import { UserEntity } from '../entity'
@@ -10,7 +11,7 @@ export interface IInput {
 
 export interface IDeps {
   retrieveExistingEmailRepository: IRetrieveAllUserRepository
-  cleanObject(object: object): object
+  objClean: IObjClean
   schemaValidation: ISchemaValidation
 }
 

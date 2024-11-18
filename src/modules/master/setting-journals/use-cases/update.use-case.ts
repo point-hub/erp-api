@@ -1,3 +1,4 @@
+import { IObjClean } from '@point-hub/express-utils'
 import type { ISchemaValidation, IUpdateOutput, TypeCodeStatus } from '@point-hub/papi'
 
 import type { IOptions as IOptionsApiError } from '@/utils/throw-api-error'
@@ -15,7 +16,7 @@ export interface IInput {
   }
 }
 export interface IDeps {
-  cleanObject(object: object): object
+  objClean: IObjClean
   schemaValidation: ISchemaValidation
   updateSettingJournalRepository: IUpdateSettingJournalRepository
   throwApiError(codeStatus: TypeCodeStatus, options: IOptionsApiError): void

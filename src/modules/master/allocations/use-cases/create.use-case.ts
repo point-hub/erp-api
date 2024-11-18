@@ -1,3 +1,4 @@
+import { IObjClean } from '@point-hub/express-utils'
 import type { ISchemaValidation } from '@point-hub/papi'
 
 import { IRetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
@@ -19,7 +20,7 @@ export interface IInput {
   }
 }
 export interface IDeps {
-  cleanObject(object: object): object
+  objClean: IObjClean
   createAllocationRepository: ICreateAllocationRepository
   retrieveAllocationGroupRepository: IRetrieveAllocationGroupRepository
   retrieveAllCounterRepository: IRetrieveAllCounterRepository
