@@ -48,7 +48,7 @@ export const createItemCategoryController: IController = async (controllerInput:
         data: controllerInput.httpRequest.body,
       },
       {
-        cleanObject: objClean,
+        objClean,
         createItemCategoryRepository,
         createCounterRepository,
         retrieveAllCounterRepository,

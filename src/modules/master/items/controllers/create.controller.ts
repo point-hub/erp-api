@@ -50,7 +50,7 @@ export const createItemController: IController = async (controllerInput: IContro
         data: controllerInput.httpRequest.body,
       },
       {
-        cleanObject: objClean,
+        objClean,
         createItemRepository,
         updateCounterRepository,
         retrieveItemCategoryRepository,

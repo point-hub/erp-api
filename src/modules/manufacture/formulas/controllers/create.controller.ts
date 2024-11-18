@@ -48,7 +48,7 @@ export const createFormulaController: IController = async (controllerInput: ICon
         data: controllerInput.httpRequest.body,
       },
       {
-        cleanObject: objClean,
+        objClean,
         createFormulaRepository,
         updateRepository,
         retrieveAllRepository,

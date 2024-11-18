@@ -19,7 +19,7 @@ export const retrieveExistingUsernameController: IController = async (controller
       controllerInput.httpRequest.body,
       {
         retrieveExistingUsernameRepository,
-        cleanObject: objClean,
+        objClean,
         schemaValidation,
       },
       { session },

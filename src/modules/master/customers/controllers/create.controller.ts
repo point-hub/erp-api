@@ -50,7 +50,7 @@ export const createCustomerController: IController = async (controllerInput: ICo
         data: controllerInput.httpRequest.body,
       },
       {
-        cleanObject: objClean,
+        objClean,
         createCustomerRepository,
         updateCounterRepository,
         retrieveCustomerGroupRepository,

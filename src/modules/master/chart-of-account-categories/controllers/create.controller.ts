@@ -20,7 +20,7 @@ export const createChartOfAccountCategoryController: IController = async (contro
     const response = await CreateChartOfAccountCategoryUseCase.handle(
       controllerInput.httpRequest.body,
       {
-        cleanObject: objClean,
+        objClean,
         createChartOfAccountCategoryRepository,
         schemaValidation,
       },

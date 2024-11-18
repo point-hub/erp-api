@@ -26,7 +26,7 @@ export const signupController: IController = async (controllerInput: IController
       {
         signupRepository,
         retrieveUserRepository,
-        cleanObject: objClean,
+        objClean,
         schemaValidation,
         hashPassword: Bun.password.hash,
         generateVerificationCode: tokenGenerate,

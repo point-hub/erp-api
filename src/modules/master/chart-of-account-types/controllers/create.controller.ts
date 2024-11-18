@@ -18,7 +18,7 @@ export const createChartOfAccountTypeController: IController = async (controller
     const response = await CreateChartOfAccountTypeUseCase.handle(
       controllerInput.httpRequest.body,
       {
-        cleanObject: objClean,
+        objClean,
         createChartOfAccountTypeRepository,
         schemaValidation,
       },

@@ -22,7 +22,7 @@ export const createSettingJournalController: IController = async (controllerInpu
     const response = await CreateSettingJournalUseCase.handle(
       controllerInput.httpRequest.body,
       {
-        cleanObject: objClean,
+        objClean,
         createSettingJournalRepository,
         updateCounterRepository,
         retrieveAllCounterRepository,

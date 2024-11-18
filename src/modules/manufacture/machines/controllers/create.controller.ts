@@ -48,7 +48,7 @@ export const createMachineController: IController = async (controllerInput: ICon
         data: controllerInput.httpRequest.body,
       },
       {
-        cleanObject: objClean,
+        objClean,
         createMachineRepository,
         updateRepository,
         retrieveAllRepository,

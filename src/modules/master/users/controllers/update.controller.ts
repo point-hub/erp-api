@@ -20,7 +20,7 @@ export const updateUserController: IController = async (controllerInput: IContro
         _id: controllerInput.httpRequest.params.id,
         data: controllerInput.httpRequest.body,
       },
-      { cleanObject: objClean, schemaValidation, updateUserRepository },
+      { objClean, schemaValidation, updateUserRepository },
     )
     await session.commitTransaction()
     // 4. return response to client

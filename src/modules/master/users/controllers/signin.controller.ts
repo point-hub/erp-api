@@ -21,7 +21,7 @@ export const signinController: IController = async (controllerInput: IController
       controllerInput.httpRequest.body,
       {
         retrieveMatchedUsernameRepository,
-        cleanObject: objClean,
+        objClean,
         schemaValidation,
         verifyPassword: Bun.password.verify,
         throwApiError,

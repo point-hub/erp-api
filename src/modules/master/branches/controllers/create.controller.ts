@@ -48,7 +48,7 @@ export const createBranchController: IController = async (controllerInput: ICont
         data: controllerInput.httpRequest.body,
       },
       {
-        cleanObject: objClean,
+        objClean,
         createBranchRepository,
         updateRepository,
         retrieveAllRepository,

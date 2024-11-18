@@ -50,7 +50,7 @@ export const createSupplierController: IController = async (controllerInput: ICo
         data: controllerInput.httpRequest.body,
       },
       {
-        cleanObject: objClean,
+        objClean,
         createSupplierRepository,
         updateCounterRepository,
         retrieveSupplierGroupRepository,

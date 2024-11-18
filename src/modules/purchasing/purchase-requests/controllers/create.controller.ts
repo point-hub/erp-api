@@ -35,7 +35,7 @@ export const createPurchaseRequestController: IController = async (controllerInp
         data: controllerInput.httpRequest.body,
       },
       {
-        cleanObject: objClean,
+        objClean,
         createPurchaseRequestRepository,
         createCounterRepository,
         updateCounterRepository,

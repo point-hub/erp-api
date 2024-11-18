@@ -48,7 +48,7 @@ export const createRoleController: IController = async (controllerInput: IContro
         data: controllerInput.httpRequest.body,
       },
       {
-        cleanObject: objClean,
+        objClean,
         createRoleRepository,
         updateRepository,
         retrieveAllRepository,

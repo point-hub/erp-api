@@ -20,7 +20,7 @@ export const updateChartOfAccountController: IController = async (controllerInpu
         _id: controllerInput.httpRequest.params.id,
         data: controllerInput.httpRequest.body,
       },
-      { cleanObject: objClean, schemaValidation, updateChartOfAccountRepository },
+      { objClean, schemaValidation, updateChartOfAccountRepository },
     )
     await session.commitTransaction()
     // 4. return response to client

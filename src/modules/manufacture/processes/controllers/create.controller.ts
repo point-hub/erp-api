@@ -48,7 +48,7 @@ export const createProcessController: IController = async (controllerInput: ICon
         data: controllerInput.httpRequest.body,
       },
       {
-        cleanObject: objClean,
+        objClean,
         createProcessRepository,
         updateRepository,
         retrieveAllRepository,

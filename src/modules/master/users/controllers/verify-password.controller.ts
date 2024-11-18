@@ -42,7 +42,7 @@ export const verifyPasswordController: IController = async (controllerInput: ICo
       },
       {
         retrieveMatchedUsernameRepository,
-        cleanObject: objClean,
+        objClean,
         schemaValidation,
         verifyPassword: Bun.password.verify,
         throwApiError,

@@ -49,7 +49,7 @@ export const createAllocationController: IController = async (controllerInput: I
         data: controllerInput.httpRequest.body,
       },
       {
-        cleanObject: objClean,
+        objClean,
         createAllocationRepository,
         updateCounterRepository,
         retrieveAllocationGroupRepository,

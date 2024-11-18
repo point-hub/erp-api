@@ -48,7 +48,7 @@ export const createSupplierGroupController: IController = async (controllerInput
         data: controllerInput.httpRequest.body,
       },
       {
-        cleanObject: objClean,
+        objClean,
         createSupplierGroupRepository,
         createCounterRepository,
         retrieveAllCounterRepository,

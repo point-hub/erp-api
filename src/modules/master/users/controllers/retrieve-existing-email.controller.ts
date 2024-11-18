@@ -19,7 +19,7 @@ export const retrieveExistingEmailController: IController = async (controllerInp
       controllerInput.httpRequest.body,
       {
         retrieveExistingEmailRepository,
-        cleanObject: objClean,
+        objClean,
         schemaValidation,
       },
       { session },

@@ -51,7 +51,7 @@ export const createSalesQuotationController: IController = async (controllerInpu
         data: controllerInput.httpRequest.body,
       },
       {
-        cleanObject: objClean,
+        objClean,
         createSalesQuotationRepository,
         createCounterRepository,
         updateCounterRepository,

@@ -48,7 +48,7 @@ export const createWarehouseController: IController = async (controllerInput: IC
         data: controllerInput.httpRequest.body,
       },
       {
-        cleanObject: objClean,
+        objClean,
         createWarehouseRepository,
         updateRepository,
         retrieveAllRepository,

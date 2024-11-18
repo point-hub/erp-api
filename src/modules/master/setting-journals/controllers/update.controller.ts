@@ -21,7 +21,7 @@ export const updateSettingJournalController: IController = async (controllerInpu
         _id: controllerInput.httpRequest.params.id,
         data: controllerInput.httpRequest.body,
       },
-      { cleanObject: objClean, schemaValidation, updateSettingJournalRepository, throwApiError },
+      { objClean, schemaValidation, updateSettingJournalRepository, throwApiError },
     )
     await session.commitTransaction()
     // 4. return response to client
