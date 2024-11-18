@@ -11,14 +11,13 @@ export interface IInput {
     name?: string
   }
 }
+
 export interface IDeps {
   objClean: IObjClean
   schemaValidation: ISchemaValidation
   updateChartOfAccountTypeRepository: IUpdateChartOfAccountTypeRepository
 }
-export interface IOptions {
-  session?: unknown
-}
+
 export interface IOutput {
   matched_count: number
   modified_count: number

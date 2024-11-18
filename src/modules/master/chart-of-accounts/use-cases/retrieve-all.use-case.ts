@@ -6,6 +6,7 @@ import { IRetrieveAllChartOfAccountRepository } from '../repositories/retrieve-a
 export interface IInput {
   query: IQuery
 }
+
 export interface IDeps {
   retrieveAllChartOfAccountRepository: IRetrieveAllChartOfAccountRepository
 }

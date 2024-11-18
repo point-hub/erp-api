@@ -6,6 +6,7 @@ import { IRetrieveAllBranchRepository } from '../repositories/retrieve-all.repos
 export interface IInput {
   query: IQuery
 }
+
 export interface IDeps {
   retrieveAllBranchRepository: IRetrieveAllBranchRepository
 }

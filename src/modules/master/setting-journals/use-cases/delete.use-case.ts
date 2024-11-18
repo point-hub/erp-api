@@ -7,13 +7,12 @@ export interface IInput {
   _id: string
   reason: string
 }
+
 export interface IDeps {
   schemaValidation: ISchemaValidation
   deleteSettingJournalRepository: IDeleteSettingJournalRepository
 }
-export interface IOptions {
-  session?: unknown
-}
+
 
 export class DeleteSettingJournalUseCase {
   static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IDeleteOutput> {

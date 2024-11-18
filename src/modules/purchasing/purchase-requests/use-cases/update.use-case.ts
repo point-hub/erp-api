@@ -27,6 +27,7 @@ export interface IInput {
     created_date?: Date
   }
 }
+
 export interface IDeps {
   objClean: IObjClean
   createPurchaseRequestRepository: ICreatePurchaseRequestRepository
@@ -37,9 +38,7 @@ export interface IDeps {
   updatePurchaseRequestRepository: IUpdatePurchaseRequestRepository
   dateFormat(date: Date | number | string, format: string): string
 }
-export interface IOptions {
-  session?: unknown
-}
+
 export interface IOutput {
   inserted_id: string
 }

@@ -15,13 +15,12 @@ export interface IInput {
     notes?: string
   }
 }
+
 export interface IDeps {
   schemaValidation: ISchemaValidation
   updateFormulaRepository: IUpdateFormulaRepository
 }
-export interface IOptions {
-  session?: unknown
-}
+
 export interface IOutput {
   matched_count: number
   modified_count: number

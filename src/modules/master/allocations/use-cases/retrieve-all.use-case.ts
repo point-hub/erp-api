@@ -6,6 +6,7 @@ import { IRetrieveAllAllocationRepository } from '../repositories/retrieve-all.r
 export interface IInput {
   query: IQuery
 }
+
 export interface IDeps {
   retrieveAllAllocationRepository: IRetrieveAllAllocationRepository
 }

@@ -7,13 +7,12 @@ export interface IInput {
   _id: string
   reason: string
 }
+
 export interface IDeps {
   schemaValidation: ISchemaValidation
   deleteCustomerRepository: IDeleteCustomerRepository
 }
-export interface IOptions {
-  session?: unknown
-}
+
 export interface IOutput {
   deleted_count: number
 }

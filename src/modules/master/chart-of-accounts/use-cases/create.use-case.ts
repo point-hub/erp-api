@@ -13,14 +13,13 @@ export interface IInput {
   subledger?: string
   notes?: string
 }
+
 export interface IDeps {
   objClean: IObjClean
   createChartOfAccountRepository: ICreateChartOfAccountRepository
   schemaValidation: ISchemaValidation
 }
-export interface IOptions {
-  session?: unknown
-}
+
 export interface IOutput {
   inserted_id: string
 }

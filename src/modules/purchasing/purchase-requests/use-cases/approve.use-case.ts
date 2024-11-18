@@ -10,6 +10,7 @@ export interface IInput {
   auth: IAuth
   _id: string
 }
+
 export interface IDeps {
   schemaValidation: ISchemaValidation
   approvePurchaseRequestRepository: IApprovePurchaseRequestRepository

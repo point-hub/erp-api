@@ -9,6 +9,7 @@ export interface INestedBoolean {
 export interface IInput {
   query: IQuery
 }
+
 export interface IDeps {
   retrieveAllPermissionRepository: IRetrieveAllPermissionRepository
 }

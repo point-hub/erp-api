@@ -5,6 +5,7 @@ import { IBranch, IDetails, IRetrievePurchaseRequestRepository } from '../reposi
 export interface IInput {
   _id: string
 }
+
 export interface IDeps {
   retrievePurchaseRequestRepository: IRetrievePurchaseRequestRepository
 }

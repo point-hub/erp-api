@@ -18,6 +18,7 @@ export interface IInput {
     updated_by?: string
   }
 }
+
 export interface IDeps {
   schemaValidation: ISchemaValidation
   updateSalesQuotationRepository: IUpdateSalesQuotationRepository

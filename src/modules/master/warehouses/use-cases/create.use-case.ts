@@ -20,6 +20,7 @@ export interface IInput {
     notes?: string
   }
 }
+
 export interface IDeps {
   objClean: IObjClean
   createWarehouseRepository: ICreateWarehouseRepository
@@ -27,9 +28,7 @@ export interface IDeps {
   updateRepository: IUpdateCounterRepository
   schemaValidation: ISchemaValidation
 }
-export interface IOptions {
-  session?: unknown
-}
+
 export interface IOutput {
   inserted_id: string
 }

@@ -3,6 +3,7 @@ import { IRetrieveChartOfAccountTypeRepository } from '../repositories/retrieve.
 export interface IInput {
   _id: string
 }
+
 export interface IDeps {
   retrieveChartOfAccountTypeRepository: IRetrieveChartOfAccountTypeRepository
 }

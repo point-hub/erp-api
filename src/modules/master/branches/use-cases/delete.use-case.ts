@@ -10,15 +10,14 @@ export interface IInput {
   _id: string
   reason: string
 }
+
 export interface IDeps {
   schemaValidation: ISchemaValidation
   retrieveAllWarehouseRepository: IRetrieveAllWarehouseRepository
   deleteBranchRepository: IDeleteBranchRepository
   throwApiError(codeStatus: TypeCodeStatus, options?: IOptionsApiError): void
 }
-export interface IOptions {
-  session?: unknown
-}
+
 export interface IOutput {
   deleted_count: number
 }

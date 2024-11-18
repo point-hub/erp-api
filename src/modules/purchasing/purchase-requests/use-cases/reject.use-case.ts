@@ -11,6 +11,7 @@ export interface IInput {
   _id: string
   reason: string
 }
+
 export interface IDeps {
   schemaValidation: ISchemaValidation
   rejectPurchaseRequestRepository: IRejectPurchaseRequestRepository

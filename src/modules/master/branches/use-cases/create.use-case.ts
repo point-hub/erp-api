@@ -19,6 +19,7 @@ export interface IInput {
     notes?: string
   }
 }
+
 export interface IDeps {
   objClean: IObjClean
   createBranchRepository: ICreateBranchRepository
@@ -26,9 +27,7 @@ export interface IDeps {
   updateRepository: IUpdateCounterRepository
   schemaValidation: ISchemaValidation
 }
-export interface IOptions {
-  session?: unknown
-}
+
 export interface IOutput {
   inserted_id: string
 }

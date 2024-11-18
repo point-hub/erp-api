@@ -9,14 +9,13 @@ export interface IInput {
   type_id?: string
   name?: string
 }
+
 export interface IDeps {
   objClean: IObjClean
   createChartOfAccountCategoryRepository: ICreateChartOfAccountCategoryRepository
   schemaValidation: ISchemaValidation
 }
-export interface IOptions {
-  session?: unknown
-}
+
 export interface IOutput {
   inserted_id: string
 }

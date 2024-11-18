@@ -17,13 +17,12 @@ export interface IInput {
     updated_by?: string
   }
 }
+
 export interface IDeps {
   schemaValidation: ISchemaValidation
   updateAllocationRepository: IUpdateAllocationRepository
 }
-export interface IOptions {
-  session?: unknown
-}
+
 export interface IOutput {
   matched_count: number
   modified_count: number

@@ -19,6 +19,7 @@ export interface IInput {
     notes?: string
   }
 }
+
 export interface IDeps {
   objClean: IObjClean
   createAllocationRepository: ICreateAllocationRepository
@@ -27,9 +28,7 @@ export interface IDeps {
   updateCounterRepository: IUpdateCounterRepository
   schemaValidation: ISchemaValidation
 }
-export interface IOptions {
-  session?: unknown
-}
+
 export interface IOutput {
   inserted_id: string
 }

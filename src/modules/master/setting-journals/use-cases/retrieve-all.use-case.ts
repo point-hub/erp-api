@@ -5,6 +5,7 @@ import { IRetrieveAllSettingJournalRepository } from '../repositories/retrieve-a
 export interface IInput {
   query: IQuery
 }
+
 export interface IDeps {
   retrieveAllSettingJournalRepository: IRetrieveAllSettingJournalRepository
 }

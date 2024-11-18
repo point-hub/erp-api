@@ -8,14 +8,13 @@ import { createValidation } from '../validations/create.validation'
 export interface IInput {
   name?: string
 }
+
 export interface IDeps {
   objClean: IObjClean
   createChartOfAccountTypeRepository: ICreateChartOfAccountTypeRepository
   schemaValidation: ISchemaValidation
 }
-export interface IOptions {
-  session?: unknown
-}
+
 export interface IOutput {
   inserted_id: string
 }

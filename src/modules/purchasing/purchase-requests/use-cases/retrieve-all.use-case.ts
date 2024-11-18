@@ -9,6 +9,7 @@ export interface IInput {
   auth: IAuth
   query: IQuery
 }
+
 export interface IDeps {
   retrieveAllPurchaseRequestRepository: IRetrieveAllPurchaseRequestRepository
 }

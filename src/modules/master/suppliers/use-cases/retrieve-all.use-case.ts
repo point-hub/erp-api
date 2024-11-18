@@ -6,6 +6,7 @@ import { IRetrieveAllSupplierRepository } from '../repositories/retrieve-all.rep
 export interface IInput {
   query: IQuery
 }
+
 export interface IDeps {
   retrieveAllSupplierRepository: IRetrieveAllSupplierRepository
 }

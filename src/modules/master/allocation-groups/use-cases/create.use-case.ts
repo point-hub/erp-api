@@ -24,9 +24,7 @@ export interface IDeps {
   schemaValidation: ISchemaValidation
 }
 
-export interface IOptions {
-  session?: unknown
-}
+
 
 export interface IOutput {
   inserted_id: string

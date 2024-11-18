@@ -16,13 +16,12 @@ export interface IInput {
     updated_by?: string
   }
 }
+
 export interface IDeps {
   schemaValidation: ISchemaValidation
   updateItemCategoryRepository: IUpdateItemCategoryRepository
 }
-export interface IOptions {
-  session?: unknown
-}
+
 export interface IOutput {
   matched_count: number
   modified_count: number

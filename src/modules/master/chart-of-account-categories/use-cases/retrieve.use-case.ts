@@ -3,6 +3,7 @@ import { IRetrieveChartOfAccountCategoryRepository } from '../repositories/retri
 export interface IInput {
   _id: string
 }
+
 export interface IDeps {
   retrieveChartOfAccountCategoryRepository: IRetrieveChartOfAccountCategoryRepository
 }

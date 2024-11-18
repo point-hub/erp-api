@@ -12,6 +12,7 @@ export interface IInput {
   module?: string
   feature?: string
 }
+
 export interface IDeps {
   objClean: IObjClean
   createSettingJournalRepository: ICreateSettingJournalRepository
@@ -19,9 +20,7 @@ export interface IDeps {
   updateCounterRepository: IUpdateCounterRepository
   schemaValidation: ISchemaValidation
 }
-export interface IOptions {
-  session?: unknown
-}
+
 
 export class CreateSettingJournalUseCase {
   static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<ICreateOutput> {

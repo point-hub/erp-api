@@ -6,6 +6,7 @@ import { IRetrieveAllSalesQuotationRepository } from '../repositories/retrieve-a
 export interface IInput {
   query: IQuery
 }
+
 export interface IDeps {
   retrieveAllSalesQuotationRepository: IRetrieveAllSalesQuotationRepository
 }

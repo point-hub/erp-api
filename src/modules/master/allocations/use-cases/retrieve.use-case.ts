@@ -3,6 +3,7 @@ import { IRetrieveAllocationRepository } from '../repositories/retrieve.reposito
 export interface IInput {
   _id: string
 }
+
 export interface IDeps {
   retrieveAllocationRepository: IRetrieveAllocationRepository
 }

@@ -3,6 +3,7 @@ import { IRetrieveSupplierGroupRepository } from '../repositories/retrieve.repos
 export interface IInput {
   _id: string
 }
+
 export interface IDeps {
   retrieveSupplierGroupRepository: IRetrieveSupplierGroupRepository
 }

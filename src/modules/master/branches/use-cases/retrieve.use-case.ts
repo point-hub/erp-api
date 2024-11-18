@@ -3,6 +3,7 @@ import { IRetrieveBranchRepository } from '../repositories/retrieve.repository'
 export interface IInput {
   _id: string
 }
+
 export interface IDeps {
   retrieveBranchRepository: IRetrieveBranchRepository
 }

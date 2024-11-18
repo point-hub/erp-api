@@ -3,6 +3,7 @@ import { IRetrieveRoleRepository } from '../repositories/retrieve.repository'
 export interface IInput {
   _id: string
 }
+
 export interface IDeps {
   retrieveRoleRepository: IRetrieveRoleRepository
 }

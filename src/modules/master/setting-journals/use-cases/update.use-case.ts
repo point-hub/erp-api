@@ -15,15 +15,14 @@ export interface IInput {
     journals?: { [key: string]: string }[]
   }
 }
+
 export interface IDeps {
   objClean: IObjClean
   schemaValidation: ISchemaValidation
   updateSettingJournalRepository: IUpdateSettingJournalRepository
   throwApiError(codeStatus: TypeCodeStatus, options: IOptionsApiError): void
 }
-export interface IOptions {
-  session?: unknown
-}
+
 
 export class UpdateSettingJournalUseCase {
   static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IUpdateOutput> {

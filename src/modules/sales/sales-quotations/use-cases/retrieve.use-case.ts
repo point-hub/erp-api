@@ -5,6 +5,7 @@ import { IBranch, IItems, IRetrieveSalesQuotationRepository } from '../repositor
 export interface IInput {
   _id: string
 }
+
 export interface IDeps {
   retrieveSalesQuotationRepository: IRetrieveSalesQuotationRepository
 }

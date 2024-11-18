@@ -3,6 +3,7 @@ import { IRetrieveItemCategoryRepository } from '../repositories/retrieve.reposi
 export interface IInput {
   _id: string
 }
+
 export interface IDeps {
   retrieveItemCategoryRepository: IRetrieveItemCategoryRepository
 }

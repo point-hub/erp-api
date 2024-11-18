@@ -6,6 +6,7 @@ import { IRetrieveAllProcessRepository } from '../repositories/retrieve-all.repo
 export interface IInput {
   query: IQuery
 }
+
 export interface IDeps {
   retrieveAllProcessRepository: IRetrieveAllProcessRepository
 }

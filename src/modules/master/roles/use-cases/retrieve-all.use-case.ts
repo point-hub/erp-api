@@ -6,6 +6,7 @@ import { IRetrieveAllRoleRepository } from '../repositories/retrieve-all.reposit
 export interface IInput {
   query: IQuery
 }
+
 export interface IDeps {
   retrieveAllRoleRepository: IRetrieveAllRoleRepository
 }

@@ -3,6 +3,7 @@ import { IRetrieveWarehouseRepository } from '../repositories/retrieve.repositor
 export interface IInput {
   _id: string
 }
+
 export interface IDeps {
   retrieveWarehouseRepository: IRetrieveWarehouseRepository
 }

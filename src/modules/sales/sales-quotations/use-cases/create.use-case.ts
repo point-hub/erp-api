@@ -22,6 +22,7 @@ export interface IInput {
     created_date?: Date
   }
 }
+
 export interface IDeps {
   objClean: IObjClean
   createSalesQuotationRepository: ICreateSalesQuotationRepository

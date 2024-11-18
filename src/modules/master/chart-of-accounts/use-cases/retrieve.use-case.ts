@@ -5,6 +5,7 @@ import { IRetrieveChartOfAccountRepository } from '../repositories/retrieve.repo
 export interface IInput {
   _id: string
 }
+
 export interface IDeps {
   retrieveChartOfAccountRepository: IRetrieveChartOfAccountRepository
 }
