@@ -1,6 +1,0 @@
-export { CreatePurchaseOrderRepository } from './create.repository'
-export { DeletePurchaseOrderRepository } from './delete.repository'
-export { RejectPurchaseOrderRepository } from './reject.repository'
-export { RetrievePurchaseOrderRepository } from './retrieve.repository'
-export { RetrieveAllPurchaseOrderRepository } from './retrieve-all.repository'
-export { UpdatePurchaseOrderRepository } from './update.repository'

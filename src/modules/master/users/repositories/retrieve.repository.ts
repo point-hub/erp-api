@@ -1,4 +1,4 @@
-import type { IDatabase, IDocument, IPipeline, IQuery } from '@point-hub/papi'
+import type { IDatabase, IDocument, IPipeline } from '@point-hub/papi'
 
 import { collectionName } from '../entity'
 
