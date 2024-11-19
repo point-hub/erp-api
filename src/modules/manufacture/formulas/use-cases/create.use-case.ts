@@ -1,3 +1,4 @@
+import { IObjClean } from '@point-hub/express-utils'
 import type { ISchemaValidation } from '@point-hub/papi'
 
 import { IRetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
@@ -76,13 +77,13 @@ export class CreateFormulaUseCase {
       created_by: input.auth._id,
     })
     formulaEntity.generateDate('created_date')
-    const cleanEntity = deps.objClean(formulaEntity.data)
+    formulaEntity.data = deps.objClean(formulaEntity.data)
     // 3. database operation
     // 3.1 create formula
-    const response = await deps.createFormulaRepository.handle(cleanEntity)
+    const response = await deps.createFormulaRepository.handle(formulaEntity.data)
     // 3.2. update counter
-    const counters = await deps.retrieveAllRepository.handle({ filter: { name: 'formulas' } }, options)
-    await deps.updateRepository.handle(counters.data[0]._id, { count: Number(counters.data[0].count) + 1 }, options)
+    const counters = await deps.retrieveAllRepository.handle({ filter: { name: 'formulas' } })
+    await deps.updateRepository.handle(counters.data[0]._id, { count: Number(counters.data[0].count) + 1 })
     // 4. output
     return { inserted_id: response.inserted_id }
   }

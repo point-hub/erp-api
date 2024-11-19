@@ -1,10 +1,6 @@
 import type { IController, IControllerInput } from '@point-hub/papi'
 
-import authConfig from '@/config/auth'
-import { RetrieveAuthUserRepository } from '@/modules/master/users/repositories/retrieve-auth-user.repository'
-import { VerifyTokenUseCase } from '@/modules/master/users/use-cases/verify-token.use-case'
-import { verifyToken } from '@/modules/master/users/utils/jwt'
-import { throwApiError } from '@/utils/throw-api-error'
+import { verifyUserToken } from '@/modules/master/users/utils/verify-user-token'
 import { schemaValidation } from '@/utils/validation'
 
 import { DeleteProcessRepository } from '../repositories/delete.repository'
@@ -17,11 +13,10 @@ export const deleteProcessController: IController = async (controllerInput: ICon
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const retrieveAuthUserRepository = new RetrieveAuthUserRepository(controllerInput.dbConnection, { session })
     const deleteProcessRepository = new DeleteProcessRepository(controllerInput.dbConnection, { session })
     // 3. handle business logic
     // 3.1 check authenticated user
-    const verifyTokenResponse = await verifyUserToken(controllerInput, { session })
+    await verifyUserToken(controllerInput, { session })
     // 3.2 delete
     const response = await DeleteProcessUseCase.handle(
       { _id: controllerInput.httpRequest.params.id, reason: controllerInput.httpRequest.body.reason },

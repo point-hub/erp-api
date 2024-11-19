@@ -1,14 +1,10 @@
 import { objClean } from '@point-hub/express-utils'
 import type { IController, IControllerInput } from '@point-hub/papi'
 
-import authConfig from '@/config/auth'
 import { RetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
 import { UpdateCounterRepository } from '@/modules/counters/repositories/update.repository'
 import { IAuth } from '@/modules/master/users/interface'
-import { RetrieveAuthUserRepository } from '@/modules/master/users/repositories/retrieve-auth-user.repository'
-import { VerifyTokenUseCase } from '@/modules/master/users/use-cases/verify-token.use-case'
-import { verifyToken } from '@/modules/master/users/utils/jwt'
-import { throwApiError } from '@/utils/throw-api-error'
+import { verifyUserToken } from '@/modules/master/users/utils/verify-user-token'
 import { schemaValidation } from '@/utils/validation'
 
 import { CreateMachineRepository } from '../repositories/create.repository'
@@ -21,7 +17,6 @@ export const createMachineController: IController = async (controllerInput: ICon
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const retrieveAuthUserRepository = new RetrieveAuthUserRepository(controllerInput.dbConnection, { session })
     const createMachineRepository = new CreateMachineRepository(controllerInput.dbConnection, { session })
     const updateRepository = new UpdateCounterRepository(controllerInput.dbConnection, { session })
     const retrieveAllRepository = new RetrieveAllCounterRepository(controllerInput.dbConnection, { session })

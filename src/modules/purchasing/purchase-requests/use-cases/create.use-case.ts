@@ -40,7 +40,7 @@ export interface IOutput {
   inserted_id: string
 }
 export class CreatePurchaseRequestUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input.data, createValidation)
     // 2. generate form number
@@ -72,7 +72,7 @@ export class CreatePurchaseRequestUseCase {
     })
     const cleanEntity = deps.objClean(purchaseRequestEntity.data)
     // 4. database operation
-    const response = await deps.createPurchaseRequestRepository.handle(cleanEntity, options)
+    const response = await deps.createPurchaseRequestRepository.handle(cleanEntity)
     // 5. output
     return { inserted_id: response.inserted_id }
   }
