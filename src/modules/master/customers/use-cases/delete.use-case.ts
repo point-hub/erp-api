@@ -22,7 +22,7 @@ export class DeleteCustomerUseCase {
     // 1. validate schema
     await deps.schemaValidation(input, deleteValidation)
     // 2. database operation
-    const response = await deps.deleteCustomerRepository.handle(input._id, options)
+    const response = await deps.deleteCustomerRepository.handle(input._id)
     // 3. output
     return { deleted_count: response.deleted_count }
   }

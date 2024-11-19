@@ -40,7 +40,7 @@ export class UpdateItemCategoryUseCase {
     })
     itemCategoryEntity.generateDate('updated_date')
     // 3. database operation
-    const response = await deps.updateItemCategoryRepository.handle(input._id, itemCategoryEntity.data, options)
+    const response = await deps.updateItemCategoryRepository.handle(input._id, itemCategoryEntity.data)
     // 4. output
     return {
       matched_count: response.matched_count,

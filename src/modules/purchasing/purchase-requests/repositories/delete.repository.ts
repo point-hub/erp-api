@@ -17,6 +17,6 @@ export class DeletePurchaseRequestRepository implements IDeletePurchaseRequestRe
   ) {}
 
   async handle(_id: string, document: IDocument): Promise<IDeletePurchaseRequestOutput> {
-    return await this.database.collection(collectionName).update(_id, document, options)
+    return await this.database.collection(collectionName).update(_id, document, this.options)
   }
 }

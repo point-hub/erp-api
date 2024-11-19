@@ -31,7 +31,7 @@ export class ApprovePurchaseRequestUseCase {
       approval_status: 'approved',
     })
     // 3. database operation
-    const response = await deps.approvePurchaseRequestRepository.handle(input._id, purchaseRequestEntity.data, options)
+    const response = await deps.approvePurchaseRequestRepository.handle(input._id, purchaseRequestEntity.data)
     // 4. output
     return {
       matched_count: response.matched_count,

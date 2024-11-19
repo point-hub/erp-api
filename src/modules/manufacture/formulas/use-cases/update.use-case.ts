@@ -38,7 +38,7 @@ export class UpdateFormulaUseCase {
     })
     formulaEntity.generateDate('updated_date')
     // 3. database operation
-    const response = await deps.updateFormulaRepository.handle(input._id, formulaEntity.data, options)
+    const response = await deps.updateFormulaRepository.handle(input._id, formulaEntity.data)
     // 4. output
     return {
       matched_count: response.matched_count,

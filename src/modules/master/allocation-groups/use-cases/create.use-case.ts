@@ -24,8 +24,6 @@ export interface IDeps {
   schemaValidation: ISchemaValidation
 }
 
-
-
 export interface IOutput {
   inserted_id: string
 }
@@ -47,7 +45,7 @@ export class CreateAllocationGroupUseCase {
     // 3.1 create allocation group
     const response = await deps.createAllocationGroupRepository.handle(allocationGroupEntity.data)
     // 3.2. update counter
-    await deps.generateMasterNumber.handle(input.data.code, collectionName)
+    await deps.generateMasterNumber.handle(collectionName, input.data.code)
     // 4. output
     return { inserted_id: response.inserted_id }
   }

@@ -17,6 +17,6 @@ export class UpdateAllocationRepository implements IUpdateAllocationRepository {
   ) {}
 
   async handle(_id: string, document: IDocument): Promise<IUpdateAllocationOutput> {
-    return await this.database.collection(collectionName).update(_id, document, options)
+    return await this.database.collection(collectionName).update(_id, document, this.options)
   }
 }

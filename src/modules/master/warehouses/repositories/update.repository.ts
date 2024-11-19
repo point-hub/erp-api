@@ -17,6 +17,6 @@ export class UpdateWarehouseRepository implements IUpdateWarehouseRepository {
   ) {}
 
   async handle(_id: string, document: IDocument): Promise<IUpdateWarehouseOutput> {
-    return await this.database.collection(collectionName).update(_id, document, options)
+    return await this.database.collection(collectionName).update(_id, document, this.options)
   }
 }

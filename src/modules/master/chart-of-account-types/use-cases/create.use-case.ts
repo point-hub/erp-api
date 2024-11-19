@@ -28,9 +28,9 @@ export class CreateChartOfAccountTypeUseCase {
       name: input.name,
     })
     typeEntity.generateDate('created_date')
-    const cleanEntity = deps.objClean(typeEntity.data)
+    typeEntity.data = deps.objClean(typeEntity.data)
     // 3. database operation
-    const response = await deps.createChartOfAccountTypeRepository.handle(cleanEntity)
+    const response = await deps.createChartOfAccountTypeRepository.handle(typeEntity.data)
     // 4. output
     return { inserted_id: response.inserted_id }
   }

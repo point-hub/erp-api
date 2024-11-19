@@ -11,7 +11,7 @@ export const retrieveAllAllocationController: IController = async (controllerInp
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const retrieveAllAllocationRepository = new RetrieveAllAllocationRepository(controllerInput.dbConnection)
+    const retrieveAllAllocationRepository = new RetrieveAllAllocationRepository(controllerInput.dbConnection, { session })
     // 3. handle business rules
     // 3.1 check authenticated user
     await verifyUserToken(controllerInput, { session })

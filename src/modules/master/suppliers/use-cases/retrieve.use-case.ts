@@ -7,9 +7,7 @@ export interface IInput {
 export interface IDeps {
   retrieveSupplierRepository: IRetrieveSupplierRepository
 }
-export interface IOptions {
-  session: unknown
-}
+
 export interface IOutput {
   _id: string
   supplier_group: {
@@ -36,7 +34,7 @@ export interface IOutput {
 export class RetrieveSupplierUseCase {
   static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. database operation
-    const response = await deps.retrieveSupplierRepository.handle(input._id, options)
+    const response = await deps.retrieveSupplierRepository.handle(input._id)
     // 2. output
     return {
       _id: response._id,

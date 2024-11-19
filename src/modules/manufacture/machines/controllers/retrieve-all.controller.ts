@@ -17,24 +17,11 @@ export const retrieveAllMachineController: IController = async (controllerInput:
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const retrieveAuthUserRepository = new RetrieveAuthUserRepository(controllerInput.dbConnection)
-    const retrieveAllMachineRepository = new RetrieveAllMachineRepository(controllerInput.dbConnection)
+    const retrieveAuthUserRepository = new RetrieveAuthUserRepository(controllerInput.dbConnection, { session })
+    const retrieveAllMachineRepository = new RetrieveAllMachineRepository(controllerInput.dbConnection, { session })
     // 3. handle business rules
     // 3.1 check authenticated user
-    await VerifyTokenUseCase.handle(
-      {
-        token: controllerInput.httpRequest.signedCookies.POINTHUB_ACCESS,
-        secret: authConfig.secret,
-        project_id: controllerInput.httpRequest.query.project_id,
-      },
-      {
-        schemaValidation,
-        throwApiError,
-        retrieveAuthUserRepository,
-        verifyToken,
-      },
-      { session },
-    )
+    const verifyTokenResponse = await verifyUserToken(controllerInput, { session })
     // 3.2 retrieve all
     const response = await RetrieveAllMachineUseCase.handle(
       { query: controllerInput.httpRequest.query },

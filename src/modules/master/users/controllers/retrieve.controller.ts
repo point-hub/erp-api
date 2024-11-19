@@ -10,7 +10,7 @@ export const retrieveUserController: IController = async (controllerInput: ICont
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const retrieveUserRepository = new RetrieveUserRepository(controllerInput.dbConnection)
+    const retrieveUserRepository = new RetrieveUserRepository(controllerInput.dbConnection, { session })
     // 3. handle business rules
     const response = await RetrieveUserUseCase.handle(
       { _id: controllerInput.httpRequest.params.id },

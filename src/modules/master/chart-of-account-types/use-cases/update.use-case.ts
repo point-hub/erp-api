@@ -33,7 +33,7 @@ export class UpdateChartOfAccountTypeUseCase {
     })
     typeEntity.generateDate('updated_date')
     // 3. database operation
-    const response = await deps.updateChartOfAccountTypeRepository.handle(input._id, typeEntity.data, options)
+    const response = await deps.updateChartOfAccountTypeRepository.handle(input._id, typeEntity.data)
     // 4. output
     return {
       matched_count: response.matched_count,

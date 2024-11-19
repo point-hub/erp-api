@@ -21,26 +21,13 @@ export const createMachineController: IController = async (controllerInput: ICon
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const retrieveAuthUserRepository = new RetrieveAuthUserRepository(controllerInput.dbConnection)
-    const createMachineRepository = new CreateMachineRepository(controllerInput.dbConnection)
-    const updateRepository = new UpdateCounterRepository(controllerInput.dbConnection)
-    const retrieveAllRepository = new RetrieveAllCounterRepository(controllerInput.dbConnection)
+    const retrieveAuthUserRepository = new RetrieveAuthUserRepository(controllerInput.dbConnection, { session })
+    const createMachineRepository = new CreateMachineRepository(controllerInput.dbConnection, { session })
+    const updateRepository = new UpdateCounterRepository(controllerInput.dbConnection, { session })
+    const retrieveAllRepository = new RetrieveAllCounterRepository(controllerInput.dbConnection, { session })
     // 3. handle business rules
     // 3.1 check authenticated user
-    const verifyTokenResponse = await VerifyTokenUseCase.handle(
-      {
-        token: controllerInput.httpRequest.signedCookies.POINTHUB_ACCESS,
-        secret: authConfig.secret,
-        project_id: controllerInput.httpRequest.query.project_id,
-      },
-      {
-        schemaValidation,
-        throwApiError,
-        retrieveAuthUserRepository,
-        verifyToken,
-      },
-      { session },
-    )
+    const verifyTokenResponse = await verifyUserToken(controllerInput, { session })
     // 3.2 create
     const response = await CreateMachineUseCase.handle(
       {
@@ -54,7 +41,6 @@ export const createMachineController: IController = async (controllerInput: ICon
         retrieveAllRepository,
         schemaValidation,
       },
-      { session },
     )
     await session.commitTransaction()
     // 4. return response to client

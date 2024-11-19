@@ -33,7 +33,7 @@ export class RejectPurchaseRequestUseCase {
       rejected_reason: input.reason,
     })
     // 3. database operation
-    const response = await deps.rejectPurchaseRequestRepository.handle(input._id, purchaseRequestEntity.data, options)
+    const response = await deps.rejectPurchaseRequestRepository.handle(input._id, purchaseRequestEntity.data)
     // 4. output
     return {
       matched_count: response.matched_count,

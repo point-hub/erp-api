@@ -17,15 +17,11 @@ export const createChartOfAccountCategoryController: IController = async (contro
       controllerInput.dbConnection,
     )
     // 3. handle business rules
-    const response = await CreateChartOfAccountCategoryUseCase.handle(
-      controllerInput.httpRequest.body,
-      {
-        objClean,
-        createChartOfAccountCategoryRepository,
-        schemaValidation,
-      },
-      { session },
-    )
+    const response = await CreateChartOfAccountCategoryUseCase.handle(controllerInput.httpRequest.body, {
+      objClean,
+      createChartOfAccountCategoryRepository,
+      schemaValidation,
+    })
     await session.commitTransaction()
     // 4. return response to client
     return {

@@ -51,7 +51,7 @@ export class UpdateSettingJournalUseCase {
     })
     settingJournalEntity.generateDate('updated_date')
     // 3. database operation
-    const response = await deps.updateSettingJournalRepository.handle(input._id, settingJournalEntity.data, options)
+    const response = await deps.updateSettingJournalRepository.handle(input._id, settingJournalEntity.data)
     // 4. output
     return {
       matched_count: response.matched_count,

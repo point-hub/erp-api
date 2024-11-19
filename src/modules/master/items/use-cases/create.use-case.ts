@@ -59,16 +59,11 @@ export class CreateItemUseCase {
     // 3.1 create item
     const response = await deps.createItemRepository.handle(cleanEntity)
     // 3.2. update counter
-    const itemCategory = deps.retrieveItemCategoryRepository.handle(itemEntity.data.category_id as string, options)
-    const counters = await deps.retrieveAllCounterRepository.handle(
-      { filter: { name: 'item_categories', code: (await itemCategory).code } },
-      options,
-    )
-    await deps.updateCounterRepository.handle(
-      counters.data[0]._id,
-      { count: Number(counters.data[0].count) + 1 },
-      options,
-    )
+    const itemCategory = deps.retrieveItemCategoryRepository.handle(itemEntity.data.category_id as string)
+    const counters = await deps.retrieveAllCounterRepository.handle({
+      filter: { name: 'item_categories', code: (await itemCategory).code },
+    })
+    await deps.updateCounterRepository.handle(counters.data[0]._id, { count: Number(counters.data[0].count) + 1 })
     // 4. output
     return { inserted_id: response.inserted_id }
   }

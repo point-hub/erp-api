@@ -9,14 +9,11 @@ export interface IInput {
 export interface IDeps {
   retrieveSettingJournalRepository: IRetrieveSettingJournalRepository
 }
-export interface IOptions {
-  session: unknown
-}
 
 export class RetrieveSettingJournalUseCase {
   static async handle(input: IInput, deps: IDeps): Promise<IRetrieveOutput> {
     // 1. database operation
-    const response = await deps.retrieveSettingJournalRepository.handle(input._id, options)
+    const response = await deps.retrieveSettingJournalRepository.handle(input._id)
     // 2. output
     return {
       _id: response._id,

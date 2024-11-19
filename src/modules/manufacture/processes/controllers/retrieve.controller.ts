@@ -17,24 +17,11 @@ export const retrieveProcessController: IController = async (controllerInput: IC
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const retrieveAuthUserRepository = new RetrieveAuthUserRepository(controllerInput.dbConnection)
-    const retrieveProcessRepository = new RetrieveProcessRepository(controllerInput.dbConnection)
+    const retrieveAuthUserRepository = new RetrieveAuthUserRepository(controllerInput.dbConnection, { session })
+    const retrieveProcessRepository = new RetrieveProcessRepository(controllerInput.dbConnection, { session })
     // 3. handle business rules
     // 3.1 check authenticated user
-    await VerifyTokenUseCase.handle(
-      {
-        token: controllerInput.httpRequest.signedCookies.POINTHUB_ACCESS,
-        secret: authConfig.secret,
-        project_id: controllerInput.httpRequest.query.project_id,
-      },
-      {
-        schemaValidation,
-        throwApiError,
-        retrieveAuthUserRepository,
-        verifyToken,
-      },
-      { session },
-    )
+    const verifyTokenResponse = await verifyUserToken(controllerInput, { session })
     const response = await RetrieveProcessUseCase.handle(
       { _id: controllerInput.httpRequest.params.id },
       { retrieveProcessRepository },

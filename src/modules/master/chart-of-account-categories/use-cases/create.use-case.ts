@@ -30,9 +30,9 @@ export class CreateChartOfAccountCategoryUseCase {
       name: input.name,
     })
     categoryEntity.generateDate('created_date')
-    const cleanEntity = deps.objClean(categoryEntity.data)
+    categoryEntity.data = deps.objClean(categoryEntity.data)
     // 3. database operation
-    const response = await deps.createChartOfAccountCategoryRepository.handle(cleanEntity)
+    const response = await deps.createChartOfAccountCategoryRepository.handle(categoryEntity.data)
     // 4. output
     return { inserted_id: response.inserted_id }
   }

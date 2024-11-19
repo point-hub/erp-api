@@ -47,19 +47,15 @@ export class CreateSupplierGroupUseCase {
     // 3.1 create supplier group
     const response = await deps.createSupplierGroupRepository.handle(cleanEntity)
     // 3.2. update counter
-    const counters = await deps.retrieveAllCounterRepository.handle(
-      { filter: { name: 'supplier_groups', code: input.data.code } },
-      options,
-    )
+    const counters = await deps.retrieveAllCounterRepository.handle({
+      filter: { name: 'supplier_groups', code: input.data.code },
+    })
     if (!counters.data.length) {
-      await deps.createCounterRepository.handle(
-        {
-          name: 'supplier_groups',
-          code: input.data.code,
-          count: 0,
-        },
-        options,
-      )
+      await deps.createCounterRepository.handle({
+        name: 'supplier_groups',
+        code: input.data.code,
+        count: 0,
+      })
     }
     // 4. output
     return { inserted_id: response.inserted_id }

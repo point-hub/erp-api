@@ -27,7 +27,7 @@ export class DeleteBranchUseCase {
     // 1. validate schema
     await deps.schemaValidation(input, deleteValidation)
     // 2. check if doesn't have any relationship
-    const warehouses = await deps.retrieveAllWarehouseRepository.handle({ filter: { branch_id: input._id } }, options)
+    const warehouses = await deps.retrieveAllWarehouseRepository.handle({ filter: { branch_id: input._id } })
     if (warehouses.pagination.total_document) {
       deps.throwApiError(422, {
         errors: {
@@ -38,7 +38,7 @@ export class DeleteBranchUseCase {
       })
     }
     // 3. database operation
-    const response = await deps.deleteBranchRepository.handle(input._id, options)
+    const response = await deps.deleteBranchRepository.handle(input._id)
     // 4. output
     return { deleted_count: response.deleted_count }
   }

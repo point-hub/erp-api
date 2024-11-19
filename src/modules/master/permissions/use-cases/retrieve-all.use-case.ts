@@ -13,9 +13,7 @@ export interface IInput {
 export interface IDeps {
   retrieveAllPermissionRepository: IRetrieveAllPermissionRepository
 }
-export interface IOptions {
-  session: unknown
-}
+
 export interface IOutput {
   master: INestedBoolean
   purchasing: INestedBoolean
@@ -29,7 +27,7 @@ export interface IOutput {
 export class RetrieveAllPermissionUseCase {
   static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. database operation
-    const response = await deps.retrieveAllPermissionRepository.handle(input.query, options)
+    const response = await deps.retrieveAllPermissionRepository.handle(input.query)
     // 2. output
     return response
   }

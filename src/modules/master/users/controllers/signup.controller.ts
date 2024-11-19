@@ -16,25 +16,21 @@ export const signupController: IController = async (controllerInput: IController
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const signupRepository = new SignupRepository(controllerInput.dbConnection)
-    const retrieveUserRepository = new RetrieveUserRepository(controllerInput.dbConnection)
-    const updateCounterRepository = new UpdateCounterRepository(controllerInput.dbConnection)
-    const retrieveAllCounterRepository = new RetrieveAllCounterRepository(controllerInput.dbConnection)
+    const signupRepository = new SignupRepository(controllerInput.dbConnection, { session })
+    const retrieveUserRepository = new RetrieveUserRepository(controllerInput.dbConnection, { session })
+    const updateCounterRepository = new UpdateCounterRepository(controllerInput.dbConnection, { session })
+    const retrieveAllCounterRepository = new RetrieveAllCounterRepository(controllerInput.dbConnection, { session })
     // 3. handle business rules
-    const responseCreate = await SignupUseCase.handle(
-      controllerInput.httpRequest.body,
-      {
-        signupRepository,
-        retrieveUserRepository,
-        objClean,
-        schemaValidation,
-        hashPassword: Bun.password.hash,
-        generateVerificationCode: tokenGenerate,
-        updateCounterRepository,
-        retrieveAllCounterRepository,
-      },
-      { session },
-    )
+    const responseCreate = await SignupUseCase.handle(controllerInput.httpRequest.body, {
+      signupRepository,
+      retrieveUserRepository,
+      objClean,
+      schemaValidation,
+      hashPassword: Bun.password.hash,
+      generateVerificationCode: tokenGenerate,
+      updateCounterRepository,
+      retrieveAllCounterRepository,
+    })
 
     await session.commitTransaction()
     // 4. return response to client

@@ -29,7 +29,7 @@ export class CreateChartOfAccountUseCase {
     // 1. validate schema
     await deps.schemaValidation(input, createValidation)
     // 2. define entity
-    const exampleEntity = new ChartOfAccountEntity({
+    const chartOfAccountEntity = new ChartOfAccountEntity({
       type_id: input.type_id,
       category_id: input.category_id,
       number: input.number,
@@ -37,10 +37,10 @@ export class CreateChartOfAccountUseCase {
       subledger: input.subledger,
       notes: input.notes,
     })
-    exampleEntity.generateDate('created_date')
-    const cleanEntity = deps.objClean(exampleEntity.data)
+    chartOfAccountEntity.generateDate('created_date')
+    chartOfAccountEntity.data = deps.objClean(chartOfAccountEntity.data)
     // 3. database operation
-    const response = await deps.createChartOfAccountRepository.handle(cleanEntity)
+    const response = await deps.createChartOfAccountRepository.handle(chartOfAccountEntity.data)
     // 4. output
     return { inserted_id: response.inserted_id }
   }

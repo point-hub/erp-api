@@ -12,12 +12,13 @@ export const deleteChartOfAccountTypeController: IController = async (controller
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const deleteChartOfAccountTypeRepository = new DeleteChartOfAccountTypeRepository(controllerInput.dbConnection)
+    const deleteChartOfAccountTypeRepository = new DeleteChartOfAccountTypeRepository(controllerInput.dbConnection, {
+      session,
+    })
     // 3. handle business logic
     const response = await DeleteChartOfAccountTypeUseCase.handle(
       { _id: controllerInput.httpRequest.params.id, reason: controllerInput.httpRequest.body.reason },
       { schemaValidation, deleteChartOfAccountTypeRepository },
-      { session },
     )
     await session.commitTransaction()
     // return response to client

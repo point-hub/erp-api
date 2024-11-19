@@ -56,7 +56,7 @@ export class UpdateCustomerUseCase {
     })
     customerEntity.generateDate('updated_date')
     // 3. database operation
-    const response = await deps.updateCustomerRepository.handle(input._id, customerEntity.data, options)
+    const response = await deps.updateCustomerRepository.handle(input._id, customerEntity.data)
     // 4. output
     return {
       matched_count: response.matched_count,

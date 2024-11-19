@@ -15,7 +15,7 @@ export const signinController: IController = async (controllerInput: IController
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const retrieveMatchedUsernameRepository = new RetrieveMatchedUsernameRepository(controllerInput.dbConnection)
+    const retrieveMatchedUsernameRepository = new RetrieveMatchedUsernameRepository(controllerInput.dbConnection, { session })
     // 3. handle business rules
     const response = await SigninUseCase.handle(
       controllerInput.httpRequest.body,

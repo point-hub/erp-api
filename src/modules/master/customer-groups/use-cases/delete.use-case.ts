@@ -27,10 +27,7 @@ export class DeleteCustomerGroupUseCase {
     // 1. validate schema
     await deps.schemaValidation(input, deleteValidation)
     // 2. check if doesn't have any relationship
-    const customers = await deps.retrieveAllCustomerRepository.handle(
-      { filter: { customer_group_id: input._id } },
-      options,
-    )
+    const customers = await deps.retrieveAllCustomerRepository.handle({ filter: { customer_group_id: input._id } })
     if (customers.pagination.total_document) {
       deps.throwApiError(422, {
         errors: {
@@ -41,7 +38,7 @@ export class DeleteCustomerGroupUseCase {
       })
     }
     // 3. database operation
-    const response = await deps.deleteCustomerGroupRepository.handle(input._id, options)
+    const response = await deps.deleteCustomerGroupRepository.handle(input._id)
     // 4. output
     return { deleted_count: response.deleted_count }
   }

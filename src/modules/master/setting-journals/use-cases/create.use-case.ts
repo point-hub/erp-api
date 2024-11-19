@@ -21,28 +21,23 @@ export interface IDeps {
   schemaValidation: ISchemaValidation
 }
 
-
 export class CreateSettingJournalUseCase {
   static async handle(input: IInput, deps: IDeps): Promise<ICreateOutput> {
     // 1. validate schema
     await deps.schemaValidation(input, createValidation)
     // 2. define entity
-    const exampleEntity = new SettingJournalEntity({
+    const settingJournalEntity = new SettingJournalEntity({
       module: input.module,
       feature: input.feature,
     })
-    exampleEntity.generateDate('created_date')
-    const cleanEntity = deps.objClean(exampleEntity.data)
+    settingJournalEntity.generateDate('created_date')
+    settingJournalEntity.data = deps.objClean(settingJournalEntity.data)
     // 3. database operation
     // 3.1 create setting journal
-    const response = await deps.createSettingJournalRepository.handle(cleanEntity)
+    const response = await deps.createSettingJournalRepository.handle(settingJournalEntity.data)
     // 3.2. update code counter
-    const counters = await deps.retrieveAllCounterRepository.handle({ filter: { name: 'setting-journal' } }, options)
-    await deps.updateCounterRepository.handle(
-      counters.data[0]._id,
-      { count: Number(counters.data[0].count) + 1 },
-      options,
-    )
+    const counters = await deps.retrieveAllCounterRepository.handle({ filter: { name: 'setting-journal' } })
+    await deps.updateCounterRepository.handle(counters.data[0]._id, { count: Number(counters.data[0].count) + 1 })
     // 4. output
     return { inserted_id: response.inserted_id }
   }

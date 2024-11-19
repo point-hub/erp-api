@@ -39,7 +39,7 @@ export class UpdateMachineUseCase {
     })
     machineEntity.generateDate('updated_date')
     // 3. database operation
-    const response = await deps.updateMachineRepository.handle(input._id, machineEntity.data, options)
+    const response = await deps.updateMachineRepository.handle(input._id, machineEntity.data)
     // 4. output
     return {
       matched_count: response.matched_count,

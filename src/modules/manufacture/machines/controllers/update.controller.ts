@@ -18,24 +18,11 @@ export const updateMachineController: IController = async (controllerInput: ICon
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const retrieveAuthUserRepository = new RetrieveAuthUserRepository(controllerInput.dbConnection)
-    const updateMachineRepository = new UpdateMachineRepository(controllerInput.dbConnection)
+    const retrieveAuthUserRepository = new RetrieveAuthUserRepository(controllerInput.dbConnection, { session })
+    const updateMachineRepository = new UpdateMachineRepository(controllerInput.dbConnection, { session })
     // 3. handle business rules
     // 3.1 check authenticated user
-    const verifyTokenResponse = await VerifyTokenUseCase.handle(
-      {
-        token: controllerInput.httpRequest.signedCookies.POINTHUB_ACCESS,
-        secret: authConfig.secret,
-        project_id: controllerInput.httpRequest.query.project_id,
-      },
-      {
-        schemaValidation,
-        throwApiError,
-        retrieveAuthUserRepository,
-        verifyToken,
-      },
-      { session },
-    )
+    const verifyTokenResponse = await verifyUserToken(controllerInput, { session })
     // 3.2 update
     const response = await UpdateMachineUseCase.handle(
       {

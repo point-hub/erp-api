@@ -29,8 +29,8 @@ export class DeleteItemCategoryUseCase {
     // 1. validate schema
     await deps.schemaValidation(input, deleteValidation)
     // 2. check if doesn't have any relationship
-    const itemCategory = await deps.retrieveItemCategoryRepository.handle(input._id, options)
-    const items = await deps.retrieveAllItemRepository.handle({ filter: { category_id: itemCategory._id } }, options)
+    const itemCategory = await deps.retrieveItemCategoryRepository.handle(input._id)
+    const items = await deps.retrieveAllItemRepository.handle({ filter: { category_id: itemCategory._id } })
     if (items.pagination.total_document) {
       deps.throwApiError(422, {
         errors: {
@@ -41,7 +41,7 @@ export class DeleteItemCategoryUseCase {
       })
     }
     // 3. database operation
-    const response = await deps.deleteItemCategoryRepository.handle(input._id, options)
+    const response = await deps.deleteItemCategoryRepository.handle(input._id)
     // 4. output
     return { deleted_count: response.deleted_count }
   }

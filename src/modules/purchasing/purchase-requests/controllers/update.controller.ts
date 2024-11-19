@@ -20,11 +20,11 @@ export const updatePurchaseRequestController: IController = async (controllerInp
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const updatePurchaseRequestRepository = new UpdatePurchaseRequestRepository(controllerInput.dbConnection)
-    const createPurchaseRequestRepository = new CreatePurchaseRequestRepository(controllerInput.dbConnection)
-    const createCounterRepository = new CreateCounterRepository(controllerInput.dbConnection)
-    const updateCounterRepository = new UpdateCounterRepository(controllerInput.dbConnection)
-    const retrieveAllCounterRepository = new RetrieveAllCounterRepository(controllerInput.dbConnection)
+    const updatePurchaseRequestRepository = new UpdatePurchaseRequestRepository(controllerInput.dbConnection, { session })
+    const createPurchaseRequestRepository = new CreatePurchaseRequestRepository(controllerInput.dbConnection, { session })
+    const createCounterRepository = new CreateCounterRepository(controllerInput.dbConnection, { session })
+    const updateCounterRepository = new UpdateCounterRepository(controllerInput.dbConnection, { session })
+    const retrieveAllCounterRepository = new RetrieveAllCounterRepository(controllerInput.dbConnection, { session })
     // 3. handle business rules
     // 3.1 check authenticated user
     const verifyTokenResponse = await verifyUserToken(controllerInput, session)

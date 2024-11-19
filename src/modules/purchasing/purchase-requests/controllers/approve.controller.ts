@@ -14,10 +14,12 @@ export const approvePurchaseRequestController: IController = async (controllerIn
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const approvePurchaseRequestRepository = new ApprovePurchaseRequestRepository(controllerInput.dbConnection)
+    const approvePurchaseRequestRepository = new ApprovePurchaseRequestRepository(controllerInput.dbConnection, {
+      session,
+    })
     // 3. handle business rules
     // 3.1 check authenticated user
-    const verifyTokenResponse = await verifyUserToken(controllerInput, session)
+    const verifyTokenResponse = await verifyUserToken(controllerInput, { session })
     // 3.2 approve
     const response = await ApprovePurchaseRequestUseCase.handle(
       {

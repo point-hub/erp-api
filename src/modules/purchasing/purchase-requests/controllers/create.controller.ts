@@ -20,14 +20,16 @@ export const createPurchaseRequestController: IController = async (controllerInp
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const createPurchaseRequestRepository = new CreatePurchaseRequestRepository(controllerInput.dbConnection)
-    const createCounterRepository = new CreateCounterRepository(controllerInput.dbConnection)
-    const updateCounterRepository = new UpdateCounterRepository(controllerInput.dbConnection)
-    const retrieveAllCounterRepository = new RetrieveAllCounterRepository(controllerInput.dbConnection)
+    const createPurchaseRequestRepository = new CreatePurchaseRequestRepository(controllerInput.dbConnection, {
+      session,
+    })
+    const createCounterRepository = new CreateCounterRepository(controllerInput.dbConnection, { session })
+    const updateCounterRepository = new UpdateCounterRepository(controllerInput.dbConnection, { session })
+    const retrieveAllCounterRepository = new RetrieveAllCounterRepository(controllerInput.dbConnection, { session })
     const generateFormNumber = new GenerateFormNumber(controllerInput.dbConnection)
     // 3. handle business rules
     // 3.1 check authenticated user
-    const verifyTokenResponse = await verifyUserToken(controllerInput, session)
+    const verifyTokenResponse = await verifyUserToken(controllerInput, { session })
     // 3.2 create
     const response = await CreatePurchaseRequestUseCase.handle(
       {
@@ -44,7 +46,6 @@ export const createPurchaseRequestController: IController = async (controllerInp
         generateFormNumber,
         dateFormat: format,
       },
-      { session },
     )
     await session.commitTransaction()
     // 4. return response to client

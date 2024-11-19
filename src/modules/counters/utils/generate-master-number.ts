@@ -5,7 +5,7 @@ import { RetrieveAllCounterRepository } from '@/modules/counters/repositories/re
 import { throwApiError } from '@/utils/throw-api-error'
 
 export interface IGenerateMasterNumber {
-  handle(prefix: string, name: string): Promise<void>
+  handle(name: string, code: string): Promise<void>
 }
 
 export class GenerateMasterNumber implements IGenerateMasterNumber {
@@ -14,11 +14,10 @@ export class GenerateMasterNumber implements IGenerateMasterNumber {
     public options?: Record<string, unknown>,
   ) {}
 
-  async handle(prefix: string, name: string): Promise<void> {
+  async handle(name: string, code: string): Promise<void> {
     const createCounterRepository = new CreateCounterRepository(this.database, this.options)
     const retrieveAllCounterRepository = new RetrieveAllCounterRepository(this.database, this.options)
 
-    const code = prefix
     const counters = await retrieveAllCounterRepository.handle({ filter: { name: name, code: code } })
 
     if (counters.data.length > 0) {

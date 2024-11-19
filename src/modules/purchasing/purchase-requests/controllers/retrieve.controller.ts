@@ -12,10 +12,12 @@ export const retrievePurchaseRequestController: IController = async (controllerI
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const retrievePurchaseRequestRepository = new RetrievePurchaseRequestRepository(controllerInput.dbConnection)
+    const retrievePurchaseRequestRepository = new RetrievePurchaseRequestRepository(controllerInput.dbConnection, {
+      session,
+    })
     // 3. handle business rules
     // 3.1 check authenticated user
-    await verifyUserToken(controllerInput, session)
+    await verifyUserToken(controllerInput, { session })
     // 3.2 retrieve
     const response = await RetrievePurchaseRequestUseCase.handle(
       { _id: controllerInput.httpRequest.params.id },

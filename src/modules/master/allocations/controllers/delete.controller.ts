@@ -13,7 +13,7 @@ export const deleteAllocationController: IController = async (controllerInput: I
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const deleteAllocationRepository = new DeleteAllocationRepository(controllerInput.dbConnection)
+    const deleteAllocationRepository = new DeleteAllocationRepository(controllerInput.dbConnection, { session })
     // 3. handle business logic
     // 3.1 check authenticated user
     await verifyUserToken(controllerInput, { session })

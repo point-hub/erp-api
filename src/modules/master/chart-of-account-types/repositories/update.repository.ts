@@ -17,6 +17,6 @@ export class UpdateChartOfAccountTypeRepository implements IUpdateChartOfAccount
   ) {}
 
   async handle(_id: string, document: IDocument): Promise<IUpdateChartOfAccountTypeOutput> {
-    return await this.database.collection(collectionName).update(_id, document, options)
+    return await this.database.collection(collectionName).update(_id, document, this.options)
   }
 }

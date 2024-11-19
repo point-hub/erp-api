@@ -1,14 +1,8 @@
 import type { IController, IControllerInput } from '@point-hub/papi'
 
-import authConfig from '@/config/auth'
-import { RetrieveAuthUserRepository } from '@/modules/master/users/repositories/retrieve-auth-user.repository'
-import { VerifyTokenUseCase } from '@/modules/master/users/use-cases/verify-token.use-case'
-import { verifyToken } from '@/modules/master/users/utils/jwt'
-import { throwApiError } from '@/utils/throw-api-error'
-import { schemaValidation } from '@/utils/validation'
-
 import { RetrieveAllUserRepository } from '../repositories/retrieve-all.repository'
 import { RetrieveAllUserUseCase } from '../use-cases/retrieve-all.use-case'
+import { verifyUserToken } from '../utils/verify-user-token'
 
 export const retrieveAllUserController: IController = async (controllerInput: IControllerInput) => {
   let session
@@ -17,25 +11,11 @@ export const retrieveAllUserController: IController = async (controllerInput: IC
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const retrieveAuthUserRepository = new RetrieveAuthUserRepository(controllerInput.dbConnection)
-    const retrieveAllUserRepository = new RetrieveAllUserRepository(controllerInput.dbConnection)
+    const retrieveAllUserRepository = new RetrieveAllUserRepository(controllerInput.dbConnection, { session })
     // 3. handle business rules
     // 3.1 check authenticated user
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const verifyTokenResponse = await VerifyTokenUseCase.handle(
-      {
-        token: controllerInput.httpRequest.signedCookies.POINTHUB_ACCESS,
-        secret: authConfig.secret,
-        project_id: controllerInput.httpRequest.query.project_id,
-      },
-      {
-        schemaValidation,
-        throwApiError,
-        retrieveAuthUserRepository,
-        verifyToken,
-      },
-      { session },
-    )
+
+    await verifyUserToken(controllerInput, { session })
     // 3.2 retrieve all user
     const response = await RetrieveAllUserUseCase.handle(
       { query: controllerInput.httpRequest.query },

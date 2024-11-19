@@ -7,9 +7,7 @@ export interface IInput {
 export interface IDeps {
   retrieveCustomerRepository: IRetrieveCustomerRepository
 }
-export interface IOptions {
-  session: unknown
-}
+
 export interface IOutput {
   _id: string
   customer_group: {
@@ -36,7 +34,7 @@ export interface IOutput {
 export class RetrieveCustomerUseCase {
   static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. database operation
-    const response = await deps.retrieveCustomerRepository.handle(input._id, options)
+    const response = await deps.retrieveCustomerRepository.handle(input._id)
     // 2. output
     return {
       _id: response._id,

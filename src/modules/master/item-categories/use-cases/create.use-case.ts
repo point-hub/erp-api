@@ -42,24 +42,20 @@ export class CreateItemCategoryUseCase {
       created_by: input.auth._id,
     })
     itemCategoryEntity.generateDate('created_date')
-    const cleanEntity = deps.objClean(itemCategoryEntity.data)
+    itemCategoryEntity.data = deps.objClean(itemCategoryEntity.data)
     // 3. database operation
     // 3.1 create item category
-    const response = await deps.createItemCategoryRepository.handle(cleanEntity)
+    const response = await deps.createItemCategoryRepository.handle(itemCategoryEntity.data)
     // 3.2. update counter
-    const counters = await deps.retrieveAllCounterRepository.handle(
-      { filter: { name: 'item_categories', code: input.data.code } },
-      options,
-    )
+    const counters = await deps.retrieveAllCounterRepository.handle({
+      filter: { name: 'item_categories', code: input.data.code },
+    })
     if (!counters.data.length) {
-      await deps.createCounterRepository.handle(
-        {
-          name: 'item_categories',
-          code: input.data.code,
-          count: 0,
-        },
-        options,
-      )
+      await deps.createCounterRepository.handle({
+        name: 'item_categories',
+        code: input.data.code,
+        count: 0,
+      })
     }
     // 4. output
     return { inserted_id: response.inserted_id }

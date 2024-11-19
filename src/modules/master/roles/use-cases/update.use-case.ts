@@ -42,7 +42,7 @@ export class UpdateRoleUseCase {
     })
     roleEntity.generateDate('updated_date')
     // 3. database operation
-    const response = await deps.updateRoleRepository.handle(input._id, roleEntity.data, options)
+    const response = await deps.updateRoleRepository.handle(input._id, roleEntity.data)
     // 4. output
     return {
       matched_count: response.matched_count,

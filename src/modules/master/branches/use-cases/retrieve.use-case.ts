@@ -7,9 +7,7 @@ export interface IInput {
 export interface IDeps {
   retrieveBranchRepository: IRetrieveBranchRepository
 }
-export interface IOptions {
-  session: unknown
-}
+
 export interface IOutput {
   _id: string
   label: string
@@ -25,7 +23,7 @@ export interface IOutput {
 export class RetrieveBranchUseCase {
   static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. database operation
-    const response = await deps.retrieveBranchRepository.handle(input._id, options)
+    const response = await deps.retrieveBranchRepository.handle(input._id)
     // 2. output
     return {
       _id: response._id,

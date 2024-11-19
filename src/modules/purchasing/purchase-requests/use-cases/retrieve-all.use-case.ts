@@ -13,9 +13,7 @@ export interface IInput {
 export interface IDeps {
   retrieveAllPurchaseRequestRepository: IRetrieveAllPurchaseRequestRepository
 }
-export interface IOptions {
-  session: unknown
-}
+
 export interface IOutput {
   data: IRetrievePurchaseRequestOutput[]
   pagination: IPagination

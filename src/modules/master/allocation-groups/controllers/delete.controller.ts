@@ -15,8 +15,8 @@ export const deleteAllocationGroupController: IController = async (controllerInp
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const retrieveAllAllocationRepository = new RetrieveAllAllocationRepository(controllerInput.dbConnection)
-    const deleteAllocationGroupRepository = new DeleteAllocationGroupRepository(controllerInput.dbConnection)
+    const retrieveAllAllocationRepository = new RetrieveAllAllocationRepository(controllerInput.dbConnection, { session })
+    const deleteAllocationGroupRepository = new DeleteAllocationGroupRepository(controllerInput.dbConnection, { session })
     // 3. handle business logic
     // 3.1 check authenticated user
     await verifyUserToken(controllerInput, { session })

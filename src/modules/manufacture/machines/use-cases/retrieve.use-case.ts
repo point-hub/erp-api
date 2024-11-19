@@ -7,9 +7,7 @@ export interface IInput {
 export interface IDeps {
   retrieveMachineRepository: IRetrieveMachineRepository
 }
-export interface IOptions {
-  session: unknown
-}
+
 export interface IOutput {
   _id: string
   code: string
@@ -22,7 +20,7 @@ export interface IOutput {
 export class RetrieveMachineUseCase {
   static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. database operation
-    const response = await deps.retrieveMachineRepository.handle(input._id, options)
+    const response = await deps.retrieveMachineRepository.handle(input._id)
     // 2. output
     return {
       _id: response._id,

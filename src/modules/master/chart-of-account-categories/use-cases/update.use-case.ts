@@ -38,7 +38,6 @@ export class UpdateChartOfAccountCategoryUseCase {
     const response = await deps.updateChartOfAccountCategoryRepository.handle(
       input._id,
       chartOfAccountCategoryEntity.data,
-      options,
     )
     // 4. output
     return {

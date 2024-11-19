@@ -17,7 +17,7 @@ export const createAllocationController: IController = async (controllerInput: I
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const retrieveAllocationGroupRepository = new RetrieveAllocationGroupRepository(controllerInput.dbConnection)
+    const retrieveAllocationGroupRepository = new RetrieveAllocationGroupRepository(controllerInput.dbConnection, { session })
     const createAllocationRepository = new CreateAllocationRepository(controllerInput.dbConnection, { session })
     const updateMasterNumber = new UpdateMasterNumber(controllerInput.dbConnection, { session })
     // 3. handle business rules

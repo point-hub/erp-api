@@ -9,9 +9,7 @@ export interface IInput {
 export interface IDeps {
   retrievePurchaseRequestRepository: IRetrievePurchaseRequestRepository
 }
-export interface IOptions {
-  session: unknown
-}
+
 export interface IOutput {
   _id: string
   revised_count: number
@@ -37,7 +35,7 @@ export interface IOutput {
 export class RetrievePurchaseRequestUseCase {
   static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. database operation
-    const response = await deps.retrievePurchaseRequestRepository.handle(input._id, options)
+    const response = await deps.retrievePurchaseRequestRepository.handle(input._id)
     // 2. output
     return {
       _id: response._id,

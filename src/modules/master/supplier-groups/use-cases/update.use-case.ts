@@ -40,7 +40,7 @@ export class UpdateSupplierGroupUseCase {
     })
     supplierGroupEntity.generateDate('updated_date')
     // 3. database operation
-    const response = await deps.updateSupplierGroupRepository.handle(input._id, supplierGroupEntity.data, options)
+    const response = await deps.updateSupplierGroupRepository.handle(input._id, supplierGroupEntity.data)
     // 4. output
     return {
       matched_count: response.matched_count,

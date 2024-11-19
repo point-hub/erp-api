@@ -8,7 +8,6 @@ interface IAllocationGroup {
   _id: string
   label: string
   code: string
-  name: string
 }
 
 export interface IRetrieveAllocationOutput {
@@ -37,7 +36,6 @@ export class RetrieveAllocationRepository implements IRetrieveAllocationReposito
     const pipeline: IPipeline[] = []
 
     pipeline.push(...this.aggregateFilters(_id))
-    pipeline.push(...this.aggregateJoinAllocationGroup())
     pipeline.push(...this.aggregateJoinCreatedBy())
     pipeline.push(...this.aggregateJoinUpdatedBy())
 
@@ -94,34 +92,6 @@ export class RetrieveAllocationRepository implements IRetrieveAllocationReposito
           preserveNullAndEmptyArrays: true,
         },
       },
-    ]
-  }
-
-  private aggregateJoinAllocationGroup() {
-    return [
-      {
-        $lookup: {
-          from: 'allocation_groups',
-          localField: 'allocation_group_id',
-          foreignField: '_id',
-          pipeline: [{ $project: { _id: 1, code: 1, name: 1 } }],
-          as: 'allocation_group',
-        },
-      },
-      {
-        $unwind: {
-          path: '$allocation_group',
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-      {
-        $addFields: {
-          'allocation_group.label': {
-            $concat: ['[', '$allocation_group.code', '] ', '$allocation_group.name'],
-          },
-        },
-      },
-      { $unset: ['allocation_group_id'] },
     ]
   }
 

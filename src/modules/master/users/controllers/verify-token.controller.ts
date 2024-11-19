@@ -15,7 +15,7 @@ export const verifyTokenController: IController = async (controllerInput: IContr
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const retrieveAuthUserRepository = new RetrieveAuthUserRepository(controllerInput.dbConnection)
+    const retrieveAuthUserRepository = new RetrieveAuthUserRepository(controllerInput.dbConnection, { session })
     // 3. handle business rules
     const response = await VerifyTokenUseCase.handle(
       {
@@ -29,7 +29,6 @@ export const verifyTokenController: IController = async (controllerInput: IContr
         retrieveAuthUserRepository,
         verifyToken,
       },
-      { session },
     )
     await session.commitTransaction()
     // 4. return response to client

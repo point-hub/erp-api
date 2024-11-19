@@ -46,7 +46,7 @@ export class UpdateWarehouseUseCase {
     })
     warehouseEntity.generateDate('updated_date')
     // 3. database operation
-    const response = await deps.updateWarehouseRepository.handle(input._id, warehouseEntity.data, options)
+    const response = await deps.updateWarehouseRepository.handle(input._id, warehouseEntity.data)
     // 4. output
     return {
       matched_count: response.matched_count,

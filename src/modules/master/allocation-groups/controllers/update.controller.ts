@@ -14,7 +14,7 @@ export const updateAllocationGroupController: IController = async (controllerInp
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const updateAllocationGroupRepository = new UpdateAllocationGroupRepository(controllerInput.dbConnection)
+    const updateAllocationGroupRepository = new UpdateAllocationGroupRepository(controllerInput.dbConnection, { session })
     // 3. handle business rules
     // 3.1 check authenticated user
     const verifyTokenResponse = await verifyUserToken(controllerInput, { session })

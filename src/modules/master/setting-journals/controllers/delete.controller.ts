@@ -12,12 +12,11 @@ export const deleteSettingJournalController: IController = async (controllerInpu
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const deleteSettingJournalRepository = new DeleteSettingJournalRepository(controllerInput.dbConnection)
+    const deleteSettingJournalRepository = new DeleteSettingJournalRepository(controllerInput.dbConnection, { session })
     // 3. handle business logic
     const response = await DeleteSettingJournalUseCase.handle(
       { _id: controllerInput.httpRequest.params.id, reason: controllerInput.httpRequest.body.reason },
       { schemaValidation, deleteSettingJournalRepository },
-      { session },
     )
     await session.commitTransaction()
     // return response to client

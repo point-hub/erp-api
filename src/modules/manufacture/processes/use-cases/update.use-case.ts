@@ -39,7 +39,7 @@ export class UpdateProcessUseCase {
     })
     processEntity.generateDate('updated_date')
     // 3. database operation
-    const response = await deps.updateProcessRepository.handle(input._id, processEntity.data, options)
+    const response = await deps.updateProcessRepository.handle(input._id, processEntity.data)
     // 4. output
     return {
       matched_count: response.matched_count,

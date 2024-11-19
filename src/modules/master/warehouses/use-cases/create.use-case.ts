@@ -53,8 +53,8 @@ export class CreateWarehouseUseCase {
     // 3.1 create warehouse
     const response = await deps.createWarehouseRepository.handle(cleanEntity)
     // 3.2. update counter
-    const counters = await deps.retrieveAllRepository.handle({ filter: { name: 'warehouses' } }, options)
-    await deps.updateRepository.handle(counters.data[0]._id, { count: Number(counters.data[0].count) + 1 }, options)
+    const counters = await deps.retrieveAllRepository.handle({ filter: { name: 'warehouses' } })
+    await deps.updateRepository.handle(counters.data[0]._id, { count: Number(counters.data[0].count) + 1 })
     // 4. output
     return { inserted_id: response.inserted_id }
   }

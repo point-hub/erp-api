@@ -14,10 +14,12 @@ export const deletePurchaseRequestController: IController = async (controllerInp
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const deletePurchaseRequestRepository = new DeletePurchaseRequestRepository(controllerInput.dbConnection)
+    const deletePurchaseRequestRepository = new DeletePurchaseRequestRepository(controllerInput.dbConnection, {
+      session,
+    })
     // 3. handle business logic
     // 3.1 check authenticated user
-    const verifyTokenResponse = await verifyUserToken(controllerInput, session)
+    const verifyTokenResponse = await verifyUserToken(controllerInput, { session })
     // 3.2 delete
     const response = await DeletePurchaseRequestUseCase.handle(
       {
@@ -26,7 +28,6 @@ export const deletePurchaseRequestController: IController = async (controllerInp
         reason: controllerInput.httpRequest.body.reason,
       },
       { schemaValidation, deletePurchaseRequestRepository },
-      { session },
     )
     await session.commitTransaction()
     // return response to client

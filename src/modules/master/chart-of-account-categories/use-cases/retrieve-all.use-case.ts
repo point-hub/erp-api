@@ -10,9 +10,7 @@ export interface IInput {
 export interface IDeps {
   retrieveAllChartOfAccountCategoryRepository: IRetrieveAllChartOfAccountCategoryRepository
 }
-export interface IOptions {
-  session: unknown
-}
+
 export interface IOutput {
   data: IRetrieveChartOfAccountCategoryOutput[]
   pagination: IPagination
@@ -21,7 +19,7 @@ export interface IOutput {
 export class RetrieveAllChartOfAccountCategoryUseCase {
   static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. database operation
-    const response = await deps.retrieveAllChartOfAccountCategoryRepository.handle(input.query, options)
+    const response = await deps.retrieveAllChartOfAccountCategoryRepository.handle(input.query)
     // 2. output
     return {
       data: response.data,

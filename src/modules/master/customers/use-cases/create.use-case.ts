@@ -65,19 +65,11 @@ export class CreateCustomerUseCase {
     // 3.1 create customer
     const response = await deps.createCustomerRepository.handle(cleanEntity)
     // 3.2. update counter
-    const customerGroup = deps.retrieveCustomerGroupRepository.handle(
-      customerEntity.data.customer_group_id as string,
-      options,
-    )
-    const counters = await deps.retrieveAllCounterRepository.handle(
-      { filter: { name: 'customer_groups', code: (await customerGroup).code } },
-      options,
-    )
-    await deps.updateCounterRepository.handle(
-      counters.data[0]._id,
-      { count: Number(counters.data[0].count) + 1 },
-      options,
-    )
+    const customerGroup = deps.retrieveCustomerGroupRepository.handle(customerEntity.data.customer_group_id as string)
+    const counters = await deps.retrieveAllCounterRepository.handle({
+      filter: { name: 'customer_groups', code: (await customerGroup).code },
+    })
+    await deps.updateCounterRepository.handle(counters.data[0]._id, { count: Number(counters.data[0].count) + 1 })
     // 4. output
     return { inserted_id: response.inserted_id }
   }

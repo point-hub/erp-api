@@ -9,9 +9,7 @@ export interface IInput {
 export interface IDeps {
   retrieveChartOfAccountRepository: IRetrieveChartOfAccountRepository
 }
-export interface IOptions {
-  session: unknown
-}
+
 export interface IOutput {
   _id: string
   type: IChartOfAccountType
@@ -30,7 +28,7 @@ export interface IOutput {
 export class RetrieveChartOfAccountUseCase {
   static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. database operation
-    const response = await deps.retrieveChartOfAccountRepository.handle(input._id, options)
+    const response = await deps.retrieveChartOfAccountRepository.handle(input._id)
     // 2. output
     return {
       _id: response._id,
