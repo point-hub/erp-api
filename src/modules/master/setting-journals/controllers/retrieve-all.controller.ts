@@ -10,7 +10,9 @@ export const retrieveAllSettingJournalController: IController = async (controlle
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const retrieveAllSettingJournalRepository = new RetrieveAllSettingJournalRepository(controllerInput.dbConnection, { session })
+    const retrieveAllSettingJournalRepository = new RetrieveAllSettingJournalRepository(controllerInput.dbConnection, {
+      session,
+    })
     // 3. handle business rules
     const response = await RetrieveAllSettingJournalUseCase.handle(
       { query: controllerInput.httpRequest.query },

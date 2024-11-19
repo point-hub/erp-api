@@ -16,11 +16,7 @@ export class UpdateManyChartOfAccountCategoryRepository implements IUpdateManyCh
     public options?: Record<string, unknown>,
   ) {}
 
-  async handle(
-    filter: IDocument,
-    document: IDocument,
-    options?: unknown,
-  ): Promise<IUpdateManyChartOfAccountCategoryOutput> {
+  async handle(filter: IDocument, document: IDocument): Promise<IUpdateManyChartOfAccountCategoryOutput> {
     return await this.database.collection(collectionName).updateMany(filter, document, this.options)
   }
 }

@@ -21,6 +21,8 @@ export class RetrieveChartOfAccountTypeRepository implements IRetrieveChartOfAcc
   async handle(_id: string): Promise<IRetrieveChartOfAccountTypeOutput> {
     const pipeline: IPipeline[] = []
 
+    pipeline.push(...this.aggregateFilters(_id))
+
     const response = await this.database.collection(collectionName).aggregate(pipeline, {}, this.options)
 
     return {
@@ -29,5 +31,9 @@ export class RetrieveChartOfAccountTypeRepository implements IRetrieveChartOfAcc
       created_date: response.data[0].created_date as Date,
       updated_date: response.data[0].updated_date as Date,
     }
+  }
+
+  private aggregateFilters(_id: string) {
+    return [{ $match: { _id: _id } }]
   }
 }

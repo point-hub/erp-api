@@ -1,9 +1,9 @@
 import type { IController, IControllerInput } from '@point-hub/papi'
 
 import { IAuth } from '@/modules/master/users/interface'
+import { verifyUserToken } from '@/modules/master/users/utils/verify-user-token'
 import { schemaValidation } from '@/utils/validation'
 
-import { verifyUserToken } from '@/modules/master/users/utils/verify-user-token'
 import { UpdateAllocationRepository } from '../repositories/update.repository'
 import { UpdateAllocationUseCase } from '../use-cases/update.use-case'
 

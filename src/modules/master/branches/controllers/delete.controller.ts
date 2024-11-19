@@ -1,9 +1,9 @@
 import type { IController, IControllerInput } from '@point-hub/papi'
 
+import { verifyUserToken } from '@/modules/master/users/utils/verify-user-token'
 import { throwApiError } from '@/utils/throw-api-error'
 import { schemaValidation } from '@/utils/validation'
 
-import { verifyUserToken } from '@/modules/master/users/utils/verify-user-token'
 import { RetrieveAllWarehouseRepository } from '../../warehouses/repositories/retrieve-all.repository'
 import { DeleteBranchRepository } from '../repositories/delete.repository'
 import { DeleteBranchUseCase } from '../use-cases/delete.use-case'

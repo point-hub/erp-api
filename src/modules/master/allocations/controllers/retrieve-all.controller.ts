@@ -1,6 +1,7 @@
 import type { IController, IControllerInput } from '@point-hub/papi'
 
 import { verifyUserToken } from '@/modules/master/users/utils/verify-user-token'
+
 import { RetrieveAllAllocationRepository } from '../repositories/retrieve-all.repository'
 import { RetrieveAllAllocationUseCase } from '../use-cases/retrieve-all.use-case'
 
@@ -11,7 +12,9 @@ export const retrieveAllAllocationController: IController = async (controllerInp
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const retrieveAllAllocationRepository = new RetrieveAllAllocationRepository(controllerInput.dbConnection, { session })
+    const retrieveAllAllocationRepository = new RetrieveAllAllocationRepository(controllerInput.dbConnection, {
+      session,
+    })
     // 3. handle business rules
     // 3.1 check authenticated user
     await verifyUserToken(controllerInput, { session })

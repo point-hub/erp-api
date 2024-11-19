@@ -3,9 +3,9 @@ import type { IController, IControllerInput } from '@point-hub/papi'
 
 import { UpdateMasterNumber } from '@/modules/counters/utils/update-master-number'
 import { IAuth } from '@/modules/master/users/interface'
+import { verifyUserToken } from '@/modules/master/users/utils/verify-user-token'
 import { schemaValidation } from '@/utils/validation'
 
-import { verifyUserToken } from '@/modules/master/users/utils/verify-user-token'
 import { CreateBranchRepository } from '../repositories/create.repository'
 import { CreateBranchUseCase } from '../use-cases/create.use-case'
 

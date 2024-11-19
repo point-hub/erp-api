@@ -13,7 +13,6 @@ export interface IDeps {
   deleteSettingJournalRepository: IDeleteSettingJournalRepository
 }
 
-
 export class DeleteSettingJournalUseCase {
   static async handle(input: IInput, deps: IDeps): Promise<IDeleteOutput> {
     // 1. validate schema

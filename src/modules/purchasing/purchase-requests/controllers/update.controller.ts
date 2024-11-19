@@ -20,8 +20,12 @@ export const updatePurchaseRequestController: IController = async (controllerInp
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const updatePurchaseRequestRepository = new UpdatePurchaseRequestRepository(controllerInput.dbConnection, { session })
-    const createPurchaseRequestRepository = new CreatePurchaseRequestRepository(controllerInput.dbConnection, { session })
+    const updatePurchaseRequestRepository = new UpdatePurchaseRequestRepository(controllerInput.dbConnection, {
+      session,
+    })
+    const createPurchaseRequestRepository = new CreatePurchaseRequestRepository(controllerInput.dbConnection, {
+      session,
+    })
     const createCounterRepository = new CreateCounterRepository(controllerInput.dbConnection, { session })
     const updateCounterRepository = new UpdateCounterRepository(controllerInput.dbConnection, { session })
     const retrieveAllCounterRepository = new RetrieveAllCounterRepository(controllerInput.dbConnection, { session })

@@ -1,8 +1,8 @@
 import type { IController, IControllerInput } from '@point-hub/papi'
 
+import { verifyUserToken } from '@/modules/master/users/utils/verify-user-token'
 import { schemaValidation } from '@/utils/validation'
 
-import { verifyUserToken } from '@/modules/master/users/utils/verify-user-token'
 import { DeleteWarehouseRepository } from '../repositories/delete.repository'
 import { DeleteWarehouseUseCase } from '../use-cases/delete.use-case'
 

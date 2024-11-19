@@ -13,7 +13,9 @@ export const updateChartOfAccountTypeController: IController = async (controller
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const updateChartOfAccountTypeRepository = new UpdateChartOfAccountTypeRepository(controllerInput.dbConnection, { session })
+    const updateChartOfAccountTypeRepository = new UpdateChartOfAccountTypeRepository(controllerInput.dbConnection, {
+      session,
+    })
     // 3. handle business rules
     const response = await UpdateChartOfAccountTypeUseCase.handle(
       {

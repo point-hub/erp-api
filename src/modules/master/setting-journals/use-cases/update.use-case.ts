@@ -23,7 +23,6 @@ export interface IDeps {
   throwApiError(codeStatus: TypeCodeStatus, options: IOptionsApiError): void
 }
 
-
 export class UpdateSettingJournalUseCase {
   static async handle(input: IInput, deps: IDeps): Promise<IUpdateOutput> {
     // 1. validate schema
