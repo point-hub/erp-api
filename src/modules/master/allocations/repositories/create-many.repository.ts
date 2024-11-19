@@ -6,6 +6,7 @@ export interface ICreateManyAllocationOutput {
   inserted_count: number
   inserted_ids: string[]
 }
+
 export interface ICreateManyAllocationRepository {
   handle(documents: IDocument[]): Promise<ICreateManyAllocationOutput>
 }

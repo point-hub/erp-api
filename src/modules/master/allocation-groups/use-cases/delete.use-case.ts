@@ -1,8 +1,8 @@
-import type { ISchemaValidation, TypeCodeStatus } from '@point-hub/papi'
+import type { ISchemaValidation } from '@point-hub/papi'
 
-import type { IOptions as IOptionsApiError } from '@/utils/throw-api-error'
+import { IRetrieveAllAllocationRepository } from '@/modules/master/allocations/repositories/retrieve-all.repository'
+import type { IThrowApiError } from '@/utils/throw-api-error'
 
-import { IRetrieveAllAllocationRepository } from '../../allocations/repositories/retrieve-all.repository'
 import { IDeleteAllocationGroupRepository } from '../repositories/delete.repository'
 import { deleteValidation } from '../validations/delete.validation'
 
@@ -15,7 +15,7 @@ export interface IDeps {
   schemaValidation: ISchemaValidation
   retrieveAllAllocationRepository: IRetrieveAllAllocationRepository
   deleteAllocationGroupRepository: IDeleteAllocationGroupRepository
-  throwApiError(codeStatus: TypeCodeStatus, options?: IOptionsApiError): void
+  throwApiError: IThrowApiError
 }
 
 export interface IOutput {
@@ -28,7 +28,7 @@ export class DeleteAllocationGroupUseCase {
     await deps.schemaValidation(input, deleteValidation)
     // 2. check if doesn't have any relationship
     const allocations = await deps.retrieveAllAllocationRepository.handle({
-      filter: { allocation_group_id: input._id },
+      filter: { 'allocation_group._id': input._id },
     })
     if (allocations.pagination.total_document) {
       deps.throwApiError(422, {

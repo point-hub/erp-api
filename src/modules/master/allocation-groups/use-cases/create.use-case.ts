@@ -37,7 +37,11 @@ export class CreateAllocationGroupUseCase {
       code: input.data.code,
       name: input.data.name,
       notes: input.data.notes,
-      created_by: input.auth._id,
+      created_by: {
+        _id: input.auth._id,
+        label: input.auth.name,
+        email: input.auth.email,
+      },
     })
     allocationGroupEntity.generateDate('created_date')
     allocationGroupEntity.data = deps.objClean(allocationGroupEntity.data)

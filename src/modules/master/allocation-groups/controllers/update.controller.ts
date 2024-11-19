@@ -1,9 +1,9 @@
 import type { IController, IControllerInput } from '@point-hub/papi'
 
 import { IAuth } from '@/modules/master/users/interface'
+import { verifyUserToken } from '@/modules/master/users/utils/verify-user-token'
 import { schemaValidation } from '@/utils/validation'
 
-import { verifyUserToken } from '@/modules/master/users/utils/verify-user-token'
 import { UpdateAllocationGroupRepository } from '../repositories/update.repository'
 import { UpdateAllocationGroupUseCase } from '../use-cases/update.use-case'
 
@@ -14,7 +14,9 @@ export const updateAllocationGroupController: IController = async (controllerInp
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const updateAllocationGroupRepository = new UpdateAllocationGroupRepository(controllerInput.dbConnection, { session })
+    const updateAllocationGroupRepository = new UpdateAllocationGroupRepository(controllerInput.dbConnection, {
+      session,
+    })
     // 3. handle business rules
     // 3.1 check authenticated user
     const verifyTokenResponse = await verifyUserToken(controllerInput, { session })

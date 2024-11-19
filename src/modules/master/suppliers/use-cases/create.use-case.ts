@@ -60,10 +60,10 @@ export class CreateSupplierUseCase {
       created_by: input.auth._id,
     })
     supplierEntity.generateDate('created_date')
-    const cleanEntity = deps.objClean(supplierEntity.data)
+    supplierEntity.data = deps.objClean(supplierEntity.data)
     // 3. database operation
     // 3.1 create supplier
-    const response = await deps.createSupplierRepository.handle(cleanEntity)
+    const response = await deps.createSupplierRepository.handle(supplierEntity.data)
     // 3.2. update counter
     const supplierGroup = deps.retrieveSupplierGroupRepository.handle(supplierEntity.data.supplier_group_id as string)
     const counters = await deps.retrieveAllCounterRepository.handle({

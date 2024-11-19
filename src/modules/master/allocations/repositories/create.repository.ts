@@ -5,6 +5,7 @@ import { collectionName } from '../entity'
 export interface ICreateAllocationOutput {
   inserted_id: string
 }
+
 export interface ICreateAllocationRepository {
   handle(document: IDocument): Promise<ICreateAllocationOutput>
 }

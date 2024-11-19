@@ -5,9 +5,9 @@ import { RetrieveAllCounterRepository } from '@/modules/counters/repositories/re
 import { UpdateCounterRepository } from '@/modules/counters/repositories/update.repository'
 import { RetrieveSupplierGroupRepository } from '@/modules/master/supplier-groups/repositories/retrieve.repository'
 import { IAuth } from '@/modules/master/users/interface'
+import { verifyUserToken } from '@/modules/master/users/utils/verify-user-token'
 import { schemaValidation } from '@/utils/validation'
 
-import { verifyUserToken } from '@/modules/master/users/utils/verify-user-token'
 import { CreateSupplierRepository } from '../repositories/create.repository'
 import { CreateSupplierUseCase } from '../use-cases/create.use-case'
 

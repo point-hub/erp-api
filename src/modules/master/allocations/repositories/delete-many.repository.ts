@@ -5,6 +5,7 @@ import { collectionName } from '../entity'
 export interface IDeleteManyAllocationOutput {
   deleted_count: number
 }
+
 export interface IDeleteManyAllocationRepository {
   handle(_ids: string[]): Promise<IDeleteManyAllocationOutput>
 }
