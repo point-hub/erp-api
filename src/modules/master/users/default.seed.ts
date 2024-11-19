@@ -12,26 +12,23 @@ export interface ISeed {
   subledger?: string
 }
 
-export const seed = async (dbConnection: IDatabase, options: unknown) => {
+export const seed = async (dbConnection: IDatabase, options: Record<string, unknown>) => {
   console.info(`[seed] users data`)
   // delete all data inside collection
   await dbConnection.collection('users').deleteAll(options)
   // prepare repository
-  const signupRepository = new SignupRepository(dbConnection)
-  const retrieveAllRoleRepository = new RetrieveAllRoleRepository(dbConnection)
+  const signupRepository = new SignupRepository(dbConnection, options)
+  const retrieveAllRoleRepository = new RetrieveAllRoleRepository(dbConnection, options)
   // insert new seeder data
-  const roles = await retrieveAllRoleRepository.handle({}, options)
-  await signupRepository.handle(
-    {
-      role_id: roles.data[0]._id,
-      username: 'gmbtest',
-      name: 'Ganesha Mandiri',
-      email: 'gmbtest@gmail.com',
-      trimmed_username: 'gmbtest',
-      trimmed_email: 'gmbtest@gmail.com',
-      password: await Bun.password.hash('Admin123!'),
-      is_email_verified: true,
-    },
-    options,
-  )
+  const roles = await retrieveAllRoleRepository.handle({})
+  await signupRepository.handle({
+    role_id: roles.data[0]._id,
+    username: 'gmbtest',
+    name: 'Ganesha Mandiri',
+    email: 'gmbtest@gmail.com',
+    trimmed_username: 'gmbtest',
+    trimmed_email: 'gmbtest@gmail.com',
+    password: await Bun.password.hash('Admin123!'),
+    is_email_verified: true,
+  })
 }

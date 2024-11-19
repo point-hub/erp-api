@@ -2,14 +2,14 @@ import { type IDatabase } from '@point-hub/papi'
 
 import { CreatePermissionRepository } from './repositories/create.repository'
 
-export const seed = async (dbConnection: IDatabase, options: unknown) => {
+export const seed = async (dbConnection: IDatabase, options: Record<string, unknown>) => {
   console.info(`[seed] permissions data`)
   // delete all data inside collection
   await dbConnection.collection('permissions').deleteAll(options)
   // prepare repository
-  const createPermissionRepository = new CreatePermissionRepository(dbConnection)
+  const createPermissionRepository = new CreatePermissionRepository(dbConnection, options)
   // seed
-  await createPermissionRepository.handle(seeds[0], options)
+  await createPermissionRepository.handle(seeds[0])
 }
 
 export const seeds = [

@@ -14,7 +14,11 @@ export interface IInput {
     name?: string
     permission?: { [key: string]: boolean | { [key: string]: boolean } }
     notes?: string
-    updated_by?: string
+    updated_by: {
+        _id: string,
+        label: string,
+        email: string,
+      },
   }
 }
 
@@ -38,7 +42,11 @@ export class UpdateRoleUseCase {
       name: input.data.name,
       permission: input.data.permission,
       notes: input.data.notes ?? '',
-      updated_by: input.auth._id,
+      updated_by: {
+        _id: input.auth._id,
+        label: input.auth.name,
+        email: input.auth.email,
+      },
     })
     roleEntity.generateDate('updated_date')
     // 3. database operation

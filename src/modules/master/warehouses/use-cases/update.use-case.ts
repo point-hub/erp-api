@@ -16,7 +16,11 @@ export interface IInput {
     address?: string
     phone?: string
     notes?: string
-    updated_by?: string
+    updated_by: {
+        _id: string,
+        label: string,
+        email: string,
+      },
   }
 }
 
@@ -42,7 +46,11 @@ export class UpdateWarehouseUseCase {
       address: input.data.address ?? '',
       phone: input.data.phone ?? '',
       notes: input.data.notes ?? '',
-      updated_by: input.auth._id,
+      updated_by: {
+        _id: input.auth._id,
+        label: input.auth.name,
+        email: input.auth.email,
+      },
     })
     warehouseEntity.generateDate('updated_date')
     // 3. database operation

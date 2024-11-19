@@ -31,7 +31,7 @@ export const updatePurchaseRequestController: IController = async (controllerInp
     const retrieveAllCounterRepository = new RetrieveAllCounterRepository(controllerInput.dbConnection, { session })
     // 3. handle business rules
     // 3.1 check authenticated user
-    const verifyTokenResponse = await verifyUserToken(controllerInput, session)
+    const verifyTokenResponse = await verifyUserToken(controllerInput, { session })
     // 3.2 update
     const response = await UpdatePurchaseRequestUseCase.handle(
       {

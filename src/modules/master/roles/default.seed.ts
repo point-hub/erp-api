@@ -13,26 +13,26 @@ export interface ISeed {
   permission?: IPermissionEntity
 }
 
-export const seed = async (dbConnection: IDatabase, options: unknown) => {
+export const seed = async (dbConnection: IDatabase, options: Record<string, unknown>) => {
   console.info(`[truncate] roles data`)
   // delete all data inside collection
   await dbConnection.collection('roles').deleteAll(options)
   console.info(`[seed] roles data`)
   // prepare repository
-  const createRoleRepository = new CreateRoleRepository(dbConnection)
-  const retrieveAllpermissionRepository = new RetrieveAllPermissionRepository(dbConnection)
-  const retrieveAllCounterRepository = new RetrieveAllCounterRepository(dbConnection)
-  const updateCounterRepository = new UpdateCounterRepository(dbConnection)
+  const createRoleRepository = new CreateRoleRepository(dbConnection, options)
+  const retrieveAllpermissionRepository = new RetrieveAllPermissionRepository(dbConnection, options)
+  const retrieveAllCounterRepository = new RetrieveAllCounterRepository(dbConnection, options)
+  const updateCounterRepository = new UpdateCounterRepository(dbConnection, options)
 
   // insert new seeder data
-  const permission = await retrieveAllpermissionRepository.handle({}, options)
+  const permission = await retrieveAllpermissionRepository.handle({})
   replacePermission(permission, true)
   for (const seed of seeds) {
     seed.permission = permission
-    await createRoleRepository.handle(seed, options)
+    await createRoleRepository.handle(seed)
     // update counter
-    const counters = await retrieveAllCounterRepository.handle({ filter: { name: 'roles' } }, options)
-    await updateCounterRepository.handle(counters.data[0]._id, { count: Number(counters.data[0].count) + 1 }, options)
+    const counters = await retrieveAllCounterRepository.handle({ filter: { name: 'roles' } })
+    await updateCounterRepository.handle(counters.data[0]._id, { count: Number(counters.data[0].count) + 1 })
   }
 }
 

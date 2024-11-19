@@ -11,8 +11,16 @@ export interface IItemEntity {
   have_production_number?: boolean
   have_an_expiry_date?: boolean
   // meta
-  created_by?: string
-  updated_by?: string
+  created_by?: {
+        _id?: string,
+        label?: string,
+        email?: string,
+      },
+  updated_by?: {
+        _id?: string,
+        label?: string,
+        email?: string,
+      },
   created_date?: Date
   updated_date?: Date
 }

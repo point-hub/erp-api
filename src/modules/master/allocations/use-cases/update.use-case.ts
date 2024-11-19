@@ -18,7 +18,6 @@ export interface IInput {
     code: string
     name: string
     notes?: string
-    updated_by?: string
   }
 }
 
@@ -47,7 +46,11 @@ export class UpdateAllocationUseCase {
       name: input.data.name,
       label: `[${input.data.code}] ${input.data.name}`,
       notes: input.data.notes,
-      updated_by: input.auth._id,
+      updated_by: {
+        _id: input.auth._id,
+        label: input.auth.name,
+        email: input.auth.email,
+      },
     })
     allocationEntity.generateDate('updated_date')
     // 3. database operation

@@ -45,7 +45,11 @@ export class CreateWarehouseUseCase {
       address: input.data.address,
       phone: input.data.phone,
       notes: input.data.notes,
-      created_by: input.auth._id,
+      created_by: {
+        _id: input.auth._id,
+        label: input.auth.name,
+        email: input.auth.email,
+      },
     })
     warehouseEntity.generateDate('created_date')
     const cleanEntity = deps.objClean(warehouseEntity.data)

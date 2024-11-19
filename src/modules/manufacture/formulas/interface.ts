@@ -30,13 +30,19 @@ export interface IFormulaEntity {
   approval_to?: {
     _id: string
     label: string
-    username: string
-    name: string
     email: string
   }
   notes?: string
-  created_by?: string
-  updated_by?: string
+  created_by?: {
+    _id?: string
+    label?: string
+    email?: string
+  }
+  updated_by?: {
+    _id?: string
+    label?: string
+    email?: string
+  }
   created_date?: Date
   updated_date?: Date
 }

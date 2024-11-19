@@ -14,28 +14,24 @@ export interface ISeed {
   name?: string
 }
 
-export const seed = async (dbConnection: IDatabase, options: unknown) => {
+export const seed = async (dbConnection: IDatabase, options: Record<string, unknown>) => {
   console.info(`[seed] customers data`)
   // prepare repository
-  const createCustomerRepository = new CreateCustomerRepository(dbConnection)
-  const retrieveAllCustomerGroupRepository = new RetrieveAllCustomerGroupRepository(dbConnection)
-  const retrieveAllCounterRepository = new RetrieveAllCounterRepository(dbConnection)
-  const updateCounterRepository = new UpdateCounterRepository(dbConnection)
+  const createCustomerRepository = new CreateCustomerRepository(dbConnection, options)
+  const retrieveAllCustomerGroupRepository = new RetrieveAllCustomerGroupRepository(dbConnection, options)
+  const retrieveAllCounterRepository = new RetrieveAllCounterRepository(dbConnection, options)
+  const updateCounterRepository = new UpdateCounterRepository(dbConnection, options)
 
   // insert new seeder data
-  const customerGroups = await retrieveAllCustomerGroupRepository.handle({ page_size: 30 }, options)
-  const counters = await retrieveAllCounterRepository.handle({ filter: { name: 'customer_groups' } }, options)
+  const customerGroups = await retrieveAllCustomerGroupRepository.handle({ page_size: 30 })
+  const counters = await retrieveAllCounterRepository.handle({ filter: { name: 'customer_groups' } })
 
   for (let index = 1; index <= 30; index++) {
     const seed: ISeed = {}
     seed.customer_group_id = customerGroups.data[randomNumberBetween(0, 29)]._id
     seed.code = `${counters.data[0].code}${(Number(counters.data[0].count) + index).toString().padStart(4, '0')}`
     seed.name = `${faker.location.city()}`
-    await createCustomerRepository.handle(seed, options)
-    await updateCounterRepository.handle(
-      counters.data[0]._id,
-      { count: Number(counters.data[0].count) + index },
-      options,
-    )
+    await createCustomerRepository.handle(seed)
+    await updateCounterRepository.handle(counters.data[0]._id, { count: Number(counters.data[0].count) + index })
   }
 }

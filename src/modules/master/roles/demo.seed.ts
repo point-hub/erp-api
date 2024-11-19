@@ -13,17 +13,17 @@ export interface ISeed {
   permission?: IPermissionEntity
 }
 
-export const seed = async (dbConnection: IDatabase, options: unknown) => {
+export const seed = async (dbConnection: IDatabase, options: Record<string, unknown>) => {
   console.info(`[seed] roles data`)
   // prepare repository
-  const createRoleRepository = new CreateRoleRepository(dbConnection)
-  const retrieveAllpermissionRepository = new RetrieveAllPermissionRepository(dbConnection)
-  const retrieveAllCounterRepository = new RetrieveAllCounterRepository(dbConnection)
-  const updateCounterRepository = new UpdateCounterRepository(dbConnection)
+  const createRoleRepository = new CreateRoleRepository(dbConnection, options)
+  const retrieveAllpermissionRepository = new RetrieveAllPermissionRepository(dbConnection, options)
+  const retrieveAllCounterRepository = new RetrieveAllCounterRepository(dbConnection, options)
+  const updateCounterRepository = new UpdateCounterRepository(dbConnection, options)
 
   // insert new seeder data
-  const permission = await retrieveAllpermissionRepository.handle({}, options)
-  const counters = await retrieveAllCounterRepository.handle({ filter: { name: 'roles' } }, options)
+  const permission = await retrieveAllpermissionRepository.handle({})
+  const counters = await retrieveAllCounterRepository.handle({ filter: { name: 'roles' } })
   replacePermission(permission, true)
 
   for (let index = 1; index <= 30; index++) {
@@ -31,12 +31,8 @@ export const seed = async (dbConnection: IDatabase, options: unknown) => {
     seed.code = `${counters.data[0].code}${(Number(counters.data[0].count) + index).toString().padStart(4, '0')}`
     seed.name = `Role ${(Number(counters.data[0].count) + index).toString().padStart(2, '0')}`
     seed.permission = permission
-    await createRoleRepository.handle(seed, options)
-    await updateCounterRepository.handle(
-      counters.data[0]._id,
-      { count: Number(counters.data[0].count) + index },
-      options,
-    )
+    await createRoleRepository.handle(seed)
+    await updateCounterRepository.handle(counters.data[0]._id, { count: Number(counters.data[0].count) + index })
   }
 }
 

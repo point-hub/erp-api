@@ -35,7 +35,11 @@ export class UpdateProcessUseCase {
       code: input.data.code ?? '',
       name: input.data.name ?? '',
       notes: input.data.notes ?? '',
-      updated_by: input.auth._id,
+      updated_by: {
+        _id: input.auth._id,
+        label: input.auth.name,
+        email: input.auth.email,
+      },
     })
     processEntity.generateDate('updated_date')
     // 3. database operation

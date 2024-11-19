@@ -74,7 +74,11 @@ export class CreateFormulaUseCase {
       raw_materials: input.data.raw_materials,
       approval_to: input.data.approval_to,
       notes: input.data.notes,
-      created_by: input.auth._id,
+      created_by: {
+        _id: input.auth._id,
+        label: input.auth.name,
+        email: input.auth.email,
+      },
     })
     formulaEntity.generateDate('created_date')
     formulaEntity.data = deps.objClean(formulaEntity.data)

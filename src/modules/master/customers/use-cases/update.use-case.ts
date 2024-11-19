@@ -21,7 +21,11 @@ export interface IInput {
     bank_account_name?: string
     bank_account_number?: string
     notes?: string
-    updated_by?: string
+    updated_by: {
+        _id: string,
+        label: string,
+        email: string,
+      },
   }
 }
 
@@ -52,7 +56,11 @@ export class UpdateCustomerUseCase {
       bank_account_name: input.data.bank_account_name,
       bank_account_number: input.data.bank_account_number,
       notes: input.data.notes ?? '',
-      updated_by: input.auth._id,
+      updated_by: {
+        _id: input.auth._id,
+        label: input.auth.name,
+        email: input.auth.email,
+      },
     })
     customerEntity.generateDate('updated_date')
     // 3. database operation

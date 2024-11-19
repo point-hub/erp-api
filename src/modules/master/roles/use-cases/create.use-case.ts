@@ -42,7 +42,11 @@ export class CreateRoleUseCase {
       name: input.data.name,
       permission: input.data.permission,
       notes: input.data.notes,
-      created_by: input.auth._id,
+      created_by: {
+        _id: input.auth._id,
+        label: input.auth.name,
+        email: input.auth.email,
+      },
     })
     roleEntity.generateDate('created_date')
     const cleanEntity = deps.objClean(roleEntity.data)

@@ -51,7 +51,11 @@ export class CreateItemUseCase {
       have_production_number: input.data.have_production_number,
       have_an_expiry_date: input.data.have_an_expiry_date,
       notes: input.data.notes ?? '',
-      created_by: input.auth._id,
+      created_by: {
+        _id: input.auth._id,
+        label: input.auth.name,
+        email: input.auth.email,
+      },
     })
     itemEntity.generateDate('created_date')
     const cleanEntity = deps.objClean(itemEntity.data)

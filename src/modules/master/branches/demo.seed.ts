@@ -11,15 +11,15 @@ export interface ISeed {
   name?: string
 }
 
-export const seed = async (dbConnection: IDatabase, options: unknown) => {
+export const seed = async (dbConnection: IDatabase, options: Record<string, unknown>) => {
   console.info(`[seed] branches data`)
   // prepare repository
-  const createBranchRepository = new CreateBranchRepository(dbConnection)
-  const retrieveAllCounterRepository = new RetrieveAllCounterRepository(dbConnection)
-  const updateCounterRepository = new UpdateCounterRepository(dbConnection)
+  const createBranchRepository = new CreateBranchRepository(dbConnection, options)
+  const retrieveAllCounterRepository = new RetrieveAllCounterRepository(dbConnection, options)
+  const updateCounterRepository = new UpdateCounterRepository(dbConnection, options)
 
   // insert new seeder data
-  const counters = await retrieveAllCounterRepository.handle({ filter: { name: 'branches' } }, options)
+  const counters = await retrieveAllCounterRepository.handle({ filter: { name: 'branches' } })
 
   for (let index = 1; index <= 30; index++) {
     const seed: ISeed = {}

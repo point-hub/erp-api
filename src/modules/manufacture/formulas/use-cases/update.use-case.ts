@@ -34,7 +34,11 @@ export class UpdateFormulaUseCase {
     const formulaEntity = new FormulaEntity({
       name: input.data.name ?? '',
       notes: input.data.notes ?? '',
-      updated_by: input.auth._id,
+      updated_by: {
+        _id: input.auth._id,
+        label: input.auth.name,
+        email: input.auth.email,
+      },
     })
     formulaEntity.generateDate('updated_date')
     // 3. database operation

@@ -57,7 +57,11 @@ export class CreateCustomerUseCase {
       bank_account_name: input.data.bank_account_name,
       bank_account_number: input.data.bank_account_number,
       notes: input.data.notes ?? '',
-      created_by: input.auth._id,
+      created_by: {
+        _id: input.auth._id,
+        label: input.auth.name,
+        email: input.auth.email,
+      },
     })
     customerEntity.generateDate('created_date')
     const cleanEntity = deps.objClean(customerEntity.data)
