@@ -4,7 +4,7 @@ import { throwApiError } from '@/utils/throw-api-error'
 import { schemaValidation } from '@/utils/validation'
 
 import { RetrieveAllUserRepository } from '../../users/repositories/retrieve-all.repository'
-import { verifyUserToken } from '../../users/utils/verify-user-token'
+import { verifyUserToken } from '@/modules/master/users/utils/verify-user-token'
 import { DeleteRoleRepository } from '../repositories/delete.repository'
 import { RetrieveRoleRepository } from '../repositories/retrieve.repository'
 import { DeleteRoleUseCase } from '../use-cases/delete.use-case'

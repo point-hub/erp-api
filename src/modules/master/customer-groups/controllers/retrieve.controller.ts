@@ -1,6 +1,6 @@
 import type { IController, IControllerInput } from '@point-hub/papi'
 
-import { verifyUserToken } from '../../users/utils/verify-user-token'
+import { verifyUserToken } from '@/modules/master/users/utils/verify-user-token'
 import { RetrieveCustomerGroupRepository } from '../repositories/retrieve.repository'
 import { RetrieveCustomerGroupUseCase } from '../use-cases/retrieve.use-case'
 

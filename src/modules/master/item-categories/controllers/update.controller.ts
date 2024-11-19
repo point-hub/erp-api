@@ -3,7 +3,7 @@ import type { IController, IControllerInput } from '@point-hub/papi'
 import { IAuth } from '@/modules/master/users/interface'
 import { schemaValidation } from '@/utils/validation'
 
-import { verifyUserToken } from '../../users/utils/verify-user-token'
+import { verifyUserToken } from '@/modules/master/users/utils/verify-user-token'
 import { UpdateItemCategoryRepository } from '../repositories/update.repository'
 import { UpdateItemCategoryUseCase } from '../use-cases/update.use-case'
 

@@ -1,6 +1,6 @@
 import type { IController, IControllerInput } from '@point-hub/papi'
 
-import { verifyUserToken } from '../../users/utils/verify-user-token'
+import { verifyUserToken } from '@/modules/master/users/utils/verify-user-token'
 import { RetrieveAllAllocationRepository } from '../repositories/retrieve-all.repository'
 import { RetrieveAllAllocationUseCase } from '../use-cases/retrieve-all.use-case'
 

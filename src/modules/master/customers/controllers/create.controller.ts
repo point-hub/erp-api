@@ -7,7 +7,7 @@ import { RetrieveCustomerGroupRepository } from '@/modules/master/customer-group
 import { IAuth } from '@/modules/master/users/interface'
 import { schemaValidation } from '@/utils/validation'
 
-import { verifyUserToken } from '../../users/utils/verify-user-token'
+import { verifyUserToken } from '@/modules/master/users/utils/verify-user-token'
 import { CreateCustomerRepository } from '../repositories/create.repository'
 import { CreateCustomerUseCase } from '../use-cases/create.use-case'
 

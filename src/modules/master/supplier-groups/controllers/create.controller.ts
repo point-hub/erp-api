@@ -1,12 +1,11 @@
 import { objClean } from '@point-hub/express-utils'
 import type { IController, IControllerInput } from '@point-hub/papi'
 
-import { CreateCounterRepository } from '@/modules/counters/repositories/create.repository'
-import { RetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
+import { GenerateMasterNumber } from '@/modules/counters/utils/generate-master-number'
 import { IAuth } from '@/modules/master/users/interface'
+import { verifyUserToken } from '@/modules/master/users/utils/verify-user-token'
 import { schemaValidation } from '@/utils/validation'
 
-import { verifyUserToken } from '../../users/utils/verify-user-token'
 import { CreateSupplierGroupRepository } from '../repositories/create.repository'
 import { CreateSupplierGroupUseCase } from '../use-cases/create.use-case'
 
@@ -18,8 +17,7 @@ export const createSupplierGroupController: IController = async (controllerInput
     session.startTransaction()
     // 2. define repository
     const createSupplierGroupRepository = new CreateSupplierGroupRepository(controllerInput.dbConnection, { session })
-    const createCounterRepository = new CreateCounterRepository(controllerInput.dbConnection, { session })
-    const retrieveAllCounterRepository = new RetrieveAllCounterRepository(controllerInput.dbConnection, { session })
+    const generateMasterNumber = new GenerateMasterNumber(controllerInput.dbConnection, { session })
     // 3. handle business rules
     // 3.1 check authenticated user
     const verifyTokenResponse = await verifyUserToken(controllerInput, { session })
@@ -32,8 +30,7 @@ export const createSupplierGroupController: IController = async (controllerInput
       {
         objClean,
         createSupplierGroupRepository,
-        createCounterRepository,
-        retrieveAllCounterRepository,
+        generateMasterNumber,
         schemaValidation,
       },
     )

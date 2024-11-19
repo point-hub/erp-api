@@ -1,10 +1,10 @@
 import { IObjClean } from '@point-hub/express-utils'
 import type { ISchemaValidation } from '@point-hub/papi'
 
-import { ICreateCounterRepository } from '@/modules/counters/repositories/create.repository'
-import { IRetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
+import { IGenerateMasterNumber } from '@/modules/counters/utils/generate-master-number'
 import { IAuth } from '@/modules/master/users/interface'
 
+import { collectionName } from '../entity'
 import { SupplierGroupEntity } from '../entity'
 import { ICreateSupplierGroupRepository } from '../repositories/create.repository'
 import { createValidation } from '../validations/create.validation'
@@ -12,8 +12,8 @@ import { createValidation } from '../validations/create.validation'
 export interface IInput {
   auth: IAuth
   data: {
-    code?: string
-    name?: string
+    code: string
+    name: string
     notes?: string
   }
 }
@@ -21,8 +21,7 @@ export interface IInput {
 export interface IDeps {
   objClean: IObjClean
   createSupplierGroupRepository: ICreateSupplierGroupRepository
-  retrieveAllCounterRepository: IRetrieveAllCounterRepository
-  createCounterRepository: ICreateCounterRepository
+  generateMasterNumber: IGenerateMasterNumber
   schemaValidation: ISchemaValidation
 }
 
@@ -42,21 +41,12 @@ export class CreateSupplierGroupUseCase {
       created_by: input.auth._id,
     })
     supplierGroupEntity.generateDate('created_date')
-    const cleanEntity = deps.objClean(supplierGroupEntity.data)
+    supplierGroupEntity.data = deps.objClean(supplierGroupEntity.data)
     // 3. database operation
     // 3.1 create supplier group
-    const response = await deps.createSupplierGroupRepository.handle(cleanEntity)
-    // 3.2. update counter
-    const counters = await deps.retrieveAllCounterRepository.handle({
-      filter: { name: 'supplier_groups', code: input.data.code },
-    })
-    if (!counters.data.length) {
-      await deps.createCounterRepository.handle({
-        name: 'supplier_groups',
-        code: input.data.code,
-        count: 0,
-      })
-    }
+    const response = await deps.createSupplierGroupRepository.handle(supplierGroupEntity.data)
+    // 3.2. generate counter
+    await deps.generateMasterNumber.handle(collectionName, input.data.code)
     // 4. output
     return { inserted_id: response.inserted_id }
   }

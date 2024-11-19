@@ -7,7 +7,7 @@ import { RetrieveItemCategoryRepository } from '@/modules/master/item-categories
 import { IAuth } from '@/modules/master/users/interface'
 import { schemaValidation } from '@/utils/validation'
 
-import { verifyUserToken } from '../../users/utils/verify-user-token'
+import { verifyUserToken } from '@/modules/master/users/utils/verify-user-token'
 import { CreateItemRepository } from '../repositories/create.repository'
 import { CreateItemUseCase } from '../use-cases/create.use-case'
 

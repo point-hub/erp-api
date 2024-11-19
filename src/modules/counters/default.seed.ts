@@ -15,7 +15,7 @@ export const seed = async (dbConnection: IDatabase, options: unknown) => {
   // prepare repository
   const createManyCounterRepository = new CreateManyCounterRepository(dbConnection)
   // insert new seeder data
-  await createManyCounterRepository.handle(seeds, options)
+  await createManyCounterRepository.handle(seeds)
 }
 
 export const seeds: ISeed[] = [

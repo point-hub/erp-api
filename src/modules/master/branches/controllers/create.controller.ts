@@ -5,7 +5,7 @@ import { UpdateMasterNumber } from '@/modules/counters/utils/update-master-numbe
 import { IAuth } from '@/modules/master/users/interface'
 import { schemaValidation } from '@/utils/validation'
 
-import { verifyUserToken } from '../../users/utils/verify-user-token'
+import { verifyUserToken } from '@/modules/master/users/utils/verify-user-token'
 import { CreateBranchRepository } from '../repositories/create.repository'
 import { CreateBranchUseCase } from '../use-cases/create.use-case'
 

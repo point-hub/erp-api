@@ -7,7 +7,7 @@ import { RetrieveSupplierGroupRepository } from '@/modules/master/supplier-group
 import { IAuth } from '@/modules/master/users/interface'
 import { schemaValidation } from '@/utils/validation'
 
-import { verifyUserToken } from '../../users/utils/verify-user-token'
+import { verifyUserToken } from '@/modules/master/users/utils/verify-user-token'
 import { CreateSupplierRepository } from '../repositories/create.repository'
 import { CreateSupplierUseCase } from '../use-cases/create.use-case'
 

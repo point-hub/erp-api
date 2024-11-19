@@ -1,19 +1,18 @@
 import { IObjClean } from '@point-hub/express-utils'
 import type { ISchemaValidation } from '@point-hub/papi'
 
-import { ICreateCounterRepository } from '@/modules/counters/repositories/create.repository'
-import { IRetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
+import { IGenerateMasterNumber } from '@/modules/counters/utils/generate-master-number'
 import { IAuth } from '@/modules/master/users/interface'
 
-import { ItemCategoryEntity } from '../entity'
+import { collectionName, ItemCategoryEntity } from '../entity'
 import { ICreateItemCategoryRepository } from '../repositories/create.repository'
 import { createValidation } from '../validations/create.validation'
 
 export interface IInput {
   auth: IAuth
   data: {
-    code?: string
-    name?: string
+    code: string
+    name: string
     notes?: string
   }
 }
@@ -21,8 +20,7 @@ export interface IInput {
 export interface IDeps {
   objClean: IObjClean
   createItemCategoryRepository: ICreateItemCategoryRepository
-  retrieveAllCounterRepository: IRetrieveAllCounterRepository
-  createCounterRepository: ICreateCounterRepository
+  generateMasterNumber: IGenerateMasterNumber
   schemaValidation: ISchemaValidation
 }
 
@@ -47,16 +45,7 @@ export class CreateItemCategoryUseCase {
     // 3.1 create item category
     const response = await deps.createItemCategoryRepository.handle(itemCategoryEntity.data)
     // 3.2. update counter
-    const counters = await deps.retrieveAllCounterRepository.handle({
-      filter: { name: 'item_categories', code: input.data.code },
-    })
-    if (!counters.data.length) {
-      await deps.createCounterRepository.handle({
-        name: 'item_categories',
-        code: input.data.code,
-        count: 0,
-      })
-    }
+    await deps.generateMasterNumber.handle(collectionName, input.data.code)
     // 4. output
     return { inserted_id: response.inserted_id }
   }

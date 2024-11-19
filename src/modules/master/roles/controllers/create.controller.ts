@@ -6,7 +6,7 @@ import { UpdateCounterRepository } from '@/modules/counters/repositories/update.
 import { IAuth } from '@/modules/master/users/interface'
 import { schemaValidation } from '@/utils/validation'
 
-import { verifyUserToken } from '../../users/utils/verify-user-token'
+import { verifyUserToken } from '@/modules/master/users/utils/verify-user-token'
 import { CreateRoleRepository } from '../repositories/create.repository'
 import { CreateRoleUseCase } from '../use-cases/create.use-case'
 
