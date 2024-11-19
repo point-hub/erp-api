@@ -13,7 +13,11 @@ import { createValidation } from '../validations/create.validation'
 export interface IInput {
   auth: IAuth
   data: {
-    customer_group_id?: string
+    customer_group?: {
+      _id?: string
+      label?: string
+      code?: string
+    }
     code?: string
     name?: string
     address?: string
@@ -46,7 +50,7 @@ export class CreateCustomerUseCase {
     await deps.schemaValidation(input.data, createValidation)
     // 2. define entity
     const customerEntity = new CustomerEntity({
-      customer_group_id: input.data.customer_group_id,
+      customer_group: input.data.customer_group,
       code: input.data.code,
       name: input.data.name,
       address: input.data.address,
@@ -69,7 +73,7 @@ export class CreateCustomerUseCase {
     // 3.1 create customer
     const response = await deps.createCustomerRepository.handle(cleanEntity)
     // 3.2. update counter
-    const customerGroup = deps.retrieveCustomerGroupRepository.handle(customerEntity.data.customer_group_id as string)
+    const customerGroup = deps.retrieveCustomerGroupRepository.handle(customerEntity.data.customer_group?._id as string)
     const counters = await deps.retrieveAllCounterRepository.handle({
       filter: { name: 'customer_groups', code: (await customerGroup).code },
     })

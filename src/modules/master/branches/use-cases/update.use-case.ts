@@ -16,10 +16,10 @@ export interface IInput {
     phone?: string
     notes?: string
     updated_by: {
-        _id: string,
-        label: string,
-        email: string,
-      },
+      _id: string
+      label: string
+      email: string
+    }
   }
 }
 

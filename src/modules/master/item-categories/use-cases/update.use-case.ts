@@ -14,10 +14,10 @@ export interface IInput {
     name?: string
     notes?: string
     updated_by: {
-        _id: string,
-        label: string,
-        email: string,
-      },
+      _id: string
+      label: string
+      email: string
+    }
   }
 }
 

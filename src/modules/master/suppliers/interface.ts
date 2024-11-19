@@ -1,6 +1,10 @@
 export interface ISupplierEntity {
   _id?: string
-  supplier_group_id?: string
+  supplier_group?: {
+    _id?: string
+    label?: string
+    code?: string
+  }
   code?: string
   name?: string
   address?: string

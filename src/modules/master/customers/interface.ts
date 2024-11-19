@@ -1,6 +1,10 @@
 export interface ICustomerEntity {
   _id?: string
-  customer_group_id?: string
+  customer_group?: {
+    _id?: string
+    label?: string
+    code?: string
+  }
   code?: string
   name?: string
   address?: string
@@ -14,15 +18,15 @@ export interface ICustomerEntity {
   bank_account_number?: string
   // meta
   created_by?: {
-        _id?: string,
-        label?: string,
-        email?: string,
-      },
+    _id?: string
+    label?: string
+    email?: string
+  }
   updated_by?: {
-        _id?: string,
-        label?: string,
-        email?: string,
-      },
+    _id?: string
+    label?: string
+    email?: string
+  }
   created_date?: Date
   updated_date?: Date
 }

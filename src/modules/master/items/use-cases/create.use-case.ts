@@ -13,7 +13,11 @@ import { createValidation } from '../validations/create.validation'
 export interface IInput {
   auth: IAuth
   data: {
-    category_id?: string
+    category?: {
+      _id?: string
+      label?: string
+      code?: string
+    }
     chart_of_account_id?: string
     code?: string
     name?: string
@@ -43,7 +47,7 @@ export class CreateItemUseCase {
     await deps.schemaValidation(input.data, createValidation)
     // 2. define entity
     const itemEntity = new ItemEntity({
-      category_id: input.data.category_id,
+      category: input.data.category,
       chart_of_account_id: input.data.chart_of_account_id,
       code: input.data.code,
       name: input.data.name,
@@ -63,7 +67,7 @@ export class CreateItemUseCase {
     // 3.1 create item
     const response = await deps.createItemRepository.handle(cleanEntity)
     // 3.2. update counter
-    const itemCategory = deps.retrieveItemCategoryRepository.handle(itemEntity.data.category_id as string)
+    const itemCategory = deps.retrieveItemCategoryRepository.handle(itemEntity.data.category?._id as string)
     const counters = await deps.retrieveAllCounterRepository.handle({
       filter: { name: 'item_categories', code: (await itemCategory).code },
     })

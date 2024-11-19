@@ -1,6 +1,10 @@
 export interface IItemEntity {
   _id?: string
-  category_id?: string
+  category?: {
+    _id?: string
+    label?: string
+    code?: string
+  }
   code?: string
   name?: string
   unit?: string
@@ -12,15 +16,15 @@ export interface IItemEntity {
   have_an_expiry_date?: boolean
   // meta
   created_by?: {
-        _id?: string,
-        label?: string,
-        email?: string,
-      },
+    _id?: string
+    label?: string
+    email?: string
+  }
   updated_by?: {
-        _id?: string,
-        label?: string,
-        email?: string,
-      },
+    _id?: string
+    label?: string
+    email?: string
+  }
   created_date?: Date
   updated_date?: Date
 }

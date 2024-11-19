@@ -10,7 +10,11 @@ export interface IInput {
   auth: IAuth
   _id: string
   data: {
-    category_id?: string
+    category?: {
+      _id?: string
+      label?: string
+      code?: string
+    }
     chart_of_account_id?: string
     code?: string
     name?: string
@@ -19,10 +23,10 @@ export interface IInput {
     have_an_expiry_date?: boolean
     notes?: string
     updated_by: {
-        _id: string,
-        label: string,
-        email: string,
-      },
+      _id: string
+      label: string
+      email: string
+    }
   }
 }
 
@@ -42,7 +46,7 @@ export class UpdateItemUseCase {
     await deps.schemaValidation(input.data, updateValidation)
     // 2. define entity
     const itemEntity = new ItemEntity({
-      category_id: input.data.category_id,
+      category: input.data.category,
       chart_of_account_id: input.data.chart_of_account_id,
       code: input.data.code,
       name: input.data.name,
