@@ -3,8 +3,8 @@ import { type IDatabase } from '@point-hub/papi'
 import { CreateManyCounterRepository } from '@/modules/counters/repositories/create-many.repository'
 
 export interface ISeed {
-  code?: string
-  name?: string
+  code: string
+  name: string
   count?: number
 }
 
@@ -37,11 +37,6 @@ export const seeds: ISeed[] = [
   {
     name: 'machines',
     code: 'MM',
-    count: 0,
-  },
-  {
-    name: 'formulas',
-    code: 'MF',
     count: 0,
   },
 ]

@@ -4,7 +4,6 @@ import type { ISchemaValidation } from '@point-hub/papi'
 import { IUpdateMasterNumber } from '@/modules/counters/utils/update-master-number'
 import { IAuth } from '@/modules/master/users/interface'
 
-import { IRetrieveAllocationGroupRepository } from '../../allocation-groups/repositories/retrieve.repository'
 import { AllocationEntity, collectionName } from '../entity'
 import { ICreateAllocationRepository } from '../repositories/create.repository'
 import { createValidation } from '../validations/create.validation'
