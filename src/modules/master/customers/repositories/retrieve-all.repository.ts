@@ -20,11 +20,7 @@ export class RetrieveAllCustomerRepository implements IRetrieveAllCustomerReposi
   async handle(query: IQuery): Promise<IRetrieveAllCustomerOutput> {
     const pipeline: IPipeline[] = []
 
-    pipeline.push(...this.aggregateJoinCustomerGroup())
     pipeline.push(...this.aggregateFilters(query))
-    pipeline.push(...this.aggregateJoinCreatedBy())
-    pipeline.push(...this.aggregateJoinUpdatedBy())
-    pipeline.push(...this.aggregateAddFields())
 
     const response = await this.database.collection(collectionName).aggregate(pipeline, query, this.options)
 
@@ -32,67 +28,6 @@ export class RetrieveAllCustomerRepository implements IRetrieveAllCustomerReposi
       data: response.data as unknown as IRetrieveCustomerOutput[],
       pagination: response.pagination,
     }
-  }
-
-  private aggregateJoinCreatedBy() {
-    return [
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'created_by',
-          foreignField: '_id',
-          pipeline: [{ $project: { _id: 1, username: 1, name: 1, email: 1 } }],
-          as: 'created_by',
-        },
-      },
-      {
-        $unwind: {
-          path: '$created_by',
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-    ]
-  }
-
-  private aggregateJoinUpdatedBy() {
-    return [
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'updated_by',
-          foreignField: '_id',
-          pipeline: [{ $project: { _id: 1, username: 1, name: 1, email: 1 } }],
-          as: 'updated_by',
-        },
-      },
-      {
-        $unwind: {
-          path: '$updated_by',
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-    ]
-  }
-
-  private aggregateJoinCustomerGroup() {
-    return [
-      {
-        $lookup: {
-          from: 'customer_groups',
-          localField: 'customer_group_id',
-          foreignField: '_id',
-          pipeline: [{ $project: { _id: 1, code: 1, name: 1 } }],
-          as: 'customer_group',
-        },
-      },
-      {
-        $unwind: {
-          path: '$customer_group',
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-      { $unset: ['customer_group_id'] },
-    ]
   }
 
   private aggregateFilters(query: IQuery) {
@@ -135,17 +70,5 @@ export class RetrieveAllCustomerRepository implements IRetrieveAllCustomerReposi
     }
 
     return [{ $match: { $and: filtersAnd } }]
-  }
-
-  private aggregateAddFields() {
-    return [
-      {
-        $addFields: {
-          label: {
-            $concat: ['[', '$code', '] ', '$name'],
-          },
-        },
-      },
-    ]
   }
 }

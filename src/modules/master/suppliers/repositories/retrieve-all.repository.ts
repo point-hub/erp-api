@@ -20,11 +20,7 @@ export class RetrieveAllSupplierRepository implements IRetrieveAllSupplierReposi
   async handle(query: IQuery): Promise<IRetrieveAllSupplierOutput> {
     const pipeline: IPipeline[] = []
 
-    pipeline.push(...this.aggregateJoinSupplierGroup())
     pipeline.push(...this.aggregateFilters(query))
-    pipeline.push(...this.aggregateJoinCreatedBy())
-    pipeline.push(...this.aggregateJoinUpdatedBy())
-    pipeline.push(...this.aggregateAddFields())
 
     const response = await this.database.collection(collectionName).aggregate(pipeline, query, this.options)
 
@@ -32,67 +28,6 @@ export class RetrieveAllSupplierRepository implements IRetrieveAllSupplierReposi
       data: response.data as unknown as IRetrieveSupplierOutput[],
       pagination: response.pagination,
     }
-  }
-
-  private aggregateJoinCreatedBy() {
-    return [
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'created_by',
-          foreignField: '_id',
-          pipeline: [{ $project: { _id: 1, username: 1, name: 1, email: 1 } }],
-          as: 'created_by',
-        },
-      },
-      {
-        $unwind: {
-          path: '$created_by',
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-    ]
-  }
-
-  private aggregateJoinUpdatedBy() {
-    return [
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'updated_by',
-          foreignField: '_id',
-          pipeline: [{ $project: { _id: 1, username: 1, name: 1, email: 1 } }],
-          as: 'updated_by',
-        },
-      },
-      {
-        $unwind: {
-          path: '$updated_by',
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-    ]
-  }
-
-  private aggregateJoinSupplierGroup() {
-    return [
-      {
-        $lookup: {
-          from: 'supplier_groups',
-          localField: 'supplier_group_id',
-          foreignField: '_id',
-          pipeline: [{ $project: { _id: 1, code: 1, name: 1 } }],
-          as: 'supplier_group',
-        },
-      },
-      {
-        $unwind: {
-          path: '$supplier_group',
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-      { $unset: ['supplier_group_id'] },
-    ]
   }
 
   private aggregateFilters(query: IQuery) {
@@ -135,17 +70,5 @@ export class RetrieveAllSupplierRepository implements IRetrieveAllSupplierReposi
     }
 
     return [{ $match: { $and: filtersAnd } }]
-  }
-
-  private aggregateAddFields() {
-    return [
-      {
-        $addFields: {
-          label: {
-            $concat: ['[', '$code', '] ', '$name'],
-          },
-        },
-      },
-    ]
   }
 }

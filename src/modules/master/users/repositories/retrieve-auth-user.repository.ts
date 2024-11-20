@@ -38,8 +38,6 @@ export class RetrieveAuthUserRepository implements IRetrieveAuthUserRepository {
     pipeline.push(...this.aggregateJoinDefaultWarehouse())
     pipeline.push(...this.aggregateJoinWarehouses())
 
-    console.log(pipeline)
-
     const aggregateResult = await this.database.collection(collectionName).aggregate(pipeline, {}, this.options)
 
     return {

@@ -14,7 +14,6 @@ export interface IOutput {
     _id: string
     label: string
     code: string
-    name: string
   }
   label: string
   code: string

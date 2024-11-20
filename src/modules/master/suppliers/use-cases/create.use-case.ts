@@ -46,7 +46,11 @@ export class CreateSupplierUseCase {
     await deps.schemaValidation(input.data, createValidation)
     // 2. define entity
     const supplierEntity = new SupplierEntity({
-      supplier_group: input.data.supplier_group,
+      supplier_group: {
+        _id: input.data.supplier_group._id,
+        label: input.data.supplier_group.label,
+        code: input.data.supplier_group.code,
+      },
       code: input.data.code,
       name: input.data.name,
       address: input.data.address,
@@ -56,13 +60,14 @@ export class CreateSupplierUseCase {
       bank_branch: input.data.bank_branch,
       bank_account_name: input.data.bank_account_name,
       bank_account_number: input.data.bank_account_number,
-      notes: input.data.notes ?? '',
+      notes: input.data.notes,
       created_by: {
         _id: input.auth._id,
         label: input.auth.name,
         email: input.auth.email,
       },
     })
+
     supplierEntity.generateDate('created_date')
     supplierEntity.data = deps.objClean(supplierEntity.data)
     // 3. database operation
