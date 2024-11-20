@@ -3,7 +3,7 @@ export const createValidation = {
   'supplier._id': ['required'],
   'branch._id': ['required'],
   'details.*.item._id': ['required'],
-  'details.*.quantity': ['required', 'integer', 'min:1'],
+  'details.*.quantity': ['required', 'integer'],
   'approval_to._id': ['required'],
   notes: ['string'],
 }
