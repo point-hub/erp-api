@@ -15,6 +15,7 @@ export interface IInput {
       _id: string
       label: string
       code: string
+      name: string
     }
     chart_of_account: {
       _id: string
@@ -55,7 +56,7 @@ export class CreateItemUseCase {
       unit: input.data.unit,
       have_production_number: input.data.have_production_number,
       have_an_expiry_date: input.data.have_an_expiry_date,
-      notes: input.data.notes ?? '',
+      notes: input.data.notes,
       created_by: {
         _id: input.auth._id,
         label: input.auth.name,

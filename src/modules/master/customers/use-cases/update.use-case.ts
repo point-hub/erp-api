@@ -67,6 +67,7 @@ export class UpdateCustomerUseCase {
       },
     })
     customerEntity.generateDate('updated_date')
+    console.log(customerEntity.data)
     // 3. database operation
     const response = await deps.updateCustomerRepository.handle(input._id, customerEntity.data)
     // 4. output

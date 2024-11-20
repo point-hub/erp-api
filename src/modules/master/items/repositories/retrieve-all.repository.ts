@@ -20,12 +20,7 @@ export class RetrieveAllItemRepository implements IRetrieveAllItemRepository {
   async handle(query: IQuery): Promise<IRetrieveAllItemOutput> {
     const pipeline: IPipeline[] = []
 
-    pipeline.push(...this.aggregateJoinItemCategory())
-    pipeline.push(...this.aggregateJoinChartOfAccount())
     pipeline.push(...this.aggregateFilters(query))
-    pipeline.push(...this.aggregateJoinCreatedBy())
-    pipeline.push(...this.aggregateJoinUpdatedBy())
-    pipeline.push(...this.aggregateAddFields())
 
     const response = await this.database.collection(collectionName).aggregate(pipeline, query, this.options)
 
@@ -33,88 +28,6 @@ export class RetrieveAllItemRepository implements IRetrieveAllItemRepository {
       data: response.data as unknown as IRetrieveItemOutput[],
       pagination: response.pagination,
     }
-  }
-
-  private aggregateJoinCreatedBy() {
-    return [
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'created_by',
-          foreignField: '_id',
-          pipeline: [{ $project: { _id: 1, username: 1, name: 1, email: 1 } }],
-          as: 'created_by',
-        },
-      },
-      {
-        $unwind: {
-          path: '$created_by',
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-    ]
-  }
-
-  private aggregateJoinUpdatedBy() {
-    return [
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'updated_by',
-          foreignField: '_id',
-          pipeline: [{ $project: { _id: 1, username: 1, name: 1, email: 1 } }],
-          as: 'updated_by',
-        },
-      },
-      {
-        $unwind: {
-          path: '$updated_by',
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-    ]
-  }
-
-  private aggregateJoinItemCategory() {
-    return [
-      {
-        $lookup: {
-          from: 'item_categories',
-          localField: 'category_id',
-          foreignField: '_id',
-          pipeline: [{ $project: { _id: 1, code: 1, name: 1 } }],
-          as: 'category',
-        },
-      },
-      {
-        $unwind: {
-          path: '$category',
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-      { $unset: ['category_id'] },
-    ]
-  }
-
-  private aggregateJoinChartOfAccount() {
-    return [
-      {
-        $lookup: {
-          from: 'chart_of_accounts',
-          localField: 'chart_of_account_id',
-          foreignField: '_id',
-          pipeline: [{ $project: { _id: 1, number: 1, name: 1 } }],
-          as: 'chart_of_account',
-        },
-      },
-      {
-        $unwind: {
-          path: '$chart_of_account',
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-      { $unset: ['chart_of_account_id'] },
-    ]
   }
 
   private aggregateFilters(query: IQuery) {
@@ -165,17 +78,5 @@ export class RetrieveAllItemRepository implements IRetrieveAllItemRepository {
     }
 
     return [{ $match: { $and: filtersAnd } }]
-  }
-
-  private aggregateAddFields() {
-    return [
-      {
-        $addFields: {
-          label: {
-            $concat: ['[', '$code', '] ', '$name'],
-          },
-        },
-      },
-    ]
   }
 }
