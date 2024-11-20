@@ -8,12 +8,12 @@ export interface ISeed {
   count?: number
 }
 
-export const seed = async (dbConnection: IDatabase, options: unknown) => {
+export const seed = async (dbConnection: IDatabase, options: Record<string, unknown>) => {
   console.info(`[seed] counters data`)
   // delete all data inside collection
   await dbConnection.collection('counters').deleteAll(options)
   // prepare repository
-  const createManyCounterRepository = new CreateManyCounterRepository(dbConnection)
+  const createManyCounterRepository = new CreateManyCounterRepository(dbConnection, options)
   // insert new seeder data
   await createManyCounterRepository.handle(seeds)
 }

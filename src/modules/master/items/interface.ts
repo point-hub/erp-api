@@ -10,7 +10,12 @@ export interface IItemEntity {
   unit?: string
   notes?: string
   // chart of account
-  chart_of_account_id?: string
+  chart_of_account?: {
+    _id?: string
+    label?: string
+    number?: string
+    name?: string
+  }
   // dna
   have_production_number?: boolean
   have_an_expiry_date?: boolean

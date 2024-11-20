@@ -18,7 +18,12 @@ export interface IInput {
       label?: string
       code?: string
     }
-    chart_of_account_id?: string
+    chart_of_account?: {
+      _id?: string
+      label?: string
+      number?: string
+      name?: string
+    }
     code?: string
     name?: string
     unit?: string
@@ -48,7 +53,7 @@ export class CreateItemUseCase {
     // 2. define entity
     const itemEntity = new ItemEntity({
       category: input.data.category,
-      chart_of_account_id: input.data.chart_of_account_id,
+      chart_of_account: input.data.chart_of_account,
       code: input.data.code,
       name: input.data.name,
       unit: input.data.unit,
@@ -62,10 +67,10 @@ export class CreateItemUseCase {
       },
     })
     itemEntity.generateDate('created_date')
-    const cleanEntity = deps.objClean(itemEntity.data)
+    itemEntity.data = deps.objClean(itemEntity.data)
     // 3. database operation
     // 3.1 create item
-    const response = await deps.createItemRepository.handle(cleanEntity)
+    const response = await deps.createItemRepository.handle(itemEntity.data)
     // 3.2. update counter
     const itemCategory = deps.retrieveItemCategoryRepository.handle(itemEntity.data.category?._id as string)
     const counters = await deps.retrieveAllCounterRepository.handle({

@@ -15,7 +15,12 @@ export interface IInput {
       label?: string
       code?: string
     }
-    chart_of_account_id?: string
+    chart_of_account?: {
+      _id?: string
+      label?: string
+      number?: string
+      name?: string
+    }
     code?: string
     name?: string
     unit?: string
@@ -47,7 +52,7 @@ export class UpdateItemUseCase {
     // 2. define entity
     const itemEntity = new ItemEntity({
       category: input.data.category,
-      chart_of_account_id: input.data.chart_of_account_id,
+      chart_of_account: input.data.chart_of_account,
       code: input.data.code,
       name: input.data.name,
       unit: input.data.unit,
