@@ -1,8 +1,8 @@
 import { IObjClean } from '@point-hub/express-utils'
 import type { ISchemaValidation } from '@point-hub/papi'
 
-import { IRetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
-import { IUpdateCounterRepository } from '@/modules/counters/repositories/update.repository'
+import { IGenerateMasterNumber } from '@/modules/counters/utils/generate-master-number'
+import { collectionName as formulaCollectionName } from '@/modules/manufacture/formulas/entity'
 import { IAuth } from '@/modules/master/users/interface'
 
 import { ProcessEntity } from '../entity'
@@ -12,8 +12,8 @@ import { createValidation } from '../validations/create.validation'
 export interface IInput {
   auth: IAuth
   data: {
-    code?: string
-    name?: string
+    code: string
+    name: string
     notes?: string
   }
 }
@@ -21,8 +21,7 @@ export interface IInput {
 export interface IDeps {
   objClean: IObjClean
   createProcessRepository: ICreateProcessRepository
-  retrieveAllRepository: IRetrieveAllCounterRepository
-  updateRepository: IUpdateCounterRepository
+  generateMasterNumber: IGenerateMasterNumber
   schemaValidation: ISchemaValidation
 }
 
@@ -49,6 +48,7 @@ export class CreateProcessUseCase {
     const cleanEntity = deps.objClean(processEntity.data)
     // 3. database operation
     const response = await deps.createProcessRepository.handle(cleanEntity)
+    await deps.generateMasterNumber.handle(formulaCollectionName, input.data.code)
     // 4. output
     return { inserted_id: response.inserted_id }
   }

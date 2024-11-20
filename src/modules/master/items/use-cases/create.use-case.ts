@@ -1,32 +1,30 @@
 import { IObjClean } from '@point-hub/express-utils'
 import type { ISchemaValidation } from '@point-hub/papi'
 
-import { IRetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
-import { IUpdateCounterRepository } from '@/modules/counters/repositories/update.repository'
+import { IUpdateMasterNumber } from '@/modules/counters/utils/update-master-number'
 import { IAuth } from '@/modules/master/users/interface'
 
-import { IRetrieveItemCategoryRepository } from '../../item-categories/repositories/retrieve.repository'
-import { ItemEntity } from '../entity'
+import { collectionName, ItemEntity } from '../entity'
 import { ICreateItemRepository } from '../repositories/create.repository'
 import { createValidation } from '../validations/create.validation'
 
 export interface IInput {
   auth: IAuth
   data: {
-    category?: {
-      _id?: string
-      label?: string
-      code?: string
+    category: {
+      _id: string
+      label: string
+      code: string
     }
-    chart_of_account?: {
-      _id?: string
-      label?: string
-      number?: string
-      name?: string
+    chart_of_account: {
+      _id: string
+      label: string
+      number: string
+      name: string
     }
-    code?: string
-    name?: string
-    unit?: string
+    code: string
+    name: string
+    unit: string
     have_production_number?: boolean
     have_an_expiry_date?: boolean
     notes?: string
@@ -36,9 +34,7 @@ export interface IInput {
 export interface IDeps {
   objClean: IObjClean
   createItemRepository: ICreateItemRepository
-  retrieveItemCategoryRepository: IRetrieveItemCategoryRepository
-  retrieveAllCounterRepository: IRetrieveAllCounterRepository
-  updateCounterRepository: IUpdateCounterRepository
+  updateMasterNumber: IUpdateMasterNumber
   schemaValidation: ISchemaValidation
 }
 
@@ -72,11 +68,7 @@ export class CreateItemUseCase {
     // 3.1 create item
     const response = await deps.createItemRepository.handle(itemEntity.data)
     // 3.2. update counter
-    const itemCategory = deps.retrieveItemCategoryRepository.handle(itemEntity.data.category?._id as string)
-    const counters = await deps.retrieveAllCounterRepository.handle({
-      filter: { name: 'item_categories', code: (await itemCategory).code },
-    })
-    await deps.updateCounterRepository.handle(counters.data[0]._id, { count: Number(counters.data[0].count) + 1 })
+    await deps.updateMasterNumber.handle(collectionName, input.data.code)
     // 4. output
     return { inserted_id: response.inserted_id }
   }

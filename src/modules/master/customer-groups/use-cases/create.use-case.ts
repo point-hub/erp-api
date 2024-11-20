@@ -2,9 +2,10 @@ import { IObjClean } from '@point-hub/express-utils'
 import type { ISchemaValidation } from '@point-hub/papi'
 
 import { IGenerateMasterNumber } from '@/modules/counters/utils/generate-master-number'
+import { collectionName as customerCollectionName } from '@/modules/master/customers/entity'
 import { IAuth } from '@/modules/master/users/interface'
 
-import { collectionName, CustomerGroupEntity } from '../entity'
+import { CustomerGroupEntity } from '../entity'
 import { ICreateCustomerGroupRepository } from '../repositories/create.repository'
 import { createValidation } from '../validations/create.validation'
 
@@ -49,7 +50,7 @@ export class CreateCustomerGroupUseCase {
     // 3.1 create customer group
     const response = await deps.createCustomerGroupRepository.handle(customerGroupEntity.data)
     // 3.2. update counter
-    await deps.generateMasterNumber.handle(collectionName, input.data.code)
+    await deps.generateMasterNumber.handle(customerCollectionName, input.data.code)
     // 4. output
     return { inserted_id: response.inserted_id }
   }

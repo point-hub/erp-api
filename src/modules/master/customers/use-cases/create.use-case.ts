@@ -1,25 +1,23 @@
 import { IObjClean } from '@point-hub/express-utils'
 import type { ISchemaValidation } from '@point-hub/papi'
 
-import { IRetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
-import { IUpdateCounterRepository } from '@/modules/counters/repositories/update.repository'
+import { IUpdateMasterNumber } from '@/modules/counters/utils/update-master-number'
 import { IAuth } from '@/modules/master/users/interface'
 
-import { IRetrieveCustomerGroupRepository } from '../../customer-groups/repositories/retrieve.repository'
-import { CustomerEntity } from '../entity'
+import { collectionName, CustomerEntity } from '../entity'
 import { ICreateCustomerRepository } from '../repositories/create.repository'
 import { createValidation } from '../validations/create.validation'
 
 export interface IInput {
   auth: IAuth
   data: {
-    customer_group?: {
-      _id?: string
-      label?: string
-      code?: string
+    customer_group: {
+      _id: string
+      label: string
+      code: string
     }
-    code?: string
-    name?: string
+    code: string
+    name: string
     address?: string
     phone?: string
     email?: string
@@ -34,9 +32,7 @@ export interface IInput {
 export interface IDeps {
   objClean: IObjClean
   createCustomerRepository: ICreateCustomerRepository
-  retrieveCustomerGroupRepository: IRetrieveCustomerGroupRepository
-  retrieveAllCounterRepository: IRetrieveAllCounterRepository
-  updateCounterRepository: IUpdateCounterRepository
+  updateMasterNumber: IUpdateMasterNumber
   schemaValidation: ISchemaValidation
 }
 
@@ -68,16 +64,12 @@ export class CreateCustomerUseCase {
       },
     })
     customerEntity.generateDate('created_date')
-    const cleanEntity = deps.objClean(customerEntity.data)
+    customerEntity.data = deps.objClean(customerEntity.data)
     // 3. database operation
     // 3.1 create customer
-    const response = await deps.createCustomerRepository.handle(cleanEntity)
+    const response = await deps.createCustomerRepository.handle(customerEntity.data)
     // 3.2. update counter
-    const customerGroup = deps.retrieveCustomerGroupRepository.handle(customerEntity.data.customer_group?._id as string)
-    const counters = await deps.retrieveAllCounterRepository.handle({
-      filter: { name: 'customer_groups', code: (await customerGroup).code },
-    })
-    await deps.updateCounterRepository.handle(counters.data[0]._id, { count: Number(counters.data[0].count) + 1 })
+    await deps.updateMasterNumber.handle(collectionName, input.data.customer_group.code)
     // 4. output
     return { inserted_id: response.inserted_id }
   }

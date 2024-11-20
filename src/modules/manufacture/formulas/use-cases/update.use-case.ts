@@ -32,6 +32,7 @@ export class UpdateFormulaUseCase {
     await deps.schemaValidation(input, updateValidation)
     // 2. define entity
     const formulaEntity = new FormulaEntity({
+      code: input.data.code ?? '',
       name: input.data.name ?? '',
       notes: input.data.notes ?? '',
       updated_by: {

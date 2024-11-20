@@ -1,25 +1,23 @@
 import { IObjClean } from '@point-hub/express-utils'
 import type { ISchemaValidation } from '@point-hub/papi'
 
-import { IRetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
-import { IUpdateCounterRepository } from '@/modules/counters/repositories/update.repository'
+import { IUpdateMasterNumber } from '@/modules/counters/utils/update-master-number'
 import { IAuth } from '@/modules/master/users/interface'
 
-import { IRetrieveSupplierGroupRepository } from '../../supplier-groups/repositories/retrieve.repository'
-import { SupplierEntity } from '../entity'
+import { collectionName, SupplierEntity } from '../entity'
 import { ICreateSupplierRepository } from '../repositories/create.repository'
 import { createValidation } from '../validations/create.validation'
 
 export interface IInput {
   auth: IAuth
   data: {
-    supplier_group?: {
-      _id?: string
-      label?: string
-      code?: string
+    supplier_group: {
+      _id: string
+      label: string
+      code: string
     }
-    code?: string
-    name?: string
+    code: string
+    name: string
     address?: string
     phone?: string
     email?: string
@@ -34,9 +32,7 @@ export interface IInput {
 export interface IDeps {
   objClean: IObjClean
   createSupplierRepository: ICreateSupplierRepository
-  retrieveSupplierGroupRepository: IRetrieveSupplierGroupRepository
-  retrieveAllCounterRepository: IRetrieveAllCounterRepository
-  updateCounterRepository: IUpdateCounterRepository
+  updateMasterNumber: IUpdateMasterNumber
   schemaValidation: ISchemaValidation
 }
 
@@ -73,11 +69,7 @@ export class CreateSupplierUseCase {
     // 3.1 create supplier
     const response = await deps.createSupplierRepository.handle(supplierEntity.data)
     // 3.2. update counter
-    const supplierGroup = deps.retrieveSupplierGroupRepository.handle(supplierEntity.data.supplier_group?._id as string)
-    const counters = await deps.retrieveAllCounterRepository.handle({
-      filter: { name: 'supplier_groups', code: (await supplierGroup).code },
-    })
-    await deps.updateCounterRepository.handle(counters.data[0]._id, { count: Number(counters.data[0].count) + 1 })
+    deps.updateMasterNumber.handle(collectionName, input.data.code)
     // 4. output
     return { inserted_id: response.inserted_id }
   }

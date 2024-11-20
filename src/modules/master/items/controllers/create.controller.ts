@@ -1,9 +1,7 @@
 import { objClean } from '@point-hub/express-utils'
 import type { IController, IControllerInput } from '@point-hub/papi'
 
-import { RetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
-import { UpdateCounterRepository } from '@/modules/counters/repositories/update.repository'
-import { RetrieveItemCategoryRepository } from '@/modules/master/item-categories/repositories/retrieve.repository'
+import { UpdateMasterNumber } from '@/modules/counters/utils/update-master-number'
 import { IAuth } from '@/modules/master/users/interface'
 import { verifyUserToken } from '@/modules/master/users/utils/verify-user-token'
 import { schemaValidation } from '@/utils/validation'
@@ -18,10 +16,8 @@ export const createItemController: IController = async (controllerInput: IContro
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const retrieveItemCategoryRepository = new RetrieveItemCategoryRepository(controllerInput.dbConnection, { session })
     const createItemRepository = new CreateItemRepository(controllerInput.dbConnection, { session })
-    const updateCounterRepository = new UpdateCounterRepository(controllerInput.dbConnection, { session })
-    const retrieveAllCounterRepository = new RetrieveAllCounterRepository(controllerInput.dbConnection, { session })
+    const updateMasterNumber = new UpdateMasterNumber(controllerInput.dbConnection, { session })
     // 3. handle business rules
     // 3.1 check authenticated user
     const verifyTokenResponse = await verifyUserToken(controllerInput, { session })
@@ -34,9 +30,7 @@ export const createItemController: IController = async (controllerInput: IContro
       {
         objClean,
         createItemRepository,
-        updateCounterRepository,
-        retrieveItemCategoryRepository,
-        retrieveAllCounterRepository,
+        updateMasterNumber,
         schemaValidation,
       },
     )

@@ -29,7 +29,7 @@ export const seed = async (dbConnection: IDatabase, options: Record<string, unkn
   replacePermission(permission, true)
   for (const seed of seeds) {
     seed.permission = permission
-    await createRoleRepository.handle(seed, options)
+    await createRoleRepository.handle(seed)
     // update counter
     const counters = await retrieveAllCounterRepository.handle({ filter: { name: 'roles' } })
     await updateCounterRepository.handle(counters.data[0]._id, { count: Number(counters.data[0].count) + 1 })

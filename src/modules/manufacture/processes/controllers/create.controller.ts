@@ -1,8 +1,7 @@
 import { objClean } from '@point-hub/express-utils'
 import type { IController, IControllerInput } from '@point-hub/papi'
 
-import { RetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
-import { UpdateCounterRepository } from '@/modules/counters/repositories/update.repository'
+import { GenerateMasterNumber } from '@/modules/counters/utils/generate-master-number'
 import { IAuth } from '@/modules/master/users/interface'
 import { verifyUserToken } from '@/modules/master/users/utils/verify-user-token'
 import { schemaValidation } from '@/utils/validation'
@@ -18,8 +17,7 @@ export const createProcessController: IController = async (controllerInput: ICon
     session.startTransaction()
     // 2. define repository
     const createProcessRepository = new CreateProcessRepository(controllerInput.dbConnection, { session })
-    const updateRepository = new UpdateCounterRepository(controllerInput.dbConnection, { session })
-    const retrieveAllRepository = new RetrieveAllCounterRepository(controllerInput.dbConnection, { session })
+    const generateMasterNumber = new GenerateMasterNumber(controllerInput.dbConnection, { session })
     // 3. handle business rules
     // 3.1 check authenticated user
     const verifyTokenResponse = await verifyUserToken(controllerInput, { session })
@@ -32,8 +30,7 @@ export const createProcessController: IController = async (controllerInput: ICon
       {
         objClean,
         createProcessRepository,
-        updateRepository,
-        retrieveAllRepository,
+        generateMasterNumber,
         schemaValidation,
       },
     )

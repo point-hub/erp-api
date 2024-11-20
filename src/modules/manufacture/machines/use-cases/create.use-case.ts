@@ -1,19 +1,18 @@
 import { IObjClean } from '@point-hub/express-utils'
 import type { ISchemaValidation } from '@point-hub/papi'
 
-import { IRetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
-import { IUpdateCounterRepository } from '@/modules/counters/repositories/update.repository'
+import { IUpdateMasterNumber } from '@/modules/counters/utils/update-master-number'
 import { IAuth } from '@/modules/master/users/interface'
 
-import { MachineEntity } from '../entity'
+import { collectionName, MachineEntity } from '../entity'
 import { ICreateMachineRepository } from '../repositories/create.repository'
 import { createValidation } from '../validations/create.validation'
 
 export interface IInput {
   auth: IAuth
   data: {
-    code?: string
-    name?: string
+    code: string
+    name: string
     notes?: string
   }
 }
@@ -21,8 +20,7 @@ export interface IInput {
 export interface IDeps {
   objClean: IObjClean
   createMachineRepository: ICreateMachineRepository
-  retrieveAllRepository: IRetrieveAllCounterRepository
-  updateRepository: IUpdateCounterRepository
+  updateMasterNumber: IUpdateMasterNumber
   schemaValidation: ISchemaValidation
 }
 
@@ -46,13 +44,12 @@ export class CreateMachineUseCase {
       },
     })
     machineEntity.generateDate('created_date')
-    const cleanEntity = deps.objClean(machineEntity.data)
+    machineEntity.data = deps.objClean(machineEntity.data)
     // 3. database operation
     // 3.1 create machine
-    const response = await deps.createMachineRepository.handle(cleanEntity)
+    const response = await deps.createMachineRepository.handle(machineEntity.data)
     // 3.2. update counter
-    const counters = await deps.retrieveAllRepository.handle({ filter: { name: 'machines' } })
-    await deps.updateRepository.handle(counters.data[0]._id, { count: Number(counters.data[0].count) + 1 })
+    await deps.updateMasterNumber.handle(collectionName, input.data.code)
     // 4. output
     return { inserted_id: response.inserted_id }
   }

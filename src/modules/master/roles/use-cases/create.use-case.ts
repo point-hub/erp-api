@@ -1,19 +1,18 @@
 import { IObjClean } from '@point-hub/express-utils'
 import type { ISchemaValidation } from '@point-hub/papi'
 
-import { IRetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
-import { IUpdateCounterRepository } from '@/modules/counters/repositories/update.repository'
+import { IUpdateMasterNumber } from '@/modules/counters/utils/update-master-number'
 import { IAuth } from '@/modules/master/users/interface'
 
-import { RoleEntity } from '../entity'
+import { collectionName, RoleEntity } from '../entity'
 import { ICreateRoleRepository } from '../repositories/create.repository'
 import { createValidation } from '../validations/create.validation'
 
 export interface IInput {
   auth: IAuth
   data: {
-    code?: string
-    name?: string
+    code: string
+    name: string
     permission?: { [key: string]: boolean | { [key: string]: boolean } }
     phone?: string
     notes?: string
@@ -23,8 +22,7 @@ export interface IInput {
 export interface IDeps {
   objClean: IObjClean
   createRoleRepository: ICreateRoleRepository
-  retrieveAllRepository: IRetrieveAllCounterRepository
-  updateRepository: IUpdateCounterRepository
+  updateMasterNumber: IUpdateMasterNumber
   schemaValidation: ISchemaValidation
 }
 
@@ -54,8 +52,7 @@ export class CreateRoleUseCase {
     // 3.1 create role
     const response = await deps.createRoleRepository.handle(cleanEntity)
     // 3.2. update counter
-    const counters = await deps.retrieveAllRepository.handle({ filter: { name: 'roles' } })
-    await deps.updateRepository.handle(counters.data[0]._id, { count: Number(counters.data[0].count) + 1 })
+    await deps.updateMasterNumber.handle(collectionName, input.data.code)
     // 4. output
     return { inserted_id: response.inserted_id }
   }

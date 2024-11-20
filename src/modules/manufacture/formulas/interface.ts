@@ -1,5 +1,6 @@
 export interface IFormulaEntity {
   id?: string
+  code?: string
   name?: string
   finished_goods?: {
     item?: {

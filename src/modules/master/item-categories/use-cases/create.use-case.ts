@@ -2,9 +2,10 @@ import { IObjClean } from '@point-hub/express-utils'
 import type { ISchemaValidation } from '@point-hub/papi'
 
 import { IGenerateMasterNumber } from '@/modules/counters/utils/generate-master-number'
+import { collectionName as itemCollectionName } from '@/modules/master/items/entity'
 import { IAuth } from '@/modules/master/users/interface'
 
-import { collectionName, ItemCategoryEntity } from '../entity'
+import { ItemCategoryEntity } from '../entity'
 import { ICreateItemCategoryRepository } from '../repositories/create.repository'
 import { createValidation } from '../validations/create.validation'
 
@@ -49,7 +50,7 @@ export class CreateItemCategoryUseCase {
     // 3.1 create item category
     const response = await deps.createItemCategoryRepository.handle(itemCategoryEntity.data)
     // 3.2. update counter
-    await deps.generateMasterNumber.handle(collectionName, input.data.code)
+    await deps.generateMasterNumber.handle(itemCollectionName, input.data.code)
     // 4. output
     return { inserted_id: response.inserted_id }
   }
