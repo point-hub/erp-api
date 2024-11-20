@@ -21,9 +21,9 @@ export class RetrieveExistingEmailUseCase {
     const userEntity = new UserEntity({
       email: input.email,
     })
-    const cleanEntity = deps.objClean(userEntity.data)
+    userEntity.data = deps.objClean(userEntity.data)
     // 2. validate schema
-    await deps.schemaValidation(cleanEntity, retrieveExistingEmailValidation)
+    await deps.schemaValidation(userEntity.data, retrieveExistingEmailValidation)
     // 3. database operation
     const response = await deps.retrieveExistingEmailRepository.handle({
       filter: { trimmed_email: userEntity.data.trimmed_email },

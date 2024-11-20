@@ -48,10 +48,10 @@ export class CreateBranchUseCase {
       },
     })
     branchEntity.generateDate('created_date')
-    const cleanEntity = deps.objClean(branchEntity.data)
+    branchEntity.data = deps.objClean(branchEntity.data)
     // 3. database operation
     // 3.1 create branch
-    const response = await deps.createBranchRepository.handle(cleanEntity)
+    const response = await deps.createBranchRepository.handle(branchEntity.data)
     // 3.2. update counter
     await deps.updateMasterNumber.handle(collectionName)
     // 4. output

@@ -47,10 +47,10 @@ export class CreateRoleUseCase {
       },
     })
     roleEntity.generateDate('created_date')
-    const cleanEntity = deps.objClean(roleEntity.data)
+    roleEntity.data = deps.objClean(roleEntity.data)
     // 3. database operation
     // 3.1 create role
-    const response = await deps.createRoleRepository.handle(cleanEntity)
+    const response = await deps.createRoleRepository.handle(roleEntity.data)
     // 3.2. update counter
     await deps.updateMasterNumber.handle(collectionName)
     // 4. output

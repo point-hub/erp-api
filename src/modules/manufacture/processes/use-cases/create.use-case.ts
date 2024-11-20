@@ -45,9 +45,9 @@ export class CreateProcessUseCase {
       },
     })
     processEntity.generateDate('created_date')
-    const cleanEntity = deps.objClean(processEntity.data)
+    processEntity.data = deps.objClean(processEntity.data)
     // 3. database operation
-    const response = await deps.createProcessRepository.handle(cleanEntity)
+    const response = await deps.createProcessRepository.handle(processEntity.data)
     await deps.generateMasterNumber.handle(formulaCollectionName, input.data.code)
     // 4. output
     return { inserted_id: response.inserted_id }

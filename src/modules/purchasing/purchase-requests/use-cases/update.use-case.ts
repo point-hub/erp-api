@@ -71,9 +71,9 @@ export class UpdatePurchaseRequestUseCase {
       },
       created_date: new Date(),
     })
-    const cleanEntity = deps.objClean(purchaseRequestEntity.data)
+    purchaseRequestEntity.data = deps.objClean(purchaseRequestEntity.data)
     // 4. database operation
-    const response = await deps.createPurchaseRequestRepository.handle(cleanEntity)
+    const response = await deps.createPurchaseRequestRepository.handle(purchaseRequestEntity.data)
     await deps.updatePurchaseRequestRepository.handle(input._id, {
       is_revised: true,
     })
