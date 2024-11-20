@@ -55,7 +55,7 @@ export class CreateWarehouseUseCase {
     // 3.1 create warehouse
     const response = await deps.createWarehouseRepository.handle(warehouseEntity.data)
     // 3.2. update counter
-    await deps.updateMasterNumber.handle(collectionName, input.data.code)
+    await deps.updateMasterNumber.handle(collectionName)
     // 4. output
     return { inserted_id: response.inserted_id }
   }

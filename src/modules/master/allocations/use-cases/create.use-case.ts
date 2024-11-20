@@ -4,9 +4,8 @@ import type { ISchemaValidation } from '@point-hub/papi'
 import { IUpdateMasterNumber } from '@/modules/counters/utils/update-master-number'
 import { IAuth } from '@/modules/master/users/interface'
 
-import { collectionName as allocationGroupCollectionName } from '../../allocation-groups/entity'
 import { IRetrieveAllocationGroupRepository } from '../../allocation-groups/repositories/retrieve.repository'
-import { AllocationEntity } from '../entity'
+import { AllocationEntity, collectionName } from '../entity'
 import { ICreateAllocationRepository } from '../repositories/create.repository'
 import { createValidation } from '../validations/create.validation'
 
@@ -27,7 +26,6 @@ export interface IInput {
 export interface IDeps {
   objClean: IObjClean
   createAllocationRepository: ICreateAllocationRepository
-  retrieveAllocationGroupRepository: IRetrieveAllocationGroupRepository
   updateMasterNumber: IUpdateMasterNumber
   schemaValidation: ISchemaValidation
 }
@@ -63,7 +61,7 @@ export class CreateAllocationUseCase {
     // 3.1 create allocation
     const response = await deps.createAllocationRepository.handle(allocationEntity.data)
     // 3.2. update counter
-    await deps.updateMasterNumber.handle(allocationGroupCollectionName, input.data.allocation_group.code)
+    await deps.updateMasterNumber.handle(collectionName, input.data.allocation_group.code)
     // 4. output
     return { inserted_id: response.inserted_id }
   }

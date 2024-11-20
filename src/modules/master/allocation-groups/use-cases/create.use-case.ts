@@ -2,9 +2,10 @@ import { IObjClean } from '@point-hub/express-utils'
 import type { ISchemaValidation } from '@point-hub/papi'
 
 import { IGenerateMasterNumber } from '@/modules/counters/utils/generate-master-number'
+import { collectionName as allocationCollectionName } from '@/modules/master/allocations/entity'
 import { IAuth } from '@/modules/master/users/interface'
 
-import { AllocationGroupEntity, collectionName } from '../entity'
+import { AllocationGroupEntity } from '../entity'
 import { ICreateAllocationGroupRepository } from '../repositories/create.repository'
 import { createValidation } from '../validations/create.validation'
 
@@ -49,7 +50,7 @@ export class CreateAllocationGroupUseCase {
     // 3.1 create allocation group
     const response = await deps.createAllocationGroupRepository.handle(allocationGroupEntity.data)
     // 3.2. update counter
-    await deps.generateMasterNumber.handle(collectionName, input.data.code)
+    await deps.generateMasterNumber.handle(allocationCollectionName, input.data.code)
     // 4. output
     return { inserted_id: response.inserted_id }
   }

@@ -52,7 +52,7 @@ export class CreateRoleUseCase {
     // 3.1 create role
     const response = await deps.createRoleRepository.handle(cleanEntity)
     // 3.2. update counter
-    await deps.updateMasterNumber.handle(collectionName, input.data.code)
+    await deps.updateMasterNumber.handle(collectionName)
     // 4. output
     return { inserted_id: response.inserted_id }
   }

@@ -49,7 +49,7 @@ export class CreateMachineUseCase {
     // 3.1 create machine
     const response = await deps.createMachineRepository.handle(machineEntity.data)
     // 3.2. update counter
-    await deps.updateMasterNumber.handle(collectionName, input.data.code)
+    await deps.updateMasterNumber.handle(collectionName)
     // 4. output
     return { inserted_id: response.inserted_id }
   }

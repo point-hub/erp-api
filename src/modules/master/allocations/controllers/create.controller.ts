@@ -2,7 +2,6 @@ import { objClean } from '@point-hub/express-utils'
 import type { IController, IControllerInput } from '@point-hub/papi'
 
 import { UpdateMasterNumber } from '@/modules/counters/utils/update-master-number'
-import { RetrieveAllocationGroupRepository } from '@/modules/master/allocation-groups/repositories/retrieve.repository'
 import { IAuth } from '@/modules/master/users/interface'
 import { verifyUserToken } from '@/modules/master/users/utils/verify-user-token'
 import { schemaValidation } from '@/utils/validation'
@@ -17,9 +16,6 @@ export const createAllocationController: IController = async (controllerInput: I
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const retrieveAllocationGroupRepository = new RetrieveAllocationGroupRepository(controllerInput.dbConnection, {
-      session,
-    })
     const createAllocationRepository = new CreateAllocationRepository(controllerInput.dbConnection, { session })
     const updateMasterNumber = new UpdateMasterNumber(controllerInput.dbConnection, { session })
     // 3. handle business rules
@@ -34,7 +30,6 @@ export const createAllocationController: IController = async (controllerInput: I
       {
         objClean,
         createAllocationRepository,
-        retrieveAllocationGroupRepository,
         schemaValidation,
         updateMasterNumber,
       },

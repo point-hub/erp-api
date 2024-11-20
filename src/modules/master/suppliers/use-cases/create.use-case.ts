@@ -69,7 +69,7 @@ export class CreateSupplierUseCase {
     // 3.1 create supplier
     const response = await deps.createSupplierRepository.handle(supplierEntity.data)
     // 3.2. update counter
-    deps.updateMasterNumber.handle(collectionName, input.data.code)
+    deps.updateMasterNumber.handle(collectionName, input.data.supplier_group.code)
     // 4. output
     return { inserted_id: response.inserted_id }
   }

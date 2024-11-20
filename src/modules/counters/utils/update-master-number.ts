@@ -4,7 +4,7 @@ import { RetrieveAllCounterRepository } from '@/modules/counters/repositories/re
 import { UpdateCounterRepository } from '@/modules/counters/repositories/update.repository'
 
 export interface IUpdateMasterNumber {
-  handle(name: string, code: string): Promise<void>
+  handle(name: string, code?: string): Promise<void>
 }
 
 export class UpdateMasterNumber implements IUpdateMasterNumber {
@@ -13,7 +13,7 @@ export class UpdateMasterNumber implements IUpdateMasterNumber {
     public options?: Record<string, unknown>,
   ) {}
 
-  async handle(name: string, code: string): Promise<void> {
+  async handle(name: string, code?: string): Promise<void> {
     const retrieveAllCounterRepository = new RetrieveAllCounterRepository(this.database, this.options)
     const updateCounterRepository = new UpdateCounterRepository(this.database, this.options)
     const counters = await retrieveAllCounterRepository.handle({ filter: { name: name, code: code } })

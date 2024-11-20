@@ -68,7 +68,7 @@ export class CreateItemUseCase {
     // 3.1 create item
     const response = await deps.createItemRepository.handle(itemEntity.data)
     // 3.2. update counter
-    await deps.updateMasterNumber.handle(collectionName, input.data.code)
+    await deps.updateMasterNumber.handle(collectionName, input.data.category.code)
     // 4. output
     return { inserted_id: response.inserted_id }
   }

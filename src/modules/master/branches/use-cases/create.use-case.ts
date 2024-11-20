@@ -53,7 +53,7 @@ export class CreateBranchUseCase {
     // 3.1 create branch
     const response = await deps.createBranchRepository.handle(cleanEntity)
     // 3.2. update counter
-    await deps.updateMasterNumber.handle(collectionName, input.data.code)
+    await deps.updateMasterNumber.handle(collectionName)
     // 4. output
     return { inserted_id: response.inserted_id }
   }
