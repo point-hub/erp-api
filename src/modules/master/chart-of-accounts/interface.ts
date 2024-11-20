@@ -14,6 +14,7 @@ export interface IChartOfAccountEntity {
   category_id?: string
   number?: string
   name?: string
+  label?: string
   subledger?: string
   notes?: string
   created_by?: {

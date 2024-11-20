@@ -3,6 +3,7 @@ export interface IWarehouseEntity {
   branch_id?: string
   code?: string
   name?: string
+  label?: string
   address?: string
   phone?: string
   notes?: string

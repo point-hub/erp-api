@@ -12,6 +12,7 @@ export interface IInput {
   data: {
     code?: string
     name?: string
+    label?: string
     address?: string
     phone?: string
     notes?: string
@@ -41,6 +42,7 @@ export class UpdateBranchUseCase {
     const branchEntity = new BranchEntity({
       code: input.data.code,
       name: input.data.name,
+      label: `[${input.data.code}] ${input.data.name}`,
       address: input.data.address ?? '',
       phone: input.data.phone ?? '',
       notes: input.data.notes ?? '',

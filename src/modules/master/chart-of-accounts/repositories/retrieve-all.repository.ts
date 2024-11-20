@@ -23,7 +23,6 @@ export class RetrieveAllChartOfAccountRepository implements IRetrieveAllChartOfA
     pipeline.push(...this.aggregateJoinCategories())
     pipeline.push(...this.aggregateJoinTypes())
     pipeline.push(...this.aggregateFilters(query))
-    pipeline.push(...this.aggregateAddFields())
 
     const response = await this.database.collection(collectionName).aggregate(pipeline, query, this.options)
 
@@ -92,17 +91,5 @@ export class RetrieveAllChartOfAccountRepository implements IRetrieveAllChartOfA
     }
 
     return [{ $match: { $and: filtersAnd } }]
-  }
-
-  private aggregateAddFields() {
-    return [
-      {
-        $addFields: {
-          label: {
-            $concat: ['[', '$number', '] ', '$name'],
-          },
-        },
-      },
-    ]
   }
 }

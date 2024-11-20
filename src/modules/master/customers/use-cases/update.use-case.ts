@@ -52,6 +52,7 @@ export class UpdateCustomerUseCase {
       customer_group: input.data.customer_group,
       code: input.data.code,
       name: input.data.name,
+      label: `[${input.data.code}] ${input.data.name}`,
       address: input.data.address,
       phone: input.data.phone,
       email: input.data.email,
@@ -67,7 +68,6 @@ export class UpdateCustomerUseCase {
       },
     })
     customerEntity.generateDate('updated_date')
-    console.log(customerEntity.data)
     // 3. database operation
     const response = await deps.updateCustomerRepository.handle(input._id, customerEntity.data)
     // 4. output

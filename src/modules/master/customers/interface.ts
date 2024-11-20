@@ -8,6 +8,7 @@ export interface ICustomerEntity {
   }
   code?: string
   name?: string
+  label?: string
   address?: string
   phone?: string
   email?: string

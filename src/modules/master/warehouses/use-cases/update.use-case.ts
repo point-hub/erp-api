@@ -43,6 +43,7 @@ export class UpdateWarehouseUseCase {
       branch_id: input.data.branch_id,
       code: input.data.code,
       name: input.data.name,
+      label: `[${input.data.code}] ${input.data.name}`,
       address: input.data.address ?? '',
       phone: input.data.phone ?? '',
       notes: input.data.notes ?? '',

@@ -2,6 +2,7 @@ export interface IRoleEntity {
   _id?: string
   code?: string
   name?: string
+  label?: string
   notes?: string
   permission?: { [key: string]: boolean | { [key: string]: boolean } }
   created_by?: {

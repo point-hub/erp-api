@@ -38,7 +38,7 @@ export class RetrieveBranchRepository implements IRetrieveBranchRepository {
 
     return {
       _id: `${response.data[0]._id}`,
-      label: `[${response.data[0].code}] ${response.data[0].name}`,
+      label: `${response.data[0].label}`,
       code: `${response.data[0].code}`,
       name: `${response.data[0].name}`,
       address: `${response.data[0].address ?? ''}`,

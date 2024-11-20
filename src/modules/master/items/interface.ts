@@ -7,6 +7,7 @@ export interface IItemEntity {
   }
   code?: string
   name?: string
+  label?: string
   unit?: string
   notes?: string
   // chart of account

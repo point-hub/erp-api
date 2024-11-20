@@ -2,6 +2,7 @@ export interface IBranchEntity {
   _id?: string
   code?: string
   name?: string
+  label?: string
   address?: string
   phone?: string
   notes?: string

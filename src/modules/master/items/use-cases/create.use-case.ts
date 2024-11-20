@@ -53,6 +53,7 @@ export class CreateItemUseCase {
       chart_of_account: input.data.chart_of_account,
       code: input.data.code,
       name: input.data.name,
+      label: `[${input.data.code}] ${input.data.name}`,
       unit: input.data.unit,
       have_production_number: input.data.have_production_number,
       have_an_expiry_date: input.data.have_an_expiry_date,

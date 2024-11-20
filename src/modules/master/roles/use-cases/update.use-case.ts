@@ -40,6 +40,7 @@ export class UpdateRoleUseCase {
     const roleEntity = new RoleEntity({
       code: input.data.code,
       name: input.data.name,
+      label: `[${input.data.code}] ${input.data.name}`,
       permission: input.data.permission,
       notes: input.data.notes ?? '',
       updated_by: {

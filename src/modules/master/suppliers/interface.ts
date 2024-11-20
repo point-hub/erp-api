@@ -7,6 +7,7 @@ export interface ISupplierEntity {
   }
   code?: string
   name?: string
+  label?: string
   address?: string
   phone?: string
   email?: string

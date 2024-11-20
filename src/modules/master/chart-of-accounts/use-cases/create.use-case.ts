@@ -32,6 +32,7 @@ export class CreateChartOfAccountUseCase {
     const chartOfAccountEntity = new ChartOfAccountEntity({
       type_id: input.type_id,
       category_id: input.category_id,
+      label: `[${input.number}] ${input.name}`,
       number: input.number,
       name: input.name,
       subledger: input.subledger,

@@ -37,6 +37,7 @@ export class UpdateChartOfAccountUseCase {
       category_id: input.data.category_id,
       number: input.data.number,
       name: input.data.name,
+      label: `[${input.data.number}] ${input.data.name}`,
       subledger: input.data.subledger ?? '',
       notes: input.data.notes ?? '',
     })
