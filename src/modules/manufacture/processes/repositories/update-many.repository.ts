@@ -17,6 +17,6 @@ export class UpdateManyProcessRepository implements IUpdateManyProcessRepository
   ) {}
 
   async handle(filter: IDocument, document: IDocument): Promise<IUpdateManyProcessOutput> {
-    return await this.database.collection(collectionName).updateMany(filter, document, this.options)
+    return await this.database.collection(collectionName).updateMany(filter, { $set: document }, this.options)
   }
 }

@@ -26,9 +26,15 @@ export interface IDetail {
   allocation?: IAllocationReference
 }
 
-export interface IFormReference {
-  form_date: Date
-  form_number: string
+export interface IReference {
+  ref_id: string
+  ref_name: string
+  ref_number: string
+  ref_date: Date
+  details: {
+    uuid: string
+    quantity: number
+  }[]
 }
 
 export interface IPurchaseRequestEntity {
@@ -61,5 +67,5 @@ export interface IPurchaseRequestEntity {
   revised_count?: number
   is_revised?: boolean
   is_finished?: boolean
-  form_references?: IFormReference[]
+  references?: IReference[]
 }

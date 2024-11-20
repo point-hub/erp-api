@@ -17,6 +17,6 @@ export class UpdateManyChartOfAccountRepository implements IUpdateManyChartOfAcc
   ) {}
 
   async handle(filter: IDocument, document: IDocument): Promise<IUpdateManyChartOfAccountOutput> {
-    return await this.database.collection(collectionName).updateMany(filter, document, this.options)
+    return await this.database.collection(collectionName).updateMany(filter, { $set: document }, this.options)
   }
 }

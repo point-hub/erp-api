@@ -19,6 +19,7 @@ export interface IItemReference {
 }
 
 export interface IDetail {
+  uuid: string
   item?: IItemReference
   notes?: string
   quantity?: number

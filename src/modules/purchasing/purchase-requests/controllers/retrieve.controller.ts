@@ -47,6 +47,8 @@ export const retrievePurchaseRequestController: IController = async (controllerI
         deleted_date: response.deleted_date,
         deleted_reason: response.deleted_reason,
         is_deleted: response.is_deleted,
+        is_finished: response.is_finished,
+        is_revised: response.is_revised,
       },
     }
   } catch (error) {

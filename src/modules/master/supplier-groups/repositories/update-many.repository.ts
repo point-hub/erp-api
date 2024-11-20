@@ -17,6 +17,6 @@ export class UpdateManySupplierGroupRepository implements IUpdateManySupplierGro
   ) {}
 
   async handle(filter: IDocument, document: IDocument): Promise<IUpdateManySupplierGroupOutput> {
-    return await this.database.collection(collectionName).updateMany(filter, document, this.options)
+    return await this.database.collection(collectionName).updateMany(filter, { $set: document }, this.options)
   }
 }

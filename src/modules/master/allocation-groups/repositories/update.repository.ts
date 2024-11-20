@@ -18,6 +18,6 @@ export class UpdateAllocationGroupRepository implements IUpdateAllocationGroupRe
   ) {}
 
   async handle(_id: string, document: IDocument): Promise<IUpdateAllocationGroupOutput> {
-    return await this.database.collection(collectionName).update(_id, document, this.options)
+    return await this.database.collection(collectionName).update(_id, { $set: document }, this.options)
   }
 }

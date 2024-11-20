@@ -30,6 +30,8 @@ export interface IOutput {
   deleted_date: Date
   deleted_reason: string
   is_deleted: boolean
+  is_finished: boolean
+  is_revised: boolean
 }
 
 export class RetrievePurchaseRequestUseCase {
@@ -57,6 +59,8 @@ export class RetrievePurchaseRequestUseCase {
       deleted_date: response.deleted_date,
       deleted_reason: response.deleted_reason,
       is_deleted: response.is_deleted,
+      is_finished: response.is_finished,
+      is_revised: response.is_revised,
     }
   }
 }

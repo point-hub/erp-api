@@ -46,44 +46,6 @@ export const schema: ISchema[] = [
           bsonType: 'string',
           description: '',
         },
-        details: {
-          bsonType: 'array',
-          description: '',
-          items: {
-            bsonType: 'object',
-            properties: {
-              item: {
-                bsonType: 'object',
-                description: 'Authenticated user who perform create form',
-                required: ['_id', 'label'],
-                properties: {
-                  _id: {
-                    bsonType: 'objectId',
-                    description: '',
-                  },
-                  label: {
-                    bsonType: 'string',
-                    description: '',
-                  },
-                },
-              },
-              // allocation: {
-              //   bsonType: 'object',
-              //   description: 'Authenticated user who perform create form',
-              //   properties: {
-              //     _id: {
-              //       bsonType: 'objectId',
-              //       description: '',
-              //     },
-              //     label: {
-              //       bsonType: 'string',
-              //       description: '',
-              //     },
-              //   },
-              // },
-            },
-          },
-        },
         created_by: {
           bsonType: 'object',
           description: 'Authenticated user who perform create form',

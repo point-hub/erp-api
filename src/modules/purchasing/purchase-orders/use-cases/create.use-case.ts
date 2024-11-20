@@ -1,12 +1,10 @@
 import { IObjClean } from '@point-hub/express-utils'
 import type { ISchemaValidation } from '@point-hub/papi'
 
-import { ICreateCounterRepository } from '@/modules/counters/repositories/create.repository'
-import { IRetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
-import { IUpdateCounterRepository } from '@/modules/counters/repositories/update.repository'
 import { IGenerateFormNumber } from '@/modules/counters/utils/generate-form-number'
 import { IAuth, IAuthReference } from '@/modules/master/users/interface'
 
+import { IUpdatePurchaseRequestReference } from '../../purchase-requests/utils/update-reference'
 import { PurchaseOrderEntity } from '../entity'
 import { IBranchReference, IDetail, TypeApprovalStatus } from '../interface'
 import { ICreatePurchaseOrderRepository } from '../repositories/create.repository'
@@ -37,12 +35,10 @@ export interface IInput {
 export interface IDeps {
   objClean: IObjClean
   createPurchaseOrderRepository: ICreatePurchaseOrderRepository
-  retrieveAllCounterRepository: IRetrieveAllCounterRepository
-  createCounterRepository: ICreateCounterRepository
-  updateCounterRepository: IUpdateCounterRepository
   schemaValidation: ISchemaValidation
   generateFormNumber: IGenerateFormNumber
   dateFormat(date: Date | number | string, format: string): string
+  updatePurchaseRequestReference: IUpdatePurchaseRequestReference
 }
 
 export interface IOutput {
@@ -91,6 +87,20 @@ export class CreatePurchaseOrderUseCase {
     purchaseOrderEntity.data = deps.objClean(purchaseOrderEntity.data)
     // 4. database operation
     const response = await deps.createPurchaseOrderRepository.handle(purchaseOrderEntity.data)
+
+    const details = purchaseOrderEntity.data.details?.map((el) => ({
+      uuid: el.uuid as string,
+      quantity: el.quantity as number,
+    }))
+
+    const reference = {
+      ref_id: response.inserted_id,
+      ref_name: 'purchase_orders',
+      ref_number: 'xx',
+      ref_date: purchaseOrderEntity.data.created_date as Date,
+      details: details ?? [],
+    }
+    await deps.updatePurchaseRequestReference.handle(input.data.purchase_request, reference)
     // 5. output
     return { inserted_id: response.inserted_id }
   }

@@ -17,6 +17,6 @@ export class UpdateMachineRepository implements IUpdateMachineRepository {
   ) {}
 
   async handle(_id: string, document: IDocument): Promise<IUpdateMachineOutput> {
-    return await this.database.collection(collectionName).update(_id, document, this.options)
+    return await this.database.collection(collectionName).update(_id, { $set: document }, this.options)
   }
 }
