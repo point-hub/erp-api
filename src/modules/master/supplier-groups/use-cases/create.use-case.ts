@@ -2,9 +2,9 @@ import { IObjClean } from '@point-hub/express-utils'
 import type { ISchemaValidation } from '@point-hub/papi'
 
 import { IGenerateMasterNumber } from '@/modules/counters/utils/generate-master-number'
+import { collectionName as supplierCollectionName } from '@/modules/master/suppliers/entity'
 import { IAuth } from '@/modules/master/users/interface'
 
-import { collectionName } from '../entity'
 import { SupplierGroupEntity } from '../entity'
 import { ICreateSupplierGroupRepository } from '../repositories/create.repository'
 import { createValidation } from '../validations/create.validation'
@@ -50,7 +50,7 @@ export class CreateSupplierGroupUseCase {
     // 3.1 create supplier group
     const response = await deps.createSupplierGroupRepository.handle(supplierGroupEntity.data)
     // 3.2. generate counter
-    await deps.generateMasterNumber.handle(collectionName, input.data.code)
+    await deps.generateMasterNumber.handle(supplierCollectionName, input.data.code)
     // 4. output
     return { inserted_id: response.inserted_id }
   }

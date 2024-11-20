@@ -44,6 +44,7 @@ export const seed = async (dbConnection: IDatabase, options: Record<string, unkn
           category_id: categoryResponse.inserted_id,
           number: account.number,
           name: account.name,
+          label: `[${account.number}] ${account.name}`,
           subledger: account.subledger,
         })
       }

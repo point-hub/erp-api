@@ -41,7 +41,6 @@ export class UpdateUserUseCase {
       warehouses: input.data.warehouses ?? [],
     })
     userEntity.generateDate('updated_date')
-    userEntity.data = deps.objClean(userEntity.data)
     // 3. database operation
     const response = await deps.updateUserRepository.handle(input._id, userEntity.data)
     // 4. output
