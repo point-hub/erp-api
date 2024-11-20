@@ -37,6 +37,7 @@ export interface IDeps {
   schemaValidation: ISchemaValidation
   updatePurchaseRequestRepository: IUpdatePurchaseRequestRepository
   dateFormat(date: Date | number | string, format: string): string
+  tokenGenerate(): string
 }
 
 export interface IOutput {
@@ -47,6 +48,12 @@ export class UpdatePurchaseRequestUseCase {
     // 1. validate schema
     await deps.schemaValidation(input.data, createValidation)
     // 3. define entity
+    input.data.details = input.data.details.map((obj) => {
+      return {
+        ...obj,
+        uuid: deps.tokenGenerate(),
+      }
+    })
     const purchaseRequestEntity = new PurchaseRequestEntity({
       revised_count: input.data.revised_count,
       form_number: input.data.form_number,

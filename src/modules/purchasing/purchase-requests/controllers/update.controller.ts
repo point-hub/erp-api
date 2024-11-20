@@ -1,4 +1,4 @@
-import { objClean } from '@point-hub/express-utils'
+import { objClean, tokenGenerate } from '@point-hub/express-utils'
 import type { IController, IControllerInput } from '@point-hub/papi'
 import { format } from 'date-fns'
 
@@ -48,6 +48,7 @@ export const updatePurchaseRequestController: IController = async (controllerInp
         dateFormat: format,
         createPurchaseRequestRepository,
         updatePurchaseRequestRepository,
+        tokenGenerate,
       },
     )
     await session.commitTransaction()

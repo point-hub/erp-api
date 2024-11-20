@@ -34,6 +34,7 @@ export interface IDeps {
   schemaValidation: ISchemaValidation
   generateFormNumber: IGenerateFormNumber
   dateFormat(date: Date | number | string, format: string): string
+  tokenGenerate(): string
 }
 
 export interface IOutput {
@@ -46,6 +47,12 @@ export class CreatePurchaseRequestUseCase {
     // 2. generate form number
     const formNumber = await deps.generateFormNumber.handle('PR', 'purchasing.purchase_requests')
     // 3. define entity
+    input.data.details = input.data.details.map((obj) => {
+      return {
+        ...obj,
+        uuid: deps.tokenGenerate(),
+      }
+    })
     const purchaseRequestEntity = new PurchaseRequestEntity({
       revised_count: 0,
       form_number: formNumber,
