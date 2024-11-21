@@ -24,7 +24,7 @@ export const seed = async (dbConnection: IDatabase, options: Record<string, unkn
     await createSupplierGroupRepository.handle(seed)
 
     await createCounterRepository.handle({
-      name: 'supplier_groups',
+      name: 'suppliers',
       code: seed.code,
       count: 0,
     })

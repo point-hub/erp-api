@@ -8,6 +8,7 @@ import { CreateCustomerGroupRepository } from './repositories/create.repository'
 export interface ISeed {
   code?: string
   name?: string
+  label?: string
 }
 
 export const seed = async (dbConnection: IDatabase, options: Record<string, unknown>) => {
@@ -21,10 +22,11 @@ export const seed = async (dbConnection: IDatabase, options: Record<string, unkn
     const seed: ISeed = {}
     seed.code = 'CG' + index.toString().padStart(2, 'X')
     seed.name = faker.location.city()
+    seed.label = `${seed.code} ${seed.name}`
     await createCustomerGroupRepository.handle(seed)
 
     await createCounterRepository.handle({
-      name: 'customer_groups',
+      name: 'customers',
       code: seed.code,
       count: 0,
     })

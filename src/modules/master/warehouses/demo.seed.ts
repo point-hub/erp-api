@@ -12,6 +12,7 @@ export interface ISeed {
   branch_id?: string
   code?: string
   name?: string
+  label?: string
 }
 
 export const seed = async (dbConnection: IDatabase, options: Record<string, unknown>) => {
@@ -31,6 +32,7 @@ export const seed = async (dbConnection: IDatabase, options: Record<string, unkn
     seed.branch_id = branches.data[randomNumberBetween(0, 29)]._id
     seed.code = `${counters.data[0].code}${(Number(counters.data[0].count) + index).toString().padStart(4, '0')}`
     seed.name = `${faker.location.city()} ${(Number(counters.data[0].count) + index).toString().padStart(2, '0')}`
+    seed.label = `${seed.code} ${seed.name}`
     await createWarehouseRepository.handle(seed)
     await updateCounterRepository.handle(counters.data[0]._id, { count: Number(counters.data[0].count) + index })
   }

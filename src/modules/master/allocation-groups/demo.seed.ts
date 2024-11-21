@@ -21,6 +21,6 @@ export const seed = async (dbConnection: IDatabase, options: Record<string, unkn
     seed.code = 'AG' + index.toString().padStart(2, 'X')
     seed.name = faker.location.city()
     await createAllocationGroupRepository.handle(seed)
-    await generateMasterNumber.handle(seed.code, 'allocation_groups')
+    await generateMasterNumber.handle('allocations', seed.code)
   }
 }
