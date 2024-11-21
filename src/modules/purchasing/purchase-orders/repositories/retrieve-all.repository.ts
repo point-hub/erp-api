@@ -27,8 +27,6 @@ export class RetrieveAllPurchaseOrderRepository implements IRetrieveAllPurchaseO
     const pipeline: IPipeline[] = []
 
     pipeline.push(...this.aggregateFilters(data.auth, data.query))
-    pipeline.push(...this.aggregateJoinCreatedBy())
-    pipeline.push(...this.aggregateJoinUpdatedBy())
 
     const response = await this.database.collection(collectionName).aggregate(pipeline, data.query, options)
 
@@ -36,46 +34,6 @@ export class RetrieveAllPurchaseOrderRepository implements IRetrieveAllPurchaseO
       data: response.data as unknown as IRetrievePurchaseOrderOutput[],
       pagination: response.pagination,
     }
-  }
-
-  private aggregateJoinCreatedBy() {
-    return [
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'created_by',
-          foreignField: '_id',
-          pipeline: [{ $project: { _id: 1, username: 1, name: 1, email: 1 } }],
-          as: 'created_by',
-        },
-      },
-      {
-        $unwind: {
-          path: '$created_by',
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-    ]
-  }
-
-  private aggregateJoinUpdatedBy() {
-    return [
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'updated_by',
-          foreignField: '_id',
-          pipeline: [{ $project: { _id: 1, username: 1, name: 1, email: 1 } }],
-          as: 'updated_by',
-        },
-      },
-      {
-        $unwind: {
-          path: '$updated_by',
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-    ]
   }
 
   private aggregateFilters(auth: IAuth, query: IQuery) {

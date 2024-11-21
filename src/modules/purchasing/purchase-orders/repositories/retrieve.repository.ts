@@ -48,8 +48,15 @@ export interface IRetrievePurchaseOrderOutput {
     code: string
     name: string
   }
+  required_date: Date
   branch: IBranch
   details: IDetails[]
+  subtotal: number
+  discount: number
+  tax_base: number
+  tax_type: string
+  tax: number
+  total: number
   notes: string
   approval_status: 'pending' | 'approved' | 'rejected'
   approval_to: IAuthReference
@@ -87,8 +94,15 @@ export class RetrievePurchaseOrderRepository implements IRetrievePurchaseOrderRe
       form_number: response.data[0].form_number as string,
       purchase_request: response.data[0].purchase_request as IPurchaseRequest,
       supplier: response.data[0].supplier as ISupplier,
+      required_date: response.data[0].required_date as Date,
       branch: response.data[0].branch as IBranch,
       details: response.data[0].details as IDetails[],
+      subtotal: response.data[0].subtotal as number,
+      discount: response.data[0].discount as number,
+      tax_base: response.data[0].tax_base as number,
+      tax_type: response.data[0].tax_type as string,
+      tax: response.data[0].tax as number,
+      total: response.data[0].total as number,
       notes: response.data[0].notes as string,
       approval_status: response.data[0].approval_status as 'pending' | 'approved' | 'rejected',
       approval_to: response.data[0].approval_to as IAuthReference,

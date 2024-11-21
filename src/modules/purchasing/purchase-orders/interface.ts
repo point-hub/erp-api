@@ -21,8 +21,10 @@ export interface IItemReference {
 export interface IDetail {
   uuid: string
   item?: IItemReference
-  notes?: string
   quantity?: number
+  price?: number
+  discount?: number
+  total?: number
   allocation?: IAllocationReference
 }
 
@@ -45,9 +47,16 @@ export interface ISupplier {
 export interface IPurchaseOrderEntity {
   _id?: string
   purchase_request?: IPurchaseRequest
+  required_date?: Date
   supplier?: ISupplier
   branch?: IBranchReference
   details?: IDetail[]
+  subtotal?: number
+  discount?: number
+  tax_base?: number
+  tax_type?: string
+  tax?: number
+  total?: number
   notes?: string
   // state create
   created_by?: IAuthReference

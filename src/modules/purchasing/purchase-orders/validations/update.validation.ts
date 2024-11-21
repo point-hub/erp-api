@@ -1,5 +1,6 @@
 export const updateValidation = {
   'purchase_request._id': ['required'],
+  required_date: ['required'],
   'supplier._id': ['required'],
   'branch._id': ['required'],
   'details.*.item._id': ['required'],

@@ -16,9 +16,16 @@ export interface IOutput {
   revised_count: number
   form_number: string
   purchase_request: IPurchaseRequest
+  required_date: Date
   supplier: ISupplier
   branch: IBranch
   details: IDetails[]
+  subtotal: number
+  discount: number
+  tax_base: number
+  tax_type: string
+  tax: number
+  total: number
   notes: string
   approval_status: 'pending' | 'approved' | 'rejected'
   approval_to: IAuthReference
@@ -44,9 +51,16 @@ export class RetrievePurchaseOrderUseCase {
       revised_count: response.revised_count,
       form_number: response.form_number,
       purchase_request: response.purchase_request,
+      required_date: response.required_date,
       supplier: response.supplier,
       branch: response.branch,
       details: response.details,
+      subtotal: response.subtotal,
+      discount: response.discount,
+      tax_base: response.tax_base,
+      tax_type: response.tax_type,
+      tax: response.tax,
+      total: response.total,
       notes: response.notes,
       approval_status: response.approval_status,
       approval_to: response.approval_to,

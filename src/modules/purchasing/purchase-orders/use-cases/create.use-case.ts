@@ -23,8 +23,15 @@ export interface IInput {
       code: string
       name: string
     }
+    required_date: Date
     branch: IBranchReference
     details: IDetail[]
+    subtotal: number
+    discount: number
+    tax_base: number
+    tax_type: string
+    tax: number
+    total: number
     notes?: string
     approval_to: IAuthReference
     approval_status: TypeApprovalStatus
@@ -64,8 +71,15 @@ export class CreatePurchaseOrderUseCase {
         code: input.data.supplier.code,
         name: input.data.supplier.name,
       },
+      required_date: input.data.required_date,
       branch: input.data.branch,
       details: input.data.details,
+      subtotal: input.data.subtotal,
+      discount: input.data.discount,
+      tax_base: input.data.tax_base,
+      tax_type: input.data.tax_type,
+      tax: input.data.tax,
+      total: input.data.total,
       notes: input.data.notes,
       is_finished: false,
       is_revised: false,
