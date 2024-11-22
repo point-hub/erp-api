@@ -49,7 +49,12 @@ export class UpdatePurchaseRequestReference implements IUpdatePurchaseRequestRef
       }
 
       if (totalExistingQuantity + totalNewQuantity > maxQuantity) {
-        throwApiError(422, { message: 'Quantity Error' })
+        throwApiError(422, {
+          message: `Quantity Error`,
+          errors: {
+            [`${entityDetail.uuid}`]: `${entityDetail.item?.label} should less than or equal to ${maxQuantity - totalExistingQuantity} ${entityDetail.item?.unit}`,
+          },
+        })
         break
       }
     }
