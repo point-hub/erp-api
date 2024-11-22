@@ -1,4 +1,3 @@
-import { faker } from '@faker-js/faker'
 import { BaseFactory, type IDatabase } from '@point-hub/papi'
 
 import { IChartOfAccountCategoryEntity } from './interface'
@@ -12,7 +11,6 @@ export default class ChartOfAccountCategoryFactory extends BaseFactory<IChartOfA
 
   definition() {
     return {
-      name: faker.person.fullName(),
       created_date: new Date(),
     }
   }

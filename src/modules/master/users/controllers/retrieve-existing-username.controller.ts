@@ -13,17 +13,15 @@ export const retrieveExistingUsernameController: IController = async (controller
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const retrieveExistingUsernameRepository = new RetrieveExistingUsernameRepository(controllerInput.dbConnection)
+    const retrieveExistingUsernameRepository = new RetrieveExistingUsernameRepository(controllerInput.dbConnection, {
+      session,
+    })
     // 3. handle business rules
-    const response = await RetrieveExistingUsernameUseCase.handle(
-      controllerInput.httpRequest.body,
-      {
-        retrieveExistingUsernameRepository,
-        cleanObject: objClean,
-        schemaValidation,
-      },
-      { session },
-    )
+    const response = await RetrieveExistingUsernameUseCase.handle(controllerInput.httpRequest.body, {
+      retrieveExistingUsernameRepository,
+      objClean,
+      schemaValidation,
+    })
     await session.commitTransaction()
     // 4. return response to client
     return {

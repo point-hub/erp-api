@@ -1,9 +1,9 @@
+import { IObjClean } from '@point-hub/express-utils'
 import type { ISchemaValidation } from '@point-hub/papi'
 
 import { ICreateCounterRepository } from '@/modules/counters/repositories/create.repository'
 import { IRetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
 import { IUpdateCounterRepository } from '@/modules/counters/repositories/update.repository'
-import { IGenerateFormNumber } from '@/modules/counters/utils/generate'
 import { IAuth, IAuthReference } from '@/modules/master/users/interface'
 
 import { PurchaseRequestEntity } from '../entity'
@@ -27,28 +27,33 @@ export interface IInput {
     created_date?: Date
   }
 }
+
 export interface IDeps {
-  cleanObject(object: object): object
+  objClean: IObjClean
   createPurchaseRequestRepository: ICreatePurchaseRequestRepository
   retrieveAllCounterRepository: IRetrieveAllCounterRepository
   createCounterRepository: ICreateCounterRepository
   updateCounterRepository: IUpdateCounterRepository
   schemaValidation: ISchemaValidation
-  generateFormNumber: IGenerateFormNumber
   updatePurchaseRequestRepository: IUpdatePurchaseRequestRepository
   dateFormat(date: Date | number | string, format: string): string
+  tokenGenerate(): string
 }
-export interface IOptions {
-  session?: unknown
-}
+
 export interface IOutput {
   inserted_id: string
 }
 export class UpdatePurchaseRequestUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input.data, createValidation)
     // 3. define entity
+    input.data.details = input.data.details.map((obj) => {
+      return {
+        ...obj,
+        uuid: deps.tokenGenerate(),
+      }
+    })
     const purchaseRequestEntity = new PurchaseRequestEntity({
       revised_count: input.data.revised_count,
       form_number: input.data.form_number,
@@ -73,17 +78,12 @@ export class UpdatePurchaseRequestUseCase {
       },
       created_date: new Date(),
     })
-    const cleanEntity = deps.cleanObject(purchaseRequestEntity.data)
+    purchaseRequestEntity.data = deps.objClean(purchaseRequestEntity.data)
     // 4. database operation
-    const response = await deps.createPurchaseRequestRepository.handle(cleanEntity, options)
-
-    await deps.updatePurchaseRequestRepository.handle(
-      input._id,
-      {
-        is_revised: true,
-      },
-      options,
-    )
+    const response = await deps.createPurchaseRequestRepository.handle(purchaseRequestEntity.data)
+    await deps.updatePurchaseRequestRepository.handle(input._id, {
+      is_revised: true,
+    })
     // 5. output
     return { inserted_id: response.inserted_id }
   }

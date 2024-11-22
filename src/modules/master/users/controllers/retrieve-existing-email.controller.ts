@@ -13,17 +13,15 @@ export const retrieveExistingEmailController: IController = async (controllerInp
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const retrieveExistingEmailRepository = new RetrieveExistingEmailRepository(controllerInput.dbConnection)
+    const retrieveExistingEmailRepository = new RetrieveExistingEmailRepository(controllerInput.dbConnection, {
+      session,
+    })
     // 3. handle business rules
-    const response = await RetrieveExistingEmailUseCase.handle(
-      controllerInput.httpRequest.body,
-      {
-        retrieveExistingEmailRepository,
-        cleanObject: objClean,
-        schemaValidation,
-      },
-      { session },
-    )
+    const response = await RetrieveExistingEmailUseCase.handle(controllerInput.httpRequest.body, {
+      retrieveExistingEmailRepository,
+      objClean,
+      schemaValidation,
+    })
     await session.commitTransaction()
     // 4. return response to client
     return {

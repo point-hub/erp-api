@@ -1,12 +1,13 @@
+import { IObjClean } from '@point-hub/express-utils'
 import type { ISchemaValidation } from '@point-hub/papi'
 
 import { ICreateCounterRepository } from '@/modules/counters/repositories/create.repository'
 import { IRetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
 import { IUpdateCounterRepository } from '@/modules/counters/repositories/update.repository'
-import { IGenerateFormNumber } from '@/modules/counters/utils/generate'
+import { IGenerateFormNumber } from '@/modules/counters/utils/generate-form-number'
 import { IAuth, IAuthReference } from '@/modules/master/users/interface'
 
-import { formNumberPrefix, PurchaseRequestEntity } from '../entity'
+import { PurchaseRequestEntity } from '../entity'
 import { IBranchReference, IDetail, TypeApprovalStatus } from '../interface'
 import { ICreatePurchaseRequestRepository } from '../repositories/create.repository'
 import { createValidation } from '../validations/create.validation'
@@ -23,8 +24,9 @@ export interface IInput {
     created_date?: Date
   }
 }
+
 export interface IDeps {
-  cleanObject(object: object): object
+  objClean: IObjClean
   createPurchaseRequestRepository: ICreatePurchaseRequestRepository
   retrieveAllCounterRepository: IRetrieveAllCounterRepository
   createCounterRepository: ICreateCounterRepository
@@ -32,43 +34,25 @@ export interface IDeps {
   schemaValidation: ISchemaValidation
   generateFormNumber: IGenerateFormNumber
   dateFormat(date: Date | number | string, format: string): string
+  tokenGenerate(): string
 }
-export interface IOptions {
-  session?: unknown
-}
+
 export interface IOutput {
   inserted_id: string
 }
 export class CreatePurchaseRequestUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input.data, createValidation)
     // 2. generate form number
-    const code = formNumberPrefix + deps.dateFormat(new Date(), 'yyMM')
-    let formNumber = code
-    const counters = await deps.retrieveAllCounterRepository.handle(
-      { filter: { name: 'purchasing.purchase_requests', code: code } },
-      options,
-    )
-    if (!counters.data.length) {
-      await deps.createCounterRepository.handle(
-        {
-          name: 'purchasing.purchase_requests',
-          code: code,
-          count: 1,
-        },
-        options,
-      )
-      formNumber += '0001'
-    } else {
-      formNumber += (Number(counters.data[0].count) + 1).toString().padStart(4, '0')
-      await deps.updateCounterRepository.handle(
-        counters.data[0]._id,
-        { count: Number(counters.data[0].count) + 1 },
-        options,
-      )
-    }
+    const formNumber = await deps.generateFormNumber.handle('PR', 'purchasing.purchase_requests')
     // 3. define entity
+    input.data.details = input.data.details.map((obj) => {
+      return {
+        ...obj,
+        uuid: deps.tokenGenerate(),
+      }
+    })
     const purchaseRequestEntity = new PurchaseRequestEntity({
       revised_count: 0,
       form_number: formNumber,
@@ -93,9 +77,9 @@ export class CreatePurchaseRequestUseCase {
       },
       created_date: new Date(),
     })
-    const cleanEntity = deps.cleanObject(purchaseRequestEntity.data)
+    purchaseRequestEntity.data = deps.objClean(purchaseRequestEntity.data)
     // 4. database operation
-    const response = await deps.createPurchaseRequestRepository.handle(cleanEntity, options)
+    const response = await deps.createPurchaseRequestRepository.handle(purchaseRequestEntity.data)
     // 5. output
     return { inserted_id: response.inserted_id }
   }

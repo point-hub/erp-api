@@ -11,6 +11,7 @@ export interface IInput {
   _id: string
   reason: string
 }
+
 export interface IDeps {
   schemaValidation: ISchemaValidation
   retrieveAllUserRepository: IRetrieveAllUserRepository
@@ -18,20 +19,18 @@ export interface IDeps {
   deleteRoleRepository: IDeleteRoleRepository
   throwApiError(codeStatus: TypeCodeStatus, options?: IOptionsApiError): void
 }
-export interface IOptions {
-  session?: unknown
-}
+
 export interface IOutput {
   deleted_count: number
 }
 
 export class DeleteRoleUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input, deleteValidation)
     // 2. check if doesn't have any relationship
-    const role = await deps.retrieveRoleRepository.handle(input._id, options)
-    const items = await deps.retrieveAllUserRepository.handle({ filter: { role_id: role._id } }, options)
+    const role = await deps.retrieveRoleRepository.handle(input._id)
+    const items = await deps.retrieveAllUserRepository.handle({ filter: { role_id: role._id } })
     if (items.pagination.total_document) {
       deps.throwApiError(422, {
         errors: {
@@ -40,7 +39,7 @@ export class DeleteRoleUseCase {
       })
     }
     // 3. database operation
-    const response = await deps.deleteRoleRepository.handle(input._id, options)
+    const response = await deps.deleteRoleRepository.handle(input._id)
     // 4. output
     return { deleted_count: response.deleted_count }
   }

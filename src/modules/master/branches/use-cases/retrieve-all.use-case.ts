@@ -6,21 +6,20 @@ import { IRetrieveAllBranchRepository } from '../repositories/retrieve-all.repos
 export interface IInput {
   query: IQuery
 }
+
 export interface IDeps {
   retrieveAllBranchRepository: IRetrieveAllBranchRepository
 }
-export interface IOptions {
-  session: unknown
-}
+
 export interface IOutput {
   data: IRetrieveBranchOutput[]
   pagination: IPagination
 }
 
 export class RetrieveAllBranchUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. database operation
-    const response = await deps.retrieveAllBranchRepository.handle(input.query, options)
+    const response = await deps.retrieveAllBranchRepository.handle(input.query)
     // 2. output
     return {
       data: response.data,

@@ -7,13 +7,16 @@ export interface IUpdateManyRoleOutput {
   modified_count: number
 }
 export interface IUpdateManyRoleRepository {
-  handle(filter: IDocument, document: IDocument, options?: unknown): Promise<IUpdateManyRoleOutput>
+  handle(filter: IDocument, document: IDocument): Promise<IUpdateManyRoleOutput>
 }
 
 export class UpdateManyRoleRepository implements IUpdateManyRoleRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(filter: IDocument, document: IDocument, options?: unknown): Promise<IUpdateManyRoleOutput> {
-    return await this.database.collection(collectionName).updateMany(filter, document, options)
+  async handle(filter: IDocument, document: IDocument): Promise<IUpdateManyRoleOutput> {
+    return await this.database.collection(collectionName).updateMany(filter, { $set: document }, this.options)
   }
 }

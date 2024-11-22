@@ -7,13 +7,16 @@ export interface IUpdatePurchaseOrderOutput {
   modified_count: number
 }
 export interface IUpdatePurchaseOrderRepository {
-  handle(_id: string, document: IDocument, options?: unknown): Promise<IUpdatePurchaseOrderOutput>
+  handle(_id: string, document: IDocument): Promise<IUpdatePurchaseOrderOutput>
 }
 
 export class UpdatePurchaseOrderRepository implements IUpdatePurchaseOrderRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(_id: string, document: IDocument, options?: unknown): Promise<IUpdatePurchaseOrderOutput> {
-    return await this.database.collection(collectionName).update(_id, document, options)
+  async handle(_id: string, document: IDocument): Promise<IUpdatePurchaseOrderOutput> {
+    return await this.database.collection(collectionName).update(_id, { $set: document }, this.options)
   }
 }

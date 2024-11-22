@@ -6,13 +6,16 @@ export interface ICreateSupplierOutput {
   inserted_id: string
 }
 export interface ICreateSupplierRepository {
-  handle(document: IDocument, options?: unknown): Promise<ICreateSupplierOutput>
+  handle(document: IDocument): Promise<ICreateSupplierOutput>
 }
 
 export class CreateSupplierRepository implements ICreateSupplierRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(document: IDocument, options?: unknown): Promise<ICreateSupplierOutput> {
-    return await this.database.collection(collectionName).create(document, options)
+  async handle(document: IDocument): Promise<ICreateSupplierOutput> {
+    return await this.database.collection(collectionName).create(document, this.options)
   }
 }

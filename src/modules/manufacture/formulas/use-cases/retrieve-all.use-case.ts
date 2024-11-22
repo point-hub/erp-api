@@ -6,21 +6,20 @@ import { IRetrieveAllFormulaRepository } from '../repositories/retrieve-all.repo
 export interface IInput {
   query: IQuery
 }
+
 export interface IDeps {
   retrieveAllFormulaRepository: IRetrieveAllFormulaRepository
 }
-export interface IOptions {
-  session: unknown
-}
+
 export interface IOutput {
   data: IRetrieveFormulaOutput[]
   pagination: IPagination
 }
 
 export class RetrieveAllFormulaUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. database operation
-    const response = await deps.retrieveAllFormulaRepository.handle(input.query, options)
+    const response = await deps.retrieveAllFormulaRepository.handle(input.query)
     // 2. output
     return {
       data: response.data,

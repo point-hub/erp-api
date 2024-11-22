@@ -7,13 +7,16 @@ export interface IUpdateChartOfAccountCategoryOutput extends IUpdateOutput {
   modified_count: number
 }
 export interface IUpdateChartOfAccountCategoryRepository extends IUpdateRepository {
-  handle(_id: string, document: IDocument, options?: unknown): Promise<IUpdateChartOfAccountCategoryOutput>
+  handle(_id: string, document: IDocument): Promise<IUpdateChartOfAccountCategoryOutput>
 }
 
 export class UpdateChartOfAccountCategoryRepository implements IUpdateChartOfAccountCategoryRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(_id: string, document: IDocument, options?: unknown): Promise<IUpdateChartOfAccountCategoryOutput> {
-    return await this.database.collection(collectionName).update(_id, document, options)
+  async handle(_id: string, document: IDocument): Promise<IUpdateChartOfAccountCategoryOutput> {
+    return await this.database.collection(collectionName).update(_id, { $set: document }, this.options)
   }
 }

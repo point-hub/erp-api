@@ -3,12 +3,11 @@ import { IRetrieveFormulaRepository } from '../repositories/retrieve.repository'
 export interface IInput {
   _id: string
 }
+
 export interface IDeps {
   retrieveFormulaRepository: IRetrieveFormulaRepository
 }
-export interface IOptions {
-  session: unknown
-}
+
 export interface IOutput {
   _id: string
   code: string
@@ -19,9 +18,9 @@ export interface IOutput {
 }
 
 export class RetrieveFormulaUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. database operation
-    const response = await deps.retrieveFormulaRepository.handle(input._id, options)
+    const response = await deps.retrieveFormulaRepository.handle(input._id)
     // 2. output
     return {
       _id: response._id,

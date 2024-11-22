@@ -16,20 +16,23 @@ export interface IRetrieveCustomerGroupOutput {
   updated_date: Date
 }
 export interface IRetrieveCustomerGroupRepository {
-  handle(_id: string, options?: unknown): Promise<IRetrieveCustomerGroupOutput>
+  handle(_id: string): Promise<IRetrieveCustomerGroupOutput>
 }
 
 export class RetrieveCustomerGroupRepository implements IRetrieveCustomerGroupRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(_id: string, options?: unknown): Promise<IRetrieveCustomerGroupOutput> {
+  async handle(_id: string): Promise<IRetrieveCustomerGroupOutput> {
     const pipeline: IPipeline[] = []
 
     pipeline.push(...this.aggregateFilters(_id))
     pipeline.push(...this.aggregateJoinCreatedBy())
     pipeline.push(...this.aggregateJoinUpdatedBy())
 
-    const response = await this.database.collection(collectionName).aggregate(pipeline, {}, options)
+    const response = await this.database.collection(collectionName).aggregate(pipeline, {}, this.options)
 
     return {
       _id: `${response.data[0]._id}`,

@@ -6,14 +6,18 @@ export interface IUpdateAllocationGroupOutput {
   matched_count: number
   modified_count: number
 }
+
 export interface IUpdateAllocationGroupRepository {
-  handle(_id: string, document: IDocument, options?: unknown): Promise<IUpdateAllocationGroupOutput>
+  handle(_id: string, document: IDocument): Promise<IUpdateAllocationGroupOutput>
 }
 
 export class UpdateAllocationGroupRepository implements IUpdateAllocationGroupRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(_id: string, document: IDocument, options?: unknown): Promise<IUpdateAllocationGroupOutput> {
-    return await this.database.collection(collectionName).update(_id, document, options)
+  async handle(_id: string, document: IDocument): Promise<IUpdateAllocationGroupOutput> {
+    return await this.database.collection(collectionName).update(_id, { $set: document }, this.options)
   }
 }

@@ -6,13 +6,16 @@ export interface IDeleteProcessOutput {
   deleted_count: number
 }
 export interface IDeleteProcessRepository {
-  handle(_id: string, options?: unknown): Promise<IDeleteProcessOutput>
+  handle(_id: string): Promise<IDeleteProcessOutput>
 }
 
 export class DeleteProcessRepository implements IDeleteProcessRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(_id: string, options?: unknown): Promise<IDeleteProcessOutput> {
-    return await this.database.collection(collectionName).delete(_id, options)
+  async handle(_id: string): Promise<IDeleteProcessOutput> {
+    return await this.database.collection(collectionName).delete(_id, this.options)
   }
 }

@@ -8,15 +8,18 @@ export interface IRetrieveAllSettingJournalOutput extends IAggregateOutput {
   pagination: IPagination
 }
 export interface IRetrieveAllSettingJournalRepository extends IAggregateRepository {
-  handle(query: IQuery, options?: unknown): Promise<IRetrieveAllSettingJournalOutput>
+  handle(query: IQuery): Promise<IRetrieveAllSettingJournalOutput>
 }
 
 export class RetrieveAllSettingJournalRepository implements IRetrieveAllSettingJournalRepository {
   public collection = collectionName
 
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(query: IQuery, options?: unknown): Promise<IRetrieveAllSettingJournalOutput> {
+  async handle(query: IQuery): Promise<IRetrieveAllSettingJournalOutput> {
     const pipeline: IPipeline[] = []
 
     const filtersAnd = [] // filter keys using "and" logic
@@ -35,7 +38,7 @@ export class RetrieveAllSettingJournalRepository implements IRetrieveAllSettingJ
       pipeline.push({ $match: { $and: filtersAnd } })
     }
 
-    const response = await this.database.collection(this.collection).aggregate(pipeline, query, options)
+    const response = await this.database.collection(this.collection).aggregate(pipeline, query, this.options)
 
     return {
       data: response.data as IRetrieveSettingJournalOutput[],

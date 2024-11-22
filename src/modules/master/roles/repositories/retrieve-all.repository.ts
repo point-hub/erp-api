@@ -8,13 +8,16 @@ export interface IRetrieveAllRoleOutput {
   pagination: IPagination
 }
 export interface IRetrieveAllRoleRepository {
-  handle(query: IQuery, options?: unknown): Promise<IRetrieveAllRoleOutput>
+  handle(query: IQuery): Promise<IRetrieveAllRoleOutput>
 }
 
 export class RetrieveAllRoleRepository implements IRetrieveAllRoleRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(query: IQuery, options?: unknown): Promise<IRetrieveAllRoleOutput> {
+  async handle(query: IQuery): Promise<IRetrieveAllRoleOutput> {
     const pipeline: IPipeline[] = []
 
     pipeline.push(...this.aggregateFilters(query))
@@ -22,7 +25,7 @@ export class RetrieveAllRoleRepository implements IRetrieveAllRoleRepository {
     pipeline.push(...this.aggregateJoinUpdatedBy())
     pipeline.push(...this.aggregateAddFields())
 
-    const response = await this.database.collection(collectionName).aggregate(pipeline, query, options)
+    const response = await this.database.collection(collectionName).aggregate(pipeline, query, this.options)
 
     return {
       data: response.data as unknown as IRetrieveRoleOutput[],

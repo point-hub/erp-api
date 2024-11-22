@@ -6,21 +6,20 @@ import { IRetrieveAllChartOfAccountTypeRepository } from '../repositories/retrie
 export interface IInput {
   query: IQuery
 }
+
 export interface IDeps {
   retrieveAllChartOfAccountTypeRepository: IRetrieveAllChartOfAccountTypeRepository
 }
-export interface IOptions {
-  session: unknown
-}
+
 export interface IOutput {
   data: IRetrieveChartOfAccountTypeOutput[]
   pagination: IPagination
 }
 
 export class RetrieveAllChartOfAccountTypeUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. database operation
-    const response = await deps.retrieveAllChartOfAccountTypeRepository.handle(input.query, options)
+    const response = await deps.retrieveAllChartOfAccountTypeRepository.handle(input.query)
     // 2. output
     return {
       data: response.data,

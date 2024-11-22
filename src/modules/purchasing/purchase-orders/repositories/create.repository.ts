@@ -6,13 +6,16 @@ export interface ICreatePurchaseOrderOutput {
   inserted_id: string
 }
 export interface ICreatePurchaseOrderRepository {
-  handle(document: IDocument, options?: unknown): Promise<ICreatePurchaseOrderOutput>
+  handle(document: IDocument): Promise<ICreatePurchaseOrderOutput>
 }
 
 export class CreatePurchaseOrderRepository implements ICreatePurchaseOrderRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(document: IDocument, options?: unknown): Promise<ICreatePurchaseOrderOutput> {
-    return await this.database.collection(collectionName).create(document, options)
+  async handle(document: IDocument): Promise<ICreatePurchaseOrderOutput> {
+    return await this.database.collection(collectionName).create(document, this.options)
   }
 }

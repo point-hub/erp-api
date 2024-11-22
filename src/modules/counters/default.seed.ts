@@ -3,45 +3,40 @@ import { type IDatabase } from '@point-hub/papi'
 import { CreateManyCounterRepository } from '@/modules/counters/repositories/create-many.repository'
 
 export interface ISeed {
-  code?: string
-  name?: string
+  code: string
+  name: string
   count?: number
 }
 
-export const seed = async (dbConnection: IDatabase, options: unknown) => {
+export const seed = async (dbConnection: IDatabase, options: Record<string, unknown>) => {
   console.info(`[seed] counters data`)
   // delete all data inside collection
   await dbConnection.collection('counters').deleteAll(options)
   // prepare repository
-  const createManyCounterRepository = new CreateManyCounterRepository(dbConnection)
+  const createManyCounterRepository = new CreateManyCounterRepository(dbConnection, options)
   // insert new seeder data
-  await createManyCounterRepository.handle(seeds, options)
+  await createManyCounterRepository.handle(seeds)
 }
 
 export const seeds: ISeed[] = [
   {
     name: 'roles',
-    code: 'R',
+    code: 'MR',
     count: 0,
   },
   {
     name: 'branches',
-    code: 'B',
+    code: 'MB',
     count: 0,
   },
   {
     name: 'warehouses',
-    code: 'W',
+    code: 'MW',
     count: 0,
   },
   {
     name: 'machines',
-    code: 'M',
-    count: 0,
-  },
-  {
-    name: 'formulas',
-    code: 'F',
+    code: 'MM',
     count: 0,
   },
 ]

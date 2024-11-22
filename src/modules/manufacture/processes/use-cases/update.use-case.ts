@@ -15,20 +15,19 @@ export interface IInput {
     notes?: string
   }
 }
+
 export interface IDeps {
   schemaValidation: ISchemaValidation
   updateProcessRepository: IUpdateProcessRepository
 }
-export interface IOptions {
-  session?: unknown
-}
+
 export interface IOutput {
   matched_count: number
   modified_count: number
 }
 
 export class UpdateProcessUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input, updateValidation)
     // 2. define entity
@@ -36,11 +35,15 @@ export class UpdateProcessUseCase {
       code: input.data.code ?? '',
       name: input.data.name ?? '',
       notes: input.data.notes ?? '',
-      updated_by: input.auth._id,
+      updated_by: {
+        _id: input.auth._id,
+        label: input.auth.name,
+        email: input.auth.email,
+      },
     })
-    processEntity.generateUpdatedDate()
+    processEntity.generateDate('updated_date')
     // 3. database operation
-    const response = await deps.updateProcessRepository.handle(input._id, processEntity.data, options)
+    const response = await deps.updateProcessRepository.handle(input._id, processEntity.data)
     // 4. output
     return {
       matched_count: response.matched_count,

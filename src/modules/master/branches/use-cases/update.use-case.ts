@@ -12,40 +12,49 @@ export interface IInput {
   data: {
     code?: string
     name?: string
+    label?: string
     address?: string
     phone?: string
     notes?: string
-    updated_by?: string
+    updated_by: {
+      _id: string
+      label: string
+      email: string
+    }
   }
 }
+
 export interface IDeps {
   schemaValidation: ISchemaValidation
   updateBranchRepository: IUpdateBranchRepository
 }
-export interface IOptions {
-  session?: unknown
-}
+
 export interface IOutput {
   matched_count: number
   modified_count: number
 }
 
 export class UpdateBranchUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input.data, updateValidation)
     // 2. define entity
     const branchEntity = new BranchEntity({
       code: input.data.code,
       name: input.data.name,
+      label: `[${input.data.code}] ${input.data.name}`,
       address: input.data.address ?? '',
       phone: input.data.phone ?? '',
       notes: input.data.notes ?? '',
-      updated_by: input.auth._id,
+      updated_by: {
+        _id: input.auth._id,
+        label: input.auth.name,
+        email: input.auth.email,
+      },
     })
-    branchEntity.generateUpdatedDate()
+    branchEntity.generateDate('updated_date')
     // 3. database operation
-    const response = await deps.updateBranchRepository.handle(input._id, branchEntity.data, options)
+    const response = await deps.updateBranchRepository.handle(input._id, branchEntity.data)
     // 4. output
     return {
       matched_count: response.matched_count,

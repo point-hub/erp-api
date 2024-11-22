@@ -1,3 +1,4 @@
+import { IObjClean } from '@point-hub/express-utils'
 import type { ISchemaValidation, IUpdateOutput, TypeCodeStatus } from '@point-hub/papi'
 
 import type { IOptions as IOptionsApiError } from '@/utils/throw-api-error'
@@ -14,18 +15,16 @@ export interface IInput {
     journals?: { [key: string]: string }[]
   }
 }
+
 export interface IDeps {
-  cleanObject(object: object): object
+  objClean: IObjClean
   schemaValidation: ISchemaValidation
   updateSettingJournalRepository: IUpdateSettingJournalRepository
   throwApiError(codeStatus: TypeCodeStatus, options: IOptionsApiError): void
 }
-export interface IOptions {
-  session?: unknown
-}
 
 export class UpdateSettingJournalUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IUpdateOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IUpdateOutput> {
     // 1. validate schema
     await deps.schemaValidation(input.data, updateValidation)
     const errors: { [key: string]: string[] } = {}
@@ -49,9 +48,9 @@ export class UpdateSettingJournalUseCase {
       feature: input.data.feature,
       journals: input.data.journals,
     })
-    settingJournalEntity.generateUpdatedDate()
+    settingJournalEntity.generateDate('updated_date')
     // 3. database operation
-    const response = await deps.updateSettingJournalRepository.handle(input._id, settingJournalEntity.data, options)
+    const response = await deps.updateSettingJournalRepository.handle(input._id, settingJournalEntity.data)
     // 4. output
     return {
       matched_count: response.matched_count,

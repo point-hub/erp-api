@@ -3,12 +3,11 @@ import { IRetrieveWarehouseRepository } from '../repositories/retrieve.repositor
 export interface IInput {
   _id: string
 }
+
 export interface IDeps {
   retrieveWarehouseRepository: IRetrieveWarehouseRepository
 }
-export interface IOptions {
-  session: unknown
-}
+
 export interface IOutput {
   _id: string
   branch: {
@@ -28,9 +27,9 @@ export interface IOutput {
 }
 
 export class RetrieveWarehouseUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. database operation
-    const response = await deps.retrieveWarehouseRepository.handle(input._id, options)
+    const response = await deps.retrieveWarehouseRepository.handle(input._id)
     // 2. output
     return {
       _id: response._id,

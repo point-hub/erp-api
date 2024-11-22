@@ -13,14 +13,14 @@ export const updateUserController: IController = async (controllerInput: IContro
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const updateUserRepository = new UpdateUserRepository(controllerInput.dbConnection)
+    const updateUserRepository = new UpdateUserRepository(controllerInput.dbConnection, { session })
     // 3. handle business rules
     const response = await UpdateUserUseCase.handle(
       {
         _id: controllerInput.httpRequest.params.id,
         data: controllerInput.httpRequest.body,
       },
-      { cleanObject: objClean, schemaValidation, updateUserRepository },
+      { objClean, schemaValidation, updateUserRepository },
     )
     await session.commitTransaction()
     // 4. return response to client

@@ -7,13 +7,16 @@ export interface IRejectPurchaseRequestOutput {
   modified_count: number
 }
 export interface IRejectPurchaseRequestRepository {
-  handle(_id: string, document: IDocument, options?: unknown): Promise<IRejectPurchaseRequestOutput>
+  handle(_id: string, document: IDocument): Promise<IRejectPurchaseRequestOutput>
 }
 
 export class RejectPurchaseRequestRepository implements IRejectPurchaseRequestRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(_id: string, document: IDocument, options?: unknown): Promise<IRejectPurchaseRequestOutput> {
-    return await this.database.collection(collectionName).update(_id, document, options)
+  async handle(_id: string, document: IDocument): Promise<IRejectPurchaseRequestOutput> {
+    return await this.database.collection(collectionName).update(_id, { $set: document }, this.options)
   }
 }

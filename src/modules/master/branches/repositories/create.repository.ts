@@ -6,13 +6,16 @@ export interface ICreateBranchOutput {
   inserted_id: string
 }
 export interface ICreateBranchRepository {
-  handle(document: IDocument, options?: unknown): Promise<ICreateBranchOutput>
+  handle(document: IDocument): Promise<ICreateBranchOutput>
 }
 
 export class CreateBranchRepository implements ICreateBranchRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(document: IDocument, options?: unknown): Promise<ICreateBranchOutput> {
-    return await this.database.collection(collectionName).create(document, options)
+  async handle(document: IDocument): Promise<ICreateBranchOutput> {
+    return await this.database.collection(collectionName).create(document, this.options)
   }
 }

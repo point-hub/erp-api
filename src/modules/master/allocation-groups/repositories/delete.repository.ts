@@ -5,14 +5,18 @@ import { collectionName } from '../entity'
 export interface IDeleteAllocationGroupOutput {
   deleted_count: number
 }
+
 export interface IDeleteAllocationGroupRepository {
-  handle(_id: string, options?: unknown): Promise<IDeleteAllocationGroupOutput>
+  handle(_id: string): Promise<IDeleteAllocationGroupOutput>
 }
 
 export class DeleteAllocationGroupRepository implements IDeleteAllocationGroupRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(_id: string, options?: unknown): Promise<IDeleteAllocationGroupOutput> {
-    return await this.database.collection(collectionName).delete(_id, options)
+  async handle(_id: string): Promise<IDeleteAllocationGroupOutput> {
+    return await this.database.collection(collectionName).delete(_id, this.options)
   }
 }

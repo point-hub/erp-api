@@ -6,13 +6,16 @@ export interface ICreateProcessOutput {
   inserted_id: string
 }
 export interface ICreateProcessRepository {
-  handle(document: IDocument, options?: unknown): Promise<ICreateProcessOutput>
+  handle(document: IDocument): Promise<ICreateProcessOutput>
 }
 
 export class CreateProcessRepository implements ICreateProcessRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(document: IDocument, options?: unknown): Promise<ICreateProcessOutput> {
-    return await this.database.collection(collectionName).create(document, options)
+  async handle(document: IDocument): Promise<ICreateProcessOutput> {
+    return await this.database.collection(collectionName).create(document, this.options)
   }
 }

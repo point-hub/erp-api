@@ -6,21 +6,20 @@ import { IRetrieveAllRoleRepository } from '../repositories/retrieve-all.reposit
 export interface IInput {
   query: IQuery
 }
+
 export interface IDeps {
   retrieveAllRoleRepository: IRetrieveAllRoleRepository
 }
-export interface IOptions {
-  session: unknown
-}
+
 export interface IOutput {
   data: IRetrieveRoleOutput[]
   pagination: IPagination
 }
 
 export class RetrieveAllRoleUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. database operation
-    const response = await deps.retrieveAllRoleRepository.handle(input.query, options)
+    const response = await deps.retrieveAllRoleRepository.handle(input.query)
     // 2. output
     return {
       data: response.data,

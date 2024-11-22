@@ -8,13 +8,16 @@ export interface IRetrieveAllWarehouseOutput {
   pagination: IPagination
 }
 export interface IRetrieveAllWarehouseRepository {
-  handle(query: IQuery, options?: unknown): Promise<IRetrieveAllWarehouseOutput>
+  handle(query: IQuery): Promise<IRetrieveAllWarehouseOutput>
 }
 
 export class RetrieveAllWarehouseRepository implements IRetrieveAllWarehouseRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(query: IQuery, options?: unknown): Promise<IRetrieveAllWarehouseOutput> {
+  async handle(query: IQuery): Promise<IRetrieveAllWarehouseOutput> {
     const pipeline: IPipeline[] = []
 
     pipeline.push(...this.aggregateJoinBranch())
@@ -23,7 +26,7 @@ export class RetrieveAllWarehouseRepository implements IRetrieveAllWarehouseRepo
     pipeline.push(...this.aggregateJoinUpdatedBy())
     pipeline.push(...this.aggregateAddFields())
 
-    const response = await this.database.collection(collectionName).aggregate(pipeline, query, options)
+    const response = await this.database.collection(collectionName).aggregate(pipeline, query, this.options)
 
     return {
       data: response.data as unknown as IRetrieveWarehouseOutput[],

@@ -1,3 +1,4 @@
+import { IObjClean } from '@point-hub/express-utils'
 import type { ISchemaValidation } from '@point-hub/papi'
 
 import { ChartOfAccountTypeTypeEntity } from '../entity'
@@ -10,30 +11,29 @@ export interface IInput {
     name?: string
   }
 }
+
 export interface IDeps {
-  cleanObject(object: object): object
+  objClean: IObjClean
   schemaValidation: ISchemaValidation
   updateChartOfAccountTypeRepository: IUpdateChartOfAccountTypeRepository
 }
-export interface IOptions {
-  session?: unknown
-}
+
 export interface IOutput {
   matched_count: number
   modified_count: number
 }
 
 export class UpdateChartOfAccountTypeUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input, updateValidation)
     // 2. define entity
     const typeEntity = new ChartOfAccountTypeTypeEntity({
       name: input.data.name,
     })
-    typeEntity.generateUpdatedDate()
+    typeEntity.generateDate('updated_date')
     // 3. database operation
-    const response = await deps.updateChartOfAccountTypeRepository.handle(input._id, typeEntity.data, options)
+    const response = await deps.updateChartOfAccountTypeRepository.handle(input._id, typeEntity.data)
     // 4. output
     return {
       matched_count: response.matched_count,

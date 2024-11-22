@@ -1,4 +1,3 @@
-import { objClean } from '@point-hub/express-utils'
 import { type IController, type IControllerInput } from '@point-hub/papi'
 
 import { throwApiError } from '@/utils/throw-api-error'
@@ -15,21 +14,18 @@ export const signinController: IController = async (controllerInput: IController
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const retrieveMatchedUsernameRepository = new RetrieveMatchedUsernameRepository(controllerInput.dbConnection)
+    const retrieveMatchedUsernameRepository = new RetrieveMatchedUsernameRepository(controllerInput.dbConnection, {
+      session,
+    })
     // 3. handle business rules
-    const response = await SigninUseCase.handle(
-      controllerInput.httpRequest.body,
-      {
-        retrieveMatchedUsernameRepository,
-        cleanObject: objClean,
-        schemaValidation,
-        verifyPassword: Bun.password.verify,
-        throwApiError,
-        generateAccessToken,
-        generateRefreshToken,
-      },
-      { session },
-    )
+    const response = await SigninUseCase.handle(controllerInput.httpRequest.body, {
+      retrieveMatchedUsernameRepository,
+      schemaValidation,
+      verifyPassword: Bun.password.verify,
+      throwApiError,
+      generateAccessToken,
+      generateRefreshToken,
+    })
     await session.commitTransaction()
     // 4. return response to client
     const date = new Date()

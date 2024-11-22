@@ -10,7 +10,9 @@ export const retrieveAllPermissionController: IController = async (controllerInp
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const retrieveAllPermissionRepository = new RetrieveAllPermissionRepository(controllerInput.dbConnection)
+    const retrieveAllPermissionRepository = new RetrieveAllPermissionRepository(controllerInput.dbConnection, {
+      session,
+    })
     // 3. handle business rules
     const response = await RetrieveAllPermissionUseCase.handle(
       { query: controllerInput.httpRequest.query },

@@ -15,20 +15,23 @@ export interface IRetrieveMachineOutput {
   updated_date: Date
 }
 export interface IRetrieveMachineRepository {
-  handle(_id: string, options?: unknown): Promise<IRetrieveMachineOutput>
+  handle(_id: string): Promise<IRetrieveMachineOutput>
 }
 
 export class RetrieveMachineRepository implements IRetrieveMachineRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(_id: string, options?: unknown): Promise<IRetrieveMachineOutput> {
+  async handle(_id: string): Promise<IRetrieveMachineOutput> {
     const pipeline: IPipeline[] = []
 
     pipeline.push(...this.aggregateFilters(_id))
     pipeline.push(...this.aggregateJoinCreatedBy())
     pipeline.push(...this.aggregateJoinUpdatedBy())
 
-    const response = await this.database.collection(collectionName).aggregate(pipeline, {}, options)
+    const response = await this.database.collection(collectionName).aggregate(pipeline, {}, this.options)
     const created_by = response.data[0].created_by as IAuthReference
     const updated_by = response.data[0].updated_by as IAuthReference
 

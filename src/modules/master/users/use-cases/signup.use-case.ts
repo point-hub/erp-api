@@ -1,3 +1,4 @@
+import { IObjClean } from '@point-hub/express-utils'
 import type { ISchemaValidation } from '@point-hub/papi'
 
 import { IRetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
@@ -16,6 +17,7 @@ export interface IOutput {
     email: string
   }
 }
+
 export interface IInput {
   role_id: string
   name: string
@@ -27,22 +29,20 @@ export interface IInput {
   default_warehouse: string
   warehouses: string[]
 }
+
 export interface IDeps {
   signupRepository: ICreateUserRepository
   retrieveUserRepository: IRetrieveUserRepository
   retrieveAllCounterRepository: IRetrieveAllCounterRepository
   updateCounterRepository: IUpdateCounterRepository
-  cleanObject(object: object): object
+  objClean: IObjClean
   schemaValidation: ISchemaValidation
   hashPassword(password: string): Promise<string>
   generateVerificationCode(): string
 }
-export interface IOptions {
-  session?: unknown
-}
 
 export class SignupUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input, signupValidation)
     // 2. define entity
@@ -60,12 +60,12 @@ export class SignupUseCase {
       branches: input.branches,
       warehouses: input.warehouses,
     })
-    userEntity.generateCreatedDate()
-    const cleanEntity = deps.cleanObject(userEntity.data)
+    userEntity.generateDate('created_date')
+    userEntity.data = deps.objClean(userEntity.data)
     // 3. database operation
-    const responseSignup = await deps.signupRepository.handle(cleanEntity, options)
+    const responseSignup = await deps.signupRepository.handle(userEntity.data)
     // 4. get user recorded data
-    const responseUser = await deps.retrieveUserRepository.handle({ _id: responseSignup.inserted_id }, options)
+    const responseUser = await deps.retrieveUserRepository.handle({ _id: responseSignup.inserted_id })
     // 5. return response
     return {
       inserted_id: responseSignup.inserted_id,

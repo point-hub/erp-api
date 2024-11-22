@@ -10,40 +10,51 @@ export interface IInput {
   auth: IAuth
   _id: string
   data: {
-    allocation_group_id?: string
-    code?: string
-    name?: string
+    allocation_group: {
+      _id: string
+      label: string
+      code: string
+    }
+    code: string
+    name: string
     notes?: string
-    updated_by?: string
   }
 }
+
 export interface IDeps {
   schemaValidation: ISchemaValidation
   updateAllocationRepository: IUpdateAllocationRepository
 }
-export interface IOptions {
-  session?: unknown
-}
+
 export interface IOutput {
   matched_count: number
   modified_count: number
 }
 
 export class UpdateAllocationUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input.data, updateValidation)
     // 2. define entity
     const allocationEntity = new AllocationEntity({
-      allocation_group_id: input.data.allocation_group_id,
+      allocation_group: {
+        _id: input.data.allocation_group._id,
+        label: input.data.allocation_group.label,
+        code: input.data.allocation_group.code,
+      },
       code: input.data.code,
       name: input.data.name,
-      notes: input.data.notes ?? '',
-      updated_by: input.auth._id,
+      label: `[${input.data.code}] ${input.data.name}`,
+      notes: input.data.notes,
+      updated_by: {
+        _id: input.auth._id,
+        label: input.auth.name,
+        email: input.auth.email,
+      },
     })
-    allocationEntity.generateUpdatedDate()
+    allocationEntity.generateDate('updated_date')
     // 3. database operation
-    const response = await deps.updateAllocationRepository.handle(input._id, allocationEntity.data, options)
+    const response = await deps.updateAllocationRepository.handle(input._id, allocationEntity.data)
     // 4. output
     return {
       matched_count: response.matched_count,

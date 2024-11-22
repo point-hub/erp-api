@@ -8,13 +8,16 @@ export interface IRetrieveAllSupplierGroupOutput {
   pagination: IPagination
 }
 export interface IRetrieveAllSupplierGroupRepository {
-  handle(query: IQuery, options?: unknown): Promise<IRetrieveAllSupplierGroupOutput>
+  handle(query: IQuery): Promise<IRetrieveAllSupplierGroupOutput>
 }
 
 export class RetrieveAllSupplierGroupRepository implements IRetrieveAllSupplierGroupRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(query: IQuery, options?: unknown): Promise<IRetrieveAllSupplierGroupOutput> {
+  async handle(query: IQuery): Promise<IRetrieveAllSupplierGroupOutput> {
     const pipeline: IPipeline[] = []
 
     pipeline.push(...this.aggregateFilters(query))
@@ -22,7 +25,7 @@ export class RetrieveAllSupplierGroupRepository implements IRetrieveAllSupplierG
     pipeline.push(...this.aggregateJoinUpdatedBy())
     pipeline.push(...this.aggregateAddFields())
 
-    const response = await this.database.collection(collectionName).aggregate(pipeline, query, options)
+    const response = await this.database.collection(collectionName).aggregate(pipeline, query, this.options)
 
     return {
       data: response.data as unknown as IRetrieveSupplierGroupOutput[],

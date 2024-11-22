@@ -1,7 +1,7 @@
 /**
  * MongoDB Schema
  *
- * https://www.mongodb.com/docs/v7.0/core/schema-validation/update-schema-validation/
+ * https://www.mongodb.com/docs/manual/core/schema-validation/update-schema-validation/
  * https://www.mongodb.com/docs/drivers/node/current/fundamentals/indexes/
  * https://www.mongodb.com/developer/products/mongodb/mongodb-schema-design-best-practices/
  */
@@ -17,9 +17,9 @@ export const schema: ISchema[] = [
     uniqueIfExists: [[]],
     schema: {
       bsonType: 'object',
-      required: ['customer_group_id', 'code', 'name'],
+      required: ['customer_group._id', 'code', 'name'],
       properties: {
-        customer_group_id: {
+        'customer_group._id': {
           bsonType: 'objectId',
           description: 'The code for the customer',
         },

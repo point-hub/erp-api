@@ -11,6 +11,7 @@ export interface IInput {
   _id: string
   reason: string
 }
+
 export interface IDeps {
   schemaValidation: ISchemaValidation
   retrieveAllItemRepository: IRetrieveAllItemRepository
@@ -18,20 +19,18 @@ export interface IDeps {
   deleteItemCategoryRepository: IDeleteItemCategoryRepository
   throwApiError(codeStatus: TypeCodeStatus, options?: IOptionsApiError): void
 }
-export interface IOptions {
-  session?: unknown
-}
+
 export interface IOutput {
   deleted_count: number
 }
 
 export class DeleteItemCategoryUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input, deleteValidation)
     // 2. check if doesn't have any relationship
-    const itemCategory = await deps.retrieveItemCategoryRepository.handle(input._id, options)
-    const items = await deps.retrieveAllItemRepository.handle({ filter: { category_id: itemCategory._id } }, options)
+    const itemCategory = await deps.retrieveItemCategoryRepository.handle(input._id)
+    const items = await deps.retrieveAllItemRepository.handle({ filter: { category_id: itemCategory._id } })
     if (items.pagination.total_document) {
       deps.throwApiError(422, {
         errors: {
@@ -42,7 +41,7 @@ export class DeleteItemCategoryUseCase {
       })
     }
     // 3. database operation
-    const response = await deps.deleteItemCategoryRepository.handle(input._id, options)
+    const response = await deps.deleteItemCategoryRepository.handle(input._id)
     // 4. output
     return { deleted_count: response.deleted_count }
   }

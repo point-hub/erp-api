@@ -7,13 +7,16 @@ export interface ICreateManyPurchaseRequestOutput {
   inserted_ids: string[]
 }
 export interface ICreateManyPurchaseRequestRepository {
-  handle(documents: IDocument[], options?: unknown): Promise<ICreateManyPurchaseRequestOutput>
+  handle(documents: IDocument[]): Promise<ICreateManyPurchaseRequestOutput>
 }
 
 export class CreateManyPurchaseRequestRepository implements ICreateManyPurchaseRequestRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(documents: IDocument[], options?: unknown): Promise<ICreateManyPurchaseRequestOutput> {
-    return await this.database.collection(collectionName).createMany(documents, options)
+  async handle(documents: IDocument[]): Promise<ICreateManyPurchaseRequestOutput> {
+    return await this.database.collection(collectionName).createMany(documents, this.options)
   }
 }

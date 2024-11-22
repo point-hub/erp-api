@@ -6,14 +6,18 @@ export interface ICreateManyAllocationOutput {
   inserted_count: number
   inserted_ids: string[]
 }
+
 export interface ICreateManyAllocationRepository {
-  handle(documents: IDocument[], options?: unknown): Promise<ICreateManyAllocationOutput>
+  handle(documents: IDocument[]): Promise<ICreateManyAllocationOutput>
 }
 
 export class CreateManyAllocationRepository implements ICreateManyAllocationRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(documents: IDocument[], options?: unknown): Promise<ICreateManyAllocationOutput> {
-    return await this.database.collection(collectionName).createMany(documents, options)
+  async handle(documents: IDocument[]): Promise<ICreateManyAllocationOutput> {
+    return await this.database.collection(collectionName).createMany(documents, this.options)
   }
 }

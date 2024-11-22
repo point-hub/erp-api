@@ -15,21 +15,17 @@ export const createSettingJournalController: IController = async (controllerInpu
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const createSettingJournalRepository = new CreateSettingJournalRepository(controllerInput.dbConnection)
-    const updateCounterRepository = new UpdateCounterRepository(controllerInput.dbConnection)
-    const retrieveAllCounterRepository = new RetrieveAllCounterRepository(controllerInput.dbConnection)
+    const createSettingJournalRepository = new CreateSettingJournalRepository(controllerInput.dbConnection, { session })
+    const updateCounterRepository = new UpdateCounterRepository(controllerInput.dbConnection, { session })
+    const retrieveAllCounterRepository = new RetrieveAllCounterRepository(controllerInput.dbConnection, { session })
     // 3. handle business rules
-    const response = await CreateSettingJournalUseCase.handle(
-      controllerInput.httpRequest.body,
-      {
-        cleanObject: objClean,
-        createSettingJournalRepository,
-        updateCounterRepository,
-        retrieveAllCounterRepository,
-        schemaValidation,
-      },
-      { session },
-    )
+    const response = await CreateSettingJournalUseCase.handle(controllerInput.httpRequest.body, {
+      objClean,
+      createSettingJournalRepository,
+      updateCounterRepository,
+      retrieveAllCounterRepository,
+      schemaValidation,
+    })
     await session.commitTransaction()
     // 4. return response to client
     return {

@@ -13,17 +13,15 @@ export const createChartOfAccountTypeController: IController = async (controller
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const createChartOfAccountTypeRepository = new CreateChartOfAccountTypeRepository(controllerInput.dbConnection)
+    const createChartOfAccountTypeRepository = new CreateChartOfAccountTypeRepository(controllerInput.dbConnection, {
+      session,
+    })
     // 3. handle business rules
-    const response = await CreateChartOfAccountTypeUseCase.handle(
-      controllerInput.httpRequest.body,
-      {
-        cleanObject: objClean,
-        createChartOfAccountTypeRepository,
-        schemaValidation,
-      },
-      { session },
-    )
+    const response = await CreateChartOfAccountTypeUseCase.handle(controllerInput.httpRequest.body, {
+      objClean,
+      createChartOfAccountTypeRepository,
+      schemaValidation,
+    })
     await session.commitTransaction()
     // 4. return response to client
     return {

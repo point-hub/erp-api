@@ -9,24 +9,20 @@ export interface IInput {
   auth: IAuth
   query: IQuery
 }
+
 export interface IDeps {
   retrieveAllPurchaseRequestRepository: IRetrieveAllPurchaseRequestRepository
 }
-export interface IOptions {
-  session: unknown
-}
+
 export interface IOutput {
   data: IRetrievePurchaseRequestOutput[]
   pagination: IPagination
 }
 
 export class RetrieveAllPurchaseRequestUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. database operation
-    const response = await deps.retrieveAllPurchaseRequestRepository.handle(
-      { auth: input.auth, query: input.query },
-      options,
-    )
+    const response = await deps.retrieveAllPurchaseRequestRepository.handle({ auth: input.auth, query: input.query })
     // 2. output
     return {
       data: response.data,

@@ -6,21 +6,20 @@ import { IRetrieveAllSupplierGroupRepository } from '../repositories/retrieve-al
 export interface IInput {
   query: IQuery
 }
+
 export interface IDeps {
   retrieveAllSupplierGroupRepository: IRetrieveAllSupplierGroupRepository
 }
-export interface IOptions {
-  session: unknown
-}
+
 export interface IOutput {
   data: IRetrieveSupplierGroupOutput[]
   pagination: IPagination
 }
 
 export class RetrieveAllSupplierGroupUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. database operation
-    const response = await deps.retrieveAllSupplierGroupRepository.handle(input.query, options)
+    const response = await deps.retrieveAllSupplierGroupRepository.handle(input.query)
     // 2. output
     return {
       data: response.data,

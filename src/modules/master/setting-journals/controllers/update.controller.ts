@@ -14,14 +14,14 @@ export const updateSettingJournalController: IController = async (controllerInpu
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const updateSettingJournalRepository = new UpdateSettingJournalRepository(controllerInput.dbConnection)
+    const updateSettingJournalRepository = new UpdateSettingJournalRepository(controllerInput.dbConnection, { session })
     // 3. handle business rules
     const response = await UpdateSettingJournalUseCase.handle(
       {
         _id: controllerInput.httpRequest.params.id,
         data: controllerInput.httpRequest.body,
       },
-      { cleanObject: objClean, schemaValidation, updateSettingJournalRepository, throwApiError },
+      { objClean, schemaValidation, updateSettingJournalRepository, throwApiError },
     )
     await session.commitTransaction()
     // 4. return response to client

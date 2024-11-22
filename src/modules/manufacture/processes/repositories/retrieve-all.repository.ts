@@ -8,20 +8,23 @@ export interface IRetrieveAllProcessOutput {
   pagination: IPagination
 }
 export interface IRetrieveAllProcessRepository {
-  handle(query: IQuery, options?: unknown): Promise<IRetrieveAllProcessOutput>
+  handle(query: IQuery): Promise<IRetrieveAllProcessOutput>
 }
 
 export class RetrieveAllProcessRepository implements IRetrieveAllProcessRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(query: IQuery, options?: unknown): Promise<IRetrieveAllProcessOutput> {
+  async handle(query: IQuery): Promise<IRetrieveAllProcessOutput> {
     const pipeline: IPipeline[] = []
 
     pipeline.push(...this.aggregateFilters(query))
     pipeline.push(...this.aggregateJoinCreatedBy())
     pipeline.push(...this.aggregateJoinUpdatedBy())
 
-    const response = await this.database.collection(collectionName).aggregate(pipeline, query, options)
+    const response = await this.database.collection(collectionName).aggregate(pipeline, query, this.options)
 
     return {
       data: response.data as unknown as IRetrieveProcessOutput[],

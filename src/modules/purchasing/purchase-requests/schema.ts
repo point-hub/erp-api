@@ -1,7 +1,7 @@
 /**
  * MongoDB Schema
  *
- * https://www.mongodb.com/docs/v7.0/core/schema-validation/update-schema-validation/
+ * https://www.mongodb.com/docs/manual/core/schema-validation/update-schema-validation/
  * https://www.mongodb.com/docs/drivers/node/current/fundamentals/indexes/
  * https://www.mongodb.com/developer/products/mongodb/mongodb-schema-design-best-practices/
  */
@@ -45,45 +45,6 @@ export const schema: ISchema[] = [
         notes: {
           bsonType: 'string',
           description: '',
-        },
-        details: {
-          bsonType: 'array',
-          description: '',
-          items: {
-            bsonType: 'object',
-            properties: {
-              item: {
-                bsonType: 'object',
-                description: 'Authenticated user who perform create form',
-                required: ['_id', 'label'],
-                properties: {
-                  _id: {
-                    bsonType: 'objectId',
-                    description: '',
-                  },
-                  label: {
-                    bsonType: 'string',
-                    description: '',
-                  },
-                },
-              },
-              allocation: {
-                bsonType: 'object',
-                description: 'Authenticated user who perform create form',
-                required: ['_id', 'label'],
-                properties: {
-                  _id: {
-                    bsonType: 'objectId',
-                    description: '',
-                  },
-                  label: {
-                    bsonType: 'string',
-                    description: '',
-                  },
-                },
-              },
-            },
-          },
         },
         created_by: {
           bsonType: 'object',

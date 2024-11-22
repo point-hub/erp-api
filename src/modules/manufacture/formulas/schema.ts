@@ -1,7 +1,7 @@
 /**
  * MongoDB Schema
  *
- * https://www.mongodb.com/docs/v7.0/core/schema-validation/update-schema-validation/
+ * https://www.mongodb.com/docs/manual/core/schema-validation/update-schema-validation/
  * https://www.mongodb.com/docs/drivers/node/current/fundamentals/indexes/
  * https://www.mongodb.com/developer/products/mongodb/mongodb-schema-design-best-practices/
  */
@@ -13,12 +13,16 @@ import { collectionName } from './entity'
 export const schema: ISchema[] = [
   {
     collection: collectionName,
-    unique: [['name']],
+    unique: [['code'], ['name']],
     uniqueIfExists: [[]],
     schema: {
       bsonType: 'object',
-      required: ['name'],
+      required: ['code', 'name'],
       properties: {
+        code: {
+          bsonType: 'string',
+          description: 'The code for the formula',
+        },
         name: {
           bsonType: 'string',
           description: 'The name for the formula',

@@ -7,13 +7,16 @@ export interface ICreateManyFormulaOutput {
   inserted_ids: string[]
 }
 export interface ICreateManyFormulaRepository {
-  handle(documents: IDocument[], options?: unknown): Promise<ICreateManyFormulaOutput>
+  handle(documents: IDocument[]): Promise<ICreateManyFormulaOutput>
 }
 
 export class CreateManyFormulaRepository implements ICreateManyFormulaRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(documents: IDocument[], options?: unknown): Promise<ICreateManyFormulaOutput> {
-    return await this.database.collection(collectionName).createMany(documents, options)
+  async handle(documents: IDocument[]): Promise<ICreateManyFormulaOutput> {
+    return await this.database.collection(collectionName).createMany(documents, this.options)
   }
 }

@@ -10,7 +10,9 @@ export const retrieveChartOfAccountController: IController = async (controllerIn
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const retrieveChartOfAccountRepository = new RetrieveChartOfAccountRepository(controllerInput.dbConnection)
+    const retrieveChartOfAccountRepository = new RetrieveChartOfAccountRepository(controllerInput.dbConnection, {
+      session,
+    })
     // 3. handle business rules
     const response = await RetrieveChartOfAccountUseCase.handle(
       { _id: controllerInput.httpRequest.params.id },

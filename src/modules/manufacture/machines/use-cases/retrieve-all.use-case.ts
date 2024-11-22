@@ -6,21 +6,20 @@ import { IRetrieveAllMachineRepository } from '../repositories/retrieve-all.repo
 export interface IInput {
   query: IQuery
 }
+
 export interface IDeps {
   retrieveAllMachineRepository: IRetrieveAllMachineRepository
 }
-export interface IOptions {
-  session: unknown
-}
+
 export interface IOutput {
   data: IRetrieveMachineOutput[]
   pagination: IPagination
 }
 
 export class RetrieveAllMachineUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. database operation
-    const response = await deps.retrieveAllMachineRepository.handle(input.query, options)
+    const response = await deps.retrieveAllMachineRepository.handle(input.query)
     // 2. output
     return {
       data: response.data,

@@ -1,5 +1,7 @@
 import { IUserEntity } from './interface'
 
+export type TypeFieldDate = 'created_date' | 'updated_date'
+
 export const collectionName = 'users'
 
 export class UserEntity {
@@ -28,11 +30,7 @@ export class UserEntity {
     this.data.trimmed_email = `${prefix.toLocaleLowerCase()}@${domain.toLocaleLowerCase()}`
   }
 
-  public generateCreatedDate() {
-    this.data.created_date = new Date()
-  }
-
-  public generateUpdatedDate() {
-    this.data.updated_date = new Date()
+  public generateDate(field: TypeFieldDate) {
+    this.data[field] = new Date()
   }
 }

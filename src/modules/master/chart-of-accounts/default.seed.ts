@@ -13,48 +13,40 @@ export interface ISeed {
   subledger?: string
 }
 
-export const seed = async (dbConnection: IDatabase, options: unknown) => {
+export const seed = async (dbConnection: IDatabase, options: Record<string, unknown>) => {
   console.info(`[seed] chart of accounts data`)
   // delete all data inside collection
   await dbConnection.collection('chart_of_accounts').deleteAll(options)
   await dbConnection.collection('chart_of_account_categories').deleteAll(options)
   await dbConnection.collection('chart_of_account_types').deleteAll(options)
   // prepare repository
-  const createChartOfAccountTypeRepository = new CreateChartOfAccountTypeRepository(dbConnection)
-  const createChartOfAccountCategoryRepository = new CreateChartOfAccountCategoryRepository(dbConnection)
-  const createChartOfAccountRepository = new CreateChartOfAccountRepository(dbConnection)
+  const createChartOfAccountTypeRepository = new CreateChartOfAccountTypeRepository(dbConnection, options)
+  const createChartOfAccountCategoryRepository = new CreateChartOfAccountCategoryRepository(dbConnection, options)
+  const createChartOfAccountRepository = new CreateChartOfAccountRepository(dbConnection, options)
   // insert new seeder data
   const uniqueTypes = [...new Map(seeds.map((el) => [el.type, el])).values()]
   for (const type of uniqueTypes) {
     // insert account type
-    const typeResponse = await createChartOfAccountTypeRepository.handle(
-      { code: type.type_code, name: type.type },
-      options,
-    )
+    const typeResponse = await createChartOfAccountTypeRepository.handle({ code: type.type_code, name: type.type })
     const filteredCategorySeeds = seeds.filter((el) => el.type_code === type.type_code)
     const uniqueCategories = [...new Map(filteredCategorySeeds.map((el) => [el.category, el])).values()]
     for (const category of uniqueCategories) {
       // insert account category
-      const categoryResponse = await createChartOfAccountCategoryRepository.handle(
-        {
-          type_id: typeResponse.inserted_id,
-          code: category.category_code,
-          name: category.category,
-        },
-        options,
-      )
+      const categoryResponse = await createChartOfAccountCategoryRepository.handle({
+        type_id: typeResponse.inserted_id,
+        code: category.category_code,
+        name: category.category,
+      })
       const accounts = seeds.filter((el) => el.category_code === category.category_code)
       for (const account of accounts) {
         // insert account
-        await createChartOfAccountRepository.handle(
-          {
-            category_id: categoryResponse.inserted_id,
-            number: account.number,
-            name: account.name,
-            subledger: account.subledger,
-          },
-          options,
-        )
+        await createChartOfAccountRepository.handle({
+          category_id: categoryResponse.inserted_id,
+          number: account.number,
+          name: account.name,
+          label: `[${account.number}] ${account.name}`,
+          subledger: account.subledger,
+        })
       }
     }
   }

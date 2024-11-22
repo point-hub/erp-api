@@ -13,14 +13,14 @@ export const updateCounterController: IController = async (controllerInput: ICon
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const updateCounterRepository = new UpdateCounterRepository(controllerInput.dbConnection)
+    const updateCounterRepository = new UpdateCounterRepository(controllerInput.dbConnection, { session })
     // 3. handle business rules
     const response = await UpdateCounterUseCase.handle(
       {
         _id: controllerInput.httpRequest.params.id,
         data: controllerInput.httpRequest.body,
       },
-      { cleanObject: objClean, schemaValidation, updateCounterRepository },
+      { objClean, schemaValidation, updateCounterRepository },
     )
     await session.commitTransaction()
     // 4. return response to client

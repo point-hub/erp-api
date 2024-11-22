@@ -5,17 +5,15 @@ import { IRetrieveAllSettingJournalRepository } from '../repositories/retrieve-a
 export interface IInput {
   query: IQuery
 }
+
 export interface IDeps {
   retrieveAllSettingJournalRepository: IRetrieveAllSettingJournalRepository
 }
-export interface IOptions {
-  session: unknown
-}
 
 export class RetrieveAllSettingJournalUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IRetrieveAllOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IRetrieveAllOutput> {
     // 1. database operation
-    const response = await deps.retrieveAllSettingJournalRepository.handle(input.query, options)
+    const response = await deps.retrieveAllSettingJournalRepository.handle(input.query)
     // 2. output
     return {
       data: response.data,

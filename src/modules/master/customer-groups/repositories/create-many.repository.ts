@@ -7,13 +7,16 @@ export interface ICreateManyCustomerGroupOutput {
   inserted_ids: string[]
 }
 export interface ICreateManyCustomerGroupRepository {
-  handle(documents: IDocument[], options?: unknown): Promise<ICreateManyCustomerGroupOutput>
+  handle(documents: IDocument[]): Promise<ICreateManyCustomerGroupOutput>
 }
 
 export class CreateManyCustomerGroupRepository implements ICreateManyCustomerGroupRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(documents: IDocument[], options?: unknown): Promise<ICreateManyCustomerGroupOutput> {
-    return await this.database.collection(collectionName).createMany(documents, options)
+  async handle(documents: IDocument[]): Promise<ICreateManyCustomerGroupOutput> {
+    return await this.database.collection(collectionName).createMany(documents, this.options)
   }
 }

@@ -17,20 +17,23 @@ export interface IRetrieveRoleOutput {
   updated_date: Date
 }
 export interface IRetrieveRoleRepository {
-  handle(_id: string, options?: unknown): Promise<IRetrieveRoleOutput>
+  handle(_id: string): Promise<IRetrieveRoleOutput>
 }
 
 export class RetrieveRoleRepository implements IRetrieveRoleRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(_id: string, options?: unknown): Promise<IRetrieveRoleOutput> {
+  async handle(_id: string): Promise<IRetrieveRoleOutput> {
     const pipeline: IPipeline[] = []
 
     pipeline.push(...this.aggregateFilters(_id))
     pipeline.push(...this.aggregateJoinCreatedBy())
     pipeline.push(...this.aggregateJoinUpdatedBy())
 
-    const response = await this.database.collection(collectionName).aggregate(pipeline, {}, options)
+    const response = await this.database.collection(collectionName).aggregate(pipeline, {}, this.options)
 
     return {
       _id: `${response.data[0]._id}`,

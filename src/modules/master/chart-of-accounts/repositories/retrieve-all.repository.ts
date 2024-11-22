@@ -8,21 +8,23 @@ export interface IRetrieveAllChartOfAccountOutput {
   pagination: IPagination
 }
 export interface IRetrieveAllChartOfAccountRepository {
-  handle(query: IQuery, options?: unknown): Promise<IRetrieveAllChartOfAccountOutput>
+  handle(query: IQuery): Promise<IRetrieveAllChartOfAccountOutput>
 }
 
 export class RetrieveAllChartOfAccountRepository implements IRetrieveAllChartOfAccountRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(query: IQuery, options?: unknown): Promise<IRetrieveAllChartOfAccountOutput> {
+  async handle(query: IQuery): Promise<IRetrieveAllChartOfAccountOutput> {
     const pipeline: IPipeline[] = []
 
     pipeline.push(...this.aggregateJoinCategories())
     pipeline.push(...this.aggregateJoinTypes())
     pipeline.push(...this.aggregateFilters(query))
-    pipeline.push(...this.aggregateAddFields())
 
-    const response = await this.database.collection(collectionName).aggregate(pipeline, query, options)
+    const response = await this.database.collection(collectionName).aggregate(pipeline, query, this.options)
 
     return {
       data: response.data as unknown as IRetrieveChartOfAccountOutput[],
@@ -89,17 +91,5 @@ export class RetrieveAllChartOfAccountRepository implements IRetrieveAllChartOfA
     }
 
     return [{ $match: { $and: filtersAnd } }]
-  }
-
-  private aggregateAddFields() {
-    return [
-      {
-        $addFields: {
-          label: {
-            $concat: ['[', '$number', '] ', '$name'],
-          },
-        },
-      },
-    ]
   }
 }

@@ -27,14 +27,13 @@ import masterUserRouter from './modules/master/users/router'
 import masterAuthRouter from './modules/master/users/router-auth'
 import masterWarehousesRouter from './modules/master/warehouses/router'
 // purchasing
+import purchasingPurchaseOrdersRouter from './modules/purchasing/purchase-orders/router'
 import purchasingPurchaseRequestsRouter from './modules/purchasing/purchase-requests/router'
-import purchasingPurchaseOrdersRouter from './modules/purchasing/purchase-requests/router'
 import purchasingDownPaymentsRouter from './modules/purchasing/purchase-requests/router'
 import purchasingReceiveOrdersRouter from './modules/purchasing/purchase-requests/router'
 import purchasingInvoicesRouter from './modules/purchasing/purchase-requests/router'
 import purchasingPaymentOrdersRouter from './modules/purchasing/purchase-requests/router'
 // sales
-import salesSalesQuotationsRouter from './modules/sales/sales-quotations/router'
 
 export default async function (baseRouterInput: IBaseAppInput) {
   const app: Express = express()
@@ -72,8 +71,6 @@ export default async function (baseRouterInput: IBaseAppInput) {
   app.use('/v1/purchasing/receive-orders', await purchasingReceiveOrdersRouter(baseRouterInput))
   app.use('/v1/purchasing/invoices', await purchasingInvoicesRouter(baseRouterInput))
   app.use('/v1/purchasing/payment-orders', await purchasingPaymentOrdersRouter(baseRouterInput))
-  // sales
-  app.use('/v1/sales/sales-quotations', await salesSalesQuotationsRouter(baseRouterInput))
   // manufacture
   app.use('/v1/manufacture/machines', await manufactureMachinesRouter(baseRouterInput))
   app.use('/v1/manufacture/processes', await manufactureProcessesRouter(baseRouterInput))

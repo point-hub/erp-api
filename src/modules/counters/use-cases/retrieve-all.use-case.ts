@@ -6,11 +6,9 @@ import { IRetrieveAllCounterRepository } from '../repositories/retrieve-all.repo
 export interface IInput {
   query: IQuery
 }
+
 export interface IDeps {
   retrieveAllCounterRepository: IRetrieveAllCounterRepository
-}
-export interface IOptions {
-  session: unknown
 }
 
 export interface IOutput {
@@ -24,9 +22,9 @@ export interface IOutput {
 }
 
 export class RetrieveAllCounterUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. database operation
-    const response = await deps.retrieveAllCounterRepository.handle(input.query, options)
+    const response = await deps.retrieveAllCounterRepository.handle(input.query)
     // 2. output
     return {
       data: response.data,

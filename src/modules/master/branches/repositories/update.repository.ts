@@ -7,13 +7,16 @@ export interface IUpdateBranchOutput {
   modified_count: number
 }
 export interface IUpdateBranchRepository {
-  handle(_id: string, document: IDocument, options?: unknown): Promise<IUpdateBranchOutput>
+  handle(_id: string, document: IDocument): Promise<IUpdateBranchOutput>
 }
 
 export class UpdateBranchRepository implements IUpdateBranchRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(_id: string, document: IDocument, options?: unknown): Promise<IUpdateBranchOutput> {
-    return await this.database.collection(collectionName).update(_id, document, options)
+  async handle(_id: string, document: IDocument): Promise<IUpdateBranchOutput> {
+    return await this.database.collection(collectionName).update(_id, { $set: document }, this.options)
   }
 }

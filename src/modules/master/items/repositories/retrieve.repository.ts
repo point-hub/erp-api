@@ -35,13 +35,16 @@ export interface IRetrieveItemOutput {
   updated_date: Date
 }
 export interface IRetrieveItemRepository {
-  handle(_id: string, options?: unknown): Promise<IRetrieveItemOutput>
+  handle(_id: string): Promise<IRetrieveItemOutput>
 }
 
 export class RetrieveItemRepository implements IRetrieveItemRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(_id: string, options?: unknown): Promise<IRetrieveItemOutput> {
+  async handle(_id: string): Promise<IRetrieveItemOutput> {
     const pipeline: IPipeline[] = []
 
     pipeline.push(...this.aggregateFilters(_id))
@@ -50,11 +53,11 @@ export class RetrieveItemRepository implements IRetrieveItemRepository {
     pipeline.push(...this.aggregateJoinCreatedBy())
     pipeline.push(...this.aggregateJoinUpdatedBy())
 
-    const response = await this.database.collection(collectionName).aggregate(pipeline, {}, options)
+    const response = await this.database.collection(collectionName).aggregate(pipeline, {}, this.options)
 
     return {
       _id: `${response.data[0]._id}`,
-      label: `[${response.data[0].code}] ${response.data[0].name}`,
+      label: `${response.data[0].label}`,
       code: `${response.data[0].code}`,
       name: `${response.data[0].name}`,
       unit: `${response.data[0].unit}`,

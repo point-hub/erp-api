@@ -1,3 +1,4 @@
+import { IObjClean } from '@point-hub/express-utils'
 import type { ISchemaValidation } from '@point-hub/papi'
 
 import { CounterEntity } from '../entity'
@@ -8,13 +9,11 @@ export interface IInput {
   code?: string
   name?: string
 }
+
 export interface IDeps {
-  cleanObject(object: object): object
+  objClean: IObjClean
   createCounterRepository: ICreateCounterRepository
   schemaValidation: ISchemaValidation
-}
-export interface IOptions {
-  session?: unknown
 }
 
 export interface IOutput {
@@ -22,7 +21,7 @@ export interface IOutput {
 }
 
 export class CreateCounterUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input, createValidation)
     // 2. define entity
@@ -30,10 +29,10 @@ export class CreateCounterUseCase {
       code: input.code,
       name: input.name,
     })
-    counterEntity.generateCreatedDate()
-    const cleanEntity = deps.cleanObject(counterEntity.data)
+    counterEntity.generateDate('created_date')
+    counterEntity.data = deps.objClean(counterEntity.data)
     // 3. database operation
-    const response = await deps.createCounterRepository.handle(cleanEntity, options)
+    const response = await deps.createCounterRepository.handle(counterEntity)
     // 4. output
     return { inserted_id: response.inserted_id }
   }

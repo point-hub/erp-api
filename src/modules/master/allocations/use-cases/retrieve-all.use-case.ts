@@ -6,21 +6,20 @@ import { IRetrieveAllAllocationRepository } from '../repositories/retrieve-all.r
 export interface IInput {
   query: IQuery
 }
+
 export interface IDeps {
   retrieveAllAllocationRepository: IRetrieveAllAllocationRepository
 }
-export interface IOptions {
-  session: unknown
-}
+
 export interface IOutput {
   data: IRetrieveAllocationOutput[]
   pagination: IPagination
 }
 
 export class RetrieveAllAllocationUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. database operation
-    const response = await deps.retrieveAllAllocationRepository.handle(input.query, options)
+    const response = await deps.retrieveAllAllocationRepository.handle(input.query)
     // 2. output
     return {
       data: response.data,

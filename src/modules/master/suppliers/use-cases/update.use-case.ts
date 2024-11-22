@@ -10,7 +10,11 @@ export interface IInput {
   auth: IAuth
   _id: string
   data: {
-    supplier_group_id?: string
+    supplier_group?: {
+      _id?: string
+      label?: string
+      code?: string
+    }
     code?: string
     name?: string
     address?: string
@@ -21,30 +25,34 @@ export interface IInput {
     bank_account_name?: string
     bank_account_number?: string
     notes?: string
-    updated_by?: string
+    updated_by: {
+      _id: string
+      label: string
+      email: string
+    }
   }
 }
+
 export interface IDeps {
   schemaValidation: ISchemaValidation
   updateSupplierRepository: IUpdateSupplierRepository
 }
-export interface IOptions {
-  session?: unknown
-}
+
 export interface IOutput {
   matched_count: number
   modified_count: number
 }
 
 export class UpdateSupplierUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input.data, updateValidation)
     // 2. define entity
     const supplierEntity = new SupplierEntity({
-      supplier_group_id: input.data.supplier_group_id,
+      supplier_group: input.data.supplier_group,
       code: input.data.code,
       name: input.data.name,
+      label: `[${input.data.code}] ${input.data.name}`,
       address: input.data.address,
       phone: input.data.phone,
       email: input.data.email,
@@ -53,11 +61,15 @@ export class UpdateSupplierUseCase {
       bank_account_name: input.data.bank_account_name,
       bank_account_number: input.data.bank_account_number,
       notes: input.data.notes ?? '',
-      updated_by: input.auth._id,
+      updated_by: {
+        _id: input.auth._id,
+        label: input.auth.name,
+        email: input.auth.email,
+      },
     })
-    supplierEntity.generateUpdatedDate()
+    supplierEntity.generateDate('updated_date')
     // 3. database operation
-    const response = await deps.updateSupplierRepository.handle(input._id, supplierEntity.data, options)
+    const response = await deps.updateSupplierRepository.handle(input._id, supplierEntity.data)
     // 4. output
     return {
       matched_count: response.matched_count,

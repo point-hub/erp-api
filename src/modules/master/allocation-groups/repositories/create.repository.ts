@@ -5,14 +5,18 @@ import { collectionName } from '../entity'
 export interface ICreateAllocationGroupOutput {
   inserted_id: string
 }
+
 export interface ICreateAllocationGroupRepository {
-  handle(document: IDocument, options?: unknown): Promise<ICreateAllocationGroupOutput>
+  handle(document: IDocument): Promise<ICreateAllocationGroupOutput>
 }
 
 export class CreateAllocationGroupRepository implements ICreateAllocationGroupRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(document: IDocument, options?: unknown): Promise<ICreateAllocationGroupOutput> {
-    return await this.database.collection(collectionName).create(document, options)
+  async handle(document: IDocument): Promise<ICreateAllocationGroupOutput> {
+    return await this.database.collection(collectionName).create(document, this.options)
   }
 }

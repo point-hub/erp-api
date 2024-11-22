@@ -7,13 +7,16 @@ export interface IUpdateProcessOutput {
   modified_count: number
 }
 export interface IUpdateProcessRepository {
-  handle(_id: string, document: IDocument, options?: unknown): Promise<IUpdateProcessOutput>
+  handle(_id: string, document: IDocument): Promise<IUpdateProcessOutput>
 }
 
 export class UpdateProcessRepository implements IUpdateProcessRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(_id: string, document: IDocument, options?: unknown): Promise<IUpdateProcessOutput> {
-    return await this.database.collection(collectionName).update(_id, document, options)
+  async handle(_id: string, document: IDocument): Promise<IUpdateProcessOutput> {
+    return await this.database.collection(collectionName).update(_id, { $set: document }, this.options)
   }
 }

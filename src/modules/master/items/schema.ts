@@ -1,7 +1,7 @@
 /**
  * MongoDB Schema
  *
- * https://www.mongodb.com/docs/v7.0/core/schema-validation/update-schema-validation/
+ * https://www.mongodb.com/docs/manual/core/schema-validation/update-schema-validation/
  * https://www.mongodb.com/docs/drivers/node/current/fundamentals/indexes/
  * https://www.mongodb.com/developer/products/mongodb/mongodb-schema-design-best-practices/
  */
@@ -17,13 +17,13 @@ export const schema: ISchema[] = [
     uniqueIfExists: [[]],
     schema: {
       bsonType: 'object',
-      required: ['category_id', 'chart_of_account_id', 'code', 'name'],
+      required: ['category._id', 'chart_of_account._id', 'code', 'name'],
       properties: {
-        category_id: {
+        'category._id': {
           bsonType: 'objectId',
           description: 'The category for the item',
         },
-        chart_of_account_id: {
+        'chart_of_account._id': {
           bsonType: 'objectId',
           description: 'The chart of account for the item',
         },

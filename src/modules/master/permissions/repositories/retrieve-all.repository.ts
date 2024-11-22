@@ -17,16 +17,19 @@ export interface IRetrieveAllPermissionOutput {
 }
 
 export interface IRetrieveAllPermissionRepository {
-  handle(query: IQuery, options?: unknown): Promise<IRetrieveAllPermissionOutput>
+  handle(query: IQuery): Promise<IRetrieveAllPermissionOutput>
 }
 
 export class RetrieveAllPermissionRepository implements IRetrieveAllPermissionRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(query: IQuery, options?: unknown): Promise<IRetrieveAllPermissionOutput> {
+  async handle(query: IQuery): Promise<IRetrieveAllPermissionOutput> {
     const pipeline: IPipeline[] = []
 
-    const response = await this.database.collection(collectionName).aggregate(pipeline, query, options)
+    const response = await this.database.collection(collectionName).aggregate(pipeline, query, this.options)
 
     return {
       master: response.data[0].master as INestedBoolean,

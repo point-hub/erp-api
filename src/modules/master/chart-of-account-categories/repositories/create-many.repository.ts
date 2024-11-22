@@ -7,13 +7,16 @@ export interface ICreateManyChartOfAccountCategoryOutput {
   inserted_ids: string[]
 }
 export interface ICreateManyChartOfAccountCategoryRepository {
-  handle(documents: IDocument[], options?: unknown): Promise<ICreateManyChartOfAccountCategoryOutput>
+  handle(documents: IDocument[]): Promise<ICreateManyChartOfAccountCategoryOutput>
 }
 
 export class CreateManyChartOfAccountCategoryRepository implements ICreateManyChartOfAccountCategoryRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(documents: IDocument[], options?: unknown): Promise<ICreateManyChartOfAccountCategoryOutput> {
-    return await this.database.collection(collectionName).createMany(documents, options)
+  async handle(documents: IDocument[]): Promise<ICreateManyChartOfAccountCategoryOutput> {
+    return await this.database.collection(collectionName).createMany(documents, this.options)
   }
 }

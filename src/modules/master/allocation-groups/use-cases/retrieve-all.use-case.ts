@@ -6,21 +6,20 @@ import { IRetrieveAllAllocationGroupRepository } from '../repositories/retrieve-
 export interface IInput {
   query: IQuery
 }
+
 export interface IDeps {
   retrieveAllAllocationGroupRepository: IRetrieveAllAllocationGroupRepository
 }
-export interface IOptions {
-  session: unknown
-}
+
 export interface IOutput {
   data: IRetrieveAllocationGroupOutput[]
   pagination: IPagination
 }
 
 export class RetrieveAllAllocationGroupUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. database operation
-    const response = await deps.retrieveAllAllocationGroupRepository.handle(input.query, options)
+    const response = await deps.retrieveAllAllocationGroupRepository.handle(input.query)
     // 2. output
     return {
       data: response.data,

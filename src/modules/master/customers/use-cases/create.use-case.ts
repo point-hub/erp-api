@@ -1,20 +1,24 @@
+import { IObjClean } from '@point-hub/express-utils'
 import type { ISchemaValidation } from '@point-hub/papi'
 
-import { IRetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
-import { IUpdateCounterRepository } from '@/modules/counters/repositories/update.repository'
+import { IUpdateMasterNumber } from '@/modules/counters/utils/update-master-number'
 import { IAuth } from '@/modules/master/users/interface'
 
-import { IRetrieveCustomerGroupRepository } from '../../customer-groups/repositories/retrieve.repository'
-import { CustomerEntity } from '../entity'
+import { collectionName, CustomerEntity } from '../entity'
 import { ICreateCustomerRepository } from '../repositories/create.repository'
 import { createValidation } from '../validations/create.validation'
 
 export interface IInput {
   auth: IAuth
   data: {
-    customer_group_id?: string
-    code?: string
-    name?: string
+    customer_group: {
+      _id: string
+      label: string
+      code: string
+      name: string
+    }
+    code: string
+    name: string
     address?: string
     phone?: string
     email?: string
@@ -25,30 +29,28 @@ export interface IInput {
     notes?: string
   }
 }
+
 export interface IDeps {
-  cleanObject(object: object): object
+  objClean: IObjClean
   createCustomerRepository: ICreateCustomerRepository
-  retrieveCustomerGroupRepository: IRetrieveCustomerGroupRepository
-  retrieveAllCounterRepository: IRetrieveAllCounterRepository
-  updateCounterRepository: IUpdateCounterRepository
+  updateMasterNumber: IUpdateMasterNumber
   schemaValidation: ISchemaValidation
 }
-export interface IOptions {
-  session?: unknown
-}
+
 export interface IOutput {
   inserted_id: string
 }
 
 export class CreateCustomerUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input.data, createValidation)
     // 2. define entity
     const customerEntity = new CustomerEntity({
-      customer_group_id: input.data.customer_group_id,
+      customer_group: input.data.customer_group,
       code: input.data.code,
       name: input.data.name,
+      label: `[${input.data.code}] ${input.data.name}`,
       address: input.data.address,
       phone: input.data.phone,
       email: input.data.email,
@@ -57,27 +59,19 @@ export class CreateCustomerUseCase {
       bank_account_name: input.data.bank_account_name,
       bank_account_number: input.data.bank_account_number,
       notes: input.data.notes ?? '',
-      created_by: input.auth._id,
+      created_by: {
+        _id: input.auth._id,
+        label: input.auth.name,
+        email: input.auth.email,
+      },
     })
-    customerEntity.generateCreatedDate()
-    const cleanEntity = deps.cleanObject(customerEntity.data)
+    customerEntity.generateDate('created_date')
+    customerEntity.data = deps.objClean(customerEntity.data)
     // 3. database operation
     // 3.1 create customer
-    const response = await deps.createCustomerRepository.handle(cleanEntity, options)
+    const response = await deps.createCustomerRepository.handle(customerEntity.data)
     // 3.2. update counter
-    const customerGroup = deps.retrieveCustomerGroupRepository.handle(
-      customerEntity.data.customer_group_id as string,
-      options,
-    )
-    const counters = await deps.retrieveAllCounterRepository.handle(
-      { filter: { name: 'customer_groups', code: (await customerGroup).code } },
-      options,
-    )
-    await deps.updateCounterRepository.handle(
-      counters.data[0]._id,
-      { count: Number(counters.data[0].count) + 1 },
-      options,
-    )
+    await deps.updateMasterNumber.handle(collectionName, input.data.customer_group.code)
     // 4. output
     return { inserted_id: response.inserted_id }
   }

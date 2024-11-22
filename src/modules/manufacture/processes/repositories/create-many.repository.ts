@@ -7,13 +7,16 @@ export interface ICreateManyProcessOutput {
   inserted_ids: string[]
 }
 export interface ICreateManyProcessRepository {
-  handle(documents: IDocument[], options?: unknown): Promise<ICreateManyProcessOutput>
+  handle(documents: IDocument[]): Promise<ICreateManyProcessOutput>
 }
 
 export class CreateManyProcessRepository implements ICreateManyProcessRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(documents: IDocument[], options?: unknown): Promise<ICreateManyProcessOutput> {
-    return await this.database.collection(collectionName).createMany(documents, options)
+  async handle(documents: IDocument[]): Promise<ICreateManyProcessOutput> {
+    return await this.database.collection(collectionName).createMany(documents, this.options)
   }
 }

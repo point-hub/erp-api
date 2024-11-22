@@ -1,17 +1,22 @@
-import type { IDatabase, IDocument, IUpdateOutput, IUpdateRepository } from '@point-hub/papi'
+import type { IDatabase, IDocument } from '@point-hub/papi'
 
 import { collectionName } from '../entity'
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface IUpdateUserOutput extends IUpdateOutput {}
-export interface IUpdateUserRepository extends IUpdateRepository {
-  handle(_id: string, document: IDocument, options?: unknown): Promise<IUpdateUserOutput>
+export interface IUpdateUserOutput {
+  matched_count: number
+  modified_count: number
+}
+export interface IUpdateUserRepository {
+  handle(_id: string, document: IDocument): Promise<IUpdateUserOutput>
 }
 
 export class UpdateUserRepository implements IUpdateUserRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(_id: string, document: IDocument, options?: unknown): Promise<IUpdateUserOutput> {
-    return await this.database.collection(collectionName).update(_id, document, options)
+  async handle(_id: string, document: IDocument): Promise<IUpdateUserOutput> {
+    return await this.database.collection(collectionName).update(_id, { $set: document }, this.options)
   }
 }

@@ -6,13 +6,16 @@ export interface IDeleteRoleOutput {
   deleted_count: number
 }
 export interface IDeleteRoleRepository {
-  handle(_id: string, options?: unknown): Promise<IDeleteRoleOutput>
+  handle(_id: string): Promise<IDeleteRoleOutput>
 }
 
 export class DeleteRoleRepository implements IDeleteRoleRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(_id: string, options?: unknown): Promise<IDeleteRoleOutput> {
-    return await this.database.collection(collectionName).delete(_id, options)
+  async handle(_id: string): Promise<IDeleteRoleOutput> {
+    return await this.database.collection(collectionName).delete(_id, this.options)
   }
 }

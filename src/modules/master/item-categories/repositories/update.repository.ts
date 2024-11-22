@@ -7,13 +7,16 @@ export interface IUpdateItemCategoryOutput {
   modified_count: number
 }
 export interface IUpdateItemCategoryRepository {
-  handle(_id: string, document: IDocument, options?: unknown): Promise<IUpdateItemCategoryOutput>
+  handle(_id: string, document: IDocument): Promise<IUpdateItemCategoryOutput>
 }
 
 export class UpdateItemCategoryRepository implements IUpdateItemCategoryRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(_id: string, document: IDocument, options?: unknown): Promise<IUpdateItemCategoryOutput> {
-    return await this.database.collection(collectionName).update(_id, document, options)
+  async handle(_id: string, document: IDocument): Promise<IUpdateItemCategoryOutput> {
+    return await this.database.collection(collectionName).update(_id, { $set: document }, this.options)
   }
 }

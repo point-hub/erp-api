@@ -1,3 +1,4 @@
+import { IObjClean } from '@point-hub/express-utils'
 import type { ISchemaValidation } from '@point-hub/papi'
 
 import { UserEntity } from '../entity'
@@ -7,29 +8,26 @@ import { retrieveExistingEmailValidation } from '../validations/retrieve-existin
 export interface IInput {
   email: string
 }
+
 export interface IDeps {
   retrieveExistingEmailRepository: IRetrieveAllUserRepository
-  cleanObject(object: object): object
+  objClean: IObjClean
   schemaValidation: ISchemaValidation
-}
-export interface IOptions {
-  session?: unknown
 }
 
 export class RetrieveExistingEmailUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<boolean> {
+  static async handle(input: IInput, deps: IDeps): Promise<boolean> {
     // 1. define entity
     const userEntity = new UserEntity({
       email: input.email,
     })
-    const cleanEntity = deps.cleanObject(userEntity.data)
+    userEntity.data = deps.objClean(userEntity.data)
     // 2. validate schema
-    await deps.schemaValidation(cleanEntity, retrieveExistingEmailValidation)
+    await deps.schemaValidation(userEntity.data, retrieveExistingEmailValidation)
     // 3. database operation
-    const response = await deps.retrieveExistingEmailRepository.handle(
-      { filter: { trimmed_email: userEntity.data.trimmed_email } },
-      options,
-    )
+    const response = await deps.retrieveExistingEmailRepository.handle({
+      filter: { trimmed_email: userEntity.data.trimmed_email },
+    })
     // 4. return is email exists or not
     return response.pagination.total_document > 0
   }

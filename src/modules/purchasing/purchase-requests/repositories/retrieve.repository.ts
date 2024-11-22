@@ -3,6 +3,7 @@ import type { IDatabase, IPipeline } from '@point-hub/papi'
 import { IAuthReference } from '@/modules/master/users/interface'
 
 import { collectionName } from '../entity'
+import { IReference } from '../interface'
 
 export interface IBranch {
   _id: string
@@ -53,20 +54,26 @@ export interface IRetrievePurchaseRequestOutput {
   deleted_date: Date
   deleted_reason: string
   is_deleted: boolean
+  is_finished: boolean
+  is_revised: boolean
+  references: IReference[]
 }
 export interface IRetrievePurchaseRequestRepository {
-  handle(_id: string, options?: unknown): Promise<IRetrievePurchaseRequestOutput>
+  handle(_id: string): Promise<IRetrievePurchaseRequestOutput>
 }
 
 export class RetrievePurchaseRequestRepository implements IRetrievePurchaseRequestRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(_id: string, options?: unknown): Promise<IRetrievePurchaseRequestOutput> {
+  async handle(_id: string): Promise<IRetrievePurchaseRequestOutput> {
     const pipeline: IPipeline[] = []
 
     pipeline.push(...this.aggregateFilters(_id))
 
-    const response = await this.database.collection(collectionName).aggregate(pipeline, {}, options)
+    const response = await this.database.collection(collectionName).aggregate(pipeline, {}, this.options)
 
     return {
       _id: response.data[0]._id as string,
@@ -88,6 +95,9 @@ export class RetrievePurchaseRequestRepository implements IRetrievePurchaseReque
       deleted_date: response.data[0].deleted_date as Date,
       deleted_reason: response.data[0].deleted_reason as string,
       is_deleted: response.data[0].is_deleted as boolean,
+      is_finished: response.data[0].is_finished as boolean,
+      is_revised: response.data[0].is_revised as boolean,
+      references: response.data[0].references as IReference[],
     }
   }
 

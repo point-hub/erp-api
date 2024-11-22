@@ -1,7 +1,8 @@
+import { IObjClean } from '@point-hub/express-utils'
 import type { ISchemaValidation } from '@point-hub/papi'
 
-import { ICreateCounterRepository } from '@/modules/counters/repositories/create.repository'
-import { IRetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
+import { IGenerateMasterNumber } from '@/modules/counters/utils/generate-master-number'
+import { collectionName as allocationCollectionName } from '@/modules/master/allocations/entity'
 import { IAuth } from '@/modules/master/users/interface'
 
 import { AllocationGroupEntity } from '../entity'
@@ -11,27 +12,25 @@ import { createValidation } from '../validations/create.validation'
 export interface IInput {
   auth: IAuth
   data: {
-    code?: string
-    name?: string
+    code: string
+    name: string
     notes?: string
   }
 }
+
 export interface IDeps {
-  cleanObject(object: object): object
+  objClean: IObjClean
   createAllocationGroupRepository: ICreateAllocationGroupRepository
-  retrieveAllCounterRepository: IRetrieveAllCounterRepository
-  createCounterRepository: ICreateCounterRepository
+  generateMasterNumber: IGenerateMasterNumber
   schemaValidation: ISchemaValidation
 }
-export interface IOptions {
-  session?: unknown
-}
+
 export interface IOutput {
   inserted_id: string
 }
 
 export class CreateAllocationGroupUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input.data, createValidation)
     // 2. define entity
@@ -39,28 +38,19 @@ export class CreateAllocationGroupUseCase {
       code: input.data.code,
       name: input.data.name,
       notes: input.data.notes,
-      created_by: input.auth._id,
+      created_by: {
+        _id: input.auth._id,
+        label: input.auth.name,
+        email: input.auth.email,
+      },
     })
-    allocationGroupEntity.generateCreatedDate()
-    const cleanEntity = deps.cleanObject(allocationGroupEntity.data)
+    allocationGroupEntity.generateDate('created_date')
+    allocationGroupEntity.data = deps.objClean(allocationGroupEntity.data)
     // 3. database operation
     // 3.1 create allocation group
-    const response = await deps.createAllocationGroupRepository.handle(cleanEntity, options)
+    const response = await deps.createAllocationGroupRepository.handle(allocationGroupEntity.data)
     // 3.2. update counter
-    const counters = await deps.retrieveAllCounterRepository.handle(
-      { filter: { name: 'allocation_groups', code: input.data.code } },
-      options,
-    )
-    if (!counters.data.length) {
-      await deps.createCounterRepository.handle(
-        {
-          name: 'allocation_groups',
-          code: input.data.code,
-          count: 0,
-        },
-        options,
-      )
-    }
+    await deps.generateMasterNumber.handle(allocationCollectionName, input.data.code)
     // 4. output
     return { inserted_id: response.inserted_id }
   }

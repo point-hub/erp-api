@@ -13,14 +13,14 @@ export const updateChartOfAccountController: IController = async (controllerInpu
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const updateChartOfAccountRepository = new UpdateChartOfAccountRepository(controllerInput.dbConnection)
+    const updateChartOfAccountRepository = new UpdateChartOfAccountRepository(controllerInput.dbConnection, { session })
     // 3. handle business rules
     const response = await UpdateChartOfAccountUseCase.handle(
       {
         _id: controllerInput.httpRequest.params.id,
         data: controllerInput.httpRequest.body,
       },
-      { cleanObject: objClean, schemaValidation, updateChartOfAccountRepository },
+      { objClean, schemaValidation, updateChartOfAccountRepository },
     )
     await session.commitTransaction()
     // 4. return response to client

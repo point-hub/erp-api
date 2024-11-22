@@ -8,13 +8,16 @@ export interface IRetrieveAllCustomerGroupOutput {
   pagination: IPagination
 }
 export interface IRetrieveAllCustomerGroupRepository {
-  handle(query: IQuery, options?: unknown): Promise<IRetrieveAllCustomerGroupOutput>
+  handle(query: IQuery): Promise<IRetrieveAllCustomerGroupOutput>
 }
 
 export class RetrieveAllCustomerGroupRepository implements IRetrieveAllCustomerGroupRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(query: IQuery, options?: unknown): Promise<IRetrieveAllCustomerGroupOutput> {
+  async handle(query: IQuery): Promise<IRetrieveAllCustomerGroupOutput> {
     const pipeline: IPipeline[] = []
 
     pipeline.push(...this.aggregateFilters(query))
@@ -22,7 +25,7 @@ export class RetrieveAllCustomerGroupRepository implements IRetrieveAllCustomerG
     pipeline.push(...this.aggregateJoinUpdatedBy())
     pipeline.push(...this.aggregateAddFields())
 
-    const response = await this.database.collection(collectionName).aggregate(pipeline, query, options)
+    const response = await this.database.collection(collectionName).aggregate(pipeline, query, this.options)
 
     return {
       data: response.data as unknown as IRetrieveCustomerGroupOutput[],

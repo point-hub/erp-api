@@ -7,14 +7,18 @@ export interface IRetrieveAllAllocationGroupOutput {
   data: IRetrieveAllocationGroupOutput[]
   pagination: IPagination
 }
+
 export interface IRetrieveAllAllocationGroupRepository {
-  handle(query: IQuery, options?: unknown): Promise<IRetrieveAllAllocationGroupOutput>
+  handle(query: IQuery): Promise<IRetrieveAllAllocationGroupOutput>
 }
 
 export class RetrieveAllAllocationGroupRepository implements IRetrieveAllAllocationGroupRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(query: IQuery, options?: unknown): Promise<IRetrieveAllAllocationGroupOutput> {
+  async handle(query: IQuery): Promise<IRetrieveAllAllocationGroupOutput> {
     const pipeline: IPipeline[] = []
 
     pipeline.push(...this.aggregateFilters(query))
@@ -22,7 +26,7 @@ export class RetrieveAllAllocationGroupRepository implements IRetrieveAllAllocat
     pipeline.push(...this.aggregateJoinUpdatedBy())
     pipeline.push(...this.aggregateAddFields())
 
-    const response = await this.database.collection(collectionName).aggregate(pipeline, query, options)
+    const response = await this.database.collection(collectionName).aggregate(pipeline, query, this.options)
 
     return {
       data: response.data as unknown as IRetrieveAllocationGroupOutput[],

@@ -10,20 +10,19 @@ export interface IInput {
   auth: IAuth
   _id: string
 }
+
 export interface IDeps {
   schemaValidation: ISchemaValidation
   approvePurchaseRequestRepository: IApprovePurchaseRequestRepository
 }
-export interface IOptions {
-  session?: unknown
-}
+
 export interface IOutput {
   matched_count: number
   modified_count: number
 }
 
 export class ApprovePurchaseRequestUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input, approveValidation)
     // 2. define entity
@@ -32,7 +31,7 @@ export class ApprovePurchaseRequestUseCase {
       approval_status: 'approved',
     })
     // 3. database operation
-    const response = await deps.approvePurchaseRequestRepository.handle(input._id, purchaseRequestEntity.data, options)
+    const response = await deps.approvePurchaseRequestRepository.handle(input._id, purchaseRequestEntity.data)
     // 4. output
     return {
       matched_count: response.matched_count,

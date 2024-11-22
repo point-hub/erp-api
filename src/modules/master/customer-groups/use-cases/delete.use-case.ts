@@ -10,28 +10,24 @@ export interface IInput {
   _id: string
   reason: string
 }
+
 export interface IDeps {
   schemaValidation: ISchemaValidation
   retrieveAllCustomerRepository: IRetrieveAllCustomerRepository
   deleteCustomerGroupRepository: IDeleteCustomerGroupRepository
   throwApiError(codeStatus: TypeCodeStatus, options?: IOptionsApiError): void
 }
-export interface IOptions {
-  session?: unknown
-}
+
 export interface IOutput {
   deleted_count: number
 }
 
 export class DeleteCustomerGroupUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input, deleteValidation)
     // 2. check if doesn't have any relationship
-    const customers = await deps.retrieveAllCustomerRepository.handle(
-      { filter: { customer_group_id: input._id } },
-      options,
-    )
+    const customers = await deps.retrieveAllCustomerRepository.handle({ filter: { customer_group_id: input._id } })
     if (customers.pagination.total_document) {
       deps.throwApiError(422, {
         errors: {
@@ -42,7 +38,7 @@ export class DeleteCustomerGroupUseCase {
       })
     }
     // 3. database operation
-    const response = await deps.deleteCustomerGroupRepository.handle(input._id, options)
+    const response = await deps.deleteCustomerGroupRepository.handle(input._id)
     // 4. output
     return { deleted_count: response.deleted_count }
   }

@@ -11,15 +11,18 @@ export interface IRetrieveSettingJournalOutput extends IRetrieveOutput {
   updated_date?: Date
 }
 export interface IRetrieveSettingJournalRepository extends IRetrieveRepository {
-  handle(_id: string, options?: unknown): Promise<IRetrieveSettingJournalOutput>
+  handle(_id: string): Promise<IRetrieveSettingJournalOutput>
 }
 
 export class RetrieveSettingJournalRepository implements IRetrieveSettingJournalRepository {
   public collection = collectionName
 
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(_id: string, options?: unknown): Promise<IRetrieveSettingJournalOutput> {
+  async handle(_id: string): Promise<IRetrieveSettingJournalOutput> {
     const pipeline: IPipeline[] = []
 
     const filters = [] // filter keys using "and" logic
@@ -90,7 +93,7 @@ export class RetrieveSettingJournalRepository implements IRetrieveSettingJournal
         },
       },
     )
-    const response = await this.database.collection(this.collection).aggregate(pipeline, {}, options)
+    const response = await this.database.collection(this.collection).aggregate(pipeline, {}, this.options)
 
     return {
       _id: response.data[0]._id as string,

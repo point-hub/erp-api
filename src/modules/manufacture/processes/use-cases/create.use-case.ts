@@ -1,7 +1,8 @@
+import { IObjClean } from '@point-hub/express-utils'
 import type { ISchemaValidation } from '@point-hub/papi'
 
-import { IRetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
-import { IUpdateCounterRepository } from '@/modules/counters/repositories/update.repository'
+import { IGenerateMasterNumber } from '@/modules/counters/utils/generate-master-number'
+import { collectionName as formulaCollectionName } from '@/modules/manufacture/formulas/entity'
 import { IAuth } from '@/modules/master/users/interface'
 
 import { ProcessEntity } from '../entity'
@@ -11,27 +12,25 @@ import { createValidation } from '../validations/create.validation'
 export interface IInput {
   auth: IAuth
   data: {
-    code?: string
-    name?: string
+    code: string
+    name: string
     notes?: string
   }
 }
+
 export interface IDeps {
-  cleanObject(object: object): object
+  objClean: IObjClean
   createProcessRepository: ICreateProcessRepository
-  retrieveAllRepository: IRetrieveAllCounterRepository
-  updateRepository: IUpdateCounterRepository
+  generateMasterNumber: IGenerateMasterNumber
   schemaValidation: ISchemaValidation
 }
-export interface IOptions {
-  session?: unknown
-}
+
 export interface IOutput {
   inserted_id: string
 }
 
 export class CreateProcessUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input.data, createValidation)
     // 2. define entity
@@ -39,12 +38,17 @@ export class CreateProcessUseCase {
       code: input.data.code,
       name: input.data.name,
       notes: input.data.notes,
-      created_by: input.auth._id,
+      created_by: {
+        _id: input.auth._id,
+        label: input.auth.name,
+        email: input.auth.email,
+      },
     })
-    processEntity.generateCreatedDate()
-    const cleanEntity = deps.cleanObject(processEntity.data)
+    processEntity.generateDate('created_date')
+    processEntity.data = deps.objClean(processEntity.data)
     // 3. database operation
-    const response = await deps.createProcessRepository.handle(cleanEntity, options)
+    const response = await deps.createProcessRepository.handle(processEntity.data)
+    await deps.generateMasterNumber.handle(formulaCollectionName, input.data.code)
     // 4. output
     return { inserted_id: response.inserted_id }
   }

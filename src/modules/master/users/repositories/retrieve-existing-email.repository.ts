@@ -7,10 +7,13 @@ import { IRetrieveAllUserOutput, IRetrieveAllUserRepository } from './retrieve-a
 export class RetrieveExistingEmailRepository implements IRetrieveAllUserRepository {
   public collection = collectionName
 
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(query: IQuery, options?: unknown): Promise<IRetrieveAllUserOutput> {
-    const response = await this.database.collection(this.collection).retrieveAll(query, options)
+  async handle(query: IQuery): Promise<IRetrieveAllUserOutput> {
+    const response = await this.database.collection(this.collection).retrieveAll(query, this.options)
     return {
       data: response.data as unknown as IRetrieveUserOutput[],
       pagination: response.pagination,

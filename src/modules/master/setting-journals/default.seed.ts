@@ -5,24 +5,24 @@ import { CreateSettingJournalRepository } from '@/modules/master/setting-journal
 
 import { ISettingJournalEntity } from './interface'
 
-export const seed = async (dbConnection: IDatabase, options: unknown) => {
+export const seed = async (dbConnection: IDatabase, options: Record<string, unknown>) => {
   console.info(`[seed] setting journals data`)
   // delete all data inside collection
   await dbConnection.collection('setting_journals').deleteAll(options)
   // prepare repository
-  const createSettingJournalRepository = new CreateSettingJournalRepository(dbConnection)
-  const retrieveAllChartOfAccountRepository = new RetrieveAllChartOfAccountRepository(dbConnection)
+  const createSettingJournalRepository = new CreateSettingJournalRepository(dbConnection, options)
+  const retrieveAllChartOfAccountRepository = new RetrieveAllChartOfAccountRepository(dbConnection, options)
   // seed
   for (const feature of seeds) {
     for (const journal of feature.journals ?? []) {
       if (journal.editable) {
-        const account = await retrieveAllChartOfAccountRepository.handle({ filter: { name: journal.account } }, options)
+        const account = await retrieveAllChartOfAccountRepository.handle({ filter: { name: journal.account } })
         if (account?.data?.length) {
           journal.chart_of_account_id = account.data[0]._id
         }
       }
     }
-    await createSettingJournalRepository.handle(feature, options)
+    await createSettingJournalRepository.handle(feature)
   }
 }
 

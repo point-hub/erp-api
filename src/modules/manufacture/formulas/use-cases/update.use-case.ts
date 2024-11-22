@@ -15,31 +15,35 @@ export interface IInput {
     notes?: string
   }
 }
+
 export interface IDeps {
   schemaValidation: ISchemaValidation
   updateFormulaRepository: IUpdateFormulaRepository
 }
-export interface IOptions {
-  session?: unknown
-}
+
 export interface IOutput {
   matched_count: number
   modified_count: number
 }
 
 export class UpdateFormulaUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input, updateValidation)
     // 2. define entity
     const formulaEntity = new FormulaEntity({
+      code: input.data.code ?? '',
       name: input.data.name ?? '',
       notes: input.data.notes ?? '',
-      updated_by: input.auth._id,
+      updated_by: {
+        _id: input.auth._id,
+        label: input.auth.name,
+        email: input.auth.email,
+      },
     })
-    formulaEntity.generateUpdatedDate()
+    formulaEntity.generateDate('updated_date')
     // 3. database operation
-    const response = await deps.updateFormulaRepository.handle(input._id, formulaEntity.data, options)
+    const response = await deps.updateFormulaRepository.handle(input._id, formulaEntity.data)
     // 4. output
     return {
       matched_count: response.matched_count,

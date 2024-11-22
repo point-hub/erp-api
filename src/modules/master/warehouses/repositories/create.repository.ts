@@ -6,13 +6,16 @@ export interface ICreateWarehouseOutput {
   inserted_id: string
 }
 export interface ICreateWarehouseRepository {
-  handle(document: IDocument, options?: unknown): Promise<ICreateWarehouseOutput>
+  handle(document: IDocument): Promise<ICreateWarehouseOutput>
 }
 
 export class CreateWarehouseRepository implements ICreateWarehouseRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(document: IDocument, options?: unknown): Promise<ICreateWarehouseOutput> {
-    return await this.database.collection(collectionName).create(document, options)
+  async handle(document: IDocument): Promise<ICreateWarehouseOutput> {
+    return await this.database.collection(collectionName).create(document, this.options)
   }
 }

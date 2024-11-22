@@ -5,9 +5,12 @@ import { collectionName } from '../entity'
 export class SignupRepository implements ICreateRepository {
   public collection = collectionName
 
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(document: IDocument, options?: unknown): Promise<ICreateOutput> {
-    return await this.database.collection(this.collection).create(document, options)
+  async handle(document: IDocument): Promise<ICreateOutput> {
+    return await this.database.collection(this.collection).create(document, this.options)
   }
 }

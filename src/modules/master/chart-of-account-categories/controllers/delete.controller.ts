@@ -19,7 +19,6 @@ export const deleteChartOfAccountCategoryController: IController = async (contro
     const response = await DeleteChartOfAccountCategoryUseCase.handle(
       { _id: controllerInput.httpRequest.params.id, reason: controllerInput.httpRequest.body.reason },
       { schemaValidation, deleteChartOfAccountCategoryRepository },
-      { session },
     )
     await session.commitTransaction()
     // return response to client

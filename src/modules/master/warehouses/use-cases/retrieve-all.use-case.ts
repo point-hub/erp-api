@@ -6,21 +6,20 @@ import { IRetrieveAllWarehouseRepository } from '../repositories/retrieve-all.re
 export interface IInput {
   query: IQuery
 }
+
 export interface IDeps {
   retrieveAllWarehouseRepository: IRetrieveAllWarehouseRepository
 }
-export interface IOptions {
-  session: unknown
-}
+
 export interface IOutput {
   data: IRetrieveWarehouseOutput[]
   pagination: IPagination
 }
 
 export class RetrieveAllWarehouseUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. database operation
-    const response = await deps.retrieveAllWarehouseRepository.handle(input.query, options)
+    const response = await deps.retrieveAllWarehouseRepository.handle(input.query)
     // 2. output
     return {
       data: response.data,

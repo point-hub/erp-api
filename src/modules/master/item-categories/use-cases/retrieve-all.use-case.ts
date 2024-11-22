@@ -6,21 +6,20 @@ import { IRetrieveAllItemCategoryRepository } from '../repositories/retrieve-all
 export interface IInput {
   query: IQuery
 }
+
 export interface IDeps {
   retrieveAllItemCategoryRepository: IRetrieveAllItemCategoryRepository
 }
-export interface IOptions {
-  session: unknown
-}
+
 export interface IOutput {
   data: IRetrieveItemCategoryOutput[]
   pagination: IPagination
 }
 
 export class RetrieveAllItemCategoryUseCase {
-  static async handle(input: IInput, deps: IDeps, options?: IOptions): Promise<IOutput> {
+  static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. database operation
-    const response = await deps.retrieveAllItemCategoryRepository.handle(input.query, options)
+    const response = await deps.retrieveAllItemCategoryRepository.handle(input.query)
     // 2. output
     return {
       data: response.data,

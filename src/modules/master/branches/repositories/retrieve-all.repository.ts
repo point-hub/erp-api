@@ -8,66 +8,26 @@ export interface IRetrieveAllBranchOutput {
   pagination: IPagination
 }
 export interface IRetrieveAllBranchRepository {
-  handle(query: IQuery, options?: unknown): Promise<IRetrieveAllBranchOutput>
+  handle(query: IQuery): Promise<IRetrieveAllBranchOutput>
 }
 
 export class RetrieveAllBranchRepository implements IRetrieveAllBranchRepository {
-  constructor(public database: IDatabase) {}
+  constructor(
+    public database: IDatabase,
+    public options?: Record<string, unknown>,
+  ) {}
 
-  async handle(query: IQuery, options?: unknown): Promise<IRetrieveAllBranchOutput> {
+  async handle(query: IQuery): Promise<IRetrieveAllBranchOutput> {
     const pipeline: IPipeline[] = []
 
     pipeline.push(...this.aggregateFilters(query))
-    pipeline.push(...this.aggregateJoinCreatedBy())
-    pipeline.push(...this.aggregateJoinUpdatedBy())
-    pipeline.push(...this.aggregateAddFields())
 
-    const response = await this.database.collection(collectionName).aggregate(pipeline, query, options)
+    const response = await this.database.collection(collectionName).aggregate(pipeline, query, this.options)
 
     return {
       data: response.data as unknown as IRetrieveBranchOutput[],
       pagination: response.pagination,
     }
-  }
-
-  private aggregateJoinCreatedBy() {
-    return [
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'created_by',
-          foreignField: '_id',
-          pipeline: [{ $project: { _id: 1, username: 1, name: 1, email: 1 } }],
-          as: 'created_by',
-        },
-      },
-      {
-        $unwind: {
-          path: '$created_by',
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-    ]
-  }
-
-  private aggregateJoinUpdatedBy() {
-    return [
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'updated_by',
-          foreignField: '_id',
-          pipeline: [{ $project: { _id: 1, username: 1, name: 1, email: 1 } }],
-          as: 'updated_by',
-        },
-      },
-      {
-        $unwind: {
-          path: '$updated_by',
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-    ]
   }
 
   private aggregateFilters(query: IQuery) {
@@ -99,17 +59,5 @@ export class RetrieveAllBranchRepository implements IRetrieveAllBranchRepository
     }
 
     return [{ $match: { $and: filtersAnd } }]
-  }
-
-  private aggregateAddFields() {
-    return [
-      {
-        $addFields: {
-          label: {
-            $concat: ['[', '$code', '] ', '$name'],
-          },
-        },
-      },
-    ]
   }
 }

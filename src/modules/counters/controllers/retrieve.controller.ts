@@ -10,7 +10,7 @@ export const retrieveCounterController: IController = async (controllerInput: IC
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const retrieveCounterRepository = new RetrieveCounterRepository(controllerInput.dbConnection)
+    const retrieveCounterRepository = new RetrieveCounterRepository(controllerInput.dbConnection, { session })
     // 3. handle business rules
     const response = await RetrieveCounterUseCase.handle(
       { _id: controllerInput.httpRequest.params.id },
@@ -24,6 +24,7 @@ export const retrieveCounterController: IController = async (controllerInput: IC
         _id: response._id,
         code: response.code,
         name: response.name,
+        count: response.count,
         created_date: response.created_date,
         updated_date: response.updated_date,
       },
