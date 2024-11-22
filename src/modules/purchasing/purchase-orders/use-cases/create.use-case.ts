@@ -114,7 +114,7 @@ export class CreatePurchaseOrderUseCase {
       ref_date: purchaseOrderEntity.data.created_date as Date,
       details: details ?? [],
     }
-    await deps.updatePurchaseRequestReference.handle(input.data.purchase_request, reference)
+    await deps.updatePurchaseRequestReference.add(input.data.purchase_request, reference)
     // 5. output
     return { inserted_id: response.inserted_id }
   }

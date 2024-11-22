@@ -2,6 +2,7 @@ import type { ISchemaValidation } from '@point-hub/papi'
 
 import { IAuth } from '@/modules/master/users/interface'
 
+import { IUpdatePurchaseRequestReference } from '../../purchase-requests/utils/update-reference'
 import { IDeletePurchaseOrderRepository } from '../repositories/delete.repository'
 import { deleteValidation } from '../validations/delete.validation'
 
@@ -14,6 +15,7 @@ export interface IInput {
 export interface IDeps {
   schemaValidation: ISchemaValidation
   deletePurchaseOrderRepository: IDeletePurchaseOrderRepository
+  updatePurchaseRequestReference?: IUpdatePurchaseRequestReference
 }
 
 export interface IOutput {
@@ -36,6 +38,7 @@ export class DeletePurchaseOrderUseCase {
       deleted_date: new Date(),
       is_deleted: true,
     })
+    // deps.updatePurchaseRequestReference.delete()
     // 3. output
     return { matched_count: response.matched_count, modified_count: response.modified_count }
   }

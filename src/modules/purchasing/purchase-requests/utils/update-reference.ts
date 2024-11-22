@@ -6,7 +6,8 @@ import { collectionName } from '../entity'
 import { IPurchaseRequestEntity, IReference } from '../interface'
 
 export interface IUpdatePurchaseRequestReference {
-  handle(entity: IPurchaseRequestEntity, reference: IReference): Promise<void>
+  add(entity: IPurchaseRequestEntity, reference: IReference): Promise<void>
+  delete(_id: string, ref_name: string, ref_id: string): Promise<void>
 }
 
 export class UpdatePurchaseRequestReference implements IUpdatePurchaseRequestReference {
@@ -15,7 +16,7 @@ export class UpdatePurchaseRequestReference implements IUpdatePurchaseRequestRef
     public options?: Record<string, unknown>,
   ) {}
 
-  async handle(entity: IPurchaseRequestEntity, reference: IReference): Promise<void> {
+  async add(entity: IPurchaseRequestEntity, reference: IReference): Promise<void> {
     await this.database
       .collection(collectionName)
       .update(entity._id as string, { $push: { references: reference } }, this.options)
@@ -27,7 +28,6 @@ export class UpdatePurchaseRequestReference implements IUpdatePurchaseRequestRef
 
       const totalExistingQuantity =
         entity.references?.reduce((acc, entityReference) => {
-          console.log(entityReference)
           return (
             acc +
             entityReference.details.reduce(
@@ -42,9 +42,7 @@ export class UpdatePurchaseRequestReference implements IUpdatePurchaseRequestRef
         (acc, referenceDetail) => (entityDetail.uuid === referenceDetail.uuid ? acc + referenceDetail.quantity : acc),
         0,
       )
-      console.log(
-        entityDetail.uuid + ' max: ' + maxQuantity + ' e: ' + totalExistingQuantity + ' n: ' + totalNewQuantity,
-      )
+
       if (totalExistingQuantity + totalNewQuantity < maxQuantity) {
         isFinished = false
         break
@@ -61,5 +59,11 @@ export class UpdatePurchaseRequestReference implements IUpdatePurchaseRequestRef
         .collection(collectionName)
         .update(entity._id as string, { $set: { is_finished: true } }, this.options)
     }
+  }
+
+  async delete(_id: string, ref_name: string, ref_id: string) {
+    await this.database
+      .collection(collectionName)
+      .update(_id, { $pop: { ref_id: ref_id, ref_name: ref_name } }, this.options)
   }
 }
