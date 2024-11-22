@@ -30,7 +30,7 @@ export const deletePurchaseRequestController: IController = async (controllerInp
       { schemaValidation, deletePurchaseRequestRepository },
     )
     await session.commitTransaction()
-    // return response to client
+    // 4. return response to client
     return {
       status: 200,
       json: {

@@ -28,7 +28,7 @@ export const deleteRoleController: IController = async (controllerInput: IContro
       { schemaValidation, retrieveRoleRepository, retrieveAllUserRepository, deleteRoleRepository, throwApiError },
     )
     await session.commitTransaction()
-    // return response to client
+    // 4. return response to client
     return {
       status: 200,
       json: { deleted_count: response.deleted_count },

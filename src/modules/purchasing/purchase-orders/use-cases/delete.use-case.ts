@@ -4,6 +4,7 @@ import { IAuth } from '@/modules/master/users/interface'
 
 import { IUpdatePurchaseRequestReference } from '../../purchase-requests/utils/update-reference'
 import { IDeletePurchaseOrderRepository } from '../repositories/delete.repository'
+import { IRetrievePurchaseOrderRepository } from '../repositories/retrieve.repository'
 import { deleteValidation } from '../validations/delete.validation'
 
 export interface IInput {
@@ -14,8 +15,9 @@ export interface IInput {
 
 export interface IDeps {
   schemaValidation: ISchemaValidation
+  retrievePurchaseOrderRepository: IRetrievePurchaseOrderRepository
   deletePurchaseOrderRepository: IDeletePurchaseOrderRepository
-  updatePurchaseRequestReference?: IUpdatePurchaseRequestReference
+  updatePurchaseRequestReference: IUpdatePurchaseRequestReference
 }
 
 export interface IOutput {
@@ -28,6 +30,7 @@ export class DeletePurchaseOrderUseCase {
     // 1. validate schema
     await deps.schemaValidation(input, deleteValidation)
     // 2. database operation
+    const purchaseOrder = await deps.retrievePurchaseOrderRepository.handle(input._id)
     const response = await deps.deletePurchaseOrderRepository.handle(input._id, {
       deleted_by: {
         _id: input.auth._id,
@@ -38,7 +41,7 @@ export class DeletePurchaseOrderUseCase {
       deleted_date: new Date(),
       is_deleted: true,
     })
-    // deps.updatePurchaseRequestReference.delete()
+    await deps.updatePurchaseRequestReference.delete(purchaseOrder.purchase_request._id, 'purchase_orders', input._id)
     // 3. output
     return { matched_count: response.matched_count, modified_count: response.modified_count }
   }

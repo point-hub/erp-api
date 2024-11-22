@@ -64,6 +64,7 @@ export class UpdatePurchaseRequestReference implements IUpdatePurchaseRequestRef
   async delete(_id: string, ref_name: string, ref_id: string) {
     await this.database
       .collection(collectionName)
-      .update(_id, { $pop: { ref_id: ref_id, ref_name: ref_name } }, this.options)
+      .update(_id, { $pull: { references: { ref_id: ref_id, ref_name: ref_name } } }, this.options)
+    await this.database.collection(collectionName).update(_id, { $set: { is_finished: false } }, this.options)
   }
 }

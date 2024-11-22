@@ -4,7 +4,9 @@ import { IAuth } from '@/modules/master/users/interface'
 import { verifyUserToken } from '@/modules/master/users/utils/verify-user-token'
 import { schemaValidation } from '@/utils/validation'
 
+import { UpdatePurchaseRequestReference } from '../../purchase-requests/utils/update-reference'
 import { DeletePurchaseOrderRepository } from '../repositories/delete.repository'
+import { RetrievePurchaseOrderRepository } from '../repositories/retrieve.repository'
 import { DeletePurchaseOrderUseCase } from '../use-cases/delete.use-case'
 
 export const deletePurchaseOrderController: IController = async (controllerInput: IControllerInput) => {
@@ -14,9 +16,13 @@ export const deletePurchaseOrderController: IController = async (controllerInput
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
+    const retrievePurchaseOrderRepository = new RetrievePurchaseOrderRepository(controllerInput.dbConnection, {
+      session,
+    })
     const deletePurchaseOrderRepository = new DeletePurchaseOrderRepository(controllerInput.dbConnection, {
       session,
     })
+    const updatePurchaseRequestReference = new UpdatePurchaseRequestReference(controllerInput.dbConnection, { session })
     // 3. handle business logic
     // 3.1 check authenticated user
     const verifyTokenResponse = await verifyUserToken(controllerInput, { session })
@@ -27,10 +33,15 @@ export const deletePurchaseOrderController: IController = async (controllerInput
         auth: verifyTokenResponse as IAuth,
         reason: controllerInput.httpRequest.body.reason,
       },
-      { schemaValidation, deletePurchaseOrderRepository },
+      {
+        schemaValidation,
+        retrievePurchaseOrderRepository,
+        deletePurchaseOrderRepository,
+        updatePurchaseRequestReference,
+      },
     )
     await session.commitTransaction()
-    // return response to client
+    // 4. return response to client
     return {
       status: 200,
       json: {
