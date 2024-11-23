@@ -8,6 +8,7 @@ import { CreateAllocationGroupRepository } from './repositories/create.repositor
 export interface ISeed {
   code?: string
   name?: string
+  label?: string
 }
 
 export const seed = async (dbConnection: IDatabase, options: Record<string, unknown>) => {
@@ -20,6 +21,7 @@ export const seed = async (dbConnection: IDatabase, options: Record<string, unkn
     const seed: ISeed = {}
     seed.code = 'AG' + index.toString().padStart(2, 'X')
     seed.name = faker.location.city()
+    seed.label = `[${seed.code}] ${seed.name}`
     await createAllocationGroupRepository.handle(seed)
     await generateMasterNumber.handle('allocations', seed.code)
   }

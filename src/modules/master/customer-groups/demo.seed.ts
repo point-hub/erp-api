@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker'
 import { type IDatabase } from '@point-hub/papi'
 
-import { CreateCounterRepository } from '@/modules/counters/repositories/create.repository'
+import { GenerateMasterNumber } from '@/modules/counters/utils/generate-master-number'
 
 import { CreateCustomerGroupRepository } from './repositories/create.repository'
 
@@ -15,8 +15,7 @@ export const seed = async (dbConnection: IDatabase, options: Record<string, unkn
   console.info(`[seed] customer groups data`)
   // prepare repository
   const createCustomerGroupRepository = new CreateCustomerGroupRepository(dbConnection, options)
-  const createCounterRepository = new CreateCounterRepository(dbConnection, options)
-
+  const generateMasterNumber = new GenerateMasterNumber(dbConnection, options)
   // insert new seeder data
   for (let index = 1; index <= 30; index++) {
     const seed: ISeed = {}
@@ -24,11 +23,6 @@ export const seed = async (dbConnection: IDatabase, options: Record<string, unkn
     seed.name = faker.location.city()
     seed.label = `${seed.code} ${seed.name}`
     await createCustomerGroupRepository.handle(seed)
-
-    await createCounterRepository.handle({
-      name: 'customers',
-      code: seed.code,
-      count: 0,
-    })
+    await generateMasterNumber.handle('customers', seed.code)
   }
 }

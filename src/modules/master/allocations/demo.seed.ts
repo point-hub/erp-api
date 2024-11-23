@@ -12,6 +12,7 @@ export interface ISeed {
   allocation_group_id?: string
   code?: string
   name?: string
+  label?: string
 }
 
 export const seed = async (dbConnection: IDatabase, options: Record<string, unknown>) => {
@@ -31,6 +32,7 @@ export const seed = async (dbConnection: IDatabase, options: Record<string, unkn
     seed.allocation_group_id = allocationGroups.data[randomNumberBetween(0, 29)]._id
     seed.code = `${counters.data[0].code}${(Number(counters.data[0].count) + index).toString().padStart(4, '0')}`
     seed.name = `${faker.location.city()}`
+    seed.label = `[${seed.code}] ${seed.name}`
     await createAllocationRepository.handle(seed)
     await updateCounterRepository.handle(counters.data[0]._id, { count: Number(counters.data[0].count) + index })
   }

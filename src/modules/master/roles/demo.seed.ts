@@ -1,7 +1,6 @@
 import { type IDatabase } from '@point-hub/papi'
 
-import { RetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
-import { UpdateCounterRepository } from '@/modules/counters/repositories/update.repository'
+import { UpdateMasterNumber } from '@/modules/counters/utils/update-master-number'
 
 import { IPermissionEntity } from '../permissions/interface'
 import { RetrieveAllPermissionRepository } from '../permissions/repositories/retrieve-all.repository'
@@ -10,6 +9,7 @@ import { CreateRoleRepository } from './repositories/create.repository'
 export interface ISeed {
   code?: string
   name?: string
+  label?: string
   permission?: IPermissionEntity
 }
 
@@ -18,21 +18,20 @@ export const seed = async (dbConnection: IDatabase, options: Record<string, unkn
   // prepare repository
   const createRoleRepository = new CreateRoleRepository(dbConnection, options)
   const retrieveAllpermissionRepository = new RetrieveAllPermissionRepository(dbConnection, options)
-  const retrieveAllCounterRepository = new RetrieveAllCounterRepository(dbConnection, options)
-  const updateCounterRepository = new UpdateCounterRepository(dbConnection, options)
+  const updateMasterNumber = new UpdateMasterNumber(dbConnection, options)
 
   // insert new seeder data
   const permission = await retrieveAllpermissionRepository.handle({})
-  const counters = await retrieveAllCounterRepository.handle({ filter: { name: 'roles' } })
   replacePermission(permission, true)
 
   for (let index = 1; index <= 30; index++) {
     const seed: ISeed = {}
-    seed.code = `${counters.data[0].code}${(Number(counters.data[0].count) + index).toString().padStart(4, '0')}`
-    seed.name = `Role ${(Number(counters.data[0].count) + index).toString().padStart(2, '0')}`
+    seed.code = `MR${index.toString().padStart(4, '0')}`
+    seed.name = `ROLE ${index.toString().padStart(2, '0')}`
+    seed.label = `[${seed.code}] ${seed.name}`
     seed.permission = permission
     await createRoleRepository.handle(seed)
-    await updateCounterRepository.handle(counters.data[0]._id, { count: Number(counters.data[0].count) + index })
+    await updateMasterNumber.handle('roles')
   }
 }
 

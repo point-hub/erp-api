@@ -1,8 +1,5 @@
 import { type IDatabase } from '@point-hub/papi'
 
-import { RetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
-import { UpdateCounterRepository } from '@/modules/counters/repositories/update.repository'
-
 import { IPermissionEntity } from '../permissions/interface'
 import { RetrieveAllPermissionRepository } from '../permissions/repositories/retrieve-all.repository'
 import { CreateRoleRepository } from './repositories/create.repository'
@@ -22,8 +19,6 @@ export const seed = async (dbConnection: IDatabase, options: Record<string, unkn
   // prepare repository
   const createRoleRepository = new CreateRoleRepository(dbConnection, options)
   const retrieveAllpermissionRepository = new RetrieveAllPermissionRepository(dbConnection, options)
-  const retrieveAllCounterRepository = new RetrieveAllCounterRepository(dbConnection, options)
-  const updateCounterRepository = new UpdateCounterRepository(dbConnection, options)
 
   // insert new seeder data
   const permission = await retrieveAllpermissionRepository.handle({})
@@ -32,9 +27,6 @@ export const seed = async (dbConnection: IDatabase, options: Record<string, unkn
     seed.permission = permission
     seed.label = `[${seed.code}] ${seed.name}`
     await createRoleRepository.handle(seed)
-    // update counter
-    const counters = await retrieveAllCounterRepository.handle({ filter: { name: 'roles' } })
-    await updateCounterRepository.handle(counters.data[0]._id, { count: Number(counters.data[0].count) + 1 })
   }
 }
 
@@ -53,7 +45,7 @@ const replacePermission = (obj: any, newValue: boolean) => {
 
 export const seeds: ISeed[] = [
   {
-    code: 'R0001',
+    code: 'RSA',
     name: 'Super Admin',
   },
 ]

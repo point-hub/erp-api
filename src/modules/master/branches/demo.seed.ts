@@ -1,8 +1,7 @@
 import { faker } from '@faker-js/faker'
 import { type IDatabase } from '@point-hub/papi'
 
-import { RetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
-import { UpdateCounterRepository } from '@/modules/counters/repositories/update.repository'
+import { GenerateMasterNumber } from '@/modules/counters/utils/generate-master-number'
 
 import { CreateBranchRepository } from './repositories/create.repository'
 
@@ -16,18 +15,14 @@ export const seed = async (dbConnection: IDatabase, options: Record<string, unkn
   console.info(`[seed] branches data`)
   // prepare repository
   const createBranchRepository = new CreateBranchRepository(dbConnection, options)
-  const retrieveAllCounterRepository = new RetrieveAllCounterRepository(dbConnection, options)
-  const updateCounterRepository = new UpdateCounterRepository(dbConnection, options)
-
+  const generateMasterNumber = new GenerateMasterNumber(dbConnection, options)
   // insert new seeder data
-  const counters = await retrieveAllCounterRepository.handle({ filter: { name: 'branches' } })
-
   for (let index = 1; index <= 30; index++) {
     const seed: ISeed = {}
-    seed.code = `${counters.data[0].code}${(Number(counters.data[0].count) + index).toString().padStart(4, '0')}`
-    seed.name = `${faker.location.city()} ${(Number(counters.data[0].count) + index).toString().padStart(2, '0')}`
+    seed.code = 'BR' + index.toString().padStart(2, 'X')
+    seed.name = `${faker.location.city()} ${index.toString().padStart(2, '0')}`
     seed.label = `${seed.code} ${seed.name}`
     await createBranchRepository.handle(seed)
-    await updateCounterRepository.handle(counters.data[0]._id, { count: Number(counters.data[0].count) + index })
+    await generateMasterNumber.handle('warehouses', seed.code)
   }
 }
