@@ -10,13 +10,14 @@ export interface IInput {
   auth: IAuth
   _id: string
   data: {
-    supplier_group?: {
-      _id?: string
-      label?: string
-      code?: string
+    supplier_group: {
+      _id: string
+      label: string
+      code: string
+      name: string
     }
-    code?: string
-    name?: string
+    code: string
+    name: string
     address?: string
     phone?: string
     email?: string
@@ -49,7 +50,12 @@ export class UpdateSupplierUseCase {
     await deps.schemaValidation(input.data, updateValidation)
     // 2. define entity
     const supplierEntity = new SupplierEntity({
-      supplier_group: input.data.supplier_group,
+      supplier_group: {
+        _id: input.data.supplier_group._id,
+        label: input.data.supplier_group.label,
+        code: input.data.supplier_group.code,
+        name: input.data.supplier_group.name,
+      },
       code: input.data.code,
       name: input.data.name,
       label: `[${input.data.code}] ${input.data.name}`,

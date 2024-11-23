@@ -4,6 +4,7 @@ export interface ISupplierEntity {
     _id?: string
     label?: string
     code?: string
+    name?: string
   }
   code?: string
   name?: string

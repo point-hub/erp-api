@@ -14,6 +14,7 @@ export interface IInput {
       _id?: string
       label?: string
       code?: string
+      name?: string
     }
     chart_of_account?: {
       _id?: string

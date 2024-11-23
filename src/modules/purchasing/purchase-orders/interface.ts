@@ -82,5 +82,5 @@ export interface IPurchaseOrderEntity {
   revised_count?: number
   is_revised?: boolean
   is_finished?: boolean
-  form_references?: IFormReference[]
+  references?: IFormReference[]
 }

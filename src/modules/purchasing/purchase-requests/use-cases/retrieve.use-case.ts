@@ -1,5 +1,6 @@
 import { IAuthReference } from '@/modules/master/users/interface'
 
+import { IReference } from '../interface'
 import { IBranch, IDetails, IRetrievePurchaseRequestRepository } from '../repositories/retrieve.repository'
 
 export interface IInput {
@@ -32,6 +33,7 @@ export interface IOutput {
   is_deleted: boolean
   is_finished: boolean
   is_revised: boolean
+  references: IReference[]
 }
 
 export class RetrievePurchaseRequestUseCase {
@@ -61,6 +63,7 @@ export class RetrievePurchaseRequestUseCase {
       is_deleted: response.is_deleted,
       is_finished: response.is_finished,
       is_revised: response.is_revised,
+      references: response.references,
     }
   }
 }

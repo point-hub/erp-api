@@ -15,6 +15,7 @@ export interface IInput {
       _id: string
       label: string
       code: string
+      name: string
     }
     code: string
     name: string
@@ -50,6 +51,7 @@ export class CreateSupplierUseCase {
         _id: input.data.supplier_group._id,
         label: input.data.supplier_group.label,
         code: input.data.supplier_group.code,
+        name: input.data.supplier_group.name,
       },
       code: input.data.code,
       name: input.data.name,

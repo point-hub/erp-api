@@ -2,6 +2,7 @@ export interface ICustomerGroupEntity {
   _id?: string
   code?: string
   name?: string
+  label?: string
   notes?: string
   created_by?: {
     _id?: string

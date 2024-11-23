@@ -1,5 +1,5 @@
 export const updateValidation = {
-  supplier_group_id: ['required', 'string'],
+  'supplier_group._id': ['required', 'string'],
   code: ['required', 'string'],
   name: ['required', 'string'],
   email: ['email'],

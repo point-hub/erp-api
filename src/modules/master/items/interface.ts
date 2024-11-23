@@ -4,6 +4,7 @@ export interface IItemEntity {
     _id?: string
     label?: string
     code?: string
+    name?: string
   }
   code?: string
   name?: string

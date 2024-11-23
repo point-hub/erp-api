@@ -72,6 +72,7 @@ export class RetrievePurchaseRequestRepository implements IRetrievePurchaseReque
     const pipeline: IPipeline[] = []
 
     pipeline.push(...this.aggregateFilters(_id))
+    pipeline.push(...this.addQuantityPending())
 
     const response = await this.database.collection(collectionName).aggregate(pipeline, {}, this.options)
 
@@ -103,5 +104,74 @@ export class RetrievePurchaseRequestRepository implements IRetrievePurchaseReque
 
   private aggregateFilters(_id: string) {
     return [{ $match: { _id: _id } }]
+  }
+
+  private addQuantityPending() {
+    return [
+      {
+        $addFields: {
+          details: {
+            $map: {
+              input: '$details',
+              as: 'detail',
+              in: {
+                $mergeObjects: [
+                  '$$detail',
+                  {
+                    quantity_pending: {
+                      $subtract: [
+                        '$$detail.quantity',
+                        {
+                          $sum: {
+                            $map: {
+                              input: {
+                                $filter: {
+                                  input: '$references',
+                                  as: 'reference',
+                                  cond: {
+                                    $in: [
+                                      '$$detail.uuid',
+                                      {
+                                        $map: {
+                                          input: '$$reference.details',
+                                          as: 'refDetail',
+                                          in: '$$refDetail.uuid',
+                                        },
+                                      },
+                                    ],
+                                  },
+                                },
+                              },
+                              as: 'ref',
+                              in: {
+                                $sum: {
+                                  $map: {
+                                    input: '$$ref.details',
+                                    as: 'r',
+                                    in: {
+                                      $cond: {
+                                        if: {
+                                          $eq: ['$$r.uuid', '$$detail.uuid'],
+                                        },
+                                        then: '$$r.quantity',
+                                        else: 0,
+                                      },
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        },
+      },
+    ]
   }
 }

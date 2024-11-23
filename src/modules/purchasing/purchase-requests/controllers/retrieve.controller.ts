@@ -49,6 +49,7 @@ export const retrievePurchaseRequestController: IController = async (controllerI
         is_deleted: response.is_deleted,
         is_finished: response.is_finished,
         is_revised: response.is_revised,
+        references: response.references,
       },
     }
   } catch (error) {

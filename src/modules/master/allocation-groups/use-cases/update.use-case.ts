@@ -39,6 +39,7 @@ export class UpdateAllocationGroupUseCase {
     const allocationGroupEntity = new AllocationGroupEntity({
       code: input.data.code,
       name: input.data.name,
+      label: `[${input.data.code}] ${input.data.name}`,
       notes: input.data.notes ?? '',
       updated_by: {
         _id: input.auth._id,

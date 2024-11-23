@@ -37,6 +37,7 @@ export class CreateItemCategoryUseCase {
     const itemCategoryEntity = new ItemCategoryEntity({
       code: input.data.code,
       name: input.data.name,
+      label: `[${input.data.code}] ${input.data.name}`,
       notes: input.data.notes,
       created_by: {
         _id: input.auth._id,

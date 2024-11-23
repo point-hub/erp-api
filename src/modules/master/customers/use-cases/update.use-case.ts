@@ -10,13 +10,14 @@ export interface IInput {
   auth: IAuth
   _id: string
   data: {
-    customer_group?: {
-      _id?: string
-      label?: string
-      code?: string
+    customer_group: {
+      _id: string
+      label: string
+      code: string
+      name: string
     }
-    code?: string
-    name?: string
+    code: string
+    name: string
     address?: string
     phone?: string
     email?: string
@@ -49,7 +50,12 @@ export class UpdateCustomerUseCase {
     await deps.schemaValidation(input.data, updateValidation)
     // 2. define entity
     const customerEntity = new CustomerEntity({
-      customer_group: input.data.customer_group,
+      customer_group: {
+        _id: input.data.customer_group._id,
+        label: input.data.customer_group.label,
+        code: input.data.customer_group.code,
+        name: input.data.customer_group.name,
+      },
       code: input.data.code,
       name: input.data.name,
       label: `[${input.data.code}] ${input.data.name}`,

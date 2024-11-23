@@ -39,6 +39,7 @@ export class UpdateSupplierGroupUseCase {
     const supplierGroupEntity = new SupplierGroupEntity({
       code: input.data.code,
       name: input.data.name,
+      label: `[${input.data.code}] ${input.data.name}`,
       notes: input.data.notes ?? '',
       updated_by: {
         _id: input.auth._id,

@@ -76,6 +76,7 @@ export class CreatePurchaseRequestUseCase {
         email: input.auth.email,
       },
       created_date: new Date(),
+      references: [],
     })
     purchaseRequestEntity.data = deps.objClean(purchaseRequestEntity.data)
     // 4. database operation
