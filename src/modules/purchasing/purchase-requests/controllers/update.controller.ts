@@ -1,10 +1,6 @@
 import { objClean, tokenGenerate } from '@point-hub/express-utils'
 import type { IController, IControllerInput } from '@point-hub/papi'
-import { format } from 'date-fns'
 
-import { CreateCounterRepository } from '@/modules/counters/repositories/create.repository'
-import { RetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
-import { UpdateCounterRepository } from '@/modules/counters/repositories/update.repository'
 import { IAuth } from '@/modules/master/users/interface'
 import { verifyUserToken } from '@/modules/master/users/utils/verify-user-token'
 import { schemaValidation } from '@/utils/validation'
@@ -26,9 +22,6 @@ export const updatePurchaseRequestController: IController = async (controllerInp
     const createPurchaseRequestRepository = new CreatePurchaseRequestRepository(controllerInput.dbConnection, {
       session,
     })
-    const createCounterRepository = new CreateCounterRepository(controllerInput.dbConnection, { session })
-    const updateCounterRepository = new UpdateCounterRepository(controllerInput.dbConnection, { session })
-    const retrieveAllCounterRepository = new RetrieveAllCounterRepository(controllerInput.dbConnection, { session })
     // 3. handle business rules
     // 3.1 check authenticated user
     const verifyTokenResponse = await verifyUserToken(controllerInput, { session })
@@ -41,14 +34,10 @@ export const updatePurchaseRequestController: IController = async (controllerInp
       },
       {
         objClean,
-        createCounterRepository,
-        updateCounterRepository,
-        retrieveAllCounterRepository,
         schemaValidation,
-        dateFormat: format,
+        tokenGenerate,
         createPurchaseRequestRepository,
         updatePurchaseRequestRepository,
-        tokenGenerate,
       },
     )
     await session.commitTransaction()

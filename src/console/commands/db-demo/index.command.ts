@@ -24,6 +24,7 @@ export default class DbSeedCommand extends BaseConsoleCommand {
       await this.seeds(['master/branches'], { session })
       await this.seeds(['master/warehouses'], { session })
       await this.seeds(['master/allocation-groups'], { session })
+      await this.seeds(['master/allocations'], { session })
       await this.seeds(['master/supplier-groups'], { session })
       await this.seeds(['master/suppliers'], { session })
       await this.seeds(['master/customer-groups'], { session })

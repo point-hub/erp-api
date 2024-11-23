@@ -30,13 +30,9 @@ export interface IInput {
 
 export interface IDeps {
   objClean: IObjClean
-  createPurchaseRequestRepository: ICreatePurchaseRequestRepository
-  retrieveAllCounterRepository: IRetrieveAllCounterRepository
-  createCounterRepository: ICreateCounterRepository
-  updateCounterRepository: IUpdateCounterRepository
   schemaValidation: ISchemaValidation
+  createPurchaseRequestRepository: ICreatePurchaseRequestRepository
   updatePurchaseRequestRepository: IUpdatePurchaseRequestRepository
-  dateFormat(date: Date | number | string, format: string): string
   tokenGenerate(): string
 }
 
@@ -47,7 +43,7 @@ export class UpdatePurchaseRequestUseCase {
   static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. validate schema
     await deps.schemaValidation(input.data, createValidation)
-    // 3. define entity
+    // 2. define entity
     input.data.details = input.data.details.map((obj) => {
       return {
         ...obj,
@@ -79,12 +75,12 @@ export class UpdatePurchaseRequestUseCase {
       created_date: new Date(),
     })
     purchaseRequestEntity.data = deps.objClean(purchaseRequestEntity.data)
-    // 4. database operation
+    // 3. database operation
     const response = await deps.createPurchaseRequestRepository.handle(purchaseRequestEntity.data)
     await deps.updatePurchaseRequestRepository.handle(input._id, {
       is_revised: true,
     })
-    // 5. output
+    // 4. output
     return { inserted_id: response.inserted_id }
   }
 }
