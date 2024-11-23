@@ -4,6 +4,7 @@ import { throwApiError } from '@/utils/throw-api-error'
 
 import { collectionName } from '../entity'
 import { IPurchaseRequestEntity, IReference } from '../interface'
+import { RetrievePurchaseRequestRepository } from '../repositories/retrieve.repository'
 
 export interface IUpdatePurchaseRequestReference {
   add(entity: IPurchaseRequestEntity, reference: IReference): Promise<void>
@@ -23,11 +24,15 @@ export class UpdatePurchaseRequestReference implements IUpdatePurchaseRequestRef
 
     let isFinished = true
 
-    for (const entityDetail of entity.details ?? []) {
-      const maxQuantity = entityDetail.quantity ?? 0
+    const retrievePurchaseRequestRepository = new RetrievePurchaseRequestRepository(this.database, this.options)
+
+    const purchaseRequest = await retrievePurchaseRequestRepository.handle(entity._id as string)
+
+    for (const entityDetail of purchaseRequest.details ?? []) {
+      const maxQuantity = Number(entityDetail.quantity ?? 0)
 
       const totalExistingQuantity =
-        entity.references?.reduce((acc, entityReference) => {
+        purchaseRequest.references?.reduce((acc, entityReference) => {
           return (
             acc +
             entityReference.details.reduce(

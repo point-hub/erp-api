@@ -1,6 +1,5 @@
 import { objClean } from '@point-hub/express-utils'
 import type { IController, IControllerInput } from '@point-hub/papi'
-import { format } from 'date-fns'
 
 import { GenerateFormNumber } from '@/modules/counters/utils/generate-form-number'
 import { IAuth } from '@/modules/master/users/interface'
@@ -34,11 +33,10 @@ export const createPurchaseOrderController: IController = async (controllerInput
       },
       {
         objClean,
-        createPurchaseOrderRepository,
-        updatePurchaseRequestReference,
         schemaValidation,
         generateFormNumber,
-        dateFormat: format,
+        createPurchaseOrderRepository,
+        updatePurchaseRequestReference,
       },
     )
     await session.commitTransaction()

@@ -1,11 +1,9 @@
 import { IObjClean } from '@point-hub/express-utils'
 import type { ISchemaValidation } from '@point-hub/papi'
 
-import { ICreateCounterRepository } from '@/modules/counters/repositories/create.repository'
-import { IRetrieveAllCounterRepository } from '@/modules/counters/repositories/retrieve-all.repository'
-import { IUpdateCounterRepository } from '@/modules/counters/repositories/update.repository'
 import { IAuth, IAuthReference } from '@/modules/master/users/interface'
 
+import { IUpdatePurchaseRequestReference } from '../../purchase-requests/utils/update-reference'
 import { PurchaseOrderEntity } from '../entity'
 import { IBranchReference, IDetail, IPurchaseRequest, ISupplier, TypeApprovalStatus } from '../interface'
 import { ICreatePurchaseOrderRepository } from '../repositories/create.repository'
@@ -16,12 +14,19 @@ export interface IInput {
   _id: string
   auth: IAuth
   data: {
+    required_date: Date
     revised_count: number
     form_number: string
     purchase_request: IPurchaseRequest
     supplier: ISupplier
     branch: IBranchReference
     details: IDetail[]
+    subtotal: number
+    discount: number
+    tax_base: number
+    tax_type: string
+    tax: number
+    total: number
     notes?: string
     approval_to: IAuthReference
     approval_status: TypeApprovalStatus
@@ -31,13 +36,10 @@ export interface IInput {
 
 export interface IDeps {
   objClean: IObjClean
-  createPurchaseOrderRepository: ICreatePurchaseOrderRepository
-  retrieveAllCounterRepository: IRetrieveAllCounterRepository
-  createCounterRepository: ICreateCounterRepository
-  updateCounterRepository: IUpdateCounterRepository
   schemaValidation: ISchemaValidation
+  createPurchaseOrderRepository: ICreatePurchaseOrderRepository
   updatePurchaseOrderRepository: IUpdatePurchaseOrderRepository
-  dateFormat(date: Date | number | string, format: string): string
+  updatePurchaseRequestReference: IUpdatePurchaseRequestReference
 }
 
 export interface IOutput {
@@ -51,8 +53,25 @@ export class UpdatePurchaseOrderUseCase {
     const purchaseOrderEntity = new PurchaseOrderEntity({
       revised_count: input.data.revised_count,
       form_number: input.data.form_number,
+      purchase_request: {
+        _id: input.data.purchase_request._id,
+        label: input.data.purchase_request.label,
+      },
+      supplier: {
+        _id: input.data.supplier._id,
+        label: input.data.supplier.label,
+        code: input.data.supplier.code,
+        name: input.data.supplier.name,
+      },
+      required_date: input.data.required_date,
       branch: input.data.branch,
       details: input.data.details,
+      subtotal: input.data.subtotal,
+      discount: input.data.discount,
+      tax_base: input.data.tax_base,
+      tax_type: input.data.tax_type,
+      tax: input.data.tax,
+      total: input.data.total,
       notes: input.data.notes,
       is_revised: false,
       is_finished: false,
@@ -72,8 +91,24 @@ export class UpdatePurchaseOrderUseCase {
       created_date: new Date(),
     })
     purchaseOrderEntity.data = deps.objClean(purchaseOrderEntity.data)
+
     // 4. database operation
     const response = await deps.createPurchaseOrderRepository.handle(purchaseOrderEntity.data)
+
+    const details = purchaseOrderEntity.data.details?.map((el) => ({
+      uuid: el.uuid as string,
+      quantity: el.quantity as number,
+    }))
+
+    const reference = {
+      ref_id: response.inserted_id,
+      ref_name: 'purchase_orders',
+      ref_number: 'xx',
+      ref_date: purchaseOrderEntity.data.created_date as Date,
+      details: details ?? [],
+    }
+    await deps.updatePurchaseRequestReference.delete(input.data.purchase_request._id, 'purchase_orders', input._id)
+    await deps.updatePurchaseRequestReference.add(input.data.purchase_request, reference)
     await deps.updatePurchaseOrderRepository.handle(input._id, {
       is_revised: true,
     })

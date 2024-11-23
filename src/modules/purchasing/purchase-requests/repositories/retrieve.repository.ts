@@ -28,6 +28,7 @@ export interface IAllocation {
 }
 
 export interface IDetails {
+  uuid: string
   item: IItem
   quantity: string
   notes: string

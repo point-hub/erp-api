@@ -29,8 +29,9 @@ export const retrievePurchaseOrderController: IController = async (controllerInp
       status: 200,
       json: {
         _id: response._id,
-        revised_count: response.revised_count,
         form_number: response.form_number,
+        required_date: response.required_date,
+        revised_count: response.revised_count,
         purchase_request: response.purchase_request,
         supplier: response.supplier,
         branch: response.branch,

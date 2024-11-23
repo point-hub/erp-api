@@ -41,10 +41,9 @@ export interface IInput {
 
 export interface IDeps {
   objClean: IObjClean
-  createPurchaseOrderRepository: ICreatePurchaseOrderRepository
   schemaValidation: ISchemaValidation
   generateFormNumber: IGenerateFormNumber
-  dateFormat(date: Date | number | string, format: string): string
+  createPurchaseOrderRepository: ICreatePurchaseOrderRepository
   updatePurchaseRequestReference: IUpdatePurchaseRequestReference
 }
 
@@ -97,7 +96,6 @@ export class CreatePurchaseOrderUseCase {
         email: input.auth.email,
       },
       created_date: new Date(),
-      references: [],
     })
     purchaseOrderEntity.data = deps.objClean(purchaseOrderEntity.data)
     // 4. database operation
