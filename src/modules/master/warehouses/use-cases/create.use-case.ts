@@ -3,6 +3,7 @@ import type { ISchemaValidation } from '@point-hub/papi'
 
 import { IUpdateMasterNumber } from '@/modules/counters/utils/update-master-number'
 import { IAuth } from '@/modules/master/users/interface'
+import { IBranchReference } from '@/modules/purchasing/purchase-requests/interface'
 
 import { collectionName, WarehouseEntity } from '../entity'
 import { ICreateWarehouseRepository } from '../repositories/create.repository'
@@ -11,7 +12,7 @@ import { createValidation } from '../validations/create.validation'
 export interface IInput {
   auth: IAuth
   data: {
-    branch_id: string
+    branch: IBranchReference
     code: string
     name: string
     address?: string
@@ -37,7 +38,7 @@ export class CreateWarehouseUseCase {
     await deps.schemaValidation(input.data, createValidation)
     // 2. define entity
     const warehouseEntity = new WarehouseEntity({
-      branch_id: input.data.branch_id,
+      branch: input.data.branch,
       code: input.data.code,
       name: input.data.name,
       label: `[${input.data.code}] ${input.data.name}`,

@@ -1,6 +1,7 @@
 import type { ISchemaValidation } from '@point-hub/papi'
 
 import { IAuth } from '@/modules/master/users/interface'
+import { IBranchReference } from '@/modules/purchasing/purchase-requests/interface'
 
 import { WarehouseEntity } from '../entity'
 import { IUpdateWarehouseRepository } from '../repositories/update.repository'
@@ -10,7 +11,7 @@ export interface IInput {
   auth: IAuth
   _id: string
   data: {
-    branch_id?: string
+    branch?: IBranchReference
     code?: string
     name?: string
     address?: string
@@ -40,7 +41,7 @@ export class UpdateWarehouseUseCase {
     await deps.schemaValidation(input.data, updateValidation)
     // 2. define entity
     const warehouseEntity = new WarehouseEntity({
-      branch_id: input.data.branch_id,
+      branch: input.data.branch,
       code: input.data.code,
       name: input.data.name,
       label: `[${input.data.code}] ${input.data.name}`,

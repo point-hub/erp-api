@@ -10,6 +10,7 @@ import { CreateRoleRepository } from './repositories/create.repository'
 export interface ISeed {
   code?: string
   name?: string
+  label?: string
   permission?: IPermissionEntity
 }
 
@@ -29,6 +30,7 @@ export const seed = async (dbConnection: IDatabase, options: Record<string, unkn
   replacePermission(permission, true)
   for (const seed of seeds) {
     seed.permission = permission
+    seed.label = `[${seed.code}] ${seed.name}`
     await createRoleRepository.handle(seed)
     // update counter
     const counters = await retrieveAllCounterRepository.handle({ filter: { name: 'roles' } })

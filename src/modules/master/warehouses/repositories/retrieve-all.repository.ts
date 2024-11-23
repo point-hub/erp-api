@@ -20,11 +20,7 @@ export class RetrieveAllWarehouseRepository implements IRetrieveAllWarehouseRepo
   async handle(query: IQuery): Promise<IRetrieveAllWarehouseOutput> {
     const pipeline: IPipeline[] = []
 
-    pipeline.push(...this.aggregateJoinBranch())
     pipeline.push(...this.aggregateFilters(query))
-    pipeline.push(...this.aggregateJoinCreatedBy())
-    pipeline.push(...this.aggregateJoinUpdatedBy())
-    pipeline.push(...this.aggregateAddFields())
 
     const response = await this.database.collection(collectionName).aggregate(pipeline, query, this.options)
 
@@ -32,67 +28,6 @@ export class RetrieveAllWarehouseRepository implements IRetrieveAllWarehouseRepo
       data: response.data as unknown as IRetrieveWarehouseOutput[],
       pagination: response.pagination,
     }
-  }
-
-  private aggregateJoinCreatedBy() {
-    return [
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'created_by',
-          foreignField: '_id',
-          pipeline: [{ $project: { _id: 1, username: 1, name: 1, email: 1 } }],
-          as: 'created_by',
-        },
-      },
-      {
-        $unwind: {
-          path: '$created_by',
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-    ]
-  }
-
-  private aggregateJoinUpdatedBy() {
-    return [
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'updated_by',
-          foreignField: '_id',
-          pipeline: [{ $project: { _id: 1, username: 1, name: 1, email: 1 } }],
-          as: 'updated_by',
-        },
-      },
-      {
-        $unwind: {
-          path: '$updated_by',
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-    ]
-  }
-
-  private aggregateJoinBranch() {
-    return [
-      {
-        $lookup: {
-          from: 'branches',
-          localField: 'branch_id',
-          foreignField: '_id',
-          pipeline: [{ $project: { _id: 1, code: 1, name: 1 } }],
-          as: 'branch',
-        },
-      },
-      {
-        $unwind: {
-          path: '$branch',
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-      { $unset: ['branch_id'] },
-    ]
   }
 
   private aggregateFilters(query: IQuery) {
@@ -134,17 +69,5 @@ export class RetrieveAllWarehouseRepository implements IRetrieveAllWarehouseRepo
     }
 
     return [{ $match: { $and: filtersAnd } }]
-  }
-
-  private aggregateAddFields() {
-    return [
-      {
-        $addFields: {
-          label: {
-            $concat: ['[', '$code', '] ', '$name'],
-          },
-        },
-      },
-    ]
   }
 }

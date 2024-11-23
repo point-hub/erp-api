@@ -1,10 +1,11 @@
 import { IObjClean } from '@point-hub/express-utils'
 import type { ISchemaValidation } from '@point-hub/papi'
 
-import { IUpdateMasterNumber } from '@/modules/counters/utils/update-master-number'
+import { IGenerateMasterNumber } from '@/modules/counters/utils/generate-master-number'
 import { IAuth } from '@/modules/master/users/interface'
 
-import { BranchEntity, collectionName } from '../entity'
+import { collectionName as warehouseCollectionName } from '../../warehouses/entity'
+import { BranchEntity } from '../entity'
 import { ICreateBranchRepository } from '../repositories/create.repository'
 import { createValidation } from '../validations/create.validation'
 
@@ -23,7 +24,7 @@ export interface IInput {
 export interface IDeps {
   objClean: IObjClean
   createBranchRepository: ICreateBranchRepository
-  updateMasterNumber: IUpdateMasterNumber
+  generateMasterNumber: IGenerateMasterNumber
   schemaValidation: ISchemaValidation
 }
 
@@ -54,8 +55,8 @@ export class CreateBranchUseCase {
     // 3. database operation
     // 3.1 create branch
     const response = await deps.createBranchRepository.handle(branchEntity.data)
-    // 3.2. update counter
-    await deps.updateMasterNumber.handle(collectionName)
+    // 3.2. generate counter
+    await deps.generateMasterNumber.handle(warehouseCollectionName, input.data.code)
     // 4. output
     return { inserted_id: response.inserted_id }
   }

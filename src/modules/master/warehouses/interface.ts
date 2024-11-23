@@ -1,6 +1,8 @@
+import { IBranchReference } from '@/modules/purchasing/purchase-requests/interface'
+
 export interface IWarehouseEntity {
   _id?: string
-  branch_id?: string
+  branch?: IBranchReference
   code?: string
   name?: string
   label?: string

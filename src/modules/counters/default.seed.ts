@@ -25,16 +25,6 @@ export const seeds: ISeed[] = [
     count: 0,
   },
   {
-    name: 'branches',
-    code: 'MB',
-    count: 0,
-  },
-  {
-    name: 'warehouses',
-    code: 'MW',
-    count: 0,
-  },
-  {
     name: 'machines',
     code: 'MM',
     count: 0,

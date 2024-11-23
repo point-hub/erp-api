@@ -5,6 +5,8 @@ export type TypeApprovalStatus = 'pending' | 'approved' | 'rejected'
 export interface IBranchReference {
   _id?: string
   label?: string
+  code?: string
+  name?: string
 }
 
 export interface IAllocationReference {

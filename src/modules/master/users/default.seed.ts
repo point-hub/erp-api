@@ -9,6 +9,7 @@ export interface ISeed {
   group?: string
   number?: number
   name?: string
+  label?: string
   subledger?: string
 }
 
@@ -25,6 +26,7 @@ export const seed = async (dbConnection: IDatabase, options: Record<string, unkn
     role_id: roles.data[0]._id,
     username: 'gmbtest',
     name: 'Ganesha Mandiri',
+    label: 'Ganesha Mandiri',
     email: 'gmbtest@gmail.com',
     trimmed_username: 'gmbtest',
     trimmed_email: 'gmbtest@gmail.com',

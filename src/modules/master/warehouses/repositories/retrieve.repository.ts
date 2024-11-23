@@ -39,9 +39,6 @@ export class RetrieveWarehouseRepository implements IRetrieveWarehouseRepository
     const pipeline: IPipeline[] = []
 
     pipeline.push(...this.aggregateFilters(_id))
-    pipeline.push(...this.aggregateJoinBranch())
-    pipeline.push(...this.aggregateJoinCreatedBy())
-    pipeline.push(...this.aggregateJoinUpdatedBy())
 
     const response = await this.database.collection(collectionName).aggregate(pipeline, {}, this.options)
 
@@ -59,74 +56,6 @@ export class RetrieveWarehouseRepository implements IRetrieveWarehouseRepository
       created_date: response.data[0].created_date as Date,
       updated_date: response.data[0].updated_date as Date,
     }
-  }
-
-  private aggregateJoinCreatedBy() {
-    return [
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'created_by',
-          foreignField: '_id',
-          pipeline: [{ $project: { _id: 1, username: 1, name: 1, email: 1 } }],
-          as: 'created_by',
-        },
-      },
-      {
-        $unwind: {
-          path: '$created_by',
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-    ]
-  }
-
-  private aggregateJoinUpdatedBy() {
-    return [
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'updated_by',
-          foreignField: '_id',
-          pipeline: [{ $project: { _id: 1, username: 1, name: 1, email: 1 } }],
-          as: 'updated_by',
-        },
-      },
-      {
-        $unwind: {
-          path: '$updated_by',
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-    ]
-  }
-
-  private aggregateJoinBranch() {
-    return [
-      {
-        $lookup: {
-          from: 'branches',
-          localField: 'branch_id',
-          foreignField: '_id',
-          pipeline: [{ $project: { _id: 1, code: 1, name: 1 } }],
-          as: 'branch',
-        },
-      },
-      {
-        $unwind: {
-          path: '$branch',
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-      {
-        $addFields: {
-          'branch.label': {
-            $concat: ['[', '$branch.code', '] ', '$branch.name'],
-          },
-        },
-      },
-      { $unset: ['branch_id'] },
-    ]
   }
 
   private aggregateFilters(_id: string) {

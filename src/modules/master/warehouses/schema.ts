@@ -17,9 +17,9 @@ export const schema: ISchema[] = [
     uniqueIfExists: [[]],
     schema: {
       bsonType: 'object',
-      required: ['branch_id', 'code', 'name'],
+      required: ['branch._id', 'code', 'name'],
       properties: {
-        branch_id: {
+        'branch._id': {
           bsonType: 'objectId',
           description: 'The code for the warehouse',
         },
