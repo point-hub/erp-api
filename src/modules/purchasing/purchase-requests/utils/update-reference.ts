@@ -18,10 +18,6 @@ export class UpdatePurchaseRequestReference implements IUpdatePurchaseRequestRef
   ) {}
 
   async add(entity: IPurchaseRequestEntity, reference: IReference): Promise<void> {
-    await this.database
-      .collection(collectionName)
-      .update(entity._id as string, { $push: { references: reference } }, this.options)
-
     let isFinished = true
 
     const retrievePurchaseRequestRepository = new RetrievePurchaseRequestRepository(this.database, this.options)
@@ -63,6 +59,9 @@ export class UpdatePurchaseRequestReference implements IUpdatePurchaseRequestRef
         break
       }
     }
+    await this.database
+      .collection(collectionName)
+      .update(entity._id as string, { $push: { references: reference } }, this.options)
 
     if (isFinished) {
       await this.database
