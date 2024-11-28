@@ -17,6 +17,7 @@ export interface IOutput {
   form_number: string
   purchase_request: IPurchaseRequest
   required_date: Date
+  required_down_payment: boolean
   supplier: ISupplier
   branch: IBranch
   details: IDetails[]
@@ -52,6 +53,7 @@ export class RetrievePurchaseOrderUseCase {
       form_number: response.form_number,
       purchase_request: response.purchase_request,
       required_date: response.required_date,
+      required_down_payment: response.required_down_payment,
       supplier: response.supplier,
       branch: response.branch,
       details: response.details,

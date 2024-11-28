@@ -15,6 +15,7 @@ export interface IInput {
   auth: IAuth
   data: {
     required_date: Date
+    required_down_payment: boolean
     revised_count: number
     form_number: string
     purchase_request: IPurchaseRequest
@@ -64,6 +65,7 @@ export class UpdatePurchaseOrderUseCase {
         name: input.data.supplier.name,
       },
       required_date: input.data.required_date,
+      required_down_payment: input.data.required_down_payment,
       branch: input.data.branch,
       details: input.data.details,
       subtotal: input.data.subtotal,

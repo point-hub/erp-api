@@ -48,6 +48,7 @@ export interface IPurchaseOrderEntity {
   _id?: string
   purchase_request?: IPurchaseRequest
   required_date?: Date
+  required_down_payment?: boolean
   supplier?: ISupplier
   branch?: IBranchReference
   details?: IDetail[]

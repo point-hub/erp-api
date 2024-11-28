@@ -31,6 +31,7 @@ export const retrievePurchaseOrderController: IController = async (controllerInp
         _id: response._id,
         form_number: response.form_number,
         required_date: response.required_date,
+        required_down_payment: response.required_down_payment,
         revised_count: response.revised_count,
         purchase_request: response.purchase_request,
         supplier: response.supplier,

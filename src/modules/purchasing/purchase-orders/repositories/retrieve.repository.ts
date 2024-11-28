@@ -49,6 +49,7 @@ export interface IRetrievePurchaseOrderOutput {
     name: string
   }
   required_date: Date
+  required_down_payment: boolean
   branch: IBranch
   details: IDetails[]
   subtotal: number
@@ -93,6 +94,7 @@ export class RetrievePurchaseOrderRepository implements IRetrievePurchaseOrderRe
       revised_count: response.data[0].revised_count as number,
       form_number: response.data[0].form_number as string,
       purchase_request: response.data[0].purchase_request as IPurchaseRequest,
+      required_down_payment: response.data[0].required_down_payment as boolean,
       supplier: response.data[0].supplier as ISupplier,
       required_date: response.data[0].required_date as Date,
       branch: response.data[0].branch as IBranch,

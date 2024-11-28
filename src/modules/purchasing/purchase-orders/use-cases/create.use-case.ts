@@ -24,6 +24,7 @@ export interface IInput {
       name: string
     }
     required_date: Date
+    required_down_payment: boolean
     branch: IBranchReference
     details: IDetail[]
     subtotal: number
@@ -71,6 +72,7 @@ export class CreatePurchaseOrderUseCase {
         name: input.data.supplier.name,
       },
       required_date: input.data.required_date,
+      required_down_payment: input.data.required_down_payment,
       branch: input.data.branch,
       details: input.data.details,
       subtotal: input.data.subtotal,
