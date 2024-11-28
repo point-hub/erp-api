@@ -58,7 +58,7 @@ export class UpdatePurchaseRequestUseCase {
       is_finished: false,
       approval_request_by: {
         _id: input.auth._id,
-        label: input.auth.username,
+        label: input.auth.name,
         email: input.auth.email,
       },
       approval_request_date: new Date(),
@@ -66,7 +66,7 @@ export class UpdatePurchaseRequestUseCase {
       approval_status: 'pending',
       created_by: {
         _id: input.auth._id,
-        label: input.auth.username,
+        label: input.auth.name,
         email: input.auth.email,
       },
       created_date: new Date(),

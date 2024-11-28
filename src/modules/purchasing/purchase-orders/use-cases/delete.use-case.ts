@@ -34,7 +34,7 @@ export class DeletePurchaseOrderUseCase {
     const response = await deps.deletePurchaseOrderRepository.handle(input._id, {
       deleted_by: {
         _id: input.auth._id,
-        label: input.auth.username,
+        label: input.auth.name,
         email: input.auth.email,
       },
       deleted_reason: input.reason,

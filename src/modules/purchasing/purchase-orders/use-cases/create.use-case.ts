@@ -86,7 +86,7 @@ export class CreatePurchaseOrderUseCase {
       is_revised: false,
       approval_request_by: {
         _id: input.auth._id,
-        label: input.auth.username,
+        label: input.auth.name,
         email: input.auth.email,
       },
       approval_request_date: new Date(),
