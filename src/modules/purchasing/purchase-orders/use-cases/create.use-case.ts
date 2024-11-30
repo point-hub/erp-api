@@ -105,7 +105,7 @@ export class CreatePurchaseOrderUseCase {
 
     const details = purchaseOrderEntity.data.details?.map((el) => ({
       uuid: el.uuid as string,
-      quantity: el.quantity as number,
+      quantity: (el.quantity as number) * -1,
     }))
 
     const reference = {

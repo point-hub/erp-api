@@ -1,10 +1,11 @@
 import type { IDatabase } from '@point-hub/papi'
 
 import { throwApiError } from '@/utils/throw-api-error'
+import { getReferenceUpdateObject } from '@/utils/transaction'
 
 import { collectionName } from '../entity'
 import { IPurchaseRequestEntity, IReference } from '../interface'
-import { RetrievePurchaseRequestRepository } from '../repositories/retrieve.repository'
+import { IRetrievePurchaseRequestOutput, RetrievePurchaseRequestRepository } from '../repositories/retrieve.repository'
 
 export interface IUpdatePurchaseRequestReference {
   add(entity: IPurchaseRequestEntity, reference: IReference): Promise<void>
@@ -59,10 +60,19 @@ export class UpdatePurchaseRequestReference implements IUpdatePurchaseRequestRef
         break
       }
     }
+
+    // update add quantity references
     await this.database
       .collection(collectionName)
       .update(entity._id as string, { $push: { references: reference } }, this.options)
 
+    // update -1
+    const updateObject = getReferenceUpdateObject(reference.details)
+    await this.database
+      .collection(collectionName)
+      .update(entity._id as string, { $inc: updateObject.set }, { ...this.options, arrayFilters: updateObject.filters })
+
+    // if all quantity is completed set status to true
     if (isFinished) {
       await this.database
         .collection(collectionName)
@@ -71,9 +81,25 @@ export class UpdatePurchaseRequestReference implements IUpdatePurchaseRequestRef
   }
 
   async delete(_id: string, ref_name: string, ref_id: string) {
+    const purchaseRequest = (await this.database
+      .collection(collectionName)
+      .retrieve(_id, this.options)) as unknown as IRetrievePurchaseRequestOutput
+
+    const reference = purchaseRequest.references.find(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (ref: any) => ref.ref_name === ref_name && ref.ref_id === ref_id,
+    ) as unknown as IReference
+
     await this.database
       .collection(collectionName)
       .update(_id, { $pull: { references: { ref_id: ref_id, ref_name: ref_name } } }, this.options)
+
+    const updateObject = getReferenceUpdateObject(reference.details, true)
+
+    await this.database
+      .collection(collectionName)
+      .update(_id, { $inc: updateObject.set }, { ...this.options, arrayFilters: updateObject.filters })
+
     await this.database.collection(collectionName).update(_id, { $set: { is_finished: false } }, this.options)
   }
 }
