@@ -1,4 +1,4 @@
-import { objClean } from '@point-hub/express-utils'
+import { objClean, tokenGenerate } from '@point-hub/express-utils'
 import type { IController, IControllerInput } from '@point-hub/papi'
 
 import { GenerateFormNumber } from '@/modules/counters/utils/generate-form-number'
@@ -37,6 +37,7 @@ export const createPurchaseOrderController: IController = async (controllerInput
         generateFormNumber,
         createPurchaseOrderRepository,
         updatePurchaseRequestReference,
+        tokenGenerate,
       },
     )
     await session.commitTransaction()

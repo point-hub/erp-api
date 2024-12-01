@@ -68,6 +68,7 @@ export class UpdatePurchaseRequestReference implements IUpdatePurchaseRequestRef
 
     // update -1
     const updateObject = getReferenceUpdateObject(reference.details)
+
     await this.database
       .collection(collectionName)
       .update(entity._id as string, { $inc: updateObject.set }, { ...this.options, arrayFilters: updateObject.filters })

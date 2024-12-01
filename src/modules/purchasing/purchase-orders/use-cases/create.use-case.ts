@@ -46,6 +46,7 @@ export interface IDeps {
   generateFormNumber: IGenerateFormNumber
   createPurchaseOrderRepository: ICreatePurchaseOrderRepository
   updatePurchaseRequestReference: IUpdatePurchaseRequestReference
+  tokenGenerate(): string
 }
 
 export interface IOutput {
@@ -58,6 +59,18 @@ export class CreatePurchaseOrderUseCase {
     // 2. generate form number
     const formNumber = await deps.generateFormNumber.handle('PO', 'purchasing.purchase_orders')
     // 3. define entity
+    const details = input.data.details?.map((el) => ({
+      uuid: el.uuid as string,
+      quantity: (el.quantity as number) * -1,
+    }))
+    input.data.details = input.data.details.map((obj) => {
+      return {
+        ...obj,
+        uuid: deps.tokenGenerate(),
+        quantity_pending: obj.quantity,
+      }
+    })
+
     const purchaseOrderEntity = new PurchaseOrderEntity({
       revised_count: 0,
       form_number: formNumber,
@@ -102,11 +115,6 @@ export class CreatePurchaseOrderUseCase {
     purchaseOrderEntity.data = deps.objClean(purchaseOrderEntity.data)
     // 4. database operation
     const response = await deps.createPurchaseOrderRepository.handle(purchaseOrderEntity.data)
-
-    const details = purchaseOrderEntity.data.details?.map((el) => ({
-      uuid: el.uuid as string,
-      quantity: (el.quantity as number) * -1,
-    }))
 
     const reference = {
       ref_id: response.inserted_id,

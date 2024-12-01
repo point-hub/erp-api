@@ -41,10 +41,9 @@ export class RetrieveAllPurchaseRequestRepository implements IRetrieveAllPurchas
 
     if (query.filter?.search) {
       const filtersOr = []
-      filtersOr.push({ code: { $regex: query.filter?.search, $options: 'i' } })
-      filtersOr.push({ name: { $regex: query.filter?.search, $options: 'i' } })
-      filtersOr.push({ address: { $regex: query.filter?.search, $options: 'i' } })
-      filtersOr.push({ phone: { $regex: query.filter?.search, $options: 'i' } })
+      filtersOr.push({ form_number: { $regex: query.filter?.search, $options: 'i' } })
+      filtersOr.push({ [`details.item.label`]: { $regex: query.filter?.search, $options: 'i' } })
+      filtersOr.push({ [`details.item.notes`]: { $regex: query.filter?.search, $options: 'i' } })
       filtersAnd.push({ $or: filtersOr })
     }
 

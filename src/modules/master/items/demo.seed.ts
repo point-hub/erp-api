@@ -67,7 +67,7 @@ export const seed = async (dbConnection: IDatabase, options: Record<string, unkn
     seed.code = `${itemCategory.code}${(counters.data[0].count + 1).toString().padStart(4, '0')}`
     seed.name = `${faker.location.city()} ${index.toString().padStart(2, '0')}`
     seed.unit = `pcs`
-    seed.label = `${seed.code} ${seed.name}`
+    seed.label = `[${seed.code}] ${seed.name}`
     await createItemRepository.handle(seed)
     await updateMasterNumber.handle('items', itemCategory.code)
   }

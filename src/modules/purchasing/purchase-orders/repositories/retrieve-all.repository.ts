@@ -27,7 +27,6 @@ export class RetrieveAllPurchaseOrderRepository implements IRetrieveAllPurchaseO
     const pipeline: IPipeline[] = []
 
     pipeline.push(...this.aggregateFilters(data.auth, data.query))
-    // pipeline.push(...this.addQuantityPending())
 
     const response = await this.database.collection(collectionName).aggregate(pipeline, data.query, options)
 
@@ -42,10 +41,8 @@ export class RetrieveAllPurchaseOrderRepository implements IRetrieveAllPurchaseO
 
     if (query.filter?.search) {
       const filtersOr = []
-      filtersOr.push({ code: { $regex: query.filter?.search, $options: 'i' } })
-      filtersOr.push({ name: { $regex: query.filter?.search, $options: 'i' } })
-      filtersOr.push({ address: { $regex: query.filter?.search, $options: 'i' } })
-      filtersOr.push({ phone: { $regex: query.filter?.search, $options: 'i' } })
+      filtersOr.push({ form_number: { $regex: query.filter?.search, $options: 'i' } })
+      filtersOr.push({ [`details.item.label`]: { $regex: query.filter?.search, $options: 'i' } })
       filtersAnd.push({ $or: filtersOr })
     }
 
@@ -69,74 +66,5 @@ export class RetrieveAllPurchaseOrderRepository implements IRetrieveAllPurchaseO
     }
 
     return [{ $match: { $and: filtersAnd } }]
-  }
-
-  private addQuantityPending() {
-    return [
-      {
-        $addFields: {
-          details: {
-            $map: {
-              input: '$details',
-              as: 'detail',
-              in: {
-                $mergeObjects: [
-                  '$$detail',
-                  {
-                    quantity_pending: {
-                      $subtract: [
-                        '$$detail.quantity',
-                        {
-                          $sum: {
-                            $map: {
-                              input: {
-                                $filter: {
-                                  input: '$references',
-                                  as: 'reference',
-                                  cond: {
-                                    $in: [
-                                      '$$detail.uuid',
-                                      {
-                                        $map: {
-                                          input: '$$reference.details',
-                                          as: 'refDetail',
-                                          in: '$$refDetail.uuid',
-                                        },
-                                      },
-                                    ],
-                                  },
-                                },
-                              },
-                              as: 'ref',
-                              in: {
-                                $sum: {
-                                  $map: {
-                                    input: '$$ref.details',
-                                    as: 'r',
-                                    in: {
-                                      $cond: {
-                                        if: {
-                                          $eq: ['$$r.uuid', '$$detail.uuid'],
-                                        },
-                                        then: '$$r.quantity',
-                                        else: 0,
-                                      },
-                                    },
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      ],
-                    },
-                  },
-                ],
-              },
-            },
-          },
-        },
-      },
-    ]
   }
 }

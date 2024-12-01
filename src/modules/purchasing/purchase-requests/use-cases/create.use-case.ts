@@ -51,6 +51,7 @@ export class CreatePurchaseRequestUseCase {
       return {
         ...obj,
         uuid: deps.tokenGenerate(),
+        quantity_pending: obj.quantity,
       }
     })
     const purchaseRequestEntity = new PurchaseRequestEntity({
