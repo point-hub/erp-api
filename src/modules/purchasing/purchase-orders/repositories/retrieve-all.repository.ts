@@ -1,5 +1,4 @@
 import type { IDatabase, IPagination, IPipeline, IQuery } from '@point-hub/papi'
-import e from 'express'
 
 import { IAuth } from '@/modules/master/users/interface'
 
