@@ -3,27 +3,27 @@ import type { IDatabase, IPagination, IPipeline, IQuery } from '@point-hub/papi'
 import { IAuth } from '@/modules/master/users/interface'
 
 import { collectionName } from '../entity'
-import { IRetrievePurchaseOrderOutput } from './retrieve.repository'
+import { IRetrieveDownPaymentOutput } from './retrieve.repository'
 
-export interface IRetrieveAllPurchaseOrderOutput {
-  data: IRetrievePurchaseOrderOutput[]
+export interface IRetrieveAllDownPaymentOutput {
+  data: IRetrieveDownPaymentOutput[]
   pagination: IPagination
 }
-export interface IRetrieveAllPurchaseOrderRepository {
-  handle(data: { query: IQuery; auth: IAuth }, options?: unknown): Promise<IRetrieveAllPurchaseOrderOutput>
+export interface IRetrieveAllDownPaymentRepository {
+  handle(data: { query: IQuery; auth: IAuth }, options?: unknown): Promise<IRetrieveAllDownPaymentOutput>
 }
 export interface IData {
   query: IQuery
   auth: IAuth
 }
 
-export class RetrieveAllPurchaseOrderRepository implements IRetrieveAllPurchaseOrderRepository {
+export class RetrieveAllDownPaymentRepository implements IRetrieveAllDownPaymentRepository {
   constructor(
     public database: IDatabase,
     public options?: Record<string, unknown>,
   ) {}
 
-  async handle(data: IData, options?: unknown): Promise<IRetrieveAllPurchaseOrderOutput> {
+  async handle(data: IData, options?: unknown): Promise<IRetrieveAllDownPaymentOutput> {
     const pipeline: IPipeline[] = []
 
     pipeline.push(...this.aggregateFilters(data.auth, data.query))
@@ -31,7 +31,7 @@ export class RetrieveAllPurchaseOrderRepository implements IRetrieveAllPurchaseO
     const response = await this.database.collection(collectionName).aggregate(pipeline, data.query, options)
 
     return {
-      data: response.data as unknown as IRetrievePurchaseOrderOutput[],
+      data: response.data as unknown as IRetrieveDownPaymentOutput[],
       pagination: response.pagination,
     }
   }
@@ -42,7 +42,7 @@ export class RetrieveAllPurchaseOrderRepository implements IRetrieveAllPurchaseO
     if (query.filter?.search) {
       const filtersOr = []
       filtersOr.push({ form_number: { $regex: query.filter?.search, $options: 'i' } })
-      filtersOr.push({ payment_type: { $regex: query.filter?.search, $options: 'i' } })
+      filtersOr.push({ [`details.item.label`]: { $regex: query.filter?.search, $options: 'i' } })
       filtersAnd.push({ $or: filtersOr })
     }
 

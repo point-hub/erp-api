@@ -3,7 +3,7 @@ import type { IDatabase, IPipeline } from '@point-hub/papi'
 import { IAuthReference } from '@/modules/master/users/interface'
 
 import { collectionName } from '../entity'
-import { IPurchaseRequest, IReference, ISupplier } from '../interface'
+import { IPurchaseOrder, ISupplier } from '../interface'
 
 export interface IBranch {
   _id: string
@@ -31,15 +31,14 @@ export interface IDetails {
   item: IItem
   quantity: string
   notes: string
-  uuid: string
   allocation: IAllocation
 }
 
-export interface IRetrievePurchaseOrderOutput {
+export interface IRetrieveDownPaymentOutput {
   _id: string
   revised_count: number
   form_number: string
-  purchase_request: {
+  purchase_order: {
     _id: string
     label: string
   }
@@ -59,6 +58,8 @@ export interface IRetrievePurchaseOrderOutput {
   tax_type: string
   tax: number
   total: number
+  payment_type: 'cash' | 'bank'
+  amount: number
   notes: string
   approval_status: 'pending' | 'approved' | 'rejected'
   approval_to: IAuthReference
@@ -72,19 +73,18 @@ export interface IRetrievePurchaseOrderOutput {
   deleted_date: Date
   deleted_reason: string
   is_deleted: boolean
-  references: IReference[]
 }
-export interface IRetrievePurchaseOrderRepository {
-  handle(_id: string): Promise<IRetrievePurchaseOrderOutput>
+export interface IRetrieveDownPaymentRepository {
+  handle(_id: string): Promise<IRetrieveDownPaymentOutput>
 }
 
-export class RetrievePurchaseOrderRepository implements IRetrievePurchaseOrderRepository {
+export class RetrieveDownPaymentRepository implements IRetrieveDownPaymentRepository {
   constructor(
     public database: IDatabase,
     public options?: Record<string, unknown>,
   ) {}
 
-  async handle(_id: string): Promise<IRetrievePurchaseOrderOutput> {
+  async handle(_id: string): Promise<IRetrieveDownPaymentOutput> {
     const pipeline: IPipeline[] = []
 
     pipeline.push(...this.aggregateFilters(_id))
@@ -95,7 +95,7 @@ export class RetrievePurchaseOrderRepository implements IRetrievePurchaseOrderRe
       _id: response.data[0]._id as string,
       revised_count: response.data[0].revised_count as number,
       form_number: response.data[0].form_number as string,
-      purchase_request: response.data[0].purchase_request as IPurchaseRequest,
+      purchase_order: response.data[0].purchase_order as IPurchaseOrder,
       required_down_payment: response.data[0].required_down_payment as boolean,
       supplier: response.data[0].supplier as ISupplier,
       required_date: response.data[0].required_date as Date,
@@ -107,6 +107,8 @@ export class RetrievePurchaseOrderRepository implements IRetrievePurchaseOrderRe
       tax_type: response.data[0].tax_type as string,
       tax: response.data[0].tax as number,
       total: response.data[0].total as number,
+      payment_type: response.data[0].payment_type as 'cash' | 'bank',
+      amount: response.data[0].amount as number,
       notes: response.data[0].notes as string,
       approval_status: response.data[0].approval_status as 'pending' | 'approved' | 'rejected',
       approval_to: response.data[0].approval_to as IAuthReference,
@@ -120,7 +122,6 @@ export class RetrievePurchaseOrderRepository implements IRetrievePurchaseOrderRe
       deleted_date: response.data[0].deleted_date as Date,
       deleted_reason: response.data[0].deleted_reason as string,
       is_deleted: response.data[0].is_deleted as boolean,
-      references: response.data[0].references as IReference[],
     }
   }
 

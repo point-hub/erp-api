@@ -1,0 +1,6 @@
+export { CreateDownPaymentRepository } from './create.repository'
+export { DeleteDownPaymentRepository } from './delete.repository'
+export { RejectDownPaymentRepository } from './reject.repository'
+export { RetrieveDownPaymentRepository } from './retrieve.repository'
+export { RetrieveAllDownPaymentRepository } from './retrieve-all.repository'
+export { UpdateDownPaymentRepository } from './update.repository'

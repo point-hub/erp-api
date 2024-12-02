@@ -18,17 +18,6 @@ export interface IItemReference {
   unit?: string
 }
 
-export interface IReference {
-  ref_id: string
-  ref_name: string
-  ref_number: string
-  ref_date: Date
-  details: {
-    uuid: string
-    quantity: number
-  }[]
-}
-
 export interface IDetail {
   uuid: string
   item?: IItemReference
@@ -44,7 +33,7 @@ export interface IFormReference {
   form_number: string
 }
 
-export interface IPurchaseRequest {
+export interface IPurchaseOrder {
   _id: string
   label: string
 }
@@ -55,9 +44,9 @@ export interface ISupplier {
   name: string
 }
 
-export interface IPurchaseOrderEntity {
+export interface IDownPaymentEntity {
   _id?: string
-  purchase_request?: IPurchaseRequest
+  purchase_order?: IPurchaseOrder
   required_date?: Date
   required_down_payment?: boolean
   supplier?: ISupplier
@@ -70,6 +59,8 @@ export interface IPurchaseOrderEntity {
   tax?: number
   total?: number
   notes?: string
+  payment_type?: 'cash' | 'bank'
+  amount?: number
   // state create
   created_by?: IAuthReference
   created_date?: Date
