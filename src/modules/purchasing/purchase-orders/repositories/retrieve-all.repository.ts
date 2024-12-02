@@ -1,4 +1,5 @@
 import type { IDatabase, IPagination, IPipeline, IQuery } from '@point-hub/papi'
+import e from 'express'
 
 import { IAuth } from '@/modules/master/users/interface'
 
@@ -59,8 +60,15 @@ export class RetrieveAllPurchaseOrderRepository implements IRetrieveAllPurchaseO
     if (query.filter?.is_deleted) filtersAnd.push({ is_deleted: { $exists: false } })
     if (query.filter?.approval_status) filtersAnd.push({ approval_status: { $eq: query.filter?.approval_status } })
 
-    if (query.filter?.required_down_payment !== undefined)
-      filtersAnd.push({ required_down_payment: { $eq: JSON.parse(query.filter?.required_down_payment) } })
+    if (query.filter?.required_down_payment !== undefined) {
+      if (query.filter?.required_down_payment === true) {
+        filtersAnd.push({ required_down_payment: { $eq: JSON.parse(query.filter?.required_down_payment) } })
+      } else {
+        filtersAnd.push({
+          $or: [{ required_down_payment: { $exists: false } }, { required_down_payment: { $eq: false } }],
+        })
+      }
+    }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     filtersAnd.push({ 'branch._id': { $in: auth.branches.map((item: any) => item._id) } })

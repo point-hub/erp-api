@@ -67,7 +67,6 @@ export class CreatePurchaseOrderUseCase {
     input.data.details = input.data.details.map((obj) => {
       return {
         ...obj,
-        uuid: deps.tokenGenerate(),
         quantity_pending: obj.quantity,
       }
     })

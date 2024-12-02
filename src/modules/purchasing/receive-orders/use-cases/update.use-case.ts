@@ -55,6 +55,16 @@ export class UpdateReceiveOrderUseCase {
     // 1. validate schema
     await deps.schemaValidation(input.data, createValidation)
     // 3. define entity
+    const details = input.data.details?.map((el) => ({
+      uuid: el.uuid as string,
+      quantity: el.quantity as number,
+    }))
+    input.data.details = input.data.details.map((obj) => {
+      return {
+        ...obj,
+        quantity_pending: obj.quantity,
+      }
+    })
     const receiveOrderEntity = new ReceiveOrderEntity({
       revised_count: input.data.revised_count,
       form_number: input.data.form_number,
@@ -96,11 +106,6 @@ export class UpdateReceiveOrderUseCase {
 
     // 4. database operation
     const response = await deps.createReceiveOrderRepository.handle(receiveOrderEntity.data)
-
-    const details = receiveOrderEntity.data.details?.map((el) => ({
-      uuid: el.uuid as string,
-      quantity: el.quantity as number,
-    }))
 
     const reference = {
       ref_id: response.inserted_id,
