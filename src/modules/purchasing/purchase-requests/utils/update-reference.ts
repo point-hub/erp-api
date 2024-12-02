@@ -24,7 +24,6 @@ export class UpdatePurchaseRequestReference implements IUpdatePurchaseRequestRef
     const retrievePurchaseRequestRepository = new RetrievePurchaseRequestRepository(this.database, this.options)
 
     const purchaseRequest = await retrievePurchaseRequestRepository.handle(entity._id as string)
-
     for (const entityDetail of purchaseRequest.details ?? []) {
       const maxQuantity = Number(entityDetail.quantity ?? 0)
 
@@ -44,6 +43,10 @@ export class UpdatePurchaseRequestReference implements IUpdatePurchaseRequestRef
         (acc, referenceDetail) => (entityDetail.uuid === referenceDetail.uuid ? acc + referenceDetail.quantity : acc),
         0,
       )
+      console.log(entityDetail.uuid)
+      console.log(reference.details)
+
+      console.log(`${Math.abs(totalExistingQuantity)} + ${Math.abs(totalNewQuantity)} > ${maxQuantity}`)
 
       if (Math.abs(totalExistingQuantity) + Math.abs(totalNewQuantity) < maxQuantity) {
         isFinished = false
@@ -62,12 +65,14 @@ export class UpdatePurchaseRequestReference implements IUpdatePurchaseRequestRef
     }
 
     // update add quantity references
+    console.log(reference)
     await this.database
       .collection(collectionName)
       .update(entity._id as string, { $push: { references: reference } }, this.options)
 
     // update -1
     const updateObject = getReferenceUpdateObject(reference.details)
+    console.log(updateObject)
 
     await this.database
       .collection(collectionName)

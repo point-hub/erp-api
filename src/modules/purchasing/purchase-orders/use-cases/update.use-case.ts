@@ -41,6 +41,7 @@ export interface IDeps {
   createPurchaseOrderRepository: ICreatePurchaseOrderRepository
   updatePurchaseOrderRepository: IUpdatePurchaseOrderRepository
   updatePurchaseRequestReference: IUpdatePurchaseRequestReference
+  tokenGenerate(): string
 }
 
 export interface IOutput {
@@ -51,6 +52,19 @@ export class UpdatePurchaseOrderUseCase {
     // 1. validate schema
     await deps.schemaValidation(input.data, createValidation)
     // 3. define entity
+    const details = input.data.details?.map((el) => ({
+      uuid: el.uuid as string,
+      quantity: (el.quantity as number) * -1,
+    }))
+
+    input.data.details = input.data.details.map((obj) => {
+      return {
+        ...obj,
+        uuid: deps.tokenGenerate(),
+        quantity_pending: obj.quantity,
+      }
+    })
+
     const purchaseOrderEntity = new PurchaseOrderEntity({
       revised_count: input.data.revised_count,
       form_number: input.data.form_number,
@@ -97,11 +111,6 @@ export class UpdatePurchaseOrderUseCase {
     // 4. database operation
     const response = await deps.createPurchaseOrderRepository.handle(purchaseOrderEntity.data)
 
-    const details = purchaseOrderEntity.data.details?.map((el) => ({
-      uuid: el.uuid as string,
-      quantity: el.quantity as number,
-    }))
-
     const reference = {
       ref_id: response.inserted_id,
       ref_name: 'purchase_orders',
@@ -109,6 +118,7 @@ export class UpdatePurchaseOrderUseCase {
       ref_date: purchaseOrderEntity.data.created_date as Date,
       details: details ?? [],
     }
+
     await deps.updatePurchaseRequestReference.delete(input.data.purchase_request._id, 'purchase_orders', input._id)
     await deps.updatePurchaseRequestReference.add(input.data.purchase_request, reference)
     await deps.updatePurchaseOrderRepository.handle(input._id, {

@@ -63,6 +63,7 @@ export class CreatePurchaseOrderUseCase {
       uuid: el.uuid as string,
       quantity: (el.quantity as number) * -1,
     }))
+
     input.data.details = input.data.details.map((obj) => {
       return {
         ...obj,

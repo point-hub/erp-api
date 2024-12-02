@@ -114,6 +114,7 @@ export class UpdateReceiveOrderUseCase {
     await deps.updateReceiveOrderRepository.handle(input._id, {
       is_revised: true,
     })
+
     // 5. output
     return { inserted_id: response.inserted_id }
   }

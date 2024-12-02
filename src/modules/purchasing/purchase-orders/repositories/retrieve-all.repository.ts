@@ -61,9 +61,12 @@ export class RetrieveAllPurchaseOrderRepository implements IRetrieveAllPurchaseO
 
     if (query.filter?.required_down_payment !== undefined)
       filtersAnd.push({ required_down_payment: { $eq: JSON.parse(query.filter?.required_down_payment) } })
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     filtersAnd.push({ 'branch._id': { $in: auth.branches.map((item: any) => item._id) } })
     filtersAnd.push({ is_revised: false })
+
+    console.log(filtersAnd)
 
     if (!filtersAnd.length) {
       return []

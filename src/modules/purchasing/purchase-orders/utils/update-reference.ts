@@ -67,7 +67,9 @@ export class UpdatePurchaseOrderReference implements IUpdatePurchaseOrderReferen
       .update(entity._id as string, { $push: { references: reference } }, this.options)
 
     // update -1
+    console.log(reference.details)
     const updateObject = getReferenceUpdateObject(reference.details)
+    console.log(updateObject)
 
     await this.database
       .collection(collectionName)

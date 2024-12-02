@@ -1,4 +1,4 @@
-import { objClean } from '@point-hub/express-utils'
+import { objClean, tokenGenerate } from '@point-hub/express-utils'
 import type { IController, IControllerInput } from '@point-hub/papi'
 
 import { IAuth } from '@/modules/master/users/interface'
@@ -40,6 +40,7 @@ export const updatePurchaseOrderController: IController = async (controllerInput
         createPurchaseOrderRepository,
         updatePurchaseOrderRepository,
         updatePurchaseRequestReference,
+        tokenGenerate,
       },
     )
     await session.commitTransaction()
