@@ -1,14 +1,15 @@
 import { IAuthReference } from '@/modules/master/users/interface'
 
-import { IWarehouseReference } from '../receive-orders/interface'
-
 export type TypeApprovalStatus = 'pending' | 'approved' | 'rejected'
 
 export interface IBranchReference {
   _id?: string
   label?: string
-  code?: string
-  name?: string
+}
+
+export interface IWarehouseReference {
+  _id?: string
+  label?: string
 }
 
 export interface IAllocationReference {
@@ -22,14 +23,6 @@ export interface IItemReference {
   unit?: string
 }
 
-export interface IDetail {
-  uuid: string
-  item?: IItemReference
-  notes?: string
-  quantity?: number
-  allocation?: IAllocationReference
-}
-
 export interface IReference {
   ref_id: string
   ref_name: string
@@ -41,15 +34,40 @@ export interface IReference {
   }[]
 }
 
-export interface IPurchaseRequestEntity {
+export interface IDetail {
+  uuid: string
+  item?: IItemReference
+  quantity_order?: number
+  quantity?: number
+}
+
+export interface IFormReference {
+  form_date: Date
+  form_number: string
+}
+
+export interface IPurchaseOrder {
+  _id: string
+  label: string
+}
+export interface ISupplier {
+  _id: string
+  label: string
+  code: string
+  name: string
+}
+
+export interface IReceiveOrderEntity {
   _id?: string
+  purchase_order?: IPurchaseOrder
   required_date?: Date
+  supplier?: ISupplier
   branch?: IBranchReference
   warehouse?: IWarehouseReference
-  driver?: string
-  license_plate?: string
   details?: IDetail[]
   notes?: string
+  driver?: string
+  license_plate?: string
   // state create
   created_by?: IAuthReference
   created_date?: Date
@@ -74,5 +92,5 @@ export interface IPurchaseRequestEntity {
   revised_count?: number
   is_revised?: boolean
   is_finished?: boolean
-  references?: IReference[]
+  references?: IFormReference[]
 }

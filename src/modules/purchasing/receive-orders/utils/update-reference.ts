@@ -4,32 +4,32 @@ import { throwApiError } from '@/utils/throw-api-error'
 import { getReferenceUpdateObject } from '@/utils/transaction'
 
 import { collectionName } from '../entity'
-import { IPurchaseOrderEntity, IReference } from '../interface'
-import { IRetrievePurchaseOrderOutput, RetrievePurchaseOrderRepository } from '../repositories/retrieve.repository'
+import { IReceiveOrderEntity, IReference } from '../interface'
+import { IRetrieveReceiveOrderOutput, RetrieveReceiveOrderRepository } from '../repositories/retrieve.repository'
 
-export interface IUpdatePurchaseOrderReference {
-  add(entity: IPurchaseOrderEntity, reference: IReference): Promise<void>
+export interface IUpdateReceiveOrderReference {
+  add(entity: IReceiveOrderEntity, reference: IReference): Promise<void>
   delete(_id: string, ref_name: string, ref_id: string): Promise<void>
 }
 
-export class UpdatePurchaseOrderReference implements IUpdatePurchaseOrderReference {
+export class UpdateReceiveOrderReference implements IUpdateReceiveOrderReference {
   constructor(
     public database: IDatabase,
     public options?: Record<string, unknown>,
   ) {}
 
-  async add(entity: IPurchaseOrderEntity, reference: IReference): Promise<void> {
+  async add(entity: IReceiveOrderEntity, reference: IReference): Promise<void> {
     let isFinished = true
 
-    const retrievePurchaseOrderRepository = new RetrievePurchaseOrderRepository(this.database, this.options)
+    const retrieveReceiveOrderRepository = new RetrieveReceiveOrderRepository(this.database, this.options)
 
-    const purchaseOrder = await retrievePurchaseOrderRepository.handle(entity._id as string)
+    const receiveOrder = await retrieveReceiveOrderRepository.handle(entity._id as string)
 
-    for (const entityDetail of purchaseOrder.details ?? []) {
+    for (const entityDetail of receiveOrder.details ?? []) {
       const maxQuantity = Number(entityDetail.quantity ?? 0)
 
       const totalExistingQuantity =
-        purchaseOrder.references?.reduce((acc, entityReference) => {
+        receiveOrder.references?.reduce((acc, entityReference) => {
           return (
             acc +
             entityReference.details.reduce(
@@ -45,16 +45,16 @@ export class UpdatePurchaseOrderReference implements IUpdatePurchaseOrderReferen
         0,
       )
 
-      if (Math.abs(totalExistingQuantity) + Math.abs(totalNewQuantity) < maxQuantity) {
+      if (totalExistingQuantity + totalNewQuantity < maxQuantity) {
         isFinished = false
         break
       }
 
-      if (Math.abs(totalExistingQuantity) + Math.abs(totalNewQuantity) > maxQuantity) {
+      if (totalExistingQuantity + totalNewQuantity > maxQuantity) {
         throwApiError(422, {
           message: `Quantity Error`,
           errors: {
-            [`${entityDetail.uuid}`]: `${entityDetail.item?.label} should less than or equal to ${maxQuantity + totalExistingQuantity} ${entityDetail.item?.unit}`,
+            [`${entityDetail.uuid}`]: `${entityDetail.item?.label} should less than or equal to ${maxQuantity - totalExistingQuantity} ${entityDetail.item?.unit}`,
           },
         })
         break
@@ -82,11 +82,11 @@ export class UpdatePurchaseOrderReference implements IUpdatePurchaseOrderReferen
   }
 
   async delete(_id: string, ref_name: string, ref_id: string) {
-    const purchaseOrder = (await this.database
+    const receiveOrder = (await this.database
       .collection(collectionName)
-      .retrieve(_id, this.options)) as unknown as IRetrievePurchaseOrderOutput
+      .retrieve(_id, this.options)) as unknown as IRetrieveReceiveOrderOutput
 
-    const reference = purchaseOrder.references.find(
+    const reference = receiveOrder.references.find(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (ref: any) => ref.ref_name === ref_name && ref.ref_id === ref_id,
     ) as unknown as IReference

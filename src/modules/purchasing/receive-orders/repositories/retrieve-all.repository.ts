@@ -3,37 +3,35 @@ import type { IDatabase, IPagination, IPipeline, IQuery } from '@point-hub/papi'
 import { IAuth } from '@/modules/master/users/interface'
 
 import { collectionName } from '../entity'
-import { IRetrievePurchaseOrderOutput } from './retrieve.repository'
+import { IRetrieveReceiveOrderOutput } from './retrieve.repository'
 
-export interface IRetrieveAllPurchaseOrderOutput {
-  data: IRetrievePurchaseOrderOutput[]
+export interface IRetrieveAllReceiveOrderOutput {
+  data: IRetrieveReceiveOrderOutput[]
   pagination: IPagination
 }
-export interface IRetrieveAllPurchaseOrderRepository {
-  handle(data: { query: IQuery; auth: IAuth }, options?: unknown): Promise<IRetrieveAllPurchaseOrderOutput>
+export interface IRetrieveAllReceiveOrderRepository {
+  handle(data: { query: IQuery; auth: IAuth }, options?: unknown): Promise<IRetrieveAllReceiveOrderOutput>
 }
 export interface IData {
   query: IQuery
   auth: IAuth
 }
 
-export class RetrieveAllPurchaseOrderRepository implements IRetrieveAllPurchaseOrderRepository {
+export class RetrieveAllReceiveOrderRepository implements IRetrieveAllReceiveOrderRepository {
   constructor(
     public database: IDatabase,
     public options?: Record<string, unknown>,
   ) {}
 
-  async handle(data: IData, options?: unknown): Promise<IRetrieveAllPurchaseOrderOutput> {
+  async handle(data: IData, options?: unknown): Promise<IRetrieveAllReceiveOrderOutput> {
     const pipeline: IPipeline[] = []
 
     pipeline.push(...this.aggregateFilters(data.auth, data.query))
 
     const response = await this.database.collection(collectionName).aggregate(pipeline, data.query, options)
 
-    console.log(response)
-
     return {
-      data: response.data as unknown as IRetrievePurchaseOrderOutput[],
+      data: response.data as unknown as IRetrieveReceiveOrderOutput[],
       pagination: response.pagination,
     }
   }
@@ -58,8 +56,8 @@ export class RetrieveAllPurchaseOrderRepository implements IRetrieveAllPurchaseO
     if (query.filter?.is_finished) filtersAnd.push({ is_finished: { $eq: JSON.parse(query.filter?.is_finished) } })
     if (query.filter?.is_deleted) filtersAnd.push({ is_deleted: { $exists: false } })
     if (query.filter?.approval_status) filtersAnd.push({ approval_status: { $eq: query.filter?.approval_status } })
-
-    if (query.filter?.required_down_payment !== undefined)
+    console.log(query.filter?.required_down_payment)
+    if (query.filter?.required_down_payment)
       filtersAnd.push({ required_down_payment: { $eq: JSON.parse(query.filter?.required_down_payment) } })
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     filtersAnd.push({ 'branch._id': { $in: auth.branches.map((item: any) => item._id) } })

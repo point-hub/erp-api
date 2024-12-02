@@ -30,9 +30,9 @@ import masterWarehousesRouter from './modules/master/warehouses/router'
 import purchasingDownPaymentsRouter from './modules/purchasing/down-payments/router'
 import purchasingPurchaseOrdersRouter from './modules/purchasing/purchase-orders/router'
 import purchasingPurchaseRequestsRouter from './modules/purchasing/purchase-requests/router'
-import purchasingReceiveOrdersRouter from './modules/purchasing/purchase-requests/router'
 import purchasingInvoicesRouter from './modules/purchasing/purchase-requests/router'
 import purchasingPaymentOrdersRouter from './modules/purchasing/purchase-requests/router'
+import purchasingReceiveOrdersRouter from './modules/purchasing/receive-orders/router'
 // sales
 
 export default async function (baseRouterInput: IBaseAppInput) {

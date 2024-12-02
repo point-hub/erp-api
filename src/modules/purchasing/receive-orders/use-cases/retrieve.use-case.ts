@@ -1,27 +1,30 @@
 import { IAuthReference } from '@/modules/master/users/interface'
 
-import { IReference } from '../interface'
-import { IBranch, IDetails, IRetrievePurchaseRequestRepository, IWarehouse } from '../repositories/retrieve.repository'
+import { IPurchaseOrder, ISupplier, IWarehouseReference } from '../interface'
+import { IBranch, IDetails, IRetrieveReceiveOrderRepository } from '../repositories/retrieve.repository'
 
 export interface IInput {
   _id: string
 }
 
 export interface IDeps {
-  retrievePurchaseRequestRepository: IRetrievePurchaseRequestRepository
+  retrieveReceiveOrderRepository: IRetrieveReceiveOrderRepository
 }
 
 export interface IOutput {
   _id: string
   revised_count: number
   form_number: string
+  purchase_order: IPurchaseOrder
   required_date: Date
+  required_down_payment: boolean
+  supplier: ISupplier
   branch: IBranch
-  warehouse: IWarehouse
-  driver: string
-  license_plate: string
+  warehouse: IWarehouseReference
   details: IDetails[]
   notes: string
+  driver: string
+  license_plate: string
   approval_status: 'pending' | 'approved' | 'rejected'
   approval_to: IAuthReference
   rejected_reason: string
@@ -34,27 +37,27 @@ export interface IOutput {
   deleted_date: Date
   deleted_reason: string
   is_deleted: boolean
-  is_finished: boolean
-  is_revised: boolean
-  references: IReference[]
 }
 
-export class RetrievePurchaseRequestUseCase {
+export class RetrieveReceiveOrderUseCase {
   static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
     // 1. database operation
-    const response = await deps.retrievePurchaseRequestRepository.handle(input._id)
+    const response = await deps.retrieveReceiveOrderRepository.handle(input._id)
     // 2. output
     return {
       _id: response._id,
       revised_count: response.revised_count,
       form_number: response.form_number,
+      purchase_order: response.purchase_order,
       required_date: response.required_date,
+      required_down_payment: response.required_down_payment,
+      supplier: response.supplier,
       branch: response.branch,
       warehouse: response.warehouse,
-      driver: response.driver,
-      license_plate: response.license_plate,
       details: response.details,
       notes: response.notes,
+      driver: response.driver,
+      license_plate: response.license_plate,
       approval_status: response.approval_status,
       approval_to: response.approval_to,
       rejected_reason: response.rejected_reason,
@@ -67,9 +70,6 @@ export class RetrievePurchaseRequestUseCase {
       deleted_date: response.deleted_date,
       deleted_reason: response.deleted_reason,
       is_deleted: response.is_deleted,
-      is_finished: response.is_finished,
-      is_revised: response.is_revised,
-      references: response.references,
     }
   }
 }

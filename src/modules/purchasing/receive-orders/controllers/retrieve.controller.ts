@@ -2,26 +2,26 @@ import type { IController, IControllerInput } from '@point-hub/papi'
 
 import { verifyUserToken } from '@/modules/master/users/utils/verify-user-token'
 
-import { RetrievePurchaseRequestRepository } from '../repositories/retrieve.repository'
-import { RetrievePurchaseRequestUseCase } from '../use-cases/retrieve.use-case'
+import { RetrieveReceiveOrderRepository } from '../repositories/retrieve.repository'
+import { RetrieveReceiveOrderUseCase } from '../use-cases/retrieve.use-case'
 
-export const retrievePurchaseRequestController: IController = async (controllerInput: IControllerInput) => {
+export const retrieveReceiveOrderController: IController = async (controllerInput: IControllerInput) => {
   let session
   try {
     // 1. start session for transactional
     session = controllerInput.dbConnection.startSession()
     session.startTransaction()
     // 2. define repository
-    const retrievePurchaseRequestRepository = new RetrievePurchaseRequestRepository(controllerInput.dbConnection, {
+    const retrieveReceiveOrderRepository = new RetrieveReceiveOrderRepository(controllerInput.dbConnection, {
       session,
     })
     // 3. handle business rules
     // 3.1 check authenticated user
     await verifyUserToken(controllerInput, { session })
     // 3.2 retrieve
-    const response = await RetrievePurchaseRequestUseCase.handle(
+    const response = await RetrieveReceiveOrderUseCase.handle(
       { _id: controllerInput.httpRequest.params.id },
-      { retrievePurchaseRequestRepository },
+      { retrieveReceiveOrderRepository },
     )
     await session.commitTransaction()
     // 4. return response to client
@@ -29,9 +29,12 @@ export const retrievePurchaseRequestController: IController = async (controllerI
       status: 200,
       json: {
         _id: response._id,
-        revised_count: response.revised_count,
         form_number: response.form_number,
         required_date: response.required_date,
+        required_down_payment: response.required_down_payment,
+        revised_count: response.revised_count,
+        purchase_order: response.purchase_order,
+        supplier: response.supplier,
         branch: response.branch,
         warehouse: response.warehouse,
         driver: response.driver,
@@ -50,9 +53,6 @@ export const retrievePurchaseRequestController: IController = async (controllerI
         deleted_date: response.deleted_date,
         deleted_reason: response.deleted_reason,
         is_deleted: response.is_deleted,
-        is_finished: response.is_finished,
-        is_revised: response.is_revised,
-        references: response.references,
       },
     }
   } catch (error) {
