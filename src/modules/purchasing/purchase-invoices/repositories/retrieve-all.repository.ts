@@ -42,7 +42,8 @@ export class RetrieveAllPurchaseInvoiceRepository implements IRetrieveAllPurchas
     if (query.filter?.search) {
       const filtersOr = []
       filtersOr.push({ form_number: { $regex: query.filter?.search, $options: 'i' } })
-      filtersOr.push({ payment_type: { $regex: query.filter?.search, $options: 'i' } })
+      filtersOr.push({ 'branch.label': { $regex: query.filter?.search, $options: 'i' } })
+      filtersOr.push({ 'details.item.label': { $regex: query.filter?.search, $options: 'i' } })
       filtersAnd.push({ $or: filtersOr })
     }
 
