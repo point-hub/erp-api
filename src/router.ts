@@ -28,9 +28,9 @@ import masterAuthRouter from './modules/master/users/router-auth'
 import masterWarehousesRouter from './modules/master/warehouses/router'
 // purchasing
 import purchasingDownPaymentsRouter from './modules/purchasing/down-payments/router'
+import purchasingInvoicesRouter from './modules/purchasing/purchase-invoices/router'
 import purchasingPurchaseOrdersRouter from './modules/purchasing/purchase-orders/router'
 import purchasingPurchaseRequestsRouter from './modules/purchasing/purchase-requests/router'
-import purchasingInvoicesRouter from './modules/purchasing/purchase-requests/router'
 import purchasingPaymentOrdersRouter from './modules/purchasing/purchase-requests/router'
 import purchasingReceiveOrdersRouter from './modules/purchasing/receive-orders/router'
 // sales

@@ -3,37 +3,35 @@ import type { IDatabase, IPagination, IPipeline, IQuery } from '@point-hub/papi'
 import { IAuth } from '@/modules/master/users/interface'
 
 import { collectionName } from '../entity'
-import { IRetrievePurchaseOrderOutput } from './retrieve.repository'
+import { IRetrievePurchaseInvoiceOutput } from './retrieve.repository'
 
-export interface IRetrieveAllPurchaseOrderOutput {
-  data: IRetrievePurchaseOrderOutput[]
+export interface IRetrieveAllPurchaseInvoiceOutput {
+  data: IRetrievePurchaseInvoiceOutput[]
   pagination: IPagination
 }
-export interface IRetrieveAllPurchaseOrderRepository {
-  handle(data: { query: IQuery; auth: IAuth }, options?: unknown): Promise<IRetrieveAllPurchaseOrderOutput>
+export interface IRetrieveAllPurchaseInvoiceRepository {
+  handle(data: { query: IQuery; auth: IAuth }, options?: unknown): Promise<IRetrieveAllPurchaseInvoiceOutput>
 }
 export interface IData {
   query: IQuery
   auth: IAuth
 }
 
-export class RetrieveAllPurchaseOrderRepository implements IRetrieveAllPurchaseOrderRepository {
+export class RetrieveAllPurchaseInvoiceRepository implements IRetrieveAllPurchaseInvoiceRepository {
   constructor(
     public database: IDatabase,
     public options?: Record<string, unknown>,
   ) {}
 
-  async handle(data: IData, options?: unknown): Promise<IRetrieveAllPurchaseOrderOutput> {
+  async handle(data: IData, options?: unknown): Promise<IRetrieveAllPurchaseInvoiceOutput> {
     const pipeline: IPipeline[] = []
 
     pipeline.push(...this.aggregateFilters(data.auth, data.query))
 
     const response = await this.database.collection(collectionName).aggregate(pipeline, data.query, options)
 
-    console.log(response)
-
     return {
-      data: response.data as unknown as IRetrievePurchaseOrderOutput[],
+      data: response.data as unknown as IRetrievePurchaseInvoiceOutput[],
       pagination: response.pagination,
     }
   }
@@ -54,18 +52,6 @@ export class RetrieveAllPurchaseOrderRepository implements IRetrieveAllPurchaseO
       filtersOr.push({ name: { $regex: query.filter?.label, $options: 'i' } })
       filtersAnd.push({ $or: filtersOr })
     }
-    console.log(query.filter?.has_invoice, query.filter?.has_invoice, query.filter?.has_invoice === false)
-    if (query.filter?.has_invoice && JSON.parse(query.filter.has_invoice) === true) {
-      console.log(0)
-      filtersAnd.push({ has_invoice: { $eq: true } })
-    } else if (query.filter?.has_invoice && JSON.parse(query.filter.has_invoice) === false) {
-      console.log(1)
-      filtersAnd.push({
-        $or: [{ has_invoice: { $exists: false } }, { has_invoice: false }],
-      })
-    }
-
-    console.log(JSON.stringify(filtersAnd))
 
     if (query.filter?.is_finished) filtersAnd.push({ is_finished: { $eq: JSON.parse(query.filter?.is_finished) } })
     if (query.filter?.is_deleted) filtersAnd.push({ is_deleted: { $exists: false } })
@@ -84,6 +70,8 @@ export class RetrieveAllPurchaseOrderRepository implements IRetrieveAllPurchaseO
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     filtersAnd.push({ 'branch._id': { $in: auth.branches.map((item: any) => item._id) } })
     filtersAnd.push({ is_revised: false })
+
+    console.log(filtersAnd)
 
     if (!filtersAnd.length) {
       return []
