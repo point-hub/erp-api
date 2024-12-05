@@ -6,6 +6,5 @@ export const updateValidation = {
   'warehouse._id': ['required'],
   'details.*.item._id': ['required'],
   'details.*.quantity': ['required', 'numeric'],
-  'approval_to._id': ['required'],
   notes: ['string'],
 }
