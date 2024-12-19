@@ -5,6 +5,6 @@ export const createValidation = {
   'branch._id': ['required'],
   'warehouse._id': ['required'],
   'details.*.item._id': ['required'],
-  'details.*.quantity': ['required', 'numeric', 'min:1'],
+  'details.*.quantity': ['required', 'numeric'],
   notes: ['string'],
 }
