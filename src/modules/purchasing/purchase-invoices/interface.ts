@@ -58,16 +58,19 @@ export interface ISupplier {
 export interface IPurchaseInvoiceEntity {
   _id?: string
   purchase_order?: IPurchaseOrder
+  due_date?: Date
   required_date?: Date
   required_down_payment?: boolean
   supplier?: ISupplier
   branch?: IBranchReference
   details?: IDetail[]
   subtotal?: number
+  discount_type?: string
   discount?: number
   tax_base?: number
   tax_type?: string
   tax?: number
+  expedition_fee?: number
   total?: number
   notes?: string
   // state create

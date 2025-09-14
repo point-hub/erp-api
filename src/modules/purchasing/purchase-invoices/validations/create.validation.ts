@@ -5,6 +5,5 @@ export const createValidation = {
   'details.*.item._id': ['required'],
   'details.*.quantity': ['required', 'numeric'],
   'details.*.price': ['required', 'numeric'],
-  'approval_to._id': ['required'],
   notes: ['string'],
 }
