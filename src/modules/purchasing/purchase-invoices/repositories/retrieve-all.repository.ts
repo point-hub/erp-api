@@ -54,6 +54,7 @@ export class RetrieveAllPurchaseInvoiceRepository implements IRetrieveAllPurchas
       filtersAnd.push({ $or: filtersOr })
     }
 
+    if (query.filter?.has_invoice) filtersAnd.push({ has_invoice: { $eq: JSON.parse(query.filter?.has_invoice) } })
     if (query.filter?.is_finished) filtersAnd.push({ is_finished: { $eq: JSON.parse(query.filter?.is_finished) } })
     if (query.filter?.is_deleted) filtersAnd.push({ is_deleted: { $exists: false } })
     if (query.filter?.approval_status) filtersAnd.push({ approval_status: { $eq: query.filter?.approval_status } })

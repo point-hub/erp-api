@@ -30,6 +30,9 @@ export interface IReference {
 }
 
 export interface IDetail {
+  receive_order: {
+    _id: string
+  }
   uuid: string
   item?: IItemReference
   quantity?: number

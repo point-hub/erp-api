@@ -4,7 +4,7 @@ import type { ISchemaValidation } from '@point-hub/papi'
 import { IGenerateFormNumber } from '@/modules/counters/utils/generate-form-number'
 import { IAuth, IAuthReference } from '@/modules/master/users/interface'
 
-import { IUpdatePurchaseOrderInvoice } from '../../purchase-orders/utils/update-invoice'
+import { IUpdateReceiveOrderInvoice } from '../../receive-orders/utils/update-invoice'
 import { PurchaseInvoiceEntity } from '../entity'
 import { IBranchReference, IDetail, TypeApprovalStatus } from '../interface'
 import { ICreatePurchaseInvoiceRepository } from '../repositories/create.repository'
@@ -44,7 +44,7 @@ export interface IDeps {
   schemaValidation: ISchemaValidation
   generateFormNumber: IGenerateFormNumber
   createPurchaseInvoiceRepository: ICreatePurchaseInvoiceRepository
-  updatePurchaseOrderInvoice: IUpdatePurchaseOrderInvoice
+  updateReceiveOrderInvoice: IUpdateReceiveOrderInvoice
   tokenGenerate(): string
 }
 
@@ -53,6 +53,7 @@ export interface IOutput {
 }
 export class CreatePurchaseInvoiceUseCase {
   static async handle(input: IInput, deps: IDeps): Promise<IOutput> {
+    console.log(input.data.details[0])
     // 1. validate schema
     await deps.schemaValidation(input.data, createValidation)
     // 2. generate form number
@@ -113,6 +114,10 @@ export class CreatePurchaseInvoiceUseCase {
     purchaseInvoiceEntity.data = deps.objClean(purchaseInvoiceEntity.data)
     // 4. database operation
     const response = await deps.createPurchaseInvoiceRepository.handle(purchaseInvoiceEntity.data)
+
+    for (const element of input.data.details) {
+      await deps.updateReceiveOrderInvoice.add(element.receive_order._id)
+    }
     // 5. output
     return { inserted_id: response.inserted_id }
   }

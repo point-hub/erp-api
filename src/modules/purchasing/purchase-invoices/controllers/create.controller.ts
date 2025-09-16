@@ -6,7 +6,7 @@ import { IAuth } from '@/modules/master/users/interface'
 import { verifyUserToken } from '@/modules/master/users/utils/verify-user-token'
 import { schemaValidation } from '@/utils/validation'
 
-import { UpdatePurchaseOrderInvoice } from '../../purchase-orders/utils/update-invoice'
+import { UpdateReceiveOrderInvoice } from '../../receive-orders/utils/update-invoice'
 import { CreatePurchaseInvoiceRepository } from '../repositories/create.repository'
 import { CreatePurchaseInvoiceUseCase } from '../use-cases/create.use-case'
 
@@ -21,7 +21,7 @@ export const createPurchaseInvoiceController: IController = async (controllerInp
       session,
     })
     const generateFormNumber = new GenerateFormNumber(controllerInput.dbConnection)
-    const updatePurchaseOrderInvoice = new UpdatePurchaseOrderInvoice(controllerInput.dbConnection, { session })
+    const updateReceiveOrderInvoice = new UpdateReceiveOrderInvoice(controllerInput.dbConnection, { session })
     // 3. handle business rules
     // 3.1 check authenticated user
     const verifyTokenResponse = await verifyUserToken(controllerInput, { session })
@@ -36,7 +36,7 @@ export const createPurchaseInvoiceController: IController = async (controllerInp
         schemaValidation,
         generateFormNumber,
         createPurchaseInvoiceRepository,
-        updatePurchaseOrderInvoice,
+        updateReceiveOrderInvoice,
         tokenGenerate,
       },
     )
