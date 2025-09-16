@@ -54,10 +54,33 @@ export class RetrieveAllPurchaseInvoiceRepository implements IRetrieveAllPurchas
       filtersAnd.push({ $or: filtersOr })
     }
 
+    if (query.filter?.start_date) {
+      const start = new Date(query.filter?.start_date)
+      filtersAnd.push({ created_date: { $gte: start } })
+    }
+    if (query.filter?.end_date) {
+      const end = new Date(query.filter.end_date)
+      end.setHours(23, 59, 59, 999)
+      filtersAnd.push({ created_date: { $lte: end } })
+    }
+
+    if (query.filter?.form_status) {
+      const status = query.filter?.form_status.value
+      if (status == 'pending') {
+        filtersAnd.push({ is_finished: false })
+        filtersAnd.push({ is_deleted: { $exists: false } })
+      } else if (status == 'done') {
+        filtersAnd.push({ is_finished: true })
+        filtersAnd.push({ is_deleted: { $exists: false, $eq: false } })
+      } else if (status == 'deleted') {
+        filtersAnd.push({ is_deleted: { $exists: true, $eq: true } })
+      }
+    }
+    console.log(query.filter?.approval_status)
     if (query.filter?.has_invoice) filtersAnd.push({ has_invoice: { $eq: JSON.parse(query.filter?.has_invoice) } })
     if (query.filter?.is_finished) filtersAnd.push({ is_finished: { $eq: JSON.parse(query.filter?.is_finished) } })
     if (query.filter?.is_deleted) filtersAnd.push({ is_deleted: { $exists: false } })
-    if (query.filter?.approval_status) filtersAnd.push({ approval_status: { $eq: query.filter?.approval_status } })
+    // if (query.filter?.approval_status) filtersAnd.push({ approval_status: { $eq: query.filter?.approval_status } })
 
     if (query.filter?.required_down_payment !== undefined) {
       if (query.filter?.required_down_payment === true) {
@@ -72,8 +95,6 @@ export class RetrieveAllPurchaseInvoiceRepository implements IRetrieveAllPurchas
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     filtersAnd.push({ 'branch._id': { $in: auth.branches.map((item: any) => item._id) } })
     filtersAnd.push({ is_revised: false })
-
-    console.log(filtersAnd)
 
     if (!filtersAnd.length) {
       return []
