@@ -13,10 +13,6 @@ import { createValidation } from '../validations/create.validation'
 export interface IInput {
   auth: IAuth
   data: {
-    purchase_order: {
-      _id: string
-      label: string
-    }
     supplier: {
       _id: string
       label: string
@@ -72,10 +68,6 @@ export class CreatePurchaseInvoiceUseCase {
     const purchaseInvoiceEntity = new PurchaseInvoiceEntity({
       revised_count: 0,
       form_number: formNumber,
-      purchase_order: {
-        _id: input.data.purchase_order._id,
-        label: input.data.purchase_order.label,
-      },
       supplier: {
         _id: input.data.supplier._id,
         label: input.data.supplier.label,
@@ -121,8 +113,6 @@ export class CreatePurchaseInvoiceUseCase {
     purchaseInvoiceEntity.data = deps.objClean(purchaseInvoiceEntity.data)
     // 4. database operation
     const response = await deps.createPurchaseInvoiceRepository.handle(purchaseInvoiceEntity.data)
-
-    await deps.updatePurchaseOrderInvoice.add(input.data.purchase_order._id)
     // 5. output
     return { inserted_id: response.inserted_id }
   }

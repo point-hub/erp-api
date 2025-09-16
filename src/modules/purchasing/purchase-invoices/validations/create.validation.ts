@@ -1,5 +1,6 @@
 export const createValidation = {
-  'purchase_order._id': ['required'],
+  // 'purchase_order._id': ['required'],
+  due_date: ['required'],
   'supplier._id': ['required'],
   'branch._id': ['required'],
   'details.*.item._id': ['required'],

@@ -54,10 +54,12 @@ export interface IRetrievePurchaseInvoiceOutput {
   branch: IBranch
   details: IDetails[]
   subtotal: number
+  discount_type: string
   discount: number
   tax_base: number
   tax_type: string
   tax: number
+  expedition_fee: number
   total: number
   notes: string
   approval_status: 'pending' | 'approved' | 'rejected'
@@ -66,6 +68,7 @@ export interface IRetrievePurchaseInvoiceOutput {
   created_by: IAuthReference
   updated_by: IAuthReference
   approval_date: Date
+  due_date: Date
   created_date: Date
   updated_date: Date
   deleted_by: IAuthReference
@@ -103,10 +106,12 @@ export class RetrievePurchaseInvoiceRepository implements IRetrievePurchaseInvoi
       branch: response.data[0].branch as IBranch,
       details: response.data[0].details as IDetails[],
       subtotal: response.data[0].subtotal as number,
+      discount_type: response.data[0].discount_type as string,
       discount: response.data[0].discount as number,
       tax_base: response.data[0].tax_base as number,
       tax_type: response.data[0].tax_type as string,
       tax: response.data[0].tax as number,
+      expedition_fee: response.data[0].expedition_fee as number,
       total: response.data[0].total as number,
       notes: response.data[0].notes as string,
       approval_status: response.data[0].approval_status as 'pending' | 'approved' | 'rejected',
@@ -115,6 +120,7 @@ export class RetrievePurchaseInvoiceRepository implements IRetrievePurchaseInvoi
       created_by: response.data[0].created_by as IAuthReference,
       updated_by: response.data[0].updated_by as IAuthReference,
       approval_date: response.data[0].approval_date as Date,
+      due_date: response.data[0].due_date as Date,
       created_date: response.data[0].created_date as Date,
       updated_date: response.data[0].updated_date as Date,
       deleted_by: response.data[0].deleted_by as IAuthReference,

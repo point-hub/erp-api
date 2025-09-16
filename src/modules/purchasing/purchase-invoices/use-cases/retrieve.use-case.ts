@@ -15,6 +15,7 @@ export interface IOutput {
   _id: string
   revised_count: number
   form_number: string
+  due_date: string
   purchase_order: IPurchaseOrder
   required_date: Date
   required_down_payment: boolean
@@ -22,10 +23,12 @@ export interface IOutput {
   branch: IBranch
   details: IDetails[]
   subtotal: number
+  discount_type: string
   discount: number
   tax_base: number
   tax_type: string
   tax: number
+  expedition_fee: number
   total: number
   notes: string
   approval_status: 'pending' | 'approved' | 'rejected'
@@ -58,10 +61,12 @@ export class RetrievePurchaseInvoiceUseCase {
       branch: response.branch,
       details: response.details,
       subtotal: response.subtotal,
+      discount_type: response.discount_type,
       discount: response.discount,
       tax_base: response.tax_base,
       tax_type: response.tax_type,
       tax: response.tax,
+      expedition_fee: response.expedition_fee,
       total: response.total,
       notes: response.notes,
       approval_status: response.approval_status,
@@ -70,6 +75,7 @@ export class RetrievePurchaseInvoiceUseCase {
       created_by: response.created_by,
       updated_by: response.updated_by,
       approval_date: response.approval_date,
+      due_date: response.due_date,
       created_date: response.created_date,
       updated_date: response.updated_date,
       deleted_by: response.deleted_by,

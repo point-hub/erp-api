@@ -56,6 +56,7 @@ export class RetrieveAllReceiveOrderRepository implements IRetrieveAllReceiveOrd
       filtersAnd.push({ $or: filtersOr })
     }
 
+    if (query.filter?.supplier) filtersAnd.push({ 'supplier._id': { $eq: query.filter?.supplier } })
     if (query.filter?.is_finished) filtersAnd.push({ is_finished: { $eq: JSON.parse(query.filter?.is_finished) } })
     if (query.filter?.is_deleted) filtersAnd.push({ is_deleted: { $exists: false } })
     if (query.filter?.approval_status) filtersAnd.push({ approval_status: { $eq: query.filter?.approval_status } })
