@@ -37,6 +37,7 @@ export interface IOutput {
   deleted_date: Date
   deleted_reason: string
   is_deleted: boolean
+  has_invoice: boolean
 }
 
 export class RetrieveReceiveOrderUseCase {
@@ -70,6 +71,7 @@ export class RetrieveReceiveOrderUseCase {
       deleted_date: response.deleted_date,
       deleted_reason: response.deleted_reason,
       is_deleted: response.is_deleted,
+      has_invoice: response.has_invoice,
     }
   }
 }

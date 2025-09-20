@@ -69,6 +69,7 @@ export interface IRetrieveReceiveOrderOutput {
   deleted_date: Date
   deleted_reason: string
   is_deleted: boolean
+  has_invoice: boolean
   references: IReference[]
 }
 export interface IRetrieveReceiveOrderRepository {
@@ -114,6 +115,7 @@ export class RetrieveReceiveOrderRepository implements IRetrieveReceiveOrderRepo
       deleted_date: response.data[0].deleted_date as Date,
       deleted_reason: response.data[0].deleted_reason as string,
       is_deleted: response.data[0].is_deleted as boolean,
+      has_invoice: response.data[0].has_invoice as boolean,
       references: response.data[0].references as IReference[],
     }
   }

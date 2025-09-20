@@ -53,6 +53,7 @@ export const retrieveReceiveOrderController: IController = async (controllerInpu
         deleted_date: response.deleted_date,
         deleted_reason: response.deleted_reason,
         is_deleted: response.is_deleted,
+        has_invoice: response.has_invoice,
       },
     }
   } catch (error) {
