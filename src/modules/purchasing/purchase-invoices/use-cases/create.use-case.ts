@@ -29,6 +29,7 @@ export interface IInput {
     discount: number
     tax_base: number
     tax_type: string
+    tax_percentage: number
     tax: number
     expedition_fee: number
     total: number
@@ -85,6 +86,7 @@ export class CreatePurchaseInvoiceUseCase {
       discount: input.data.discount,
       tax_base: input.data.tax_base,
       tax_type: input.data.tax_type,
+      tax_percentage: input.data.tax_percentage,
       tax: input.data.tax,
       expedition_fee: input.data.expedition_fee,
       total: input.data.total,

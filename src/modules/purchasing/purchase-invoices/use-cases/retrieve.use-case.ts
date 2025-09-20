@@ -27,6 +27,7 @@ export interface IOutput {
   discount: number
   tax_base: number
   tax_type: string
+  tax_percentage: number
   tax: number
   expedition_fee: number
   total: number
@@ -65,6 +66,7 @@ export class RetrievePurchaseInvoiceUseCase {
       discount: response.discount,
       tax_base: response.tax_base,
       tax_type: response.tax_type,
+      tax_percentage: response.tax_percentage,
       tax: response.tax,
       expedition_fee: response.expedition_fee,
       total: response.total,

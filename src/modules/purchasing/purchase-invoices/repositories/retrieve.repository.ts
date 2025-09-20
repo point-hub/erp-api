@@ -58,6 +58,7 @@ export interface IRetrievePurchaseInvoiceOutput {
   discount: number
   tax_base: number
   tax_type: string
+  tax_percentage: number
   tax: number
   expedition_fee: number
   total: number
@@ -110,6 +111,7 @@ export class RetrievePurchaseInvoiceRepository implements IRetrievePurchaseInvoi
       discount: response.data[0].discount as number,
       tax_base: response.data[0].tax_base as number,
       tax_type: response.data[0].tax_type as string,
+      tax_percentage: response.data[0].tax_percentage as number,
       tax: response.data[0].tax as number,
       expedition_fee: response.data[0].expedition_fee as number,
       total: response.data[0].total as number,

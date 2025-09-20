@@ -42,6 +42,7 @@ export const retrievePurchaseInvoiceController: IController = async (controllerI
         discount: response.discount,
         tax_base: response.tax_base,
         tax_type: response.tax_type,
+        tax_percentage: response.tax_percentage,
         tax: response.tax,
         expedition_fee: response.expedition_fee,
         total: response.total,

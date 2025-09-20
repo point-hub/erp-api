@@ -72,6 +72,7 @@ export interface IPurchaseInvoiceEntity {
   discount?: number
   tax_base?: number
   tax_type?: string
+  tax_percentage?: number
   tax?: number
   expedition_fee?: number
   total?: number
